@@ -1,0 +1,209 @@
+div.headerWrapper.login div.header a.logo{
+	width: 109px;
+    height: 130px;
+    background: url(../img/sprite.png) scroll -180px 0px no-repeat;
+    margin-right: 60px;
+    display: block;
+    margin: auto;
+    float: inherit;
+}
+
+div.contentWrapper.login > div.content{
+	width:955px;
+	height:610px;
+	min-height:610px;
+}
+
+
+div.loginForm{
+	float: left;
+    width: 548px;
+    margin-right: 2px;
+    height: 100%;
+}
+
+div.loginForm div.loginHeader{
+	float:left;
+	width:100%;
+	height:160px;
+	background:#2b3245;
+}
+
+div.loginForm div.loginHeader i.lock{
+	float: left;
+    width: 86px;
+    height: 95px;
+    background: url(../img/sprite.png) scroll -492px -38px no-repeat;
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+div.loginForm div.loginHeader i.login{
+	float: left;
+    width: 110px;
+    height: 40px;
+    background: url(../img/sprite.png) scroll -478px -167px no-repeat;
+    margin-top: 65px;
+    margin-left: 100px;
+}
+
+div.loginForm div.loginCenter{
+	float:left;
+	width:100%;
+	padding-left:110px;
+	padding-right:110px;
+	padding-top:35px;
+	height: 339px;
+}
+
+div.loginForm div.loginCenter div.helloTxt{
+	float:left;
+	margin-bottom:20px;
+	width:100%;
+}
+
+div.loginForm div.loginCenter div.helloTxt p{
+	float:left;
+	width:100%;
+	font-size:14px;
+	color:#252c3c;
+	font-weight:500;
+	margin-bottom: 7px;
+}
+
+div.loginForm div.loginCenter div.helloTxt span{
+	float:left;
+	width:100%;
+	font-size:14px;
+	color:#252c3c;
+}
+
+div.loginForm div.loginCenter div.inputWrp{
+	float: left;
+    width: 100%;
+    margin-bottom: 15px;
+    padding-bottom: 20px;
+    position: relative;
+}
+
+div.loginForm div.loginCenter div.inputWrp div.title{
+	float:left;
+	width:100%;
+}
+
+div.loginForm div.loginCenter div.inputWrp div.title span{
+	width:100px;
+	float:left;
+	color:black;
+	font-size:14px;
+	font-weight:500;
+	margin-bottom: 4px;
+}
+
+div.loginForm div.loginCenter div.inputWrp div.input{
+	float:left;
+	width:100%;
+	height:40px;
+	position:relative;
+}
+
+div.loginForm div.loginCenter div.inputWrp.error div.input input{
+	background:#ffe5e5;
+	border:1px solid #df1112;
+}
+
+div.loginForm div.loginCenter div.inputWrp div.input input{
+	width:100%;
+	height:40px;
+	float:left;
+	padding-left: 28px;
+}
+
+div.loginForm div.loginCenter div.inputWrp div.input i.email{
+	position: absolute;
+    top: 12px;
+    left: 5px;
+    width: 23px;
+    height: 16px;
+    background: url(../img/sprite.png) scroll -232px -253px no-repeat;
+}
+
+div.loginForm div.loginCenter div.inputWrp div.input i.password{
+position: absolute;
+    top: 12px;
+    left: 5px;
+    width: 23px;
+    height: 16px;
+    background:url(../img/sprite.png) scroll -232px -280px no-repeat;
+}
+
+div.loginForm div.loginCenter div.inputWrp span.error{
+	display:none;
+}
+
+div.loginForm div.loginCenter div.inputWrp.error span.error{
+    font-size: 13px;
+    color: #cc415b;
+    margin-top: 3px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+   	top: auto;
+    right: auto;
+    display:block;
+}
+
+
+div.loginForm div.loginCenter div.inputWrp div.title a.forgottenPass{
+	float:right;
+	font-size:12px;
+	color:#407ad1;
+}
+
+div.loginForm div.loginCenter div.inputWrp div.title a.forgottenPass:hover{
+	color:#538ce2;
+}
+
+div.loginForm div.loginCenter div.inputWrp div.title a.forgottenPass:active{
+	color:#2c62b3;
+}
+
+div.loginForm div.loginCenter div.rememberMe{
+	float:left;
+	width:100%;
+	margin-top:10px;
+	margin-bottom:30px;
+}
+
+div.loginForm div.loginCenter div.rememberMe a.checkbox{
+	margin-right: 20px;
+}
+
+div.loginForm div.loginCenter div.rememberMe p{
+	float:left;
+	font-size:14px;
+	color:black;
+	margin-top:2px;
+}
+
+div.loginForm div.loginBtn{
+	float:left;
+	width: 100%;
+	background:#f4f6f7;
+	border-top:1px solid #e5e9ef;
+	padding-top:35px;
+	padding-bottom:35px;
+	
+}	
+div.loginForm div.loginBtn a.greenBtn{
+	display:block;
+	margin:auto;
+	width:218px;
+}
+
+div.loginImage{
+	float:left;
+	width:405px;
+	height:610px;
+	background:url("../img/login_bgr.png") no-repeat;
+}
