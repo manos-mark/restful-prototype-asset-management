@@ -12,15 +12,13 @@ public interface UserService extends UserDetailsService {
 
     User findByUserName(String userName);
 
-    void saveUser(User user, UserDTO userDTO);
+    User saveUser(UserDTO userDTO);
 
 	List<Role> getRoles();
 
-	List<User> getUsers();
-
 	User getUser(long userId);
 
-	void updateUser(User user, UserDTO userDTO);
+	User updateUser(UserDTO userDTO);
 
 	void deleteUser(long userId);
 }

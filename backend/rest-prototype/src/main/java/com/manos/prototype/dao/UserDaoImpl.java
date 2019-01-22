@@ -8,7 +8,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.manos.prototype.entity.Car;
 import com.manos.prototype.entity.Role;
 import com.manos.prototype.entity.User;
 
@@ -23,20 +22,14 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public User findByUserName(String theUserName) {
+		
 		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
 
 		// now retrieve/read from database using username
 		Query<User> theQuery = currentSession.createQuery("from User where userName=:uName", User.class);
 		theQuery.setParameter("uName", theUserName);
-		User theUser = null;
-		try {
-			theUser = theQuery.getSingleResult();
-		} catch (Exception e) {
-			theUser = null;
-		}
-
-		return theUser;
+		return theQuery.getSingleResult();
 	}
 
 	
@@ -44,22 +37,8 @@ public class UserDaoImpl implements UserDao {
 	public void saveUser(User theUser) {
 		// get current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
-//		currentSession.saveOrUpdate(theUser);
 		currentSession.save(theUser);
 	}
-
-	
-	@Override
-	public List<User> getUsers() {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select distinct u from User u left join fetch u.roles");
-		
-		Query<User> theQuery = currentSession.createQuery(queryBuilder.toString(), User.class);
-		return theQuery.getResultList();
-	}
-
 	
 	@Override
 	public User getUser(long userId) {
