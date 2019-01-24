@@ -1,7 +1,9 @@
 {
     "/api": {
-      "target": "http://localhost:8080/rest-prototype",
+      "target": "http://localhost:8080/",
       "secure": false,
-      "pathRewrite": {"^/api": ""}
+      "pathRewrite": {"^/api": ""},
+      "changeOrigin": true,
+      "logLevel": "debug"
     }
   }

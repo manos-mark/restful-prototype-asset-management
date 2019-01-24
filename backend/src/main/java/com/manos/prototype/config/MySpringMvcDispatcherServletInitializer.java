@@ -13,7 +13,7 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		// TODO Auto-generated method stub
-		return new Class[] { PrototypeAppConfig.class };
+		return new Class[] { AppConfig.class };
 	}
 
 	@Override

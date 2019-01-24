@@ -1,24 +1,20 @@
 package com.manos.prototype.service;
 
-import java.util.List;
-
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-import com.manos.prototype.dto.UserDTO;
-import com.manos.prototype.entity.Role;
+import com.manos.prototype.dto.UserDto;
+import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
 
 public interface UserService {
 
-    User findByUserName(String userName);
+    User findByEmail(String email);
 
-    User saveUser(UserDTO userDTO);
-
-	List<Role> getRoles();
+    User saveUser(UserRequestDto userDTO);
 
 	User getUser(long userId);
 
-	User updateUser(UserDTO userDTO);
+	User updateUser(UserRequestDto userDTO);
 
 	void deleteUser(long userId);
+
+	UserDto getCurrentUser();
 }

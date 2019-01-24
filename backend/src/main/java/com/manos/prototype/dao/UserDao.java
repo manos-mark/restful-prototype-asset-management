@@ -4,7 +4,7 @@ import com.manos.prototype.entity.User;
 
 public interface UserDao {
 
-    User findByUserName(String userName);
+    User findByUserEmail(String email);
     
     void saveUser(User user);
 

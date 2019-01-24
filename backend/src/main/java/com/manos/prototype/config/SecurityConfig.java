@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -30,16 +33,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
-			.csrf().disable()
+			.csrf()//.disable()
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) 
+				.and()
 			.authorizeRequests()
+				.antMatchers("login").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
-			.loginProcessingUrl("/login")
-			.usernameParameter("username")
-			.passwordParameter("password");
-//			.and()
-//	        	.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) 	
+				.usernameParameter("email")
+				.and()
+			.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));
+//				.deleteCookies("JSESSIONID")
+//				.invalidateHttpSession(true);
 	//			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
    	}
    

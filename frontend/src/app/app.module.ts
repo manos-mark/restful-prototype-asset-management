@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -15,6 +15,7 @@ import { AuthService } from './auth/auth.service';
   imports: [
     BrowserModule,
     HttpClientModule,
+    HttpClientXsrfModule,
     AuthModule,
     AppRoutingModule
   ],

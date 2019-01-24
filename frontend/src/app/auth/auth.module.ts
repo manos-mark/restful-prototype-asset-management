@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { CommonModule } from '@angular/common';
 import { InputTrimModule } from 'ng2-trim-directive';
+import { HttpClientXsrfModule, HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -13,6 +14,8 @@ import { InputTrimModule } from 'ng2-trim-directive';
   imports: [
     CommonModule,
     InputTrimModule,
+    // HttpClientModule,
+    // HttpClientXsrfModule,
     ReactiveFormsModule,
     AuthRoutingModule
   ]

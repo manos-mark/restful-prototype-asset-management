@@ -18,14 +18,14 @@ public class UserDaoImpl implements UserDao {
 
 	
 	@Override
-	public User findByUserName(String theUserName) {
+	public User findByUserEmail(String theEmail) {
 		
 		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
 
 		// now retrieve/read from database using username
-		Query<User> theQuery = currentSession.createQuery("from User where userName=:uName", User.class);
-		theQuery.setParameter("uName", theUserName);
+		Query<User> theQuery = currentSession.createQuery("from User where email=:mail", User.class);
+		theQuery.setParameter("mail", theEmail);
 		return theQuery.getSingleResult();
 	}
 

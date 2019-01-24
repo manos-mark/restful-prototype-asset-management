@@ -1,11 +1,7 @@
 package com.manos.prototype.dto;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.springframework.security.core.GrantedAuthority;
 
 import com.manos.prototype.validation.FieldMatch;
 import com.manos.prototype.validation.ValidEmail;
@@ -13,13 +9,9 @@ import com.manos.prototype.validation.ValidEmail;
 @FieldMatch.List({
     @FieldMatch(first = "password", second = "matchingPassword", message = "The password fields must match")
 })
-public class UserDTO {
+public class UserRequestDto {
 
-	private int id;
-
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
-	private String userName;
+	private Long id;
 
 	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
@@ -41,33 +33,9 @@ public class UserDTO {
 	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
 	private String email;
-	
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
-	private String role;
-	
 
-	private List<GrantedAuthority> authorities;
-	
+	public UserRequestDto() {
 
-	public UserDTO() {
-
-	}
-
-	public String getRole() {
-		return role;
-	}
-	
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 	public String getPassword() {
@@ -110,19 +78,11 @@ public class UserDTO {
 		this.email = email;
 	}
 
-	public List<GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
-
-	public void setAuthorities(List<GrantedAuthority> authorities) {
-		this.authorities = authorities;
-	}
-
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

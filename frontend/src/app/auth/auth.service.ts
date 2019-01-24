@@ -1,25 +1,39 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators'
+import { User } from './user.model';
 @Injectable()
 export class AuthService {
   
   constructor(private httpClient: HttpClient) {}
+
+  getCurrentUser() {
+    return this.httpClient.get<User>('api/users/current', {
+      headers: new HttpHeaders().set('Content-Type', 'application/json'),
+      observe: 'response'
+    });
+  }
   
   loginUser(email: string, password: string) {
-    // let headers = new Headers();
-    // headers.append('Content-Type', 'application/json');
+    return this.httpClient.post<any>('api/login', {},
+      {
+        headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
+        params: new HttpParams().set('email', email).set('password', password) 
+      }
+    )
+    .pipe(
+      map(res => {
+        if (!res.response) {
+          throw new Error('Value expected!');
+        }
+        return res.response;
+      })
+    )
+  }
 
-    // return this.httpClient.post('api',
-    //   JSON.stringify({ email, password }),{ headers })
-    //   .map(res => res.json())
-    //   .map(res => {
-    //     localStorage.setItem('auth_token', res.auth_token);
-    //     // this.loggedIn = true;
-    //     // this._authNavStatusSource.next(true);
-    //     return true;
-    //   })
-    //   .catch(this.handleError);
+  logoutUser() {
+    return this.httpClient.post<any>('api/logout',{})
   }
 
 }
