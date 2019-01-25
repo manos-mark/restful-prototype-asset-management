@@ -1,5 +1,11 @@
 package com.manos.prototype.config;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,8 +14,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -33,21 +42,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
-			.csrf()//.disable()
+			.csrf()
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) 
 				.and()
 			.authorizeRequests()
+				.antMatchers("/users/newPassword").permitAll()
 				.antMatchers("login").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
 				.usernameParameter("email")
 				.and()
+			.rememberMe().userDetailsService(userDetailsService)
+				.and()
+			.exceptionHandling().authenticationEntryPoint(unauthenticatedRequestHandler())
+				.and()
 			.logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));
-//				.deleteCookies("JSESSIONID")
-//				.invalidateHttpSession(true);
-	//			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
    	}
    
    	//beans
@@ -63,5 +74,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
  		auth.setUserDetailsService(userDetailsService); //set the custom user details service
  		auth.setPasswordEncoder(passwordEncoder()); //set the password encoder - bcrypt
  		return auth;
+ 	}
+ 	
+ 	@Bean
+ 	UnauthenticatedRequestHandler unauthenticatedRequestHandler() {
+ 	    return new UnauthenticatedRequestHandler();
+ 	}
+
+ 	static class UnauthenticatedRequestHandler implements AuthenticationEntryPoint {
+ 	    @Override
+ 	    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+ 	        if (request.getServletPath().startsWith("/")) {
+ 	            response.setStatus(403);
+ 	        } 
+ 	    }
  	}
 }

@@ -1,6 +1,10 @@
 package com.manos.prototype.service;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +14,7 @@ import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.util.MailUtil;
 import com.manos.prototype.util.SecurityUtil;
 
 @Service
@@ -22,6 +27,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private MailUtil mailUtil;
+	
 	public UserDto getCurrentUser() {
 		UserDto currUser = new UserDto();
 		currUser.setId(SecurityUtil.getCurrentUserDetails().getId());
@@ -30,7 +38,7 @@ public class UserServiceImpl implements UserService {
 		currUser.setEmail(SecurityUtil.getCurrentUserDetails().getEmail());
 		return currUser;
 	}
-
+	
 	@Override
 	@Transactional
 	public User findByEmail(String email) {
@@ -98,5 +106,11 @@ public class UserServiceImpl implements UserService {
 			throw new EntityNotFoundException("User id not found - " + userId);
 		}
 		userDao.deleteUser(userId);
+	}
+
+	@Override
+	public String newPassword(String email) {
+		mailUtil.sentNewPassword(email);
+		return "ok";
 	}
 }

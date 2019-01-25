@@ -202,11 +202,6 @@ div.loginForm div.loginBtn a.greenBtn{
 	
 }
 
-div.loginForm div.loginBtn a.greyBtn {
-	pointer-events: none;
-	background-color: grey;
-}
-
 div.loginImage{
 	float:left;
 	width:405px;

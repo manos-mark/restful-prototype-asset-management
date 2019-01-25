@@ -27,6 +27,11 @@ public class UserController {
 		return userService.getCurrentUser();
 	}
 	
+	@PostMapping("/newPassword")
+	public String addUser(@RequestBody String email) {
+		return userService.newPassword(email);
+	}
+	
 	@PostMapping
 	public User addUser(@RequestBody UserRequestDto userDTO) {
 		return userService.saveUser(userDTO);

@@ -1,32 +1,8 @@
 <div class="wrapper">
-	<div class="windowPopWrp" style="display:none;">
-		<div class="windowPop">
-			<div class="windowPopHeader">
-				<i></i>
-				<div class="title">
-					<p>Reset password</p>
-					<p>Type in your email to reset our password</p>
-				</div>
-			</div>
-			<div class="windowPopContents">
-				<div class="centered">
-					<h4>Email address</h4>
-					<div class="inputWrp">
-						<div class="input">
-							<i class="email"></i>
-							<input/>
-						</div>
-					</div>
-					<span>You will receive an email with a new password.</span>
-				</div>
-			</div>
-			<div class="windowPopButtons">
-				<a class="grayDarkBtn">Cancel</a>
-				<a class="greenBtn">Reset</a>
-			</div>
-		</div>
-	</div>
-
+	<app-forgotten-password 
+		[(forgottenPass)]="forgottenPass"
+		(forgottenPassChanged)="forgottenPass = false"
+	></app-forgotten-password>
 	<div class="headerWrapper login">
 		<div class="header">
 			<a class="logo"></a>
@@ -45,7 +21,7 @@
 						<span>Please sign in with your email and password.</span>
 					</div>
 					<div class="inputWrp" [ngClass]="{'error': email.invalid && (email.dirty || email.touched)}">
-						<div class="title">
+						<div class="title"> 
 							<span>Email address</span>
 						</div>
 						<div class="input ">
@@ -66,7 +42,10 @@
 					<div class="inputWrp" [ngClass]="{'error': password.invalid && (password.dirty || password.touched)}">
 						<div class="title">
 							<span>Password</span>
-							<a class="forgottenPass">Forgotten password?</a>
+							<a 
+								class="forgottenPass"
+								(click)="onForgottenPass()"
+							>Forgotten password?</a>
 						</div>
 						<div class="input">
 							<i class="password"></i>
@@ -83,15 +62,19 @@
 						>Please enter correct password</span>
 					</div>
 					<div class="rememberMe">
-						<a class="checkbox"><i></i></a>
+						<a 
+							class="checkbox" 
+							(click)="rememberMe = !rememberMe"
+							[ngClass]="{ 'active': rememberMe }"
+						><i></i></a>
 						<p>Remember me</p>	
 					</div>
 				</div>
 				<div class="loginBtn">
           <a 
             class="greenBtn"
-            (click)="onSubmit()" 
-            [ngClass]="{ 'greyBtn': loginForm.invalid }"
+			(click)="onSubmit()" 
+            [ngClass]="{ 'disabled': loginForm.invalid }"
           >Sign in</a>
 				</div>
 			</div>

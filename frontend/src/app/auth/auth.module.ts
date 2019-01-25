@@ -5,11 +5,13 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { CommonModule } from '@angular/common';
 import { InputTrimModule } from 'ng2-trim-directive';
 import { HttpClientXsrfModule, HttpClientModule } from '@angular/common/http';
+import { ForgottenPasswordComponent } from './login/forgotten-password/forgotten-password.component';
 
 
 @NgModule({
   declarations: [
-    LoginComponent
+    LoginComponent,
+    ForgottenPasswordComponent
   ],
   imports: [
     CommonModule,
