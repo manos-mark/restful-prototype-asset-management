@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators'
 import { User } from './user.model';
 import { Router } from '@angular/router';
+
 @Injectable()
 export class AuthService {
   forgotPassFormSubmited = false;
@@ -13,6 +13,23 @@ export class AuthService {
   
   constructor(private httpClient: HttpClient,
               private router: Router) {}
+
+  getCsrf() {
+    return this.httpClient.get<User>('api/users/current', {
+      headers: new HttpHeaders().set('Content-Type', 'application/json'),
+      observe: 'response'
+    })
+    .subscribe(
+      resp => { 
+        this.currentUser = resp.body;
+        console.log(this.currentUser)
+        if (this.currentUser) {
+          this.router.navigate(['/']);
+        } 
+      },
+      error => { if (error.status !== 401) console.log(error) }
+    );
+  }
 
   getCurrentUser() {
     return this.httpClient.get<User>('api/users/current', {
@@ -32,7 +49,7 @@ export class AuthService {
   }
   
   loginUser(email: string, password: string) {
-    return this.httpClient.post<User>('api/login', {},
+    return this.httpClient.post<any>('api/login', {},
       {
         headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
         params: new HttpParams()
@@ -43,12 +60,13 @@ export class AuthService {
       })
       .subscribe(
         res => { 
-          // this.router.navigate(['/']);
+          this.router.navigate(['/']);
         },
         error => {
-          // if (error.status == 200) {
-            // this.router.navigate(['/']);
-          // }
+          if (error.status === 200) {
+            this.getCurrentUser();
+            this.router.navigate(['/']);
+          }
         }
     );
   }
