@@ -98,7 +98,20 @@ export class AuthService {
   }
 
   logoutUser() {
-    return this.httpClient.post<any>('api/logout',{})
+    return this.httpClient.post<any>('api/logout',{}, 
+      {observe: 'response'})
+        .subscribe(
+          res => {
+            console.log(res);
+            this.router.navigate(['/login']);
+          },
+          error => {
+            if (error.status === 404) {
+              this.currentUser = undefined;
+              this.router.navigate(['/login']);
+            }
+          }
+        )
   }
 
 }
