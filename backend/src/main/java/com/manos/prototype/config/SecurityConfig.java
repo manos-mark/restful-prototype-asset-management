@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -44,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.and()
 			.authorizeRequests()
 				.antMatchers("login").permitAll()
-				.antMatchers("/users/newPassword").permitAll()
+				.antMatchers("/users/new-password").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
@@ -81,9 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
  	static class UnauthenticatedRequestHandler implements AuthenticationEntryPoint {
  	    @Override
  	    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
- 	        if (request.getServletPath().startsWith("/")) {
- 	            response.setStatus(403);
- 	        } 
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
  	    }
  	}
 }

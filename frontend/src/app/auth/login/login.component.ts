@@ -3,52 +3,38 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Subscription } from 'rxjs';
 import { User } from '../user.model';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit, OnDestroy {
-  subscription: Subscription;
-  currentUser: User;
-  rememberMe = false;
-  forgottenPass = false;
+export class LoginComponent implements OnInit {
+  
 
   loginForm = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
     password: new FormControl(null, [Validators.required, Validators.minLength(6)])
   })
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private router: Router) { }
 
   ngOnInit() {
-    this.authService.getCurrentUser().subscribe(
-      resp => { this.currentUser = resp.body; console.log(this.currentUser) },
-      error => { if (error.status !== 403) console.log(error) }
-    );
+    this.authService.getCurrentUser();   
   }
 
 
   onSubmit() {
-    this.subscription = this.authService.loginUser(
-                            this.loginForm.value.email, 
-                            this.loginForm.value.password,
-                            this.rememberMe)
-      .subscribe(
-        res => console.log(res),
-        error => console.log(error)
-    );
+    this.authService.loginUser(this.loginForm.value.email, 
+      this.loginForm.value.password);
   }
 
   onForgottenPass() {
-    this.forgottenPass = !this.forgottenPass;
+    this.authService.forgottenPass = !this.authService.forgottenPass;
   }
 
   get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
 }

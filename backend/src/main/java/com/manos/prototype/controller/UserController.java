@@ -17,6 +17,7 @@ import com.manos.prototype.dto.EmailRequestDto;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
+import com.manos.prototype.service.EmailService;
 import com.manos.prototype.service.UserService;
 
 @RestController
@@ -26,14 +27,19 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	@GetMapping("/current")
 	public UserDto getCurrentUser() {
 		return userService.getCurrentUser();
 	}
 	
-	@PostMapping("/newPassword")
-	public boolean newPassword(@RequestParam EmailRequestDto email) throws MessagingException {
-		return userService.newPassword(email);
+	@PostMapping("/new-password")
+	public void newPassword(@RequestParam EmailRequestDto email) throws MessagingException {
+		String newPassword;
+		newPassword = userService.saveNewPassword(email);		// change pass
+		emailService.sendNewPassword(email.getEmail(), newPassword); 	// send email
 	}
 	
 	@PostMapping

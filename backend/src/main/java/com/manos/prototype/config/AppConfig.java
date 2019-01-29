@@ -2,9 +2,7 @@ package com.manos.prototype.config;
 
 import java.beans.PropertyVetoException;
 import java.util.Properties;
-
 import javax.sql.DataSource;
-
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -99,18 +94,6 @@ public class AppConfig {
 		return txManager;
 	}
 	
-	@Bean
-    public JavaMailSender javaMailService() {
-        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-        javaMailSender.setHost("smtp-mail.outlook.com");
-//        javaMailSender.setPassword(password);
-        return javaMailSender;
-    }
-
-    @Bean
-    public SimpleMailMessage simpleMailMessage() {
-       SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-       return simpleMailMessage;
-    }
+	
 }
 

@@ -8,12 +8,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './forgotten-password.component.html',
   styleUrls: ['./forgotten-password.component.css']
 })
-export class ForgottenPasswordComponent implements OnInit, OnDestroy {
+export class ForgottenPasswordComponent implements OnInit {
   @Input() forgottenPass: Boolean;
-  @Output() forgottenPassChanged = new EventEmitter<Boolean>();
-  subscription: Subscription;
-  submited = false;
-
+  
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
@@ -24,22 +21,18 @@ export class ForgottenPasswordComponent implements OnInit, OnDestroy {
   })
   
   onForgotPassSubmit() {
-    this.submited = true;
-    this.subscription = this.authService.sentNewUserPassword(this.forgotPassForm.value.email)
-    .subscribe(
-      res => console.log(res),
-      error => console.log(error)
-    );
+    this.authService.forgotPassFormError = false;
+    this.authService.sentNewUserPassword(this.forgotPassForm.value.email);
+    this.forgotPassForm.reset();
   }
 
   onCancel() {
-    this.forgottenPassChanged.emit(this.forgottenPass = false)
+    this.forgotPassForm.reset();
+    this.authService.forgotPassFormError = false;
+    this.authService.forgottenPass = false;
+    
   }
 
   get email() { return this.forgotPassForm.get('email'); }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
 
 }

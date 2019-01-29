@@ -1,7 +1,6 @@
 <div class="wrapper">
 	<app-forgotten-password 
-		[(forgottenPass)]="forgottenPass"
-		(forgottenPassChanged)="forgottenPass = false"
+		[forgottenPass]="this.authService.forgottenPass"
 	></app-forgotten-password>
 	<div class="headerWrapper login">
 		<div class="header">

@@ -1,13 +1,6 @@
 package com.manos.prototype.service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +24,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
-	@Autowired
-	private JavaMailSender sender;
-	
-	@Autowired
-	private SimpleMailMessage message;
-	
 	public UserDto getCurrentUser() {
 		UserDto currUser = new UserDto();
 		currUser.setId(SecurityUtil.getCurrentUserDetails().getId());
@@ -51,6 +38,9 @@ public class UserServiceImpl implements UserService {
 	public User findByEmail(String email) {
 		// check the database if the user already exists
 		User user = userDao.findByUserEmail(email);
+		if (user == null) {
+			throw new EntityNotFoundException("User email not found - " + email); // throw
+		}
 		return user;
 	}
 
@@ -117,16 +107,24 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public boolean newPassword(EmailRequestDto email) throws MessagingException {
-		//check first if the mail exist in db
-		if (this.findByEmail(email.toString()) == null) {
-			return false;
+	public String saveNewPassword(EmailRequestDto email) {
+		
+		// check first if the mail exist in db
+		User user = this.userDao.findByUserEmail(email.getEmail());
+		if (user == null) {
+			throw new EntityNotFoundException("User email not found - " + email); // throw
 		}
-		message.setFrom("manos-mark@hotmail.com");
-		message.setSubject("New Password request");
-		message.setTo(email.getEmail());
-		message.setText(PasswordGenerationUtil.getSaltString());
-		sender.send(message);
-		return true;
+		
+		// generate new password
+		String newPassword = PasswordGenerationUtil.getSaltString();
+
+		// save password to db
+		user.setPassword(passwordEncoder.encode(newPassword));
+		try {
+			userDao.updateUser(user);
+		} catch (Exception e) {
+			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+		}
+		return newPassword;
 	}
 }
