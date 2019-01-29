@@ -30,9 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     private UserDetailsService userDetailsService;
     
-//    @Autowired
-//    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-    
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider());
@@ -46,8 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) 
 				.and()
 			.authorizeRequests()
-				.antMatchers("/users/newPassword").permitAll()
 				.antMatchers("login").permitAll()
+				.antMatchers("/users/newPassword").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()

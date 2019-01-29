@@ -1,5 +1,8 @@
 package com.manos.prototype.service;
 
+import javax.mail.MessagingException;
+
+import com.manos.prototype.dto.EmailRequestDto;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
@@ -18,6 +21,6 @@ public interface UserService {
 
 	UserDto getCurrentUser();
 
-	String newPassword(String email);
+	boolean newPassword(EmailRequestDto email) throws MessagingException;
 
 }

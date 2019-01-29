@@ -1,8 +1,11 @@
 package com.manos.prototype.service;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,11 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.UserDao;
+import com.manos.prototype.dto.EmailRequestDto;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
-import com.manos.prototype.util.MailUtil;
+import com.manos.prototype.util.PasswordGenerationUtil;
 import com.manos.prototype.util.SecurityUtil;
 
 @Service
@@ -28,7 +32,10 @@ public class UserServiceImpl implements UserService {
 	private BCryptPasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private MailUtil mailUtil;
+	private JavaMailSender sender;
+	
+	@Autowired
+	private SimpleMailMessage message;
 	
 	public UserDto getCurrentUser() {
 		UserDto currUser = new UserDto();
@@ -109,8 +116,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String newPassword(String email) {
-		mailUtil.sentNewPassword(email);
-		return "ok";
+	@Transactional
+	public boolean newPassword(EmailRequestDto email) throws MessagingException {
+		//check first if the mail exist in db
+		if (this.findByEmail(email.toString()) == null) {
+			return false;
+		}
+		message.setFrom("manos-mark@hotmail.com");
+		message.setSubject("New Password request");
+		message.setTo(email.getEmail());
+		message.setText(PasswordGenerationUtil.getSaltString());
+		sender.send(message);
+		return true;
 	}
 }

@@ -1,5 +1,7 @@
 package com.manos.prototype.controller;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.manos.prototype.dto.EmailRequestDto;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
@@ -28,7 +32,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/newPassword")
-	public String addUser(@RequestBody String email) {
+	public boolean newPassword(@RequestParam EmailRequestDto email) throws MessagingException {
 		return userService.newPassword(email);
 	}
 	
