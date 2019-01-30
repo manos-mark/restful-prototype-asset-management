@@ -1,0 +1,58 @@
+<div class="heading">
+    <div class="pageTtl">
+      <i class="profile"></i>
+      <p>Profile</p>
+    </div>
+  </div>
+  <div class="leftCont">
+    <div class="profileInfo">
+      <div class="cont">
+        <p>Name</p>
+        <p>{{ authService.currentUser.firstName }} {{ authService.currentUser.lastName }}</p>
+      </div>
+      <div class="cont">
+        <p>Role</p>
+        <p>Prototype manager</p>
+      </div>
+    </div>
+  </div>
+  <div class="rightCont">
+    <div class="welcome">
+      <i class="profilePic"></i>
+      <p>Welcome {{ authService.currentUser.firstName }}</p>
+    </div>
+    <div class="activity">
+      <p class="ttl">Change password</p>
+      <div class="history lock">
+        <div class="formGroup changePassword">
+          <div class="generalInfo">
+            <div class="inputWrp">
+              <div class="title">
+                <span>Old password</span>
+              </div>
+              <input type="text">
+              <span class="error">Incorrect value</span>
+            </div>
+            <div class="inputWrp">
+              <div class="title">
+                <span>New password</span>
+              </div>
+              <input type="text">
+              <span class="error">Incorrect value</span>
+            </div>
+            <div class="inputWrp">
+              <div class="title">
+                <span>Repeat new password</span>
+              </div>
+              <input type="text">
+              <span class="error">Incorrect value</span>
+            </div>
+            <div class="btnsWrp">
+              <a class="grayDarkBtn">Cancel</a>
+              <a class="greenBtn">Save</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

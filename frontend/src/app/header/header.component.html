@@ -1,0 +1,46 @@
+
+<div class="headerWrapper">
+	<div class="header">
+		<a class="logo" routerLink="/general"></a>
+		<div class="mainMenu">
+			<div class="group">
+				<p>General</p>
+				<a class="dashboard" routerLinkActive="active" routerLink="general">
+					<i></i>
+					<span>Dashboard</span>
+				</a>
+			</div>
+			<div class="group">
+				<p>Prototype</p>
+				<a class="projects" routerLinkActive="active" routerLink="prototype/projects">
+					<i></i>
+					<span>Projects</span>
+					<var>2</var>
+				</a>
+				<a class="products" routerLinkActive="active" routerLink="prototype/products">
+					<i></i>
+					<span>Products</span>
+					<var>3</var>
+				</a>
+			</div>
+			<div class="group">
+				<p>Settings</p>
+				<a class="profile" routerLinkActive="active"  routerLink="profile">
+					<i></i>
+					<span>Profile</span>
+				</a>
+			</div>
+			<div class="logoutGroup">
+				<div class="user">
+					<p>{{this.authService.currentUser.firstName}} {{this.authService.currentUser.lastName}}</p>
+					<a class="logout" (click)="onLogout()">
+						<i></i>
+						<p>logout</p>
+					</a>
+				</div>
+				<i class="profilePic"></i>
+			</div>
+		</div>
+		<app-search></app-search>
+	</div>
+</div>

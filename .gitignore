@@ -2,4 +2,4 @@
 
 # project informations
 #/infos
-persistence-mysql.properties
+/backend/src/main/persistence-mysql.properties

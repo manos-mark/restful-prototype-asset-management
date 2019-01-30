@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 export class ForgottenPasswordComponent implements OnInit {
   @Input() forgottenPass: Boolean;
   
-  constructor(private authService: AuthService) { }
+  constructor(public authService: AuthService) { }
 
   ngOnInit() {
   }

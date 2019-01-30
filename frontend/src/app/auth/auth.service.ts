@@ -10,6 +10,9 @@ export class AuthService {
   forgottenPass = false;
   currentUser: User;
   rememberMe = false;
+  windowPopLogout = false;
+  windowPopLogin = false;
+  windowPop = false;
   
   constructor(private httpClient: HttpClient,
               private router: Router) {}
@@ -66,6 +69,9 @@ export class AuthService {
           if (error.status === 200) {
             this.getCurrentUser();
             this.router.navigate(['/']);
+          } else {
+            this.windowPopLogin = true;
+            this.windowPop = true;
           }
         }
     );
@@ -94,7 +100,7 @@ export class AuthService {
   }
 
   isAuthenticated() {
-    return this.currentUser !== undefined
+    return this.currentUser !== undefined && this.currentUser !== null
   }
 
   logoutUser() {
@@ -104,11 +110,15 @@ export class AuthService {
           res => {
             console.log(res);
             this.router.navigate(['/login']);
+            this.windowPopLogout = false;
+            this.windowPop = false;
           },
           error => {
             if (error.status === 404) {
               this.currentUser = undefined;
               this.router.navigate(['/login']);
+              this.windowPopLogout = false;
+              this.windowPop = false;
             }
           }
         )

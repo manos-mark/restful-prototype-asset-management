@@ -1,4 +1,22 @@
 <div class="wrapper">
-    <app-toolbar *ngIf="this.authService.isAuthenticated()"></app-toolbar>
-    <router-outlet></router-outlet>
+    <app-window-pop [active]="this.authService.windowPop"></app-window-pop>
+    <div *ngIf="this.authService.isAuthenticated()">
+        <app-header></app-header>
+        <div class="contentWrapper">
+            <div class="content">
+                <div class="breadcrumbs">
+                    <a [routerLink]="this.router.routerState.snapshot.url">{{ this.router.routerState.snapshot.url | titlecase | slice:1 }}</a>
+                </div>
+                <ng-container *ngTemplateOutlet="template"></ng-container>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!this.authService.isAuthenticated()">
+        <ng-container *ngTemplateOutlet="template"></ng-container>
+    </div>
 </div>
+
+<ng-template #template>
+    <router-outlet>
+    </router-outlet>
+</ng-template>

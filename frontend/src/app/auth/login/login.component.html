@@ -63,8 +63,8 @@
 					<div class="rememberMe">
 						<a 
 							class="checkbox" 
-							(click)="rememberMe = !rememberMe"
-							[ngClass]="{ 'active': rememberMe }"
+							(click)="this.authService.rememberMe = !this.authService.rememberMe"
+							[ngClass]="{ 'active': this.authService.rememberMe }"
 						><i></i></a>
 						<p>Remember me</p>	
 					</div>
