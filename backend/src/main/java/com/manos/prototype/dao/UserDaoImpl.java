@@ -19,7 +19,6 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public User findByUserEmail(String theEmail) {
-		
 		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
 
@@ -28,7 +27,6 @@ public class UserDaoImpl implements UserDao {
 		theQuery.setParameter("mail", theEmail);
 		return theQuery.getSingleResult();
 	}
-
 	
 	@Override
 	public void saveUser(User theUser) {

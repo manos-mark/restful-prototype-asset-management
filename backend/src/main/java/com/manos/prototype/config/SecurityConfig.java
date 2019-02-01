@@ -56,7 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.exceptionHandling().authenticationEntryPoint(unauthenticatedRequestHandler())
 				.and()
 			.logout();
-//				.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));
    	}
    
    	//beans
