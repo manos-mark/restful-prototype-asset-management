@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-//@EnableWebMvc
+@EnableWebMvc
 @ComponentScan(basePackages = "com.manos.prototype")
 @EnableTransactionManagement
 public class AppConfigTest {
@@ -37,7 +36,9 @@ public class AppConfigTest {
 		props.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
 		props.setProperty("hibernate.show_sql", "true");
 		props.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-		props.setProperty("hibernate.connection.url", "jdbc:h2:mem");
+		props.setProperty("hibernate.connection.url", "jdbc:h2:mem:file:./src/test/resources/sql/");
+		props.setProperty("hibernate.connection.username", "sa");
+		props.setProperty("hibernate.connection.password", "");
 		props.setProperty("hibernate.hbm2ddl.auto", "create");
 		return props;				
 	}

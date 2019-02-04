@@ -1,5 +1,6 @@
 package com.manos.prototype.test.dao;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -30,15 +31,26 @@ import com.manos.prototype.test.config.AppConfigTest;
 class UserDaoImplTest {
 	
 	@Autowired
-	UserDao userDao;
+	private UserDao userDao;
 	
 	@Autowired
-	SessionFactory sessionFactory;
+	private SessionFactory sessionFactory;
+	private Session currentSession;
+
+    @Before
+    public void openSession() {
+        currentSession = sessionFactory.getCurrentSession();
+    }
+    
+    @Test
+    public void shouldHaveASessionFactory() {
+        assertNotNull(sessionFactory);
+    }
 	
 	@Test
 	@Transactional
 	void findByUserEmail() {
-		Session currentSession = sessionFactory.getCurrentSession();
+		currentSession = sessionFactory.getCurrentSession();
 		Query<User> theQuery = currentSession.createQuery("from User where email=:mail", User.class);
 		theQuery.setParameter("mail", "john@luv2code.com");
 		
@@ -48,7 +60,7 @@ class UserDaoImplTest {
 	@Test
 	@Transactional
 	void findByUserEmail_found() {
-//		Session currentSession = sessionFactory.getCurrentSession();
+//		currentSession = sessionFactory.getCurrentSession();
 		User user = userDao.findByUserEmail("john@luv2code.com");
 		when(userDao.findByUserEmail("john@luv2code.com")).thenReturn(user);
 		
@@ -58,7 +70,7 @@ class UserDaoImplTest {
 	@Test
 	@Transactional
 	void findByUserEmail_notFound() {
-//		Session currentSession = sessionFactory.getCurrentSession();
+//		currentSession = sessionFactory.getCurrentSession();
 		doThrow(new EntityNotFoundException()).when(userDao.findByUserEmail(anyString()));
 		
 		userDao.findByUserEmail("john@luv2code.com");

@@ -1,5 +1,8 @@
 package com.manos.prototype.service;
 
+import java.util.List;
+
+import com.manos.prototype.dto.ActivityDto;
 import com.manos.prototype.dto.EmailRequestDto;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
@@ -17,8 +20,7 @@ public interface UserService {
 
 	void deleteUser(long userId);
 
-	UserDto getCurrentUser();
+	UserDto getCurrentUserDto();
 
 	String saveNewPassword(EmailRequestDto email);
-
 }

@@ -13,6 +13,7 @@ import { WindowPopComponent } from './window-pop/window-pop.component';
 import { GeneralModule } from './general/general.module';
 import { TitleCasePipe } from '@angular/common';
 import { PrototypeModule } from './prototype/prototype.module';
+import { ActivityService } from './general/home/activity/activity.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import { PrototypeModule } from './prototype/prototype.module';
     ProfileModule,
     AppRoutingModule
   ],
-  providers: [AuthService, AuthGuard, TitleCasePipe],
+  providers: [AuthService, ActivityService, AuthGuard, TitleCasePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

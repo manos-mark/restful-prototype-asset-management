@@ -40,8 +40,8 @@ public class UserDaoImpl implements UserDao {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from User u left join fetch u.roles where u.id=:userId");
-		
+//		queryBuilder.append("from User u left join fetch u.roles where u.id=:userId");
+		queryBuilder.append("from User u where u.id=:userId");
 		Query<User> theQuery = currentSession.createQuery(queryBuilder.toString(), User.class);
 		theQuery.setParameter("userId", userId);
 		

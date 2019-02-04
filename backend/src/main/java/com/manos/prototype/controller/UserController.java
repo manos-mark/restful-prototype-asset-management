@@ -1,5 +1,7 @@
 package com.manos.prototype.controller;
 
+import java.util.List;
+
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.manos.prototype.dto.ActivityDto;
 import com.manos.prototype.dto.EmailRequestDto;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
+import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.service.EmailService;
 import com.manos.prototype.service.UserService;
@@ -32,7 +36,7 @@ public class UserController {
 	
 	@GetMapping("/current")
 	public UserDto getCurrentUser() {
-		return userService.getCurrentUser();
+		return userService.getCurrentUserDto();
 	}
 	
 	@PostMapping("/new-password")
@@ -52,10 +56,10 @@ public class UserController {
 		return userService.updateUser(userDTO);
 	}
 	
-	@DeleteMapping("/{userId}")
-	public String deleteUser(@PathVariable long userId) {
-		return "Deleted user with id - " + userId;
-	}
+//	@DeleteMapping("/{userId}")
+//	public String deleteUser(@PathVariable long userId) {
+//		return "Deleted user with id - " + userId;
+//	}
 }
 
 
