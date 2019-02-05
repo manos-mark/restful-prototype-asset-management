@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivityService } from 'src/app/general/home/activity/activity.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditProjectComponent implements OnInit {
 
-  constructor() { }
+  constructor(private activityService: ActivityService) { }
 
   ngOnInit() {
   }
 
+  onAddSave() {
+    this.activityService.addActivity('2').subscribe();
+  }
 }

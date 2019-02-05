@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from './user.model';
 import { Router } from '@angular/router';
+import { ActivityService } from '../general/home/activity/activity.service';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,8 @@ export class AuthService {
   windowPop = false;
   
   constructor(private httpClient: HttpClient,
-              private router: Router) {}
+              private router: Router,
+              private activityService: ActivityService) {}
 
   getCsrf() {
     return this.httpClient.get<User>('api/users/current', {
@@ -68,6 +70,7 @@ export class AuthService {
         error => {
           if (error.status === 200) {
             this.getCurrentUser();
+            this.activityService.addActivity('1').subscribe();
             this.router.navigate(['/']);
           } else {
             this.windowPopLogin = true;
@@ -104,11 +107,16 @@ export class AuthService {
   }
 
   logoutUser() {
+    this.activityService.addActivity('8').subscribe(
+      resp => { return this.logout() }
+    );
+  }
+
+  logout() {
     return this.httpClient.post<any>('api/logout',{}, 
       {observe: 'response'})
         .subscribe(
           res => {
-            console.log(res);
             this.router.navigate(['/login']);
             this.windowPopLogout = false;
             this.windowPop = false;

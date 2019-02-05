@@ -1,7 +1,12 @@
 package com.manos.prototype.service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +32,18 @@ public class ActivityServiceImpl implements ActivityService{
 	@Override
 	@Transactional
 	public List<ActivityDto> getActivities() {
+		
+		// get current user
 		Long userId = userService.getCurrentUserDto().getId();
+		if (userId == null) {
+			throw new EntityNotFoundException("User id not found - " + userId);
+		}
+		
 		// get activities from db
 		List<Activity> acts = activityDao.getActivities(userId);
+		if (acts == null) {
+			throw new EntityNotFoundException("Activities not found");
+		}
 		// resolve activities into dto's
 		List<ActivityDto> actList = new ArrayList<ActivityDto>();
 		for (Activity act : acts) {
@@ -42,18 +56,29 @@ public class ActivityServiceImpl implements ActivityService{
 		return actList;
 	}
 
+	
 	@Override
 	@Transactional
 	public void addActivity(ActivityRequestDto activityRequestDto) {
+		// get current user id, then get user
 		Long userId = userService.getCurrentUserDto().getId();
+		User tempUser = userService.getUser(userId);
+		if (userId == null || tempUser == null) {
+			throw new EntityNotFoundException("User not found - " + userId);
+		}
 		
 		Action action = new Action();
 		action.setId(activityRequestDto.getActionId());
-		User tempUser = userService.getUser(userId);
+		
+		// convert datetime
+		String tempDate = activityRequestDto.getDate();
+		DateTimeFormatter formatter = DateTimeFormatter
+				.ofPattern("MM/dd/yyyy, HH:mm:ss");
+		LocalDateTime date = LocalDateTime.parse(tempDate, formatter);
 		
 		Activity activity = new Activity();
 		activity.setAction(action);
-		activity.setDate(activityRequestDto.getDate());
+		activity.setDate(date.toString());
 		activity.setUser(tempUser);
 		
 		try {

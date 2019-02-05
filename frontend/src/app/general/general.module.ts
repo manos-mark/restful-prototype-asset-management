@@ -4,6 +4,7 @@ import { ActivityComponent } from './home/activity/activity.component';
 import { GeneralComponent } from './general.component';
 import { RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -13,7 +14,8 @@ import { HomeComponent } from './home/home.component';
         HomeComponent
     ],
     imports: [
-        RouterModule
+        RouterModule,
+        CommonModule
     ]
 })
 export class GeneralModule {}

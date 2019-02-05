@@ -14,6 +14,7 @@ import { GeneralModule } from './general/general.module';
 import { TitleCasePipe } from '@angular/common';
 import { PrototypeModule } from './prototype/prototype.module';
 import { ActivityService } from './general/home/activity/activity.service';
+import { ProjectService } from './prototype/projects/project.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,13 @@ import { ActivityService } from './general/home/activity/activity.service';
     ProfileModule,
     AppRoutingModule
   ],
-  providers: [AuthService, ActivityService, AuthGuard, TitleCasePipe],
+  providers: [
+    AuthService, 
+    ActivityService, 
+    AuthGuard, 
+    TitleCasePipe, 
+    ProjectService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -23,10 +23,12 @@ public class ActivityDaoImpl implements ActivityDao {
 		queryBuilder.append("from Activity a "
 				+ "left join fetch a.action "
 				+ "left join fetch a.user "
-				+ "where a.user.id = :userId ");
+				+ "where a.user.id = :userId "
+				+ "order by a.id desc");
 		Query<Activity> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Activity.class);
 		theQuery.setParameter("userId", userId);
+		theQuery.setMaxResults(15);
 		return theQuery.getResultList();
 	}
 

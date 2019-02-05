@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivityService } from 'src/app/general/home/activity/activity.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditProductComponent implements OnInit {
 
-  constructor() { }
+  constructor(private activityService: ActivityService) { }
 
   ngOnInit() {
+  }
+
+  onAddSave() {
+    this.activityService.addActivity('5').subscribe();
   }
 
 }

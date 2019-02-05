@@ -4,21 +4,31 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ActivityService {
-    activities:Activity;
+    
+  constructor(private httpClient: HttpClient) {}
 
-    constructor(private httpClient: HttpClient) {}
-
+    // getActivities():Promise<Array<Activity>>  {
+    //   return this.httpClient.get<Array<Activity>>('api/activities', {
+    //     headers: new HttpHeaders().set('Content-Type', 'application/json')
+    //   })
+    //   .toPromise()
+    // }
     getActivities() {
-        return this.httpClient.get<Activity>('api/activities', {
-          headers: new HttpHeaders().set('Content-Type', 'application/json'),
-          observe: 'response'
-        })
-        .subscribe(
-          activity => { 
-            this.activities = activity.body;
-            console.log(this.activities);
-          },
-          error => { console.log(error) }
-        );
-      }
+      return this.httpClient.get<Array<Activity>>('api/activities', {
+        headers: new HttpHeaders().set('Content-Type', 'application/json'),
+        observe: 'body'
+      })
+      
+    }
+        
+    addActivity(actionId: string) {
+      let currDate = (new Date).toLocaleString('en-GB');
+      return this.httpClient.post<any>('api/activities', {
+        date: currDate,
+        actionId: actionId
+      }, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json'),
+        observe: 'response'
+      })
+    }    
 }
