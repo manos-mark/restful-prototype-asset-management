@@ -13,33 +13,27 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebMvc
-@ComponentScan(basePackages = "com.manos.prototype")
-@EnableTransactionManagement
+@ComponentScan(basePackages = "com.manos.prototype.dao")
 public class AppConfigTest {
 	
 	@Bean
 	public DataSource dataSource() {
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
 		builder.setType(EmbeddedDatabaseType.H2);
-		builder.addScript("/backend/src/test/resources/sql/users.sql");
 		return builder.build();
 	}
 	
 	private Properties getHibernateProperties() {
-		// set hibernate properties
 		Properties props = new Properties();
 		props.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
 		props.setProperty("hibernate.show_sql", "true");
 		props.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-		props.setProperty("hibernate.connection.url", "jdbc:h2:mem:file:./src/test/resources/sql/");
 		props.setProperty("hibernate.connection.username", "sa");
 		props.setProperty("hibernate.connection.password", "");
 		props.setProperty("hibernate.hbm2ddl.auto", "create");
+//		props.setProperty("hibernate.connection.url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
 		return props;				
 	}
 	
@@ -58,8 +52,6 @@ public class AppConfigTest {
 	@Bean
 	@Autowired
 	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
-		
-		// setup transaction manager based on session factory
 		HibernateTransactionManager txManager = new HibernateTransactionManager();
 		txManager.setSessionFactory(sessionFactory);
 

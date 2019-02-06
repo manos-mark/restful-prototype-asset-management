@@ -23,7 +23,7 @@
 
 	<dependencies>
 	
-		<!-- Mockito, Junit, H2 testing -->
+		<!-- Mockito, Junit, H2 testing, AssertJ -->
 		<dependency>
 		  <groupId>org.junit.jupiter</groupId>
 		  <artifactId>junit-jupiter</artifactId>
@@ -42,6 +42,13 @@
 		  <artifactId>h2</artifactId>
 		  <version>1.4.197</version>
 	  	  <scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+		  <groupId>org.assertj</groupId>
+		  <artifactId>assertj-core</artifactId>
+		  <version>3.11.1</version>
+		  <scope>test</scope>
 		</dependency>
 		
 		<!-- Java Mail -->

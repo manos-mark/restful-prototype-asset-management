@@ -1,21 +1,15 @@
 package com.manos.prototype.service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.ActivityDao;
 import com.manos.prototype.dao.UserDao;
-import com.manos.prototype.dto.ActivityDto;
 import com.manos.prototype.dto.EmailRequestDto;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
-import com.manos.prototype.entity.Action;
-import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
@@ -101,7 +95,7 @@ public class UserServiceImpl implements UserService {
 		
 		 // save user in the database
 		try {
-			userDao.updateUser(tempUser);
+			userDao.saveUser(tempUser);
 		} catch (Exception e) {
 			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}
@@ -134,7 +128,7 @@ public class UserServiceImpl implements UserService {
 		// save password to db
 		user.setPassword(passwordEncoder.encode(newPassword));
 		try {
-			userDao.updateUser(user);
+			userDao.saveUser(user);
 		} catch (Exception e) {
 			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}

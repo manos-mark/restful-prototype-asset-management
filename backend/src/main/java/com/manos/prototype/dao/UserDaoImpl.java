@@ -32,7 +32,7 @@ public class UserDaoImpl implements UserDao {
 	public void saveUser(User theUser) {
 		// get current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.save(theUser);
+		currentSession.saveOrUpdate(theUser);
 	}
 	
 	@Override
@@ -40,7 +40,6 @@ public class UserDaoImpl implements UserDao {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
-//		queryBuilder.append("from User u left join fetch u.roles where u.id=:userId");
 		queryBuilder.append("from User u where u.id=:userId");
 		Query<User> theQuery = currentSession.createQuery(queryBuilder.toString(), User.class);
 		theQuery.setParameter("userId", userId);
@@ -48,24 +47,16 @@ public class UserDaoImpl implements UserDao {
 		return theQuery.getSingleResult();
 	}
 
-
-	@Override
-	public void updateUser(User user) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.update(user);
-	}
-
-
 	@Override
 	public void deleteUser(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("delete User u where u.id=:userId");
+		queryBuilder.append("from User u where u.id=:userId");
 		
 		Query<?> theQuery = currentSession.createQuery(queryBuilder.toString());
 		theQuery.setParameter("userId", userId);
-		theQuery.executeUpdate();
+		currentSession.delete(theQuery.getSingleResult());
 	}
 
 }
