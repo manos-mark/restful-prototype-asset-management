@@ -17,17 +17,24 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.ProductDao;
+import com.manos.prototype.dao.ProjectDao;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.Status;
 import com.manos.prototype.test.config.AppConfigTest;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigTest.class })
 @Sql(scripts = "classpath:/sql/status.sql")
+@Sql(scripts = "classpath:/sql/projects.sql")
 @Sql(scripts = "classpath:/sql/products.sql")
 public class ProductDaoTest {
 		
 	@Autowired 
 	private ProductDao productDao;
+	
+	@Autowired
+	private ProjectDao projectDao;
 	
 	@Test
 	@Transactional
@@ -54,8 +61,8 @@ public class ProductDaoTest {
 		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
 		assertThat(product.getDescription()).isEqualTo("description");
 		assertThat(product.getQuantity()).isEqualTo(12);
-		assertThat(product.getStatusId()).isEqualTo(2);
-		assertThat(product.getProjectId()).isEqualTo(1);
+		assertThat(product.getStatus().getId()).isEqualTo(2);
+		assertThat(product.getProject().getId()).isEqualTo(1);
 	}
 	
 	@Test
@@ -79,8 +86,8 @@ public class ProductDaoTest {
 		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
 		assertThat(product.getDescription()).isEqualTo("description");
 		assertThat(product.getQuantity()).isEqualTo(12);
-		assertThat(product.getStatusId()).isEqualTo(2);
-		assertThat(product.getProjectId()).isEqualTo(1);
+		assertThat(product.getStatus().getId()).isEqualTo(2);
+		assertThat(product.getProject().getId()).isEqualTo(1);
 		assertThat(products).size().isEqualTo(1);
 		assertThat(products).doesNotContainNull();
 	}
@@ -112,14 +119,18 @@ public class ProductDaoTest {
 	@Test
 	@Transactional
 	void saveProduct_success() {
+		Project project = projectDao.getProject(1);
+		assertThat(project).isNotNull();
+		assertThat(project).hasNoNullFieldsOrProperties();
+		
 		Product product = new Product();
 		product.setProductName("test");
 		product.setDate("2019-12-17 14:14:14");
 		product.setDescription("test");
-		product.setProjectId(1);
+		product.setProject(project);
 		product.setQuantity(122);
 		product.setSerialNumber("test");
-		product.setStatusId(2);
+		product.setStatus(new Status(2));
 		
 		assertThatCode(() -> {
 			productDao.saveProduct(product);
@@ -127,13 +138,14 @@ public class ProductDaoTest {
 		
 		Product savedProduct = productDao.getProduct(2);
 		assertThat(savedProduct).isNotNull();
+		assertThat(savedProduct).hasNoNullFieldsOrProperties();
 		assertThat(savedProduct.getProductName()).isEqualTo("test");
 		assertThat(savedProduct.getDate()).isEqualTo("2019-12-17 14:14:14");
 		assertThat(savedProduct.getDescription()).isEqualTo("test");
-		assertThat(savedProduct.getProjectId()).isEqualTo(1);
+		assertThat(savedProduct.getProject().getId()).isEqualTo(1);
 		assertThat(savedProduct.getQuantity()).isEqualTo(122);
 		assertThat(savedProduct.getSerialNumber()).isEqualTo("test");
-		assertThat(savedProduct.getStatusId()).isEqualTo(2);
+		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
 	}
 	
 	@Test

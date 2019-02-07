@@ -2,9 +2,12 @@ package com.manos.prototype.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -31,21 +34,23 @@ public class Product {
 	@Column(name = "quantity")
 	private int quantity;
 	
-	@Column(name = "status_id")
-	private int statusId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "status_id")
+	private Status status;
 	
-	@Column(name = "project_id")
-	private int projectId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "project_id")
+	private Project project;
 
 	public Product(String date, String productName, String serialNumber, String description, int quantity,
-			int statusId, int projectId) {
+			Status status, Project project) {
 		this.date = date;
 		this.productName = productName;
 		this.serialNumber = serialNumber;
 		this.description = description;
 		this.quantity = quantity;
-		this.statusId = statusId;
-		this.projectId = projectId;
+		this.status = status;
+		this.project = project;
 	}
 	
 	public Product() {}
@@ -98,19 +103,19 @@ public class Product {
 		this.quantity = quantity;
 	}
 
-	public int getStatusId() {
-		return statusId;
+	public Status getStatus() {
+		return status;
 	}
 
-	public void setStatusId(int statusId) {
-		this.statusId = statusId;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
-	public int getProjectId() {
-		return projectId;
+	public Project getProject() {
+		return project;
 	}
 
-	public void setProjectId(int projectId) {
-		this.projectId = projectId;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 }

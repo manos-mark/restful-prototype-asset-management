@@ -12,6 +12,7 @@ import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
 
 @Service
@@ -36,10 +37,10 @@ public class ProductServiceImpl implements ProductService {
 			dto.setDescription(entity.getDescription());
 			dto.setId(entity.getId());
 			dto.setProductName(entity.getProductName());
-			dto.setProjectId(entity.getProjectId());
+			dto.setProject(entity.getProject());
 			dto.setQuantity(entity.getQuantity());
 			dto.setSerialNumber(entity.getSerialNumber());
-			dto.setStatusId(entity.getStatusId());
+			dto.setStatus(entity.getStatus());
 			productsDto.add(dto);
 		}
 		return productsDto;
@@ -56,10 +57,10 @@ public class ProductServiceImpl implements ProductService {
 		dto.setDescription(product.getDescription());
 		dto.setId(product.getId());
 		dto.setProductName(product.getProductName());
-		dto.setProjectId(product.getProjectId());
+		dto.setProject(product.getProject());
 		dto.setQuantity(product.getQuantity());
 		dto.setSerialNumber(product.getSerialNumber());
-		dto.setStatusId(product.getStatusId());
+		dto.setStatus(product.getStatus());
 		return dto;
 	}
 
@@ -74,14 +75,20 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void saveProduct(ProductRequestDto productDto) {
+		int projectId = productDto.getProjectId();
+		Project project = projectDao.getProject(projectId);
+		if (project == null) {
+			throw new EntityNotFoundException("Project id not found - " + projectId);
+		}
+		
 		Product product = new Product();
 		product.setDate(productDto.getDate());
 		product.setDescription(productDto.getDescription());
 		product.setProductName(productDto.getProductName());
-		product.setProjectId(productDto.getProjectId());
+		product.setProject(project);
 		product.setQuantity(productDto.getQuantity());
 		product.setSerialNumber(productDto.getSerialNumber());
-		product.setStatusId(productDto.getStatusId());
+		product.setStatus(new Status(productDto.getStatusId()));
 		
 		try {
 			productDao.saveProduct(product);			
@@ -109,10 +116,10 @@ public class ProductServiceImpl implements ProductService {
 			dto.setDescription(entity.getDescription());
 			dto.setId(entity.getId());
 			dto.setProductName(entity.getProductName());
-			dto.setProjectId(entity.getProjectId());
+			dto.setProject(project);
 			dto.setQuantity(entity.getQuantity());
 			dto.setSerialNumber(entity.getSerialNumber());
-			dto.setStatusId(entity.getStatusId());
+			dto.setStatus(new Status(entity.getStatus().getId()));
 			productsDto.add(dto);
 		}
 		return productsDto;

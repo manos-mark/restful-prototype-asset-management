@@ -37,7 +37,7 @@ public class ProductDaoImpl implements ProductDao {
 	public List<Product> getProductsByProjectId(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		Query<Product> theQuery = currentSession
-				.createQuery("from Product p where p.projectId = :id", Product.class);
+				.createQuery("from Product p where p.project.id = :id", Product.class);
 		theQuery.setParameter("id", id);
 		return theQuery.getResultList();
 	}

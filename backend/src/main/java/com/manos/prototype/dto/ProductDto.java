@@ -1,5 +1,8 @@
 package com.manos.prototype.dto;
 
+import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.Status;
+
 public class ProductDto {
 
 	private int id;
@@ -14,19 +17,19 @@ public class ProductDto {
 	
 	private int quantity;
 	
-	private int statusId;
+	private Status status;
 	
-	private int projectId;
+	private Project project;
 	
 	public ProductDto(String date, String productName, String serialNumber, String description, int quantity,
-			int statusId, int projectId) {
+			Status status, Project project) {
 		this.date = date;
 		this.productName = productName;
 		this.serialNumber = serialNumber;
 		this.description = description;
 		this.quantity = quantity;
-		this.statusId = statusId;
-		this.projectId = projectId;
+		this.status = status;
+		this.project = project;
 	}
 	
 	public ProductDto() {}
@@ -79,19 +82,19 @@ public class ProductDto {
 		this.quantity = quantity;
 	}
 
-	public int getStatusId() {
-		return statusId;
+	public Status getStatus() {
+		return status;
 	}
 
-	public void setStatusId(int statusId) {
-		this.statusId = statusId;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
-	public int getProjectId() {
-		return projectId;
+	public Project getProject() {
+		return project;
 	}
 
-	public void setProjectId(int projectId) {
-		this.projectId = projectId;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 }
