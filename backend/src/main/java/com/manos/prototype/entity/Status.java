@@ -23,6 +23,10 @@ public class Status {
 		this.id = id;
 		this.status = status;
 	}
+	
+	public Status(int id) {
+		this.id = id;
+	}
 
 	public Status() {
 	}

@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.ProductDao;
 import com.manos.prototype.entity.Product;
-import com.manos.prototype.entity.Status;
 import com.manos.prototype.test.config.AppConfigTest;
 
 @ExtendWith(SpringExtension.class)
@@ -110,31 +109,32 @@ public class ProductDaoTest {
 		});
 	}
 	
-//	@Test
-//	@Transactional
-//	void saveProduct_success() {
-//		Status status = new Status();
-//		status.setId(1);
-//		
-//		Product product = new Product();
-//		product.setCompanyName("test");
-//		product.setProductName("test");
-//		product.setProductManager("test");
-//		product.setDate("2019-12-17 14:14:14");
-//		product.setStatus(status);
-//		
-//		assertThatCode(() -> {
-//			productDao.saveProduct(product);
-//		}).doesNotThrowAnyException();
-//		
-//		Product savedProduct = productDao.getProduct(2);
-//		assertThat(savedProduct).isNotNull();
-//		assertThat(savedProduct.getCompanyName()).isEqualTo("test");
-//		assertThat(savedProduct.getProductManager()).isEqualTo("test");
-//		assertThat(savedProduct.getProductName()).isEqualTo("test");
-//		assertThat(savedProduct.getDate()).isEqualTo("2019-12-17 14:14:14");
-//		assertThat(savedProduct.getStatus().getId()).isEqualTo(1);
-//	}
+	@Test
+	@Transactional
+	void saveProduct_success() {
+		Product product = new Product();
+		product.setProductName("test");
+		product.setDate("2019-12-17 14:14:14");
+		product.setDescription("test");
+		product.setProjectId(1);
+		product.setQuantity(122);
+		product.setSerialNumber("test");
+		product.setStatusId(2);
+		
+		assertThatCode(() -> {
+			productDao.saveProduct(product);
+		}).doesNotThrowAnyException();
+		
+		Product savedProduct = productDao.getProduct(2);
+		assertThat(savedProduct).isNotNull();
+		assertThat(savedProduct.getProductName()).isEqualTo("test");
+		assertThat(savedProduct.getDate()).isEqualTo("2019-12-17 14:14:14");
+		assertThat(savedProduct.getDescription()).isEqualTo("test");
+		assertThat(savedProduct.getProjectId()).isEqualTo(1);
+		assertThat(savedProduct.getQuantity()).isEqualTo(122);
+		assertThat(savedProduct.getSerialNumber()).isEqualTo("test");
+		assertThat(savedProduct.getStatusId()).isEqualTo(2);
+	}
 	
 	@Test
 	@Transactional

@@ -89,15 +89,12 @@ public class ProjectDaoTest {
 	@Test
 	@Transactional
 	void saveProject_success() {
-		Status status = new Status();
-		status.setId(1);
-		
 		Project project = new Project();
 		project.setCompanyName("test");
 		project.setProjectName("test");
 		project.setProjectManager("test");
 		project.setDate("2019-12-17 14:14:14");
-		project.setStatus(status);
+		project.setStatus( new Status(1));
 		
 		assertThatCode(() -> {
 			projectDao.saveProject(project);

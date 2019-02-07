@@ -3,6 +3,7 @@ package com.manos.prototype.service;
 import java.util.List;
 
 import com.manos.prototype.dto.ProjectDto;
+import com.manos.prototype.dto.ProjectRequestDto;
 
 public interface ProjectService {
 	
@@ -12,5 +13,5 @@ public interface ProjectService {
 	
 	void deleteProject(int id);
 	
-    void saveProject(ProjectDto projectDto);
+    void saveProject(ProjectRequestDto projectDto);
 }
