@@ -35,8 +35,7 @@ public class Project {
 	@JoinColumn(name = "status_id")
 	private Status status;
 
-	public Project(int id, String projectName, String companyName, String projectManager, String date, Status status) {
-		this.id = id;
+	public Project(String projectName, String companyName, String projectManager, String date, Status status) {
 		this.projectName = projectName;
 		this.companyName = companyName;
 		this.projectManager = projectManager;

@@ -28,7 +28,7 @@ public class ProjectDaoImpl implements ProjectDao{
 	public Project getProject(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		Query<Project> theQuery = currentSession
-				.createQuery("from Project p where p.id := id", Project.class);
+				.createQuery("from Project p where p.id = :id", Project.class);
 		theQuery.setParameter("id", id);
 		return theQuery.getSingleResult();
 	}
@@ -37,15 +37,16 @@ public class ProjectDaoImpl implements ProjectDao{
 	public void deleteProject(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		Query<Project> theQuery = currentSession
-				.createQuery("delete from Project p where p.id := id", Project.class);
+				.createQuery("from Project p where p.id = :id", Project.class);
 		theQuery.setParameter("id", id);
-		theQuery.executeUpdate();	
+		Project project = theQuery.getSingleResult();
+		currentSession.delete(project);	
 	}
 
 	@Override
 	public void saveProject(Project project) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.saveOrUpdate(project);
+		currentSession.save(project);
 	}
 
 }

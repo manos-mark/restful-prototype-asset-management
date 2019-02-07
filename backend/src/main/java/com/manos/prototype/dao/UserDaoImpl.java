@@ -18,7 +18,7 @@ public class UserDaoImpl implements UserDao {
 
 	
 	@Override
-	public User findByUserEmail(String theEmail) {
+	public User getUserByEmail(String theEmail) {
 		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
 
@@ -32,11 +32,11 @@ public class UserDaoImpl implements UserDao {
 	public void saveUser(User theUser) {
 		// get current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.saveOrUpdate(theUser);
+		currentSession.save(theUser);
 	}
 	
 	@Override
-	public User getUser(long userId) {
+	public User getUserDaoById(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();

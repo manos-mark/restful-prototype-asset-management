@@ -22,7 +22,7 @@ public class Activity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "action_id")
-	private Action action;
+	private ActivityAction action;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
@@ -31,8 +31,7 @@ public class Activity {
 	@Column(name = "date")
 	private String date;
 
-	public Activity(Long id, Action action, User user, String date) {
-		this.id = id;
+	public Activity(ActivityAction action, User user, String date) {
 		this.action = action;
 		this.user = user;
 		this.date = date;
@@ -49,11 +48,11 @@ public class Activity {
 		this.id = id;
 	}
 
-	public Action getAction() {
+	public ActivityAction getAction() {
 		return action;
 	}
 
-	public void setAction(Action action) {
+	public void setAction(ActivityAction action) {
 		this.action = action;
 	}
 

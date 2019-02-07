@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public User findByEmail(String email) {
 		// check the database if the user already exists
-		User user = userDao.findByUserEmail(email);
+		User user = userDao.getUserByEmail(email);
 		if (user == null) {
 			throw new EntityNotFoundException("User email not found - " + email); // throw
 		}
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User getUser(long userId) {
-		return userDao.getUser(userId);
+		return userDao.getUserDaoById(userId);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
 	public String saveNewPassword(EmailRequestDto email) {
 		
 		// check first if the mail exist in db
-		User user = this.userDao.findByUserEmail(email.getEmail());
+		User user = this.userDao.getUserByEmail(email.getEmail());
 		if (user == null) {
 			throw new EntityNotFoundException("User email not found - " + email); // throw
 		}

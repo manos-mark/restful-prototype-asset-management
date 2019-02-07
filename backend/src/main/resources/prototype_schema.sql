@@ -47,18 +47,19 @@ CREATE TABLE `product` (
 	FOREIGN KEY (`project_id`)
 		REFERENCES project (`id`)	
 );
-
+INSERT INTO `product` (date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
+	('2011-12-17','productName','serialNumber','description',12,2,1);
 --
 -- Table structure for (enum) table `e_action`
 --
-CREATE TABLE `e_action` (
+CREATE TABLE `e_activity_action` (
 	`id` INT(11) NOT NULL,
 	`action` VARCHAR(15) NOT NULL,
 	PRIMARY KEY (`id`)
 );
-INSERT INTO `e_action` (id,action) VALUES
+INSERT INTO `e_activity_action` (id,action) VALUES
  	(1, 'LOGGED_IN'), (2, 'CREATED_PROJECT'), (3, 'UPDATED_PROJECT'), (4, 'DELETED_PROJECT');
-INSERT INTO `e_action` (id,action) VALUES
+INSERT INTO `e_activity_action` (id,action) VALUES
  	(5, 'CREATED_PROJECT'), (6, 'UPDATED_PROJECT'), (7, 'DELETED_PROJECT'), (8, 'LOGGED_OUT');
 --
 -- Table structure for table `user`
@@ -96,7 +97,7 @@ CREATE TABLE `activity` (
 	`date` DATETIME NOT NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`action_id`) 
-		REFERENCES e_action (`id`),
+		REFERENCES e_activity_action (`id`),
 	FOREIGN KEY (`user_id`) 
 		REFERENCES user (`id`)
 );

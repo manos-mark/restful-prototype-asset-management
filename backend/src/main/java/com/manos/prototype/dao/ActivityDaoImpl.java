@@ -17,7 +17,7 @@ public class ActivityDaoImpl implements ActivityDao {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public List<Activity> getActivities(long userId) {
+	public List<Activity> getActivitiesByUserId(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Activity a "
@@ -33,7 +33,7 @@ public class ActivityDaoImpl implements ActivityDao {
 	}
 
 	@Override
-	public void addActivity(Activity activity) {
+	public void saveActivity(Activity activity) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.save(activity);
 	}

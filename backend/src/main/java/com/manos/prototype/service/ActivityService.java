@@ -9,5 +9,5 @@ public interface ActivityService {
 
 	List<ActivityDto> getActivities();
 
-	void addActivity(ActivityRequestDto activityDto);
+	void saveActivity(ActivityRequestDto activityDto);
 }

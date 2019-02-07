@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.manos.prototype.dao.ActivityDao;
 import com.manos.prototype.dto.ActivityDto;
 import com.manos.prototype.dto.ActivityRequestDto;
-import com.manos.prototype.entity.Action;
+import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
@@ -37,7 +37,7 @@ public class ActivityServiceImpl implements ActivityService{
 		}
 		
 		// get activities from db
-		List<Activity> acts = activityDao.getActivities(userId);
+		List<Activity> acts = activityDao.getActivitiesByUserId(userId);
 		if (acts == null) {
 			throw new EntityNotFoundException("Activities not found");
 		}
@@ -56,7 +56,7 @@ public class ActivityServiceImpl implements ActivityService{
 	
 	@Override
 	@Transactional
-	public void addActivity(ActivityRequestDto activityRequestDto) {
+	public void saveActivity(ActivityRequestDto activityRequestDto) {
 		// get current user id, then get user
 		Long userId = userService.getCurrentUserDto().getId();
 		User tempUser = userService.getUser(userId);
@@ -64,7 +64,7 @@ public class ActivityServiceImpl implements ActivityService{
 			throw new EntityNotFoundException("User not found - " + userId);
 		}
 		
-		Action action = new Action();
+		ActivityAction action = new ActivityAction();
 		action.setId(activityRequestDto.getActionId());
 		
 		// convert datetime
@@ -79,7 +79,7 @@ public class ActivityServiceImpl implements ActivityService{
 		activity.setUser(tempUser);
 		
 		try {
-			activityDao.addActivity(activity);
+			activityDao.saveActivity(activity);
 		} catch (Exception e) {
 			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}

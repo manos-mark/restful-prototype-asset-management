@@ -6,7 +6,7 @@ import com.manos.prototype.entity.Activity;
 
 public interface ActivityDao {
 
-	List<Activity> getActivities(long userId);
+	List<Activity> getActivitiesByUserId(long userId);
 	
-    void addActivity(Activity activity);
+    void saveActivity(Activity activity);
 }

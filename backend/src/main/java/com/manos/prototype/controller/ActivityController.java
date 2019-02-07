@@ -27,6 +27,6 @@ public class ActivityController {
 	
 	@PostMapping
 	public void addActivity(@RequestBody ActivityRequestDto activityRequestDto) {
-		activityService.addActivity(activityRequestDto);
+		activityService.saveActivity(activityRequestDto);
 	}
 }
