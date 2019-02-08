@@ -6,8 +6,8 @@ import com.manos.prototype.entity.Product;
 
 public interface ProductDao {
 	
-	List<Product> getProducts();
-	
+//	List<Product> getProducts();
+//	
 	Product getProduct(int id);
 	
 	void deleteProduct(int id);

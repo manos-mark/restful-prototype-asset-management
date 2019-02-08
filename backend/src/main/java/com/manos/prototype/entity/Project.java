@@ -43,6 +43,10 @@ public class Project {
 		this.status = status;
 	}
 	
+	public Project(int id) {
+		this.id = id;
+	}
+
 	public Project() {}
 	
 	public int getId() {

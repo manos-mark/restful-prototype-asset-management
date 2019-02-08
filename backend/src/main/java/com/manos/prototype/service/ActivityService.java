@@ -2,12 +2,11 @@ package com.manos.prototype.service;
 
 import java.util.List;
 
-import com.manos.prototype.dto.ActivityDto;
-import com.manos.prototype.dto.ActivityRequestDto;
+import com.manos.prototype.entity.Activity;
 
 public interface ActivityService {
 
-	List<ActivityDto> getActivities();
+	List<Activity> getActivities();
 
-	void saveActivity(ActivityRequestDto activityDto);
+	void saveActivity(Activity activity);
 }

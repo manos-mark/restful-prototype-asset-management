@@ -23,6 +23,13 @@
 
 	<dependencies>
 	
+		<!-- Pastel Studios -->
+		<dependency>
+			<groupId>com.pastelstudios</groupId>
+			<artifactId>frameworks</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
 		<!-- Mockito, Junit, H2 testing, AssertJ -->
 		<dependency>
 		  <groupId>org.junit.jupiter</groupId>

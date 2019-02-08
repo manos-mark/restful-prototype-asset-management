@@ -42,13 +42,13 @@ public class ProductDaoTest {
 		assertThat(productDao).isNotNull();
 	}
 	
-	@Test
-	@Transactional
-	void getProducts_success() {
-		List<Product> products = productDao.getProducts();
-		assertThat(products).size().isEqualTo(1);
-		assertThat(products).doesNotContainNull();
-	}
+//	@Test
+//	@Transactional
+//	void getProducts_success() {
+//		List<Product> products = productDao.getProducts();
+//		assertThat(products).size().isEqualTo(1);
+//		assertThat(products).doesNotContainNull();
+//	}
 	
 	@Test
 	@Transactional
@@ -69,9 +69,9 @@ public class ProductDaoTest {
 	@Transactional
 	void getProduct_fail() {
 		assertThatExceptionOfType(NoResultException.class)
-		.isThrownBy(() -> { 
-			productDao.getProduct(100); 
-		});
+			.isThrownBy(() -> { 
+				productDao.getProduct(100); 
+			});
 	}
 	
 	@Test
@@ -111,9 +111,9 @@ public class ProductDaoTest {
 	@Transactional
 	void deleteProduct_fail() {
 		assertThatExceptionOfType(NoResultException.class)
-		.isThrownBy(() -> { 
-			productDao.deleteProduct(1000);
-		});
+			.isThrownBy(() -> { 
+				productDao.deleteProduct(1000);
+			});
 	}
 	
 	@Test

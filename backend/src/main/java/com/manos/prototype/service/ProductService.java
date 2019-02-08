@@ -2,18 +2,17 @@ package com.manos.prototype.service;
 
 import java.util.List;
 
-import com.manos.prototype.dto.ProductDto;
-import com.manos.prototype.dto.ProductRequestDto;
+import com.manos.prototype.entity.Product;
 
 public interface ProductService {
 
-	List<ProductDto> getProducts();
-	
-	ProductDto getProduct(int id);
+//	List<Product> getProducts();
+//	
+//	Product getProduct(int id);
 	
 	void deleteProduct(int id);
 	
-    void saveProduct(ProductRequestDto product);
+    void saveProduct(Product product);
 
-	List<ProductDto> getProductsByProjectId(int id);
+	List<Product> getProductsByProjectId(int id);
 }

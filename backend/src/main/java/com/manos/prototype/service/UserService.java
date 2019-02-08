@@ -1,24 +1,22 @@
 package com.manos.prototype.service;
 
 
-import com.manos.prototype.dto.EmailRequestDto;
-import com.manos.prototype.dto.UserDto;
-import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
+import com.manos.prototype.security.UserDetailsImpl;
 
 public interface UserService {
 
     User findByEmail(String email);
 
-    User saveUser(UserRequestDto userDTO);
+    void saveUser(User user);
 
 	User getUser(long userId);
 
-	User updateUser(UserRequestDto userDTO);
+//	void updateUser(User user);
 
 	void deleteUser(long userId);
 
-	UserDto getCurrentUserDto();
+	UserDetailsImpl getCurrentUser();
 
-	String saveNewPassword(EmailRequestDto email);
+	String saveNewPassword(String email);
 }

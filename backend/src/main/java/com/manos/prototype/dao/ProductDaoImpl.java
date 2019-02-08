@@ -16,13 +16,13 @@ public class ProductDaoImpl implements ProductDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	@Override
-	public List<Product> getProducts() {
-		Session currentSession = sessionFactory.getCurrentSession();
-		Query<Product> theQuery = currentSession
-				.createQuery("from Product", Product.class);
-		return theQuery.getResultList();
-	}
+//	@Override
+//	public List<Product> getProducts() {
+//		Session currentSession = sessionFactory.getCurrentSession();
+//		Query<Product> theQuery = currentSession
+//				.createQuery("from Product", Product.class);
+//		return theQuery.getResultList();
+//	}
 
 	@Override
 	public Product getProduct(int id) {

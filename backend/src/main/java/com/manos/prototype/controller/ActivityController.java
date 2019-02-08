@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.manos.prototype.dto.ActivityDto;
 import com.manos.prototype.dto.ActivityRequestDto;
+import com.manos.prototype.entity.Activity;
 import com.manos.prototype.service.ActivityService;
+import com.pastelstudios.convert.ConversionService;
 
 @RestController
 @RequestMapping("/activities")
@@ -20,13 +22,18 @@ public class ActivityController {
 	@Autowired
 	private ActivityService activityService;
 
+	@Autowired
+	private ConversionService conversionService;
+
 	@GetMapping
 	public List<ActivityDto> getActivities() {
-		return activityService.getActivities();
+		List<Activity> activities = activityService.getActivities();
+		return conversionService.convertList(activities, ActivityDto.class);
 	}
 	
 	@PostMapping
 	public void addActivity(@RequestBody ActivityRequestDto activityRequestDto) {
-		activityService.saveActivity(activityRequestDto);
+		Activity activity = conversionService.convert(activityRequestDto, Activity.class);
+		activityService.saveActivity(activity);
 	}
 }

@@ -1,8 +1,5 @@
 package com.manos.prototype.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.ActivityDao;
-import com.manos.prototype.dto.ActivityDto;
-import com.manos.prototype.dto.ActivityRequestDto;
-import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
@@ -28,56 +22,29 @@ public class ActivityServiceImpl implements ActivityService{
 	
 	@Override
 	@Transactional
-	public List<ActivityDto> getActivities() {
+	public List<Activity> getActivities() {
 		
 		// get current user
-		Long userId = userService.getCurrentUserDto().getId();
+		Long userId = userService.getCurrentUser().getId();
 		if (userId == null) {
 			throw new EntityNotFoundException("User id not found - " + userId);
 		}
 		
 		// get activities from db
-		List<Activity> acts = activityDao.getActivitiesByUserId(userId);
-		if (acts == null) {
-			throw new EntityNotFoundException("Activities not found");
-		}
-		// resolve activities into dto's
-		List<ActivityDto> actList = new ArrayList<ActivityDto>();
-		for (Activity act : acts) {
-			ActivityDto actDto = new ActivityDto();
-			actDto.setActionId(act.getAction().getId());	
-			actDto.setDate(act.getDate().toString());
-			actDto.setId(act.getId());
-			actList.add(actDto);
-		}
-		return actList;
+		return activityDao.getActivitiesByUserId(userId);
 	}
 
 	
 	@Override
 	@Transactional
-	public void saveActivity(ActivityRequestDto activityRequestDto) {
+	public void saveActivity(Activity activity) {
 		// get current user id, then get user
-		Long userId = userService.getCurrentUserDto().getId();
+		Long userId = userService.getCurrentUser().getId();
 		User tempUser = userService.getUser(userId);
 		if (userId == null || tempUser == null) {
 			throw new EntityNotFoundException("User not found - " + userId);
 		}
-		
-		ActivityAction action = new ActivityAction();
-		action.setId(activityRequestDto.getActionId());
-		
-		// convert datetime
-		String tempDate = activityRequestDto.getDate();
-		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("MM/dd/yyyy, HH:mm:ss");
-		LocalDateTime date = LocalDateTime.parse(tempDate, formatter);
-		
-		Activity activity = new Activity();
-		activity.setAction(action);
-		activity.setDate(date.toString());
 		activity.setUser(tempUser);
-		
 		try {
 			activityDao.saveActivity(activity);
 		} catch (Exception e) {
