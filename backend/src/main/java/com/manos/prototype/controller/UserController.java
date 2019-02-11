@@ -58,7 +58,7 @@ public class UserController {
 	public void updateUser(@RequestBody UserRequestDto userRequestDto) {
 		User user = conversionService.convert(userRequestDto, User.class);
 //		userService.updateUser(user);
-		userService.saveUser(user);
+		userService.updateUser(user);
 	}
 	
 	@DeleteMapping("/{userId}")

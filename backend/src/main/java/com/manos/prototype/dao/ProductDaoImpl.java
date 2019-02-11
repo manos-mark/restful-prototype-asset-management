@@ -36,8 +36,13 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public List<Product> getProductsByProjectId(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Product p "
+				+ "left join fetch p.status "
+				+ "left join fetch p.project "
+				+ "where p.project.id = :id");
 		Query<Product> theQuery = currentSession
-				.createQuery("from Product p where p.project.id = :id", Product.class);
+				.createQuery(queryBuilder.toString(), Product.class);
 		theQuery.setParameter("id", id);
 		return theQuery.getResultList();
 	}
@@ -56,6 +61,14 @@ public class ProductDaoImpl implements ProductDao {
 	public void saveProduct(Product product) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.save(product);
+	}
+
+	@Override
+	public Long getProductsCount() {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<Long> theQuery = currentSession
+				.createQuery("select count(p.id) from Product p", Long.class);
+		return theQuery.getSingleResult();
 	}
 
 }

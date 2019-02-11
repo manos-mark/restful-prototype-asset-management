@@ -8,6 +8,8 @@ public interface ProjectService {
 	
 	List<Project> getProjects();
 	
+	Long getProjectsCount();
+	
 	Project getProject(int id);
 	
 	void deleteProject(int id);

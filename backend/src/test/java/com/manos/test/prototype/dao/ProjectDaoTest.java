@@ -1,4 +1,4 @@
-package com.manos.prototype.test.dao;
+package com.manos.test.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.manos.prototype.dao.ProjectDao;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
-import com.manos.prototype.test.config.AppConfigTest;
+import com.manos.test.prototype.config.AppConfigTest;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigTest.class })
@@ -95,6 +95,7 @@ public class ProjectDaoTest {
 		project.setProjectManager("test");
 		project.setDate("2019-12-17 14:14:14");
 		project.setStatus( new Status(1));
+		project.setId(2);
 		
 		assertThatCode(() -> {
 			projectDao.saveProject(project);
@@ -116,6 +117,12 @@ public class ProjectDaoTest {
 		.isThrownBy(() -> { 
 			projectDao.saveProject(null); 
 		});
+	}
+	
+	@Test
+	@Transactional
+	void getProjectsCount() {
+		assertThat(projectDao.getProjectsCount()).isEqualTo(1);
 	}
 	
 }

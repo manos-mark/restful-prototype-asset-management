@@ -1,6 +1,5 @@
 package com.manos.prototype.converter;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import com.manos.prototype.dto.ProductDto;
@@ -14,7 +13,14 @@ public class ProductToProductDtoConveret implements Converter<Product, ProductDt
 	public ProductDto convert(Product entity) {
 		
 		ProductDto dto = new ProductDto();
-		BeanUtils.copyProperties(entity, dto);
+		dto.setDate(entity.getDate());
+		dto.setDescription(entity.getDescription());
+		dto.setId(entity.getId());
+		dto.setProductName(entity.getProductName());
+		dto.setProjectId(entity.getProject().getId());
+		dto.setQuantity(entity.getQuantity());
+		dto.setSerialNumber(entity.getSerialNumber());
+		dto.setStatusId(entity.getStatus().getId());
 		return dto;
 	}
 	

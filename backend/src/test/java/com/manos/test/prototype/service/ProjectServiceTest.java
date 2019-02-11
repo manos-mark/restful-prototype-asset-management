@@ -1,10 +1,8 @@
-package com.manos.prototype.test.service;
+package com.manos.test.prototype.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -31,6 +29,13 @@ public class ProjectServiceTest {
 	@InjectMocks
 	private ProjectServiceImpl projectService;
 	
+	@Test 
+	public void getProjectsCount() {
+		assertThatCode(() -> {
+			projectService.getProjectsCount();
+		}).doesNotThrowAnyException();
+	}
+	
 	@Test
 	public void getProjects() {
 		List<Project> mockProjects = createMockProjects();
@@ -44,7 +49,6 @@ public class ProjectServiceTest {
 			.isEqualTo(mockProjects.get(0));
 		assertThat(projects.get(0))
 			.isEqualToComparingFieldByFieldRecursively(mockProjects.get(0));
-		verify(projectService, times(1)).getProjects();
 	}
 	
 	@Test
@@ -60,7 +64,6 @@ public class ProjectServiceTest {
 			.isEqualTo(mockProject);
 		assertThat(project)
 			.isEqualToComparingFieldByFieldRecursively(mockProject);
-		verify(projectService, times(1)).getProject(1);
 	}
 	
 	@Test
@@ -88,9 +91,9 @@ public class ProjectServiceTest {
 	@Test
 	public void saveProject_nullProjectFail() {
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			projectService.saveProject(null);
-		});
+			.isThrownBy(() -> {
+				projectService.saveProject(null);
+			});
 	}
 	
 	

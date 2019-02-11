@@ -1,4 +1,4 @@
-package com.manos.prototype.test.dao;
+package com.manos.test.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.UserDao;
 import com.manos.prototype.entity.User;
-import com.manos.prototype.test.config.AppConfigTest;
+import com.manos.test.prototype.config.AppConfigTest;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigTest.class })

@@ -34,6 +34,11 @@ public class ProjectController {
 		return conversionService.convertList(projects, ProjectDto.class);
 	}
 	
+	@GetMapping("/count")
+	public Long getProjectsCount() {
+		return projectService.getProjectsCount();
+	}
+	
 	@GetMapping("/{projectId}")
 	public ProjectDto getProject(@PathVariable int projectId) {
 		Project project = projectService.getProject(projectId);

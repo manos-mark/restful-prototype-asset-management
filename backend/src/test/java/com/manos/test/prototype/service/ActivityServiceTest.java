@@ -1,18 +1,14 @@
-package com.manos.prototype.test.service;
+package com.manos.test.prototype.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
-//import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -23,7 +19,6 @@ import com.manos.prototype.dao.UserDao;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.User;
-import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.service.ActivityServiceImpl;
 import com.manos.prototype.service.UserServiceImpl;
@@ -48,9 +43,9 @@ public class ActivityServiceTest {
 		when(userService.getCurrentUserDetails())
 			.thenReturn(null);
 		
-		assertThatExceptionOfType(EntityNotFoundException.class)
+		assertThatExceptionOfType(NullPointerException.class)
 		.isThrownBy(() -> {
-			userService.getCurrentUserDetails();
+			activityService.getActivities();
 		});
 	}
 	
@@ -73,9 +68,6 @@ public class ActivityServiceTest {
 		assertThat(activities).isEqualTo(mockActivities);
 		assertThat(activities.get(0))
 			.isEqualToComparingFieldByFieldRecursively(mockActivities.get(0));
-		
-		verify(userService, times(1)).getCurrentUserDetails();
-		verify(activityService, times(1)).getActivities();
 	}
 	
 	@Test
@@ -101,9 +93,6 @@ public class ActivityServiceTest {
 		assertThatCode(() -> { 
 			activityService.saveActivity(mockActivity);
 		}).doesNotThrowAnyException();
-		verify(userService, times(1)).getCurrentUserDetails();
-		verify(userService, times(1)).getUser(1);
-		verify(activityService, times(1)).saveActivity(mockActivity);
 	}
 
 	@Test
@@ -111,7 +100,7 @@ public class ActivityServiceTest {
 		Activity mockActivity = createMockActivity();
 		mockActivity.setUser(null);
 		
-		assertThatExceptionOfType(EntityNotFoundException.class)
+		assertThatExceptionOfType(NullPointerException.class)
 		.isThrownBy(() -> {
 			activityService.saveActivity(mockActivity);
 		});

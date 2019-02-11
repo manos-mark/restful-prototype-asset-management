@@ -22,6 +22,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
+	@Override
+	@Transactional
 	public UserDetailsImpl getCurrentUserDetails() {
 		
 		UserDetailsImpl userDetails = SecurityUtil.getCurrentUserDetails();
@@ -34,23 +36,17 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	@Transactional
-	public User findByEmail(String email) {
-		// check the database if the user already exists
-		User user = userDao.getUserByEmail(email);
-		if (user == null) {
-			throw new EntityNotFoundException("User email not found - " + email); // throw
-		}
-		return user;
-	}
-
-	@Override
-	@Transactional
 	public void saveUser(User user) {
-		if (findByEmail(user.getEmail()) != null) {
-			throw new EntityNotFoundException("User name already exists - " + user.getEmail(), new Exception());
+		if (userDao.getUserByEmail(user.getEmail()) != null) {
+			throw new EntityNotFoundException("Email already exists - " + user.getEmail(), new Exception());
 		}
-//		user.setId(Long.parseLong("0"));
+		
+		user.setId(Long.parseLong("0"));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
+		if (user.getPassword() == null) {
+			throw new EntityNotFoundException("User password cannot be null");
+		}
 		
 		try {
 			userDao.saveUser(user);			
@@ -65,21 +61,24 @@ public class UserServiceImpl implements UserService {
 		return userDao.getUserById(userId);
 	}
 
-//	@Override
-//	@Transactional
-//	public void updateUser(User user) {
-//		
-//		if (user == null) {
-//			throw new EntityNotFoundException("User id not found");
-//		}
-//		user.setPassword(passwordEncoder.encode(user.getPassword()));
-//		
-//		try {
-//			userDao.saveUser(user);
-//		} catch (Exception e) {
-//			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-//		}
-//	}
+	@Override
+	@Transactional
+	public void updateUser(User user) {
+		if (user == null) {
+			throw new EntityNotFoundException("User not found");
+		}
+		
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		if (user.getPassword() == null) {
+			throw new EntityNotFoundException("User password cannot be null");
+		}
+		
+		try {
+			userDao.saveUser(user);
+		} catch (Exception e) {
+			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+		}
+	}
 
 	@Override
 	@Transactional

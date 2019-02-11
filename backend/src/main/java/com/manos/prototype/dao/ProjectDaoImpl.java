@@ -49,4 +49,12 @@ public class ProjectDaoImpl implements ProjectDao{
 		currentSession.save(project);
 	}
 
+	@Override
+	public Long getProjectsCount() {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<Long> theQuery = currentSession
+				.createQuery("select count(p.id) from Project p", Long.class);
+		return theQuery.getSingleResult();
+	}
+
 }

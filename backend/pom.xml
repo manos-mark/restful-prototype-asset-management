@@ -29,7 +29,7 @@
 			<artifactId>frameworks</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		 
+		
 		<!-- Mockito, Junit, H2 testing, AssertJ -->
 		<dependency>
 		  <groupId>org.junit.jupiter</groupId>
@@ -48,7 +48,7 @@
 		  <groupId>com.h2database</groupId>
 		  <artifactId>h2</artifactId>
 		  <version>1.4.197</version>
-	  	  <scope>runtime</scope>
+	  	  <scope>test</scope>
 		</dependency>
 		
 		<dependency>
@@ -69,7 +69,12 @@
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-context-support</artifactId>
-		    <version>5.1.4.RELEASE</version>
+		    <version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		    <version>${springframework.version}</version>
 		</dependency>
 
 		<!-- Add Jackson for JSON converters -->

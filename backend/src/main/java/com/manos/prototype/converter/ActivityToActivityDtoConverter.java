@@ -1,6 +1,5 @@
 package com.manos.prototype.converter;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import com.manos.prototype.dto.ActivityDto;
@@ -13,7 +12,9 @@ public class ActivityToActivityDtoConverter implements Converter<Activity, Activ
 	@Override
 	public ActivityDto convert(Activity from) {
 		ActivityDto dto = new ActivityDto();
-		BeanUtils.copyProperties(from, dto);
+		dto.setActionId(from.getAction().getId());
+		dto.setDate(from.getDate());
+		dto.setId(from.getId());
 		return dto;
 	}
 }

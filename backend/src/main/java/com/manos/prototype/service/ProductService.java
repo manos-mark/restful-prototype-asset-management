@@ -15,4 +15,8 @@ public interface ProductService {
     void saveProduct(Product product);
 
 	List<Product> getProductsByProjectId(int id);
+
+	Long getProductsCount();
+
+	void updateProduct(Product product, int id);
 }

@@ -1,10 +1,8 @@
-package com.manos.prototype.test.service;
+package com.manos.test.prototype.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -86,16 +84,25 @@ public class ProductServiceTest {
 //		verify(productDao, times(1)).getProduct(1);
 //	}
 	
+	@Test 
+	public void getProductsCount() {
+		assertThatCode(() -> {
+			productService.getProductsCount();
+		}).doesNotThrowAnyException();
+	}
+	
 	@Test
 	public void deleteProduct_success() {
 		Product mockProduct = createMockProduct();
+		
+		when(productDao.getProduct(1))
+			.thenReturn(mockProduct);
 		
 		assertThat(mockProduct).isNotNull();
 		assertThat(mockProduct).hasNoNullFieldsOrProperties();
 		assertThatCode(() -> { 
 			productService.deleteProduct(1);
 		}).doesNotThrowAnyException();
-		verify(productService, times(1)).deleteProduct(1);
 	}
 	
 	@Test
@@ -132,7 +139,7 @@ public class ProductServiceTest {
 		Product mockProduct = createMockProduct();
 		mockProduct.setProject(null);
 		
-		assertThatExceptionOfType(EntityNotFoundException.class)
+		assertThatExceptionOfType(NullPointerException.class)
 		.isThrownBy(() -> {
 			productService.saveProduct(mockProduct);
 		});
@@ -161,7 +168,6 @@ public class ProductServiceTest {
 		assertThat(products).isEqualTo(mockProducts);
 		assertThat(products.get(0))
 			.isEqualToComparingFieldByFieldRecursively(mockProducts.get(0));
-		verify(productService, times(1)).getProductsByProjectId(1);
 	}
 	
 	

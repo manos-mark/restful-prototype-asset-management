@@ -1,4 +1,4 @@
-package com.manos.prototype.test.config;
+package com.manos.test.prototype.config;
 
 import java.util.Properties;
 

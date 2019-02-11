@@ -6,17 +6,16 @@ import com.manos.prototype.security.UserDetailsImpl;
 
 public interface UserService {
 
-    User findByEmail(String email);
-
     void saveUser(User user);
 
 	User getUser(long userId);
 
-//	void updateUser(User user);
 
 	void deleteUser(long userId);
 
 	UserDetailsImpl getCurrentUserDetails();
 
 	String saveNewPassword(String email);
+
+	void updateUser(User user);
 }

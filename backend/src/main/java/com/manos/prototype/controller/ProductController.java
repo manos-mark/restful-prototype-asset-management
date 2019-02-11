@@ -35,6 +35,11 @@ public class ProductController {
 //		return conversionService.convertList(products, ProductDto.class);
 //		
 //	}
+	
+	@GetMapping("/count")
+	public Long getProductsCount() {
+		return productService.getProductsCount();
+	}
 
 	@GetMapping("/{projectId}")
 	public List<ProductDto> getProducts(@PathVariable int projectId) {
@@ -47,10 +52,11 @@ public class ProductController {
 		return "Deleted user with id - " + productId;
 	}
 	
-	@PutMapping
-	public void updateProduct(@RequestBody ProductRequestDto productRequestDto) {
+	@PutMapping("/{productId}")
+	public void updateProduct(@RequestBody ProductRequestDto productRequestDto,
+			@PathVariable int productId) {
 		Product product = conversionService.convert(productRequestDto, Product.class);
-		productService.saveProduct(product);
+		productService.updateProduct(product, productId);
 	}
 	
 	@PostMapping

@@ -1,4 +1,4 @@
-package com.manos.prototype.test.dao;
+package com.manos.test.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -21,7 +21,7 @@ import com.manos.prototype.dao.ProjectDao;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
-import com.manos.prototype.test.config.AppConfigTest;
+import com.manos.test.prototype.config.AppConfigTest;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigTest.class })
@@ -157,6 +157,11 @@ public class ProductDaoTest {
 		});
 	}
 	
+	@Test
+	@Transactional
+	void getProductsCount() {
+		assertThat(productDao.getProductsCount()).isEqualTo(1);
+	}
 }
 
 

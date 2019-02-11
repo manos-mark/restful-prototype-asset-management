@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ProductRequestDto {
-
+	
 	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
 	private String date;

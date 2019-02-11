@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.ProjectDao;
 import com.manos.prototype.entity.Project;
@@ -11,16 +12,18 @@ import com.manos.prototype.exception.EntityNotFoundException;
 
 @Service
 public class ProjectServiceImpl implements ProjectService{
-	
+		
 	@Autowired
 	private ProjectDao projectDao;
 	
 	@Override
+	@Transactional
 	public List<Project> getProjects() {
 		return projectDao.getProjects();
 	}
 
 	@Override
+	@Transactional
 	public Project getProject(int id) {
 		Project project = projectDao.getProject(id);
 		if (project == null) {
@@ -30,6 +33,7 @@ public class ProjectServiceImpl implements ProjectService{
 	}
 
 	@Override
+	@Transactional
 	public void deleteProject(int id) {
 		Project project  = projectDao.getProject(id);
 		if (project == null) {
@@ -39,6 +43,7 @@ public class ProjectServiceImpl implements ProjectService{
 	}
 
 	@Override
+	@Transactional
 	public void saveProject(Project project) {
 //		Project project = new Project();
 //		project.setCompanyName(projectDto.getCompanyName());
@@ -46,12 +51,21 @@ public class ProjectServiceImpl implements ProjectService{
 //		project.setProjectManager(projectDto.getProjectManager());
 //		project.setProjectName(projectDto.getProjectName());
 //		project.setStatus(new Status(projectDto.getStatusId()));
+		if (project == null) {
+			throw new EntityNotFoundException("Project not found");
+		}
 		
 		try {
 			projectDao.saveProject(project);			
 		} catch (Exception e) {
 			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}
+	}
+
+	@Override
+	@Transactional
+	public Long getProjectsCount() {
+		return projectDao.getProjectsCount();
 	}
 
 }

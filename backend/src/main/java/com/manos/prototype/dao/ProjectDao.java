@@ -13,4 +13,6 @@ public interface ProjectDao {
 	void deleteProject(int id);
 	
     void saveProject(Project project);
+
+	Long getProjectsCount();
 }
