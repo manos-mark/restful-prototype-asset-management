@@ -7,6 +7,8 @@ import javax.validation.constraints.Size;
 
 public class ProductRequestDto {
 	
+	private int id;
+	
 	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
 	private String date;
@@ -36,8 +38,11 @@ public class ProductRequestDto {
 	@Min(value=1)
 	private int projectId;
 	
-	public ProductRequestDto(String date, String productName, String serialNumber, String description, int quantity,
-			int statusId, int projectId) {
+	public ProductRequestDto(@NotNull(message = "is required") @Size(min = 1, message = "is required") String date,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String productName,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String serialNumber,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String description,
+			@NotNull @Min(1) int quantity, @NotNull @Min(1) @Max(3) int statusId, @NotNull @Min(1) int projectId) {
 		this.date = date;
 		this.productName = productName;
 		this.serialNumber = serialNumber;
@@ -46,8 +51,32 @@ public class ProductRequestDto {
 		this.statusId = statusId;
 		this.projectId = projectId;
 	}
-	
+
+	public ProductRequestDto(int id,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String date,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String productName,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String serialNumber,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String description,
+			@NotNull @Min(1) int quantity, @NotNull @Min(1) @Max(3) int statusId, @NotNull @Min(1) int projectId) {
+		this.id = id;
+		this.date = date;
+		this.productName = productName;
+		this.serialNumber = serialNumber;
+		this.description = description;
+		this.quantity = quantity;
+		this.statusId = statusId;
+		this.projectId = projectId;
+	}
+
 	public ProductRequestDto() {}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getDate() {
 		return date;

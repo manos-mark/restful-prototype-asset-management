@@ -19,26 +19,38 @@ public class ProjectDaoImpl implements ProjectDao{
 	@Override
 	public List<Project> getProjects() {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Project p "
+				+ "left join fetch p.status ");
 		Query<Project> theQuery = currentSession
-				.createQuery("from Project", Project.class);
+				.createQuery(queryBuilder.toString(), Project.class);
 		return theQuery.getResultList();
 	}
 
 	@Override
 	public Project getProject(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Project p "
+				+ "left join fetch p.status "
+				+ "where p.id = :id");
 		Query<Project> theQuery = currentSession
-				.createQuery("from Project p where p.id = :id", Project.class);
+				.createQuery(queryBuilder.toString(), Project.class);
 		theQuery.setParameter("id", id);
+		
 		return theQuery.getSingleResult();
 	}
 
 	@Override
 	public void deleteProject(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
 		Query<Project> theQuery = currentSession
 				.createQuery("from Project p where p.id = :id", Project.class);
 		theQuery.setParameter("id", id);
+		
 		Project project = theQuery.getSingleResult();
 		currentSession.delete(project);	
 	}
@@ -46,14 +58,17 @@ public class ProjectDaoImpl implements ProjectDao{
 	@Override
 	public void saveProject(Project project) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.save(project);
+//		currentSession.save(project);
+		currentSession.saveOrUpdate(project);
 	}
 
 	@Override
 	public Long getProjectsCount() {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
 		Query<Long> theQuery = currentSession
 				.createQuery("select count(p.id) from Project p", Long.class);
+		
 		return theQuery.getSingleResult();
 	}
 

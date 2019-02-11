@@ -52,16 +52,16 @@ public class ProductController {
 		return "Deleted user with id - " + productId;
 	}
 	
-	@PutMapping("/{productId}")
-	public void updateProduct(@RequestBody ProductRequestDto productRequestDto,
-			@PathVariable int productId) {
+	@PutMapping
+	public void updateProduct(@RequestBody ProductRequestDto productRequestDto) {
 		Product product = conversionService.convert(productRequestDto, Product.class);
-		productService.updateProduct(product, productId);
+		productService.saveProduct(product);
 	}
 	
 	@PostMapping
 	public void addProduct(@RequestBody ProductRequestDto productRequestDto) {
 		Product product = conversionService.convert(productRequestDto, Product.class);
+		product.setId(0);
 		productService.saveProduct(product);
 	}
 	

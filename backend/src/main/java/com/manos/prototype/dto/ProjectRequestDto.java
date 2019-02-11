@@ -7,6 +7,8 @@ import javax.validation.constraints.Size;
 
 public class ProjectRequestDto {
 	
+	private int id;
+
 	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
 	private String projectName;
@@ -28,15 +30,42 @@ public class ProjectRequestDto {
 	@Max(value=3)
 	private int statusId;
 
-	public ProjectRequestDto(String projectName, String companyName, String projectManager, String date, int statusId) {
+	public ProjectRequestDto(
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String projectName,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String companyName,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String projectManager,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String date,
+			@NotNull @Min(1) @Max(3) int statusId) {
 		this.projectName = projectName;
 		this.companyName = companyName;
 		this.projectManager = projectManager;
 		this.date = date;
 		this.statusId = statusId;
 	}
-	
+
+	public ProjectRequestDto(int id,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String projectName,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String companyName,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String projectManager,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String date,
+			@NotNull @Min(1) @Max(3) int statusId) {
+		this.id = id;
+		this.projectName = projectName;
+		this.companyName = companyName;
+		this.projectManager = projectManager;
+		this.date = date;
+		this.statusId = statusId;
+	}
+
 	public ProjectRequestDto() {}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getProjectName() {
 		return projectName;

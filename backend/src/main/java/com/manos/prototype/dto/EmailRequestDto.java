@@ -14,8 +14,11 @@ public class EmailRequestDto {
 	
 	public EmailRequestDto () {}
 	
-	public EmailRequestDto (String email) {
-		this.email = email;
+	public EmailRequestDto(
+		@NotNull(message = "is required") 
+		@Size(min = 1, message = "is required") 
+		String email) {
+			this.email = email;
 	}
 
 	public String getEmail() {

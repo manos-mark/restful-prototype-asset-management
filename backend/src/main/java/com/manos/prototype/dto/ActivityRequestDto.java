@@ -16,11 +16,11 @@ public class ActivityRequestDto {
 	@Size(min = 1, message = "is required")
 	private String date;
 	
-	public ActivityRequestDto(String date, int actionId) {
-		this.date = date;
+	public ActivityRequestDto(@NotNull @Min(1) @Max(8) int actionId,
+			@NotNull(message = "is required") @Size(min = 1, message = "is required") String date) {
 		this.actionId = actionId;
+		this.date = date;
 	}
-
 
 	public ActivityRequestDto() {
 	}

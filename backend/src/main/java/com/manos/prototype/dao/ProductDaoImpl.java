@@ -27,15 +27,23 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public Product getProduct(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Product p "
+				+ "left join fetch p.status "
+				+ "left join fetch p.project "
+				+ "where p.id = :id");
 		Query<Product> theQuery = currentSession
-				.createQuery("from Product p where p.id = :id", Product.class);
+				.createQuery(queryBuilder.toString(), Product.class);
 		theQuery.setParameter("id", id);
+		
 		return theQuery.getSingleResult();
 	}
 	
 	@Override
 	public List<Product> getProductsByProjectId(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Product p "
 				+ "left join fetch p.status "
@@ -44,15 +52,18 @@ public class ProductDaoImpl implements ProductDao {
 		Query<Product> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Product.class);
 		theQuery.setParameter("id", id);
+		
 		return theQuery.getResultList();
 	}
 
 	@Override
 	public void deleteProduct(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
 		Query<Product> theQuery = currentSession
 				.createQuery("from Product p where p.id = :id", Product.class);
 		theQuery.setParameter("id", id);
+		
 		Product project = theQuery.getSingleResult();
 		currentSession.delete(project);	
 	}
@@ -60,12 +71,14 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public void saveProduct(Product product) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.save(product);
+//		currentSession.save(product);
+		currentSession.saveOrUpdate(product);
 	}
 
 	@Override
 	public Long getProductsCount() {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
 		Query<Long> theQuery = currentSession
 				.createQuery("select count(p.id) from Product p", Long.class);
 		return theQuery.getSingleResult();

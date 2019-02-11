@@ -53,6 +53,7 @@ public class ProjectController {
 	@PostMapping
 	public void addProject(@RequestBody ProjectRequestDto projectDto) {
 		Project project = conversionService.convert(projectDto, Project.class);
+		project.setId(0);
 		projectService.saveProject(project);
 	}
 	

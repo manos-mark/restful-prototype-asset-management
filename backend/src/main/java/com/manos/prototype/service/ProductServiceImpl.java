@@ -55,29 +55,22 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional
 	public void saveProduct(Product product) {
-		int projectId = product.getProject().getId();
-		Project project = projectDao.getProject(projectId);
-		
-		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + projectId);
+		// if id !=0 then update
+		if (product.getId() != 0) {
+			// check if project exists
+			int projectId = product.getProject().getId();
+			Project project = projectDao.getProject(projectId);
+			
+			if (project == null) {
+				throw new EntityNotFoundException("Project id not found - " + projectId);
+			}
 		}
-		
 		try {
 			productDao.saveProduct(product);			
 		} catch (Exception e) {
 			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}
 	}
-	
-	@Override
-	@Transactional
-	public void updateProduct(Product product, int id) {
-//		Product tempProduct = productDao.getProduct(id);
-//		if (tempProduct == null) {
-//			throw new EntityNotFoundException("Product id not found - " + id);
-//		}
-	}
-
 
 	@Override
 	@Transactional

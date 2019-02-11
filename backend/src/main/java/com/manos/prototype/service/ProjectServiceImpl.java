@@ -45,16 +45,9 @@ public class ProjectServiceImpl implements ProjectService{
 	@Override
 	@Transactional
 	public void saveProject(Project project) {
-//		Project project = new Project();
-//		project.setCompanyName(projectDto.getCompanyName());
-//		project.setDate(projectDto.getDate());
-//		project.setProjectManager(projectDto.getProjectManager());
-//		project.setProjectName(projectDto.getProjectName());
-//		project.setStatus(new Status(projectDto.getStatusId()));
 		if (project == null) {
 			throw new EntityNotFoundException("Project not found");
 		}
-		
 		try {
 			projectDao.saveProject(project);			
 		} catch (Exception e) {

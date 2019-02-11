@@ -19,6 +19,7 @@ public class ActivityDaoImpl implements ActivityDao {
 	@Override
 	public List<Activity> getActivitiesByUserId(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Activity a "
 				+ "left join fetch a.action "
@@ -29,6 +30,7 @@ public class ActivityDaoImpl implements ActivityDao {
 				.createQuery(queryBuilder.toString(), Activity.class);
 		theQuery.setParameter("userId", userId);
 		theQuery.setMaxResults(15);
+		
 		return theQuery.getResultList();
 	}
 
