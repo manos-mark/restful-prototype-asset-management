@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
-	public UserDetailsImpl getCurrentUser() {
+	public UserDetailsImpl getCurrentUserDetails() {
 		
 		UserDetailsImpl userDetails = SecurityUtil.getCurrentUserDetails();
 		
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User getUser(long userId) {
-		return userDao.getUserDaoById(userId);
+		return userDao.getUserById(userId);
 	}
 
 //	@Override

@@ -16,7 +16,7 @@ public interface UserService {
 
 	void deleteUser(long userId);
 
-	UserDetailsImpl getCurrentUser();
+	UserDetailsImpl getCurrentUserDetails();
 
 	String saveNewPassword(String email);
 }

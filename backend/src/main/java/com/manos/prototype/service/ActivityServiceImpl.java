@@ -25,7 +25,7 @@ public class ActivityServiceImpl implements ActivityService{
 	public List<Activity> getActivities() {
 		
 		// get current user
-		Long userId = userService.getCurrentUser().getId();
+		Long userId = userService.getCurrentUserDetails().getId();
 		if (userId == null) {
 			throw new EntityNotFoundException("User id not found - " + userId);
 		}
@@ -39,7 +39,7 @@ public class ActivityServiceImpl implements ActivityService{
 	@Transactional
 	public void saveActivity(Activity activity) {
 		// get current user id, then get user
-		Long userId = userService.getCurrentUser().getId();
+		Long userId = userService.getCurrentUserDetails().getId();
 		User tempUser = userService.getUser(userId);
 		if (userId == null || tempUser == null) {
 			throw new EntityNotFoundException("User not found - " + userId);

@@ -73,7 +73,7 @@ class UserDaoTest {
 			userDao.saveUser(user);
 		}).doesNotThrowAnyException();
 		
-		User savedUser = userDao.getUserDaoById(4);
+		User savedUser = userDao.getUserById(4);
 		assertThat(savedUser.getFirstName()).isEqualTo("firstName");
 		assertThat(savedUser.getLastName()).isEqualTo("lastName");
 		assertThat(savedUser.getPassword()).isEqualTo("test");
@@ -94,7 +94,7 @@ class UserDaoTest {
 	void getUserDaoById_success() {
 		User user = userDao.getUserByEmail("john@luv2code.com");
 		assertThatCode(() -> { 
-			userDao.getUserDaoById(user.getId());
+			userDao.getUserById(user.getId());
 		}).doesNotThrowAnyException();
 	}
 	
@@ -103,7 +103,7 @@ class UserDaoTest {
 	void getUserDaoById_fail() {
 		assertThatExceptionOfType(NoResultException.class)
 		.isThrownBy(() -> { 
-			userDao.getUserDaoById(1000); 
+			userDao.getUserById(1000); 
 		});
 	}
 	

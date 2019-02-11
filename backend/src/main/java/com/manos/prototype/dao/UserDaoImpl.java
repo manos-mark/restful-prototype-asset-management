@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
-	public User getUserDaoById(long userId) {
+	public User getUserById(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();

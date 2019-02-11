@@ -5,18 +5,19 @@ import org.springframework.stereotype.Component;
 
 import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.dto.ProjectDto;
+import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.pastelstudios.convert.Converter;
 
 @Component
-public class ProjectToProjectDtoConveret implements Converter<Project, ProjectDto> {
+public class ProjectRequestDtoToProjectConveret implements Converter<ProjectRequestDto, Project> {
 
 	@Override
-	public ProjectDto convert(Project project) {
-		ProjectDto dto = new ProjectDto();
-		BeanUtils.copyProperties(project, dto);
-		return dto;
+	public Project convert(ProjectRequestDto dto) {
+		Project entity = new Project();
+		BeanUtils.copyProperties(dto, entity);
+		return entity;
 	}
 	
 }

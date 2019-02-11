@@ -37,7 +37,7 @@ public class UserController {
 	
 	@GetMapping("/current")
 	public UserDto getCurrentUser() {
-		UserDetailsImpl user = userService.getCurrentUser();
+		UserDetailsImpl user = userService.getCurrentUserDetails();
 		return conversionService.convert(user, UserDto.class);
 	}
 	

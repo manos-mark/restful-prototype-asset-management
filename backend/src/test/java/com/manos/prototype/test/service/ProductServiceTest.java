@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,11 +26,7 @@ import com.manos.prototype.service.ProductServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductServiceTest {
-	List<Product> mockProducts;
-	Product product;
-	Project project;
-	Status status;
-	
+
 	@Mock
 	private ProductDao productDao;
 	
@@ -41,42 +36,12 @@ public class ProductServiceTest {
 	@Mock
 	private ProjectDao projectDao;
 	
-	@Before
-	public void init() {
-		mockProducts = new ArrayList<Product>();
-		product = new Product();
-		project = new Project();
-		status = new Status();
-		
-		status.setId(2);
-		status.setStatus("NEW");
-		
-		project.setCompanyName("test");
-		project.setDate("2011-12-17 13:17:17");
-		project.setId(1);
-		project.setProjectManager("test");
-		project.setProjectName("test");
-		project.setStatus(status);
-		
-		product.setDate("2011-12-17 13:17:17");
-		product.setDescription("test");
-		product.setId(1);
-		product.setProductName("test");
-		product.setProject(project);
-		product.setQuantity(12);
-		product.setSerialNumber("test");
-		product.setStatus(status);
-		mockProducts.add(product);
-		
-	}
-	
 //	@Test
 //	public void getProducts_success() {
-//		List<ProductDto> products;
 //		when(productDao.getProducts())
 //			.thenReturn(mockProducts);
 //		
-//		products = productService.getProducts();
+//		List<ProductDto> products = productService.getProducts();
 //		assertThat(products).isEqualTo(mockProducts);
 //		assertThat(products.get(0))
 //			.isEqualToComparingFieldByFieldRecursively(mockProducts.get(0));
@@ -106,59 +71,31 @@ public class ProductServiceTest {
 //				productService.getProducts();
 //			});
 //	}
-
-	@Test
-	public void getProduct_success() {
-		when(productDao.getProduct(1))
-			.thenReturn(product);
-		
-		assertThat(product).isNotNull();
-		assertThat(product).hasNoNullFieldsOrProperties();
-		assertThat(productDao.getProduct(1).getDate())
-			.isEqualTo("2011-12-17 13:17:17");
-		assertThat(productDao.getProduct(1).getDescription())
-			.isEqualTo("test");
-		assertThat(productDao.getProduct(1).getProductName())
-			.isEqualTo("test");
-		assertThat(productDao.getProduct(1).getSerialNumber())
-			.isEqualTo("test");
-		assertThat(productDao.getProduct(1).getQuantity())
-			.isEqualTo(12);
-		assertThat(productDao.getProduct(1).getId())
-			.isEqualTo(1);
-		assertThat(productDao.getProduct(1).getProject())
-			.isEqualTo(project);
-		assertThat(productDao.getProduct(1).getStatus())
-			.isEqualTo(status);
-		assertThat(productDao.getProduct(1).getProject())
-			.hasNoNullFieldsOrProperties();
-		assertThat(productDao.getProduct(1).getStatus())
-			.hasNoNullFieldsOrProperties();
-		assertThatCode(() -> { 
-			productDao.getProduct(1);
-		}).doesNotThrowAnyException();
-		verify(productDao, times(11)).getProduct(1);
-	}
-	
+//
 //	@Test
-//	public void getProduct_nullProductFail() {
+//	public void getProduct_success() {
+//		Product mockProduct = createMockProduct();
 //		when(productDao.getProduct(1))
-//			.thenReturn(null);
+//			.thenReturn(mockProduct);
 //		
-//		assertThatExceptionOfType(EntityNotFoundException.class)
-//			.isThrownBy(() -> {
-//				productService.getProduct(1);
-//			});
+//		Product product = productDao.getProduct(1);
+//		
+//		assertThat(product).isEqualTo(mockProduct);
+//		assertThat(product)
+//			.isEqualToComparingFieldByFieldRecursively(mockProduct);
+//		verify(productDao, times(1)).getProduct(1);
 //	}
 	
 	@Test
 	public void deleteProduct_success() {
-		assertThat(product).isNotNull();
-		assertThat(product).hasNoNullFieldsOrProperties();
+		Product mockProduct = createMockProduct();
+		
+		assertThat(mockProduct).isNotNull();
+		assertThat(mockProduct).hasNoNullFieldsOrProperties();
 		assertThatCode(() -> { 
-			productDao.deleteProduct(1);
+			productService.deleteProduct(1);
 		}).doesNotThrowAnyException();
-		verify(productDao, times(1)).deleteProduct(1);
+		verify(productService, times(1)).deleteProduct(1);
 	}
 	
 	@Test
@@ -171,34 +108,38 @@ public class ProductServiceTest {
 	
 	@Test
 	public void saveProduct_success() {
-		when(projectDao.getProject(1))
-			.thenReturn(project);
+		Product mockProduct = createMockProduct();
+		Project mockProject = createMockProject();
 		
-		assertThat(project).isNotNull();
-		assertThat(project).hasNoNullFieldsOrProperties();
-		assertThat(product).isNotNull();
-		assertThat(product).hasNoNullFieldsOrProperties();
+		when(projectDao.getProject(1))
+			.thenReturn(mockProject);
+		
+		Project project = projectDao.getProject(1);
+		assertThat(project).isEqualTo(mockProject);
+		assertThat(project)
+			.isEqualToComparingFieldByFieldRecursively(mockProject);
+		assertThat(mockProject).isNotNull();
+		assertThat(mockProject).hasNoNullFieldsOrProperties();
+		assertThat(mockProduct).isNotNull();
+		assertThat(mockProduct).hasNoNullFieldsOrProperties();
 		assertThatCode(() -> { 
-			productService.saveProduct(product);
+			productService.saveProduct(mockProduct);
 		}).doesNotThrowAnyException();
 	}
 	
 	@Test
 	public void saveProduct_nullProjectFail() {
-		when(projectDao.getProject(1))
-			.thenReturn(null);
+		Product mockProduct = createMockProduct();
+		mockProduct.setProject(null);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 		.isThrownBy(() -> {
-			productService.saveProduct(product);
+			productService.saveProduct(mockProduct);
 		});
 	}
 	
 	@Test
 	public void saveProduct_nullProductFail() {
-		when(projectDao.getProject(1))
-			.thenReturn(project);
-
 		assertThatExceptionOfType(NullPointerException.class)
 		.isThrownBy(() -> {
 			productService.saveProduct(null);
@@ -207,7 +148,61 @@ public class ProductServiceTest {
 	
 	@Test
 	public void getProductsByProjectId_success() {
+		List<Product> mockProducts = createMockProducts();
+		Project mockProject = createMockProject();
 		
+		when(projectDao.getProject(1))
+			.thenReturn(mockProject);
+		when(productDao.getProductsByProjectId(1))
+			.thenReturn(mockProducts);
+
+		List<Product> products = productService.getProductsByProjectId(1);
+		
+		assertThat(products).isEqualTo(mockProducts);
+		assertThat(products.get(0))
+			.isEqualToComparingFieldByFieldRecursively(mockProducts.get(0));
+		verify(productService, times(1)).getProductsByProjectId(1);
+	}
+	
+	
+	
+	
+	
+	public Status createMockStatus() {
+		Status mockStatus = new Status();
+		mockStatus.setId(2);
+		mockStatus.setStatus("NEW");
+		return mockStatus;
+	}
+	
+	public Project createMockProject() {
+		Project mockProject = new Project();
+		mockProject.setCompanyName("test");
+		mockProject.setDate("2011-12-17 13:17:17");
+		mockProject.setId(1);
+		mockProject.setProjectManager("test");
+		mockProject.setProjectName("test");
+		mockProject.setStatus(createMockStatus());
+		return mockProject;
+	}
+	
+	public Product createMockProduct() {
+		Product mockProduct = new Product();
+		mockProduct.setDate("2011-12-17 13:17:17");
+		mockProduct.setDescription("test");
+		mockProduct.setId(1);
+		mockProduct.setProductName("test");
+		mockProduct.setProject(createMockProject());
+		mockProduct.setQuantity(12);
+		mockProduct.setSerialNumber("test");
+		mockProduct.setStatus(createMockStatus());
+		return mockProduct;
+	}
+	
+	public List<Product> createMockProducts() {
+		List<Product> mockProducts = new ArrayList<Product>();
+		mockProducts.add(createMockProduct());
+		return mockProducts;
 	}
 }
 

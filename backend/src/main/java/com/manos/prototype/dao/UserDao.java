@@ -8,7 +8,7 @@ public interface UserDao {
     
     void saveUser(User user);
 
-	User getUserDaoById(long userId);
+	User getUserById(long userId);
 
 	void deleteUser(long userId);
     

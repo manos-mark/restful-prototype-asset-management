@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.ActivityDao;
 import com.manos.prototype.dao.UserDao;
-import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.Activity;
+import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.test.config.AppConfigTest;
 
@@ -61,7 +61,7 @@ public class ActivityDaoTest {
 	@Test
 	@Transactional
 	void saveActivity_success() {
-		User user = userDao.getUserDaoById(1); 
+		User user = userDao.getUserById(1); 
 		
 		ActivityAction action = new ActivityAction();
 		action.setId(1);

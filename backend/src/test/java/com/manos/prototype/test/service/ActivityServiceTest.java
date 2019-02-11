@@ -2,6 +2,7 @@ package com.manos.prototype.test.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,20 +23,19 @@ import com.manos.prototype.dao.UserDao;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.User;
+import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.service.ActivityServiceImpl;
 import com.manos.prototype.service.UserServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityServiceTest {
 	
-	List<Activity> activities;
-	Activity activityOne;
-	
 	@Mock
 	private ActivityDao activityDao;
 	
 	@Mock
-	private UserDao userDaoMock;
+	private UserDao userDao;
 
 	@InjectMocks
 	private ActivityServiceImpl activityService;
@@ -43,64 +43,115 @@ public class ActivityServiceTest {
 	@Mock
 	private UserServiceImpl userService;
 		
-	@Before
-	public void init() {
-		activities = new ArrayList<Activity>();
-		activityOne = new Activity();
-		activityOne.setAction(new ActivityAction(2, "NEW"));
-		activityOne.setDate("2011-12-17 13:17:17");
-		activityOne.setId(1L);
-		activityOne.setUser(new User("test","test", "test", "test"));
-		activities.add(activityOne);
+	@Test
+	public void getActivities_getCurrentUserDetails_nullUserFail() {
+		when(userService.getCurrentUserDetails())
+			.thenReturn(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			userService.getCurrentUserDetails();
+		});
 	}
 	
-//	@Test
-//	public void getActivities_getCurrentUser() {
-//		User user = new User();
-//		user.setEmail("mail");
-//		user.setFirstName("firstName");
-//		user.setId(1L);
-//		user.setLastName("lastName");
-//		
-//		when(userService.getCurrentUser())
-//			.thenReturn(user);
-//		
-//		assertThat(userService.getCurrentUser().getId())
-//			.isEqualTo(1);
-//		assertThat(userService.getCurrentUser().getFirstName())
-//			.isEqualTo("firstName");
-//		assertThat(userService.getCurrentUser().getLastName())
-//			.isEqualTo("lastName");
-//		assertThat(userService.getCurrentUser().getEmail())
-//			.isEqualTo("mail");
-//		assertThatCode(() -> { 
-//			userService.getCurrentUser();
-//		}).doesNotThrowAnyException();
-//	}
+	@Test
+	public void getActivities_getActivitiesByUserId_success() {
+		List<Activity> mockActivities = createMockActivities();
+		UserDetailsImpl mockUser = createMockUserDetails();
+
+		when(userService.getCurrentUserDetails())
+			.thenReturn(mockUser);
+		when(activityService.getActivities())
+			.thenReturn(mockActivities);
+		
+		UserDetailsImpl user = userService.getCurrentUserDetails();
+		List<Activity> activities = activityService.getActivities();
+		
+		assertThat(user).isEqualTo(mockUser);
+		assertThat(user)
+			.isEqualToComparingFieldByFieldRecursively(mockUser);
+		assertThat(activities).isEqualTo(mockActivities);
+		assertThat(activities.get(0))
+			.isEqualToComparingFieldByFieldRecursively(mockActivities.get(0));
+		
+		verify(userService, times(1)).getCurrentUserDetails();
+		verify(activityService, times(1)).getActivities();
+	}
 	
 	@Test
-	public void getActivities_getActivitiesByUserId() {
-		when(activityDao.getActivitiesByUserId(1))
-			.thenReturn(activities);
+	public void saveActivity_success() {
+		Activity mockActivity = createMockActivity();
+		UserDetailsImpl mockUserDetails = createMockUserDetails();
+		User mockUser = createMockUser();
+
+		when(userService.getCurrentUserDetails())
+			.thenReturn(mockUserDetails);
+		when(userService.getUser(1))
+			.thenReturn(mockUser);
 		
-		assertThat(activityDao.getActivitiesByUserId(1))
-			.size().isEqualTo(1);
+		UserDetailsImpl userDetails = userService.getCurrentUserDetails();
+		User user = userService.getUser(1);
+		
+		assertThat(userDetails).isEqualTo(mockUserDetails);
+		assertThat(userDetails)
+			.isEqualToComparingFieldByFieldRecursively(mockUserDetails);
+		assertThat(user).isEqualTo(mockUser);
+		assertThat(user)
+			.isEqualToComparingFieldByFieldRecursively(mockUser);
 		assertThatCode(() -> { 
-			activityDao.getActivitiesByUserId(1);
+			activityService.saveActivity(mockActivity);
 		}).doesNotThrowAnyException();
-		
-		verify(activityDao, times(2)).getActivitiesByUserId(1);
-	}
-	
-	@Test
-	public void saveActivity() {
-//		assertThatCode(() -> { 
-//			activityDao.saveActivity(activityOne);
-//		}).doesNotThrowAnyException();
-		activityDao.saveActivity(activityOne);
-		verify(activityDao, times(1)).saveActivity(activityOne);
+		verify(userService, times(1)).getCurrentUserDetails();
+		verify(userService, times(1)).getUser(1);
+		verify(activityService, times(1)).saveActivity(mockActivity);
 	}
 
+	@Test
+	public void saveActivity_nullUserFail() {
+		Activity mockActivity = createMockActivity();
+		mockActivity.setUser(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			activityService.saveActivity(mockActivity);
+		});
+	}
+	
+	
+	public Activity createMockActivity() {
+		Activity activity = new Activity();
+		activity.setAction(new ActivityAction(2, "NEW"));
+		activity.setDate("2011-12-17 13:17:17");
+		activity.setId(1L);
+		activity.setUser(new User("test","test", "test", "test"));
+		return activity;
+	}
+	
+	public List<Activity> createMockActivities() {
+		List<Activity> activities = new ArrayList<Activity>();
+		activities.add(createMockActivity());
+		return activities;
+	}
+	
+	public UserDetailsImpl createMockUserDetails() {
+		User user = new User();
+		user.setEmail("mail");
+		user.setFirstName("firstName");
+		user.setId(1L);
+		user.setLastName("lastName");
+		user.setPassword("123");
+		return new UserDetailsImpl(user);
+	}
+	
+	public User createMockUser() {
+		User user = new User();
+		user.setEmail("mail");
+		user.setFirstName("firstName");
+		user.setId(1L);
+		user.setLastName("lastName");
+		user.setPassword("123");
+		return user;
+	}
 }
 
 
