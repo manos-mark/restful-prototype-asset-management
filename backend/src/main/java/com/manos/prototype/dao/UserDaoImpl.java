@@ -36,6 +36,13 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
+	public void updateUser(User theUser) {
+		// get current hibernate session
+		Session currentSession = sessionFactory.getCurrentSession();
+		currentSession.update(theUser);
+	}
+	
+	@Override
 	public User getUserById(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		

@@ -14,5 +14,7 @@ public interface ProjectDao {
 	
     void saveProject(Project project);
 
-	Long getProjectsCount();
+	Long getProjectsCountByStatus(int id);
+
+	void updateProject(Project project);
 }

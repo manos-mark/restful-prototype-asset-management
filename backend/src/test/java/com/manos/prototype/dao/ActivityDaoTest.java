@@ -1,4 +1,4 @@
-package com.manos.test.prototype.dao;
+package com.manos.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -14,15 +14,15 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.dao.ActivityDao;
 import com.manos.prototype.dao.UserDao;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.User;
-import com.manos.test.prototype.config.AppConfigTest;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AppConfigTest.class })
+@ContextConfiguration(classes = { AppConfigUnitTest.class })
 @Sql(scripts = "classpath:/sql/actions.sql")
 @Sql(scripts = "classpath:/sql/users.sql")
 @Sql(scripts = "classpath:/sql/activities.sql")

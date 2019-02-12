@@ -7,9 +7,10 @@ import com.manos.prototype.security.UserDetailsImpl;
 public interface UserService {
 
     void saveUser(User user);
+    
+    void updateUser(User user);
 
 	User getUser(long userId);
-
 
 	void deleteUser(long userId);
 
@@ -17,5 +18,4 @@ public interface UserService {
 
 	String saveNewPassword(String email);
 
-	void updateUser(User user);
 }

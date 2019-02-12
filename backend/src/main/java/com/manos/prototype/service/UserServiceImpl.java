@@ -12,6 +12,8 @@ import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.util.PasswordGenerationUtil;
 import com.manos.prototype.util.SecurityUtil;
+import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,10 +24,15 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
+//	@Autowired
+//	private GenericFinder finder;
+//	
+//	@Autowired
+//	private GenericGateway gateway;
+	
 	@Override
 	@Transactional
 	public UserDetailsImpl getCurrentUserDetails() {
-		
 		UserDetailsImpl userDetails = SecurityUtil.getCurrentUserDetails();
 		
 		if (userDetails == null) {
@@ -37,9 +44,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public void saveUser(User user) {
-		if (userDao.getUserByEmail(user.getEmail()) != null) {
-			throw new EntityNotFoundException("Email already exists - " + user.getEmail(), new Exception());
-		}
+//		if (userDao.getUserByEmail(user.getEmail()) != null) {
+//			throw new EntityNotFoundException("Email already exists - " + user.getEmail(), new Exception());
+//		}
 		
 		user.setId(Long.parseLong("0"));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -74,7 +81,7 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		try {
-			userDao.saveUser(user);
+			userDao.updateUser(user);
 		} catch (Exception e) {
 			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}

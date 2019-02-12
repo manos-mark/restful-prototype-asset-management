@@ -16,7 +16,7 @@ public interface ProductService {
 
 	List<Product> getProductsByProjectId(int id);
 
-	Long getProductsCount();
+	Long getProductsCountByStatus(int statusId);
 
-	void updateProduct(Product product, int id);
+//	void updateProduct(Product product, int id);
 }

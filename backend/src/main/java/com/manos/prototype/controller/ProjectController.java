@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProjectDto;
 import com.manos.prototype.dto.ProjectRequestDto;
+import com.manos.prototype.dto.StatusRequestDto;
+import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.service.ProductService;
 import com.manos.prototype.service.ProjectService;
 import com.pastelstudios.convert.ConversionService;
 
@@ -26,6 +30,9 @@ public class ProjectController {
 	private ProjectService projectService;
 	
 	@Autowired
+	private ProductService productService;
+	
+	@Autowired
 	private ConversionService conversionService;
 	
 	@GetMapping
@@ -34,20 +41,26 @@ public class ProjectController {
 		return conversionService.convertList(projects, ProjectDto.class);
 	}
 	
-	@GetMapping("/count")
-	public Long getProjectsCount() {
-		return projectService.getProjectsCount();
+	@PostMapping("/count")
+	public Long getProjectsCountByStatus(@RequestBody StatusRequestDto statusId) {
+		return projectService.getProjectsCountByStatus(statusId.getStatusId());
 	}
 	
-	@GetMapping("/{projectId}")
-	public ProjectDto getProject(@PathVariable int projectId) {
+	@GetMapping("/{id}")
+	public ProjectDto getProject(@PathVariable("id") int projectId) {
 		Project project = projectService.getProject(projectId);
 		return conversionService.convert(project, ProjectDto.class);
 	}
 	
-	@DeleteMapping("/{projectId}")
-	public void deleteProject(@PathVariable int projectId) {
+	@DeleteMapping("/{id}")
+	public void deleteProject(@PathVariable("id") int projectId) {
 		projectService.deleteProject(projectId);
+	}
+	
+	@GetMapping("/{id}/products")
+	public List<ProductDto> getProducts(@PathVariable("id") int projectId) {
+		List<Product> products =  productService.getProductsByProjectId(projectId);
+		return conversionService.convertList(products, ProductDto.class);
 	}
 	
 	@PostMapping
@@ -57,9 +70,11 @@ public class ProjectController {
 		projectService.saveProject(project);
 	}
 	
-	@PutMapping
-	public void updateProject(@RequestBody ProjectRequestDto projectDto) {
+	@PutMapping("/{id}")
+	public void updateProject(@RequestBody ProjectRequestDto projectDto,
+			@PathVariable("id") int projectId) {
 		Project project = conversionService.convert(projectDto, Project.class);
+		project.setId(projectId);
 		projectService.saveProject(project);
 	}
 }

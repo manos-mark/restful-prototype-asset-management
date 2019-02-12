@@ -41,27 +41,31 @@ public class UserController {
 		return conversionService.convert(user, UserDto.class);
 	}
 	
+	@PostMapping
+	public void addUser(@RequestBody UserRequestDto userRequestDto) {
+		User user = conversionService.convert(userRequestDto, User.class);
+		user.setId(0L);
+		userService.saveUser(user);
+	}
+	
 	@PostMapping("/new-password")
 	public void newPassword(@RequestParam EmailRequestDto email) throws MessagingException {
 		String newPassword;
 		newPassword = userService.saveNewPassword(email.getEmail());		// change pass
 		emailService.sendNewPassword(email.getEmail(), newPassword); 	// send email
 	}
-	
-	@PostMapping
-	public void addUser(@RequestBody UserRequestDto userRequestDto) {
+
+	@PutMapping("/{id}")
+	public void updateUser(@RequestBody UserRequestDto userRequestDto,
+			@PathVariable("id") long userId) {
 		User user = conversionService.convert(userRequestDto, User.class);
-		userService.saveUser(user);
-	}
-	
-	@PutMapping
-	public void updateUser(@RequestBody UserRequestDto userRequestDto) {
-		User user = conversionService.convert(userRequestDto, User.class);
+		user.setId(userId);
 		userService.updateUser(user);
 	}
 	
-	@DeleteMapping("/{userId}")
-	public String deleteUser(@PathVariable long userId) {
+	@DeleteMapping("/{id}")
+	public String deleteUser(@PathVariable("id") long userId) {
+		userService.deleteUser(userId);
 		return "Deleted user with id - " + userId;
 	}
 }

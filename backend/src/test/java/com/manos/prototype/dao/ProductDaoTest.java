@@ -1,4 +1,4 @@
-package com.manos.test.prototype.dao;
+package com.manos.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -16,15 +16,15 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.dao.ProductDao;
 import com.manos.prototype.dao.ProjectDao;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
-import com.manos.test.prototype.config.AppConfigTest;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AppConfigTest.class })
+@ContextConfiguration(classes = { AppConfigUnitTest.class })
 @Sql(scripts = "classpath:/sql/status.sql")
 @Sql(scripts = "classpath:/sql/projects.sql")
 @Sql(scripts = "classpath:/sql/products.sql")
@@ -160,7 +160,7 @@ public class ProductDaoTest {
 	@Test
 	@Transactional
 	void getProductsCount() {
-		assertThat(productDao.getProductsCount()).isEqualTo(1);
+		assertThat(productDao.getProductsCountByStatus()).isEqualTo(1);
 	}
 }
 

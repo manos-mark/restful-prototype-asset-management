@@ -1,7 +1,5 @@
 package com.manos.prototype.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProductRequestDto;
+import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.service.ProductService;
 import com.pastelstudios.convert.ConversionService;
@@ -28,33 +26,22 @@ public class ProductController {
 	@Autowired
 	private ConversionService conversionService;
 	
-	
-//	@GetMapping()
-//	public List<ProductDto> getProducts() {
-//		List<Product> products = productService.getProducts();
-//		return conversionService.convertList(products, ProductDto.class);
-//		
-//	}
-	
-	@GetMapping("/count")
-	public Long getProductsCount() {
-		return productService.getProductsCount();
+	@PostMapping("/count")
+	public Long getProductsCount(@RequestBody StatusRequestDto statusId) {
+		return productService.getProductsCountByStatus(statusId.getStatusId());
 	}
 
-	@GetMapping("/{projectId}")
-	public List<ProductDto> getProducts(@PathVariable int projectId) {
-		List<Product> products =  productService.getProductsByProjectId(projectId);
-		return conversionService.convertList(products, ProductDto.class);
-	}
-	
-	@DeleteMapping("/{productId}")
-	public String deleteProduct(@PathVariable int productId) {
+	@DeleteMapping("/{id}")
+	public String deleteProduct(@PathVariable("id") int productId) {
+		productService.deleteProduct(productId);
 		return "Deleted user with id - " + productId;
 	}
 	
-	@PutMapping
-	public void updateProduct(@RequestBody ProductRequestDto productRequestDto) {
+	@PutMapping("/{id}")
+	public void updateProduct(@PathVariable("id") int productId, 
+			@RequestBody ProductRequestDto productRequestDto) {
 		Product product = conversionService.convert(productRequestDto, Product.class);
+		product.setId(productId);
 		productService.saveProduct(product);
 	}
 	
@@ -64,7 +51,6 @@ public class ProductController {
 		product.setId(0);
 		productService.saveProduct(product);
 	}
-	
 }
 
 

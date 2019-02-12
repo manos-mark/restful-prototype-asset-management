@@ -16,5 +16,7 @@ public interface ProductDao {
 
 	List<Product> getProductsByProjectId(int id);
 
-	Long getProductsCount();
+	Long getProductsCountByStatus(int statusId);
+
+	void updateProduct(Product product);
 }

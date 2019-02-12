@@ -71,16 +71,28 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public void saveProduct(Product product) {
 		Session currentSession = sessionFactory.getCurrentSession();
-//		currentSession.save(product);
-		currentSession.saveOrUpdate(product);
+		currentSession.save(product);
+	}
+	
+	@Override
+	public void updateProduct(Product product) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		currentSession.update(product);
 	}
 
 	@Override
-	public Long getProductsCount() {
+	public Long getProductsCountByStatus(int statusId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("select count(p.id) from Product p "
+				+ "inner join p.status s "
+				+ "where p.status.id = :statusId");
+		
 		Query<Long> theQuery = currentSession
-				.createQuery("select count(p.id) from Product p", Long.class);
+				.createQuery(queryBuilder.toString(), Long.class);
+		theQuery.setParameter("statusId", statusId);
+		
 		return theQuery.getSingleResult();
 	}
 

@@ -15,7 +15,6 @@ public class ProjectRequestDtoToProjectConveret implements Converter<ProjectRequ
 		Project entity = new Project();
 		entity.setCompanyName(dto.getCompanyName());
 		entity.setDate(dto.getDate());
-		entity.setId(dto.getId());
 		entity.setProjectManager(dto.getProjectManager());
 		entity.setProjectName(dto.getProjectName());
 		

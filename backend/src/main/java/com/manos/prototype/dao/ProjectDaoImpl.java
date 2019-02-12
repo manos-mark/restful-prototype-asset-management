@@ -58,16 +58,27 @@ public class ProjectDaoImpl implements ProjectDao{
 	@Override
 	public void saveProject(Project project) {
 		Session currentSession = sessionFactory.getCurrentSession();
-//		currentSession.save(project);
-		currentSession.saveOrUpdate(project);
+		currentSession.save(project);
+	}
+	
+	@Override
+	public void updateProject(Project project) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		currentSession.update(project);
 	}
 
 	@Override
-	public Long getProjectsCount() {
+	public Long getProjectsCountByStatus(int statusId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("select count(p.id) from Project p "
+				+ "inner join p.status s "
+				+ "where s.id = :statusId");
+		
 		Query<Long> theQuery = currentSession
-				.createQuery("select count(p.id) from Project p", Long.class);
+				.createQuery(queryBuilder.toString(), Long.class);
+		theQuery.setParameter("statusId", statusId);
 		
 		return theQuery.getSingleResult();
 	}

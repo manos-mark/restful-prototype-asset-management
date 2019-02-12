@@ -1,4 +1,4 @@
-package com.manos.test.prototype.service;
+package com.manos.prototype.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -87,7 +87,7 @@ public class ProductServiceTest {
 	@Test 
 	public void getProductsCount() {
 		assertThatCode(() -> {
-			productService.getProductsCount();
+			productService.getProductsCountByStatus();
 		}).doesNotThrowAnyException();
 	}
 	

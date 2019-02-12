@@ -2,7 +2,6 @@ package com.manos.prototype.service;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,26 +20,6 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	private ProjectDao projectDao;
-	
-//	@Override
-//	@Transactional
-//	public List<Product> getProducts() {
-//		List<Product> products = productDao.getProducts();
-//		if (products.isEmpty()) {
-//			throw new EntityNotFoundException("Could not find any products");
-//		}
-//		return products;
-//	}
-
-//	@Override
-//	@Transactional
-//	public Product getProduct(int id) {
-//		Product product = productDao.getProduct(id);
-//		if (product == null) {
-//			throw new EntityNotFoundException("Product id not found - " + id);
-//		}
-//		return product;
-//	}
 
 	@Override
 	@Transactional
@@ -64,9 +43,14 @@ public class ProductServiceImpl implements ProductService {
 			if (project == null) {
 				throw new EntityNotFoundException("Project id not found - " + projectId);
 			}
+			try {
+				productDao.saveProduct(product);			
+			} catch (Exception e) {
+				throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+			}
 		}
 		try {
-			productDao.saveProduct(product);			
+			productDao.updateProduct(product);			
 		} catch (Exception e) {
 			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}
@@ -85,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public Long getProductsCount() {
-		return productDao.getProductsCount();
+	public Long getProductsCountByStatus(int statusId) {
+		return productDao.getProductsCountByStatus(statusId);
 	}
 }

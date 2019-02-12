@@ -1,4 +1,4 @@
-package com.manos.test.prototype.service;
+package com.manos.prototype.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;

@@ -19,7 +19,6 @@ public class ActivityDaoImpl implements ActivityDao {
 	@Override
 	public List<Activity> getActivitiesByUserId(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Activity a "
 				+ "left join fetch a.action "

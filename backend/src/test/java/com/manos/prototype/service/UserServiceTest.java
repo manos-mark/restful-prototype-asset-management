@@ -1,4 +1,4 @@
-package com.manos.test.prototype.service;
+package com.manos.prototype.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -34,83 +34,6 @@ public class UserServiceTest {
 	@Mock
 	private SecurityUtil securityUtil;
 	
-//	@Test
-//	public void saveNewPassword_success() {
-//		User mockUser = createMockUser();
-//
-//		when(userDao.getUserByEmail("mail"))
-//			.thenReturn(mockUser);
-//		when(PasswordGenerationUtil.getSaltString())
-//			.thenReturn("123");
-//		when(passwordEncoder.encode("123"))
-//			.thenReturn("aBc1");
-//		
-//		assertThatCode(() -> { 
-//			userService.saveNewPassword("mail");
-//		}).doesNotThrowAnyException();
-//	}
-//	
-//	@Test
-//	public void saveNewPassword_nullEmailFail() {
-//		when(userDao.getUserByEmail(null))
-//			.thenReturn(null);
-//		when(PasswordGenerationUtil.getSaltString())
-//			.thenReturn("123");
-//		when(passwordEncoder.encode("123"))
-//			.thenReturn("aBc1");
-//		
-//		assertThatExceptionOfType(EntityNotFoundException.class)
-//			.isThrownBy(() -> {
-//				userService.saveNewPassword("mail");
-//			});
-//	}
-//	
-//	@Test
-//	public void getCurrentUserDetails() {
-//		UserDetailsImpl mockUserDetails = createMockUserDetails();
-//		
-//		when(SecurityUtil.getCurrentUserDetails())
-//			.thenReturn(mockUserDetails);
-//		
-//		UserDetailsImpl userDetails = userService.getCurrentUserDetails();
-//		
-//		assertThat(userDetails).isEqualTo(mockUserDetails);
-//		assertThat(userDetails)
-//			.isEqualToComparingFieldByFieldRecursively(mockUserDetails);
-//	}
-//	
-//	@Test
-//	public void getCurrentUserDetails_nullUserFail() {
-//		when(SecurityUtil.getCurrentUserDetails())
-//			.thenReturn(null);
-//		
-//		assertThatExceptionOfType(EntityNotFoundException.class)
-//			.isThrownBy(() -> {
-//				userService.getCurrentUserDetails();
-//			});
-//	}
-//	
-//	@Test 
-//	public void findByEmail_success() {
-//		User mockUser = createMockUser();
-//		
-//		when(userDao.getUserByEmail("mail"))
-//			.thenReturn(mockUser);
-//		
-//		User user = userService.findByEmail("mail");
-//		
-//		assertThat(user).isEqualTo(mockUser);
-//		assertThat(user).isEqualToComparingFieldByFieldRecursively(mockUser);
-//	}
-//	
-//	@Test 
-//	public void findByEmail_nullEmailFail() {
-//		assertThatExceptionOfType(EntityNotFoundException.class)
-//			.isThrownBy(() -> {
-//				userService.findByEmail(null);
-//			});
-//	}
-	
 	@Test
 	public void saveUser_success() {
 		User mockUser = createMockUser();
@@ -125,23 +48,6 @@ public class UserServiceTest {
 		assertThatCode(() -> { 
 			userService.saveUser(mockUser);
 		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	public void saveUser_userExistsFail() {
-		User mockUser = createMockUser();
-		
-		when(userDao.getUserByEmail("mail"))
-			.thenReturn(mockUser);
-		when(passwordEncoder.encode("123"))
-			.thenReturn("aBc1");
-		
-		assertThat(mockUser).isNotNull();
-		assertThat(mockUser).hasNoNullFieldsOrProperties();
-		assertThatExceptionOfType(EntityNotFoundException.class)
-			.isThrownBy(() -> {
-				userService.saveUser(mockUser);
-			});
 	}
 	
 	@Test

@@ -8,7 +8,7 @@ public interface ProjectService {
 	
 	List<Project> getProjects();
 	
-	Long getProjectsCount();
+	Long getProjectsCountByStatus(int id);
 	
 	Project getProject(int id);
 	

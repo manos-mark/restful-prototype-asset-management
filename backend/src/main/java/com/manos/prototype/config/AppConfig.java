@@ -20,6 +20,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.pastelstudios.convert.ConversionService;
 import com.pastelstudios.convert.ConversionServiceImpl;
+import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 
 @Configuration
 @EnableWebMvc
@@ -100,5 +102,15 @@ public class AppConfig {
 	@Bean
 	public ConversionService conversionService() {
 		return new ConversionServiceImpl();
+	}
+	
+	@Bean
+	public GenericFinder genericFinder() {
+		return new GenericFinder();
+	}
+	
+	@Bean
+	public GenericGateway genericGateway() {
+		return new GenericGateway();
 	}
 }

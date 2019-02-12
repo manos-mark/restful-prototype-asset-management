@@ -1,4 +1,4 @@
-package com.manos.test.prototype.config;
+package com.manos.prototype.config;
 
 import java.util.Properties;
 
@@ -16,7 +16,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 @Configuration
 @ComponentScan(basePackages = "com.manos.prototype.dao")
-public class AppConfigTest {
+public class AppConfigUnitTest {
 	
 	@Bean
 	public DataSource dataSource() {

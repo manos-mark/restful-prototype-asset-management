@@ -45,11 +45,15 @@ public class ProjectServiceImpl implements ProjectService{
 	@Override
 	@Transactional
 	public void saveProject(Project project) {
-		if (project == null) {
-			throw new EntityNotFoundException("Project not found");
+		if (project.getId() != 0) {
+			try {
+				projectDao.saveProject(project);			
+			} catch (Exception e) {
+				throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+			}
 		}
 		try {
-			projectDao.saveProject(project);			
+			projectDao.updateProject(project);			
 		} catch (Exception e) {
 			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}
@@ -57,8 +61,8 @@ public class ProjectServiceImpl implements ProjectService{
 
 	@Override
 	@Transactional
-	public Long getProjectsCount() {
-		return projectDao.getProjectsCount();
+	public Long getProjectsCountByStatus(int statusId) {
+		return projectDao.getProjectsCountByStatus(statusId);
 	}
 
 }

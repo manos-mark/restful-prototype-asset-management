@@ -11,8 +11,6 @@ import com.manos.prototype.validation.ValidEmail;
 })
 public class UserRequestDto {
 
-	private Long id;
-
 	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
 	private String password;
@@ -37,14 +35,12 @@ public class UserRequestDto {
 	public UserRequestDto() {
 
 	}
-
-	public UserRequestDto(Long id,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String password,
+	
+	public UserRequestDto(@NotNull(message = "is required") @Size(min = 1, message = "is required") String password,
 			@NotNull(message = "is required") @Size(min = 1, message = "is required") String matchingPassword,
 			@NotNull(message = "is required") @Size(min = 1, message = "is required") String firstName,
 			@NotNull(message = "is required") @Size(min = 1, message = "is required") String lastName,
 			@NotNull(message = "is required") @Size(min = 1, message = "is required") String email) {
-		this.id = id;
 		this.password = password;
 		this.matchingPassword = matchingPassword;
 		this.firstName = firstName;
@@ -90,14 +86,6 @@ public class UserRequestDto {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 }
