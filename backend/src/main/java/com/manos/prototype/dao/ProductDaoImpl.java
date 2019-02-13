@@ -87,7 +87,7 @@ public class ProductDaoImpl implements ProductDao {
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("select count(p.id) from Product p "
 				+ "inner join p.status s "
-				+ "where p.status.id = :statusId");
+				+ "where s.id = :statusId");
 		
 		Query<Long> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Long.class);
