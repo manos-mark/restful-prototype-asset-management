@@ -2,7 +2,6 @@ package com.manos.prototype.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,7 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.Project;
+import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.service.ProductService;
+import com.manos.prototype.service.ProjectService;
 import com.pastelstudios.convert.ConversionService;
 
 @RestController
@@ -22,6 +24,9 @@ public class ProductController {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private ProjectService projectService;
 	
 	@Autowired
 	private ConversionService conversionService;
@@ -42,6 +47,15 @@ public class ProductController {
 			@RequestBody ProductRequestDto productRequestDto) {
 		Product product = conversionService.convert(productRequestDto, Product.class);
 		product.setId(productId);
+		
+		// check if project exists
+		int projectId = product.getProject().getId();
+		Project project = projectService.getProject(projectId);
+		
+		if (project == null) {
+			throw new EntityNotFoundException("Project id not found - " + projectId);
+		}
+		
 		productService.saveProduct(product);
 	}
 	

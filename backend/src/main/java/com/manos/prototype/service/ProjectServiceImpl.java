@@ -45,17 +45,21 @@ public class ProjectServiceImpl implements ProjectService{
 	@Override
 	@Transactional
 	public void saveProject(Project project) {
+		// if id is not 0 then update
 		if (project.getId() != 0) {
+			try {
+				projectDao.updateProject(project);			
+			} catch (Exception e) {
+				throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+			}
+		}
+		// if id is 0 then add new
+		else {
 			try {
 				projectDao.saveProject(project);			
 			} catch (Exception e) {
 				throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 			}
-		}
-		try {
-			projectDao.updateProject(project);			
-		} catch (Exception e) {
-			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
 		}
 	}
 

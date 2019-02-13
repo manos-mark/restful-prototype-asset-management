@@ -56,13 +56,13 @@ public class UserControllerTest extends AbstractMvcTest {
 	@Test
 	public void addUser_success() throws Exception {
 		MockHttpServletRequestBuilder request = post("/users")
-				.contentType(MediaType.APPLICATION_JSON)
-		        .content("{"
-		        		+ "\"firstName\": \"firstName\","
-		        		+ "\"lastName\": \"lastName\","
-		        		+ "\"email\": \"email@email.com\","
-		        		+ "\"password\": \"123\""
-		        		+ "}");
+			.contentType(MediaType.APPLICATION_JSON)
+	        .content("{"
+	        		+ "\"firstName\": \"firstName\","
+	        		+ "\"lastName\": \"lastName\","
+	        		+ "\"email\": \"email@email.com\","
+	        		+ "\"password\": \"123\""
+	        		+ "}");
 				
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isOk());
@@ -72,18 +72,17 @@ public class UserControllerTest extends AbstractMvcTest {
 		assertThat(savedUser.getEmail()).isEqualTo("email@email.com");
 		assertThat(savedUser.getFirstName()).isEqualTo("firstName");
 		assertThat(savedUser.getLastName()).isEqualTo("lastName");
-		assertThat(savedUser.getPassword()).isEqualTo("$2a$10$erHpDkQD9jHMD1dFQ.kcsu4fYko2cxvx/EWgP/KEeuCO07RVfRAfa");
 	}
 	
 	@Test
 	public void addUser_fail() throws Exception {
 		MockHttpServletRequestBuilder request = post("/users")
-				.contentType(MediaType.APPLICATION_JSON)
-		        .content("{"
-		        		+ "\"email\": \"email@email.com\","
-		        		+ "\"password\": \"123\""
-		        		+ "}");
-				
+			.contentType(MediaType.APPLICATION_JSON)
+	        .content("{"
+	        		+ "\"email\": \"email@email.com\","
+	        		+ "\"password\": \"123\""
+	        		+ "}");
+			
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isNotFound());	
 	}
@@ -116,18 +115,19 @@ public class UserControllerTest extends AbstractMvcTest {
 	@Test
 	public void updateUser_success() throws Exception {
 		MockHttpServletRequestBuilder request = put("/users/{id}", testUserId)
-				.contentType(MediaType.APPLICATION_JSON)
-		        .content("{"
-		        		+ "\"firstName\": \"firstName\","
-		        		+ "\"lastName\": \"lastName\","
-		        		+ "\"email\": \"changed@email.com\","
-		        		+ "\"password\": \"123\""
-		        		+ "}");				
+			.contentType(MediaType.APPLICATION_JSON)
+	        .content("{"
+	        		+ "\"firstName\": \"firstName\","
+	        		+ "\"lastName\": \"lastName\","
+	        		+ "\"email\": \"changed@email.com\","
+	        		+ "\"password\": \"123\","
+	        		+ "\"matchingPassword\": \"123\""
+	        		+ "}");				
 		
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isOk());
 		
-		User savedUser = userTestService.getLastUser();
+		User savedUser = userTestService.getUser(testUserId);
 		assertThat(savedUser.getEmail()).isEqualTo("changed@email.com");
 		assertThat(savedUser.getFirstName()).isEqualTo("firstName");
 		assertThat(savedUser.getLastName()).isEqualTo("lastName");
@@ -136,7 +136,7 @@ public class UserControllerTest extends AbstractMvcTest {
 	@Test
 	public void updateUser_fail() throws Exception {
 		MockHttpServletRequestBuilder request = put("/users/{id}", testUserId)
-				.contentType(MediaType.APPLICATION_JSON);
+			.contentType(MediaType.APPLICATION_JSON);
 				
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isBadRequest());
