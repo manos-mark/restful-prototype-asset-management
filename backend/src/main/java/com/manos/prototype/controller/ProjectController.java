@@ -34,16 +34,17 @@ public class ProjectController {
 	
 	@Autowired
 	private ConversionService conversionService;
-	
+
 	@GetMapping
 	public List<ProjectDto> getProjects() {
 		List<Project> projects = projectService.getProjects();
 		return conversionService.convertList(projects, ProjectDto.class);
 	}
 	
-	@PostMapping("/count")
-	public Long getProjectsCountByStatus(@RequestBody StatusRequestDto statusId) {
-		return projectService.getProjectsCountByStatus(statusId.getStatusId());
+	@GetMapping("/{id}/products")
+	public List<ProductDto> getProducts(@PathVariable("id") int projectId) {
+		List<Product> products =  productService.getProductsByProjectId(projectId);
+		return conversionService.convertList(products, ProductDto.class);
 	}
 	
 	@GetMapping("/{id}")
@@ -51,16 +52,15 @@ public class ProjectController {
 		Project project = projectService.getProject(projectId);
 		return conversionService.convert(project, ProjectDto.class);
 	}
+
+	@PostMapping("/count")
+	public Long getProjectsCountByStatus(@RequestBody StatusRequestDto statusId) {
+		return projectService.getProjectsCountByStatus(statusId.getStatusId());
+	}
 	
 	@DeleteMapping("/{id}")
 	public void deleteProject(@PathVariable("id") int projectId) {
 		projectService.deleteProject(projectId);
-	}
-	
-	@GetMapping("/{id}/products")
-	public List<ProductDto> getProducts(@PathVariable("id") int projectId) {
-		List<Product> products =  productService.getProductsByProjectId(projectId);
-		return conversionService.convertList(products, ProductDto.class);
 	}
 	
 	@PostMapping

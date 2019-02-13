@@ -32,7 +32,7 @@ public class ProjectServiceTest {
 	@Test 
 	public void getProjectsCount() {
 		assertThatCode(() -> {
-			projectService.getProjectsCount();
+			projectService.getProjectsCountByStatus(2);
 		}).doesNotThrowAnyException();
 	}
 	

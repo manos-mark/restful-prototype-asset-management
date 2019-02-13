@@ -18,5 +18,6 @@ public interface ProductService {
 
 	Long getProductsCountByStatus(int statusId);
 
-//	void updateProduct(Product product, int id);
+//	void updateProduct(Product product);
+
 }

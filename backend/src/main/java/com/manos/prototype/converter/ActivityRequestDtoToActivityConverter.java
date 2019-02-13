@@ -22,7 +22,7 @@ public class ActivityRequestDtoToActivityConverter implements Converter<Activity
 		// convert datetime
 		String tempDate = from.getDate();
 		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("MM/dd/yyyy, HH:mm:ss");
+				.ofPattern("dd/MM/yyyy, HH:mm:ss");
 		LocalDateTime date = LocalDateTime.parse(tempDate, formatter);
 		
 		Activity activity = new Activity();

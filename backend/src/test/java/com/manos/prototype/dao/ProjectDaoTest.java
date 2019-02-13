@@ -95,19 +95,42 @@ public class ProjectDaoTest {
 		project.setProjectManager("test");
 		project.setDate("2019-12-17 14:14:14");
 		project.setStatus(new Status(1));
-		project.setId(2);
 		
 		assertThatCode(() -> {
 			projectDao.saveProject(project);
 		}).doesNotThrowAnyException();
 		
-//		Project savedProject = projectDao.getProject(2);
-//		assertThat(savedProject).isNotNull();
-//		assertThat(savedProject.getCompanyName()).isEqualTo("test");
-//		assertThat(savedProject.getProjectManager()).isEqualTo("test");
-//		assertThat(savedProject.getProjectName()).isEqualTo("test");
-//		assertThat(savedProject.getDate()).isEqualTo("2019-12-17 14:14:14");
-//		assertThat(savedProject.getStatus().getId()).isEqualTo(1);
+		Project savedProject = projectDao.getProject(2);
+		assertThat(savedProject).isNotNull();
+		assertThat(savedProject.getCompanyName()).isEqualTo("test");
+		assertThat(savedProject.getProjectManager()).isEqualTo("test");
+		assertThat(savedProject.getProjectName()).isEqualTo("test");
+		assertThat(savedProject.getDate()).isEqualTo("2019-12-17 14:14:14");
+		assertThat(savedProject.getStatus().getId()).isEqualTo(1);
+	}
+	
+	@Test
+	@Transactional
+	void updateProject_success() {
+		Project project = new Project();
+		project.setCompanyName("test");
+		project.setProjectName("test");
+		project.setProjectManager("test");
+		project.setDate("2019-12-17 14:14:14");
+		project.setStatus(new Status(1));
+		project.setId(1);
+		
+		assertThatCode(() -> {
+			projectDao.updateProject(project);
+		}).doesNotThrowAnyException();
+		
+		Project savedProject = projectDao.getProject(1);
+		assertThat(savedProject).isNotNull();
+		assertThat(savedProject.getCompanyName()).isEqualTo("test");
+		assertThat(savedProject.getProjectManager()).isEqualTo("test");
+		assertThat(savedProject.getProjectName()).isEqualTo("test");
+		assertThat(savedProject.getDate()).isEqualTo("2019-12-17 14:14:14");
+		assertThat(savedProject.getStatus().getId()).isEqualTo(1);
 	}
 	
 	@Test
@@ -122,7 +145,7 @@ public class ProjectDaoTest {
 	@Test
 	@Transactional
 	void getProjectsCount() {
-		assertThat(projectDao.getProjectsCount()).isEqualTo(1);
+		assertThat(projectDao.getProjectsCountByStatus(2)).isEqualTo(1);
 	}
 	
 }

@@ -7,24 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.entity.User;
+import com.manos.prototype.entity.Project;
 import com.pastelstudios.db.GenericFinder;
 
 @Service
-public class UserTestService {
+public class ProjectTestService {
 
 	@Autowired
 	private GenericFinder finder;
 	
 	@Transactional(readOnly = true)
-	public User getLastUser() {
-		List<User> users = finder.findAll(User.class);
-		return users.get(users.size() - 1);
+	public Project getLastProject() {
+		List<Project> projects = finder.findAll(Project.class);
+		return projects.get(projects.size() - 1);
 	}
 
 	@Transactional(readOnly = true)
-	public User getUser(Long testUserId) {
-		return finder.findById(User.class, testUserId);
+	public Project getProject(int id) {
+		return finder.findById(Project.class, id);
 	}
 	
 }

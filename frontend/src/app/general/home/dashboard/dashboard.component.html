@@ -7,22 +7,22 @@
 <div class="leftCont">
   <div class="statistics">
     <a class="viewAll" routerLink="../prototype/projects">
-      <span>3</span>
+      <span>{{ newProjectsCount }}</span>
       <span>New projects</span>
       <i class="projects"></i>
       <span>view all</span>
     </a>
-    <div class="finishedProjects"><span>12</span> finished projects</div>
+    <div class="finishedProjects"><span>{{ finishedProjectsCount }}</span> finished projects</div>
     <a class="greenBtn" routerLink="../prototype/projects/new">Add project</a>
   </div>
   <div class="statistics">
     <a class="viewAll" routerLink="../prototype/products">
-      <span>7</span>
+      <span>{{ inProgressProductsCount }}</span>
       <span>Products in progress</span>
       <i class="products"></i>
       <span>view all</span>
     </a>
-    <div class="finishedProjects"><span>7</span> finished projects</div>
+    <div class="finishedProjects"><span>{{ finishedProductsCount }}</span> finished projects</div>
     <a class="blueBtn" routerLink="../prototype/products/new">Add product</a>
   </div>
 </div>

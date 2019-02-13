@@ -22,7 +22,6 @@ export class ActivityComponent implements OnInit {
           activities.map(
             activity => { this.activities.push(new Activity(activity)) }
           )
-          console.log(this.activities)
         },
         error => { console.log(error) }
       );
