@@ -87,7 +87,7 @@ public class ProductServiceTest {
 	@Test 
 	public void getProductsCount() {
 		assertThatCode(() -> {
-			productService.getProductsCountByStatus();
+			productService.getProductsCountByStatus(2);
 		}).doesNotThrowAnyException();
 	}
 	

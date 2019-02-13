@@ -34,8 +34,7 @@ public class ProjectController {
 	
 	@Autowired
 	private ConversionService conversionService;
-///////////////////////////////////////////////////////	
-////////// NOT TESTED////////////////////////
+
 	@GetMapping
 	public List<ProjectDto> getProjects() {
 		List<Project> projects = projectService.getProjects();
@@ -47,7 +46,6 @@ public class ProjectController {
 		List<Product> products =  productService.getProductsByProjectId(projectId);
 		return conversionService.convertList(products, ProductDto.class);
 	}
-////////////////////////////////////////////////////////////	
 	
 	@GetMapping("/{id}")
 	public ProjectDto getProject(@PathVariable("id") int projectId) {

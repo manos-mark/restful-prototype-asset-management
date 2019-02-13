@@ -39,17 +39,6 @@ public class ActivityServiceTest {
 	private UserServiceImpl userService;
 		
 	@Test
-	public void getActivities_getCurrentUserDetails_nullUserFail() {
-		when(userService.getCurrentUserDetails())
-			.thenReturn(null);
-		
-		assertThatExceptionOfType(NullPointerException.class)
-		.isThrownBy(() -> {
-			activityService.getActivities();
-		});
-	}
-	
-	@Test
 	public void getActivities_getActivitiesByUserId_success() {
 		List<Activity> mockActivities = createMockActivities();
 		UserDetailsImpl mockUser = createMockUserDetails();

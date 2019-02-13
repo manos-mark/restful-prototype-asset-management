@@ -26,9 +26,6 @@ public class ActivityServiceImpl implements ActivityService{
 		
 		// get current user
 		Long userId = userService.getCurrentUserDetails().getId();
-		if (userId == null) {
-			throw new EntityNotFoundException("User id not found - " + userId);
-		}
 		
 		// get activities from db
 		return activityDao.getActivitiesByUserId(userId);
@@ -41,15 +38,15 @@ public class ActivityServiceImpl implements ActivityService{
 		// get current user id, then get user
 		Long userId = userService.getCurrentUserDetails().getId();
 		User tempUser = userService.getUser(userId);
-		if (userId == null || tempUser == null) {
-			throw new EntityNotFoundException("User not found - " + userId);
-		}
+//		if (userId == null || tempUser == null) {
+//			throw new EntityNotFoundException("User not found - " + userId);
+//		}
 		activity.setUser(tempUser);
-		try {
+//		try {
 			activityDao.saveActivity(activity);
-		} catch (Exception e) {
-			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-		}
+//		} catch (Exception e) {
+//			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+//		}
 	}
 
 }

@@ -91,6 +91,27 @@ class UserDaoTest {
 	
 	@Test
 	@Transactional
+	void updateUser_success() {
+		User user = new User();
+		user.setEmail("mail@mail.com");
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
+		user.setPassword("test");
+		user.setId(1L);
+		
+		assertThatCode(() -> { 
+			userDao.updateUser(user);
+		}).doesNotThrowAnyException();
+		
+		User savedUser = userDao.getUserById(1);
+		assertThat(savedUser.getFirstName()).isEqualTo("firstName");
+		assertThat(savedUser.getLastName()).isEqualTo("lastName");
+		assertThat(savedUser.getPassword()).isEqualTo("test");
+		assertThat(savedUser.getEmail()).isEqualTo("mail@mail.com");
+	}
+	
+	@Test
+	@Transactional
 	void getUserDaoById_success() {
 		User user = userDao.getUserByEmail("john@luv2code.com");
 		assertThatCode(() -> { 
