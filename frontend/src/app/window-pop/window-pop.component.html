@@ -5,15 +5,17 @@
       <div class="title">
         <p *ngIf="this.authService.windowPopLogout">Log out</p>
         <p *ngIf="!this.authService.windowPop">Delete image</p>
-        <p *ngIf="this.authService.windowPopLogin">Authentication Failed</p>
+        <p *ngIf="this.authService.windowPopFail">Authentication Failed</p>
+        <p *ngIf="this.authService.windowPopSuccess">Success!</p>
       </div>
     </div>
     <div class="windowPopContents">
       <div class="centered">
         <h4 *ngIf="this.authService.windowPopLogout">Are you sure?</h4>
-        <h4 *ngIf="this.authService.windowPopLogin">Your request is not successful!</h4>
+        <h4 *ngIf="this.authService.windowPopFail">Your request is not successful!</h4>
         <span *ngIf="this.authService.windowPopLogout">You will be logged out!</span>
-        <span *ngIf="this.authService.windowPopLogin">Try again with different email or password</span>
+        <span *ngIf="this.authService.windowPopFail">Try again with different credentials.</span>
+        <span *ngIf="this.authService.windowPopSuccess">Your request was successful.</span>
       </div>
     </div>
     <div class="windowPopButtons">

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
-import { FormGroup, FormControl, Validators, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -11,39 +11,47 @@ export class ProfileComponent implements OnInit {
 
   changePasswordForm = new FormGroup({
       oldPassword: new FormControl(null, [Validators.required, Validators.minLength(6)]),
-      newPassword: new FormControl(null, [Validators.required, Validators.minLength(6), this.matchPasswords()]),
-      repeatNewPassword: new FormControl(null, [Validators.required, Validators.minLength(6), this.matchPasswords()])
+      passwords: new FormGroup({
+        newPassword: new FormControl(null, [Validators.required, Validators.minLength(6)]),
+        repeatNewPassword: new FormControl(null, [Validators.required, Validators.minLength(6)])
+      }, { validators: this.matchPasswords })
     }
   )
 
   constructor(public authService: AuthService) { }
 
+    matchPasswords(control: AbstractControl): { invalid: boolean } {
+        if (control.value.newPassword !== control.value.repeatNewPassword) {
+            return {invalid: true};
+        }
+        return null;
+    }
+
   ngOnInit() {
   }
 
-  matchPasswords() { 
-    let pass = this.changePasswordForm.controls.newPassword.value;
-    let confirmPass = this.changePasswordForm.controls.repeatNewPassword.value;
-
-    return pass === confirmPass ? null : { valid: true }     
-  }
-
   onSave() {
-    this.authService.updateUser(
-      this.changePasswordForm.value.oldPassword, 
-      this.changePasswordForm.value.newPassword, 
-      this.changePasswordForm.value.repeatNewPassword
-    ) 
+    this.authService.updateUser(this.oldPassword.value, 
+        this.newPassword.value, this.repeatNewPassword.value) 
+        .subscribe(
+            resp => {
+                this.authService.windowPop = true;
+                this.authService.windowPopSuccess = true;
+            },
+            error => {
+                this.authService.windowPop = true;
+                this.authService.windowPopFail = true;
+            }
+        );
   }
 
   onCancel() {
       this.changePasswordForm.reset();
-      // this.authService.changePasswordError = false;
-      // this.authService.changePassword = false;
   }
 
   get oldPassword() { return this.changePasswordForm.get('oldPassword'); }
-  get newPassword() { return this.changePasswordForm.get('newPassword'); }
-  get repeatNewPassword() { return this.changePasswordForm.get('repeatNewPassword'); }
+  get newPassword() { return this.changePasswordForm.controls.passwords.get('newPassword'); }
+  get repeatNewPassword() { return this.changePasswordForm.controls.passwords.get('repeatNewPassword'); }
+  get passwords() { return this.changePasswordForm.controls.passwords; }
   
 }

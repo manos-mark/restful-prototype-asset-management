@@ -12,7 +12,8 @@ export class AuthService {
   currentUser: User;
   rememberMe = false;
   windowPopLogout = false;
-  windowPopLogin = false;
+  windowPopFail = false;
+  windowPopSuccess = false;
   windowPop = false;
   
   constructor(private httpClient: HttpClient,
@@ -44,7 +45,6 @@ export class AuthService {
     .subscribe(
       resp => { 
         this.currentUser = resp.body;
-        console.log(this.currentUser)
         if (this.currentUser) {
           this.router.navigate(['/']);
         } 
@@ -73,7 +73,7 @@ export class AuthService {
             this.activityService.addActivity('1').subscribe();
             this.router.navigate(['/']);
           } else {
-            this.windowPopLogin = true;
+            this.windowPopFail = true;
             this.windowPop = true;
           }
         }
@@ -103,11 +103,11 @@ export class AuthService {
   }
 
   updateUser(oldPassword:number, newPassword: number, repeatNewPassword: number) {
-    return this.httpClient.put<any>('api/users/', 
+    return this.httpClient.put<any>('api/users/' + this.currentUser.id.toString(), 
       {
         oldPassword: oldPassword,
-        newPassword: newPassword,
-        repeatNewPassword: repeatNewPassword
+        password: newPassword,
+        matchingPassword: repeatNewPassword
       },
       {
         headers: new HttpHeaders().set('Content-Type', 'application/json'),

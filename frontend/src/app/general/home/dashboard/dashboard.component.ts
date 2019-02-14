@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
         error => { console.log(error) }
       );
 
-  // NEW Products
+    // NEW Products
     this.productsService.getProductsCountByStatusId(2) 
       .subscribe(
         products => { 
@@ -82,22 +82,22 @@ export class DashboardComponent implements OnInit {
       error => { console.log(error) }
     );
 
-  // IN_PROGRESS Projects
-  this.projectsService.getProjectsCountByStatusId(1) 
-    .subscribe(
-      projects => { 
-        this.inProgressProjectsCount = projects;
-      },
-      error => { console.log(error) }
+    // IN_PROGRESS Projects
+    this.projectsService.getProjectsCountByStatusId(1) 
+      .subscribe(
+        projects => { 
+          this.inProgressProjectsCount = projects;
+        },
+        error => { console.log(error) }
     );
 
-  // FINISHED Products
-  this.projectsService.getProjectsCountByStatusId(3) 
-    .subscribe(
-      projects => { 
-        this.finishedProjectsCount = projects;
-      },
-      error => { console.log(error) }
+    // FINISHED Products
+    this.projectsService.getProjectsCountByStatusId(3) 
+      .subscribe(
+        projects => { 
+          this.finishedProjectsCount = projects;
+        },
+        error => { console.log(error) }
     );
   }
 

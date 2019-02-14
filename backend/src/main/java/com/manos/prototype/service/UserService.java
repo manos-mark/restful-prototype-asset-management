@@ -8,7 +8,7 @@ public interface UserService {
 
     void saveUser(User user);
     
-    void updateUser(User user);
+    void updateUser(User user, String oldPass, String newPass);
 
 	User getUser(long userId);
 

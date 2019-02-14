@@ -16,13 +16,12 @@ export class WindowPopComponent implements OnInit {
   }
 
   onCancel() {
-    this.authService.windowPopLogin = false;    
+    this.authService.windowPopFail = false;    
     this.authService.windowPopLogout = false;  
     this.authService.windowPop = false;  
   }
 
   ngOnInit() {
-    console.log(this.active)
   }
 
 }

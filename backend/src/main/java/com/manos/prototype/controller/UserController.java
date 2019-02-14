@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.manos.prototype.dto.EmailRequestDto;
+import com.manos.prototype.dto.NewUserPassRequestDto;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
@@ -56,11 +57,15 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public void updateUser(@RequestBody UserRequestDto userRequestDto,
+	public void updateUser(@RequestBody NewUserPassRequestDto requestDto,
 			@PathVariable("id") long userId) {
-		User user = conversionService.convert(userRequestDto, User.class);
-		user.setId(userId);
-		userService.updateUser(user);
+		
+		String oldPass = requestDto.getOldPassword();
+		String newPass = requestDto.getPassword();
+		
+		User user = userService.getUser(userId);
+		
+		userService.updateUser(user, oldPass, newPass);
 	}
 	
 	@DeleteMapping("/{id}")

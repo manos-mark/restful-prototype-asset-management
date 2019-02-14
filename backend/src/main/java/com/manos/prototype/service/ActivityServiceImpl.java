@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.manos.prototype.dao.ActivityDao;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.User;
+import com.manos.prototype.exception.EntityNotFoundException;
 
 @Service
 public class ActivityServiceImpl implements ActivityService{
@@ -37,15 +38,15 @@ public class ActivityServiceImpl implements ActivityService{
 		// get current user id, then get user
 		Long userId = userService.getCurrentUserDetails().getId();
 		User tempUser = userService.getUser(userId);
-//		if (userId == null || tempUser == null) {
-//			throw new EntityNotFoundException("User not found - " + userId);
-//		}
+		if (userId == null || tempUser == null) {
+			throw new EntityNotFoundException("User not found - " + userId);
+		}
 		activity.setUser(tempUser);
-//		try {
+		try {
 			activityDao.saveActivity(activity);
-//		} catch (Exception e) {
-//			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-//		}
+		} catch (Exception e) {
+			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+		}
 	}
 
 }

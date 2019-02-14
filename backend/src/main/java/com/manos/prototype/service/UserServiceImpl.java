@@ -12,8 +12,6 @@ import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.util.PasswordGenerationUtil;
 import com.manos.prototype.util.SecurityUtil;
-import com.pastelstudios.db.GenericFinder;
-import com.pastelstudios.db.GenericGateway;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -70,20 +68,27 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void updateUser(User user) {
+	public void updateUser(User user, String oldPassReq, String newPassReq) {
 		if (user == null) {
 			throw new EntityNotFoundException("User not found");
 		}
 		
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		if (user.getPassword() == null) {
-			throw new EntityNotFoundException("User password cannot be null");
-		}
+		String oldPass = SecurityUtil.getCurrentUserDetails().getPassword();
 		
-		try {
-			userDao.updateUser(user);
-		} catch (Exception e) {
-			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+		if (passwordEncoder.matches(oldPassReq, oldPass)) {
+			user.setPassword(passwordEncoder.encode(newPassReq));
+			
+			if (user.getPassword() == null) {
+				throw new EntityNotFoundException("User password cannot be null");
+			}
+			
+			try {
+				userDao.updateUser(user);
+			} catch (Exception e) {
+				throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+			}
+		} else {
+			throw new EntityNotFoundException("User password is not correct!");
 		}
 	}
 
