@@ -24,32 +24,63 @@
     <div class="activity">
       <p class="ttl">Change password</p>
       <div class="history lock">
-        <div class="formGroup changePassword">
+        <div class="formGroup changePassword" [formGroup]="changePasswordForm">
           <div class="generalInfo">
-            <div class="inputWrp">
+            <div class="inputWrp" [ngClass]="{'error': oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)}">
               <div class="title">
                 <span>Old password</span>
               </div>
-              <input type="text">
-              <span class="error">Incorrect value</span>
+              <input 
+                formControlName="oldPassword"
+                type="password"
+              >
+              <span 
+                class="error"
+                *ngIf="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)"
+              >Incorrect value</span>
             </div>
-            <div class="inputWrp">
+            <div class="inputWrp" [ngClass]="{'error': newPassword.invalid && (newPassword.dirty || newPassword.touched)}">
               <div class="title">
                 <span>New password</span>
               </div>
-              <input type="text">
-              <span class="error">Incorrect value</span>
+              <input 
+                type="password"
+                formControlName="newPassword"
+              >
+              <span 
+                class="error"
+                *ngIf="newPassword.invalid && (newPassword.dirty || newPassword.touched)"
+              >Incorrect value</span>
             </div>
-            <div class="inputWrp">
+            <div class="inputWrp" [ngClass]="{'error': repeatNewPassword.invalid && (repeatNewPassword.dirty || repeatNewPassword.touched)}">
               <div class="title">
                 <span>Repeat new password</span>
               </div>
-              <input type="text">
-              <span class="error">Incorrect value</span>
+              <input 
+                type="password"
+                formControlName="repeatNewPassword"
+              >
+              <span 
+                class="error"
+                *ngIf="repeatNewPassword.invalid && (repeatNewPassword.dirty || repeatNewPassword.touched)"
+              >Incorrect value</span>
             </div>
+            <!-- <span 
+              [ngStyle]="{'display': this.authService.forgotPassFormSubmited ? 'block' : 'none'}"
+            >You will receive an email with a new password.</span>
+            <span 
+              [ngStyle]="{'display': this.authService.forgotPassFormError ? 'block' : 'none'}"
+            >User does not exists, please try again.</span> -->
             <div class="btnsWrp">
-              <a class="grayDarkBtn">Cancel</a>
-              <a class="greenBtn">Save</a>
+              <a 
+                class="grayDarkBtn"
+                (click)="onCancel"
+              >Cancel</a>
+              <a 
+                class="greenBtn"
+                (click)="onSave"
+                [ngClass]="{ 'disabled': changePasswordForm.invalid }"
+              >Save</a>
             </div>
           </div>
         </div>

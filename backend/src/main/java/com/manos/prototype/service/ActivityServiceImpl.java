@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.manos.prototype.dao.ActivityDao;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.User;
-import com.manos.prototype.exception.EntityNotFoundException;
 
 @Service
 public class ActivityServiceImpl implements ActivityService{

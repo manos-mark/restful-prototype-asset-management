@@ -102,6 +102,20 @@ export class AuthService {
       );
   }
 
+  updateUser(oldPassword:number, newPassword: number, repeatNewPassword: number) {
+    return this.httpClient.put<any>('api/users/', 
+      {
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        repeatNewPassword: repeatNewPassword
+      },
+      {
+        headers: new HttpHeaders().set('Content-Type', 'application/json'),
+        observe: 'response'
+      }
+    );
+  }
+
   isAuthenticated() {
     return this.currentUser !== undefined && this.currentUser !== null
   }

@@ -16,8 +16,6 @@ import { ForgottenPasswordComponent } from './login/forgotten-password/forgotten
   imports: [
     CommonModule,
     InputTrimModule,
-    // HttpClientModule,
-    // HttpClientXsrfModule,
     ReactiveFormsModule,
     AuthRoutingModule
   ]

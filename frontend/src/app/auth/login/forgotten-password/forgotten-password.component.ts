@@ -30,7 +30,6 @@ export class ForgottenPasswordComponent implements OnInit {
     this.forgotPassForm.reset();
     this.authService.forgotPassFormError = false;
     this.authService.forgottenPass = false;
-    
   }
 
   get email() { return this.forgotPassForm.get('email'); }
