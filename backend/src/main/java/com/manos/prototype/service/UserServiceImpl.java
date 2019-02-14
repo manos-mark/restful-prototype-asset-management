@@ -6,7 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.UserDao;
+import com.manos.prototype.dao.UserDaoImpl;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
@@ -14,10 +14,10 @@ import com.manos.prototype.util.PasswordGenerationUtil;
 import com.manos.prototype.util.SecurityUtil;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl {
 
 	@Autowired
-	private UserDao userDao;
+	private UserDaoImpl userDao;
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
 //	@Autowired
 //	private GenericGateway gateway;
 	
-	@Override
 	@Transactional
 	public UserDetailsImpl getCurrentUserDetails() {
 		UserDetailsImpl userDetails = SecurityUtil.getCurrentUserDetails();
@@ -39,7 +38,6 @@ public class UserServiceImpl implements UserService {
 		return userDetails;
 	}
 	
-	@Override
 	@Transactional
 	public void saveUser(User user) {
 //		if (userDao.getUserByEmail(user.getEmail()) != null) {
@@ -60,13 +58,11 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	@Override
 	@Transactional
 	public User getUser(long userId) {
 		return userDao.getUserById(userId);
 	}
 
-	@Override
 	@Transactional
 	public void updateUser(User user, String oldPassReq, String newPassReq) {
 		if (user == null) {
@@ -92,7 +88,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	@Override
 	@Transactional
 	public void deleteUser(long userId) {
 		User tempUser = getUser(userId);
@@ -102,7 +97,6 @@ public class UserServiceImpl implements UserService {
 		userDao.deleteUser(userId);
 	}
 
-	@Override
 	@Transactional
 	public String saveNewPassword(String email) {
 		

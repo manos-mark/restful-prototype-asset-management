@@ -14,23 +14,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.manos.prototype.dao.ActivityDao;
-import com.manos.prototype.dao.UserDao;
+import com.manos.prototype.dao.ActivityDaoImpl;
+import com.manos.prototype.dao.UserDaoImpl;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.security.UserDetailsImpl;
-import com.manos.prototype.service.ActivityServiceImpl;
-import com.manos.prototype.service.UserServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityServiceTest {
 	
 	@Mock
-	private ActivityDao activityDao;
+	private ActivityDaoImpl activityDao;
 	
 	@Mock
-	private UserDao userDao;
+	private UserDaoImpl userDao;
 
 	@InjectMocks
 	private ActivityServiceImpl activityService;

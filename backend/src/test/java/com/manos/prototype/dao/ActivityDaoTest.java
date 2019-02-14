@@ -15,8 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
-import com.manos.prototype.dao.ActivityDao;
-import com.manos.prototype.dao.UserDao;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.User;
@@ -29,10 +27,10 @@ import com.manos.prototype.entity.User;
 public class ActivityDaoTest {
 
 	@Autowired
-	private ActivityDao activityDao;
+	private ActivityDaoImpl activityDao;
 	
 	@Autowired
-	private UserDao userDao;
+	private UserDaoImpl userDao;
 	
 	@Test
 	@Transactional

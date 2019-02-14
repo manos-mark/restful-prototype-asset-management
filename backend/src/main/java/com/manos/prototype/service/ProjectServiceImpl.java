@@ -6,23 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.ProjectDao;
+import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.search.ProjectSearch;
+import com.pastelstudios.paging.PageRequest;
+import com.pastelstudios.paging.PageResult;
 
 @Service
-public class ProjectServiceImpl implements ProjectService{
+public class ProjectServiceImpl {
 		
 	@Autowired
-	private ProjectDao projectDao;
+	private ProjectDaoImpl projectDao;
 	
-	@Override
 	@Transactional
-	public List<Project> getProjects() {
-		return projectDao.getProjects();
+	public PageResult<Project> getProjects(PageRequest pageRequest, ProjectSearch search) {
+		List<Project> projects = projectDao.getProjects(pageRequest, search);
+		int totalCount = projectDao.count(search);
+		return new PageResult<>(projects, totalCount, pageRequest.getPageSize());
 	}
 
-	@Override
 	@Transactional
 	public Project getProject(int id) {
 		Project project = projectDao.getProject(id);
@@ -32,7 +35,6 @@ public class ProjectServiceImpl implements ProjectService{
 		return project;
 	}
 
-	@Override
 	@Transactional
 	public void deleteProject(int id) {
 		Project project  = projectDao.getProject(id);
@@ -42,7 +44,6 @@ public class ProjectServiceImpl implements ProjectService{
 		projectDao.deleteProject(id);
 	}
 
-	@Override
 	@Transactional
 	public void saveProject(Project project) {
 		// if id is not 0 then update
@@ -63,7 +64,6 @@ public class ProjectServiceImpl implements ProjectService{
 		}
 	}
 
-	@Override
 	@Transactional
 	public Long getProjectsCountByStatus(int statusId) {
 		return projectDao.getProjectsCountByStatus(statusId);

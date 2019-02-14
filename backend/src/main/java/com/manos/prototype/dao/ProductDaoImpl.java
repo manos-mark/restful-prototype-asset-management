@@ -11,12 +11,11 @@ import org.springframework.stereotype.Repository;
 import com.manos.prototype.entity.Product;
 
 @Repository
-public class ProductDaoImpl implements ProductDao {
+public class ProductDaoImpl {
 
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	@Override
 	public Product getProduct(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -32,7 +31,6 @@ public class ProductDaoImpl implements ProductDao {
 		return theQuery.getSingleResult();
 	}
 	
-	@Override
 	public List<Product> getProductsByProjectId(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -48,7 +46,6 @@ public class ProductDaoImpl implements ProductDao {
 		return theQuery.getResultList();
 	}
 
-	@Override
 	public void deleteProduct(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -60,19 +57,16 @@ public class ProductDaoImpl implements ProductDao {
 		currentSession.delete(project);	
 	}
 
-	@Override
 	public void saveProduct(Product product) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.save(product);
 	}
 	
-	@Override
 	public void updateProduct(Product product) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.update(product);
 	}
 
-	@Override
 	public Long getProductsCountByStatus(int statusId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		

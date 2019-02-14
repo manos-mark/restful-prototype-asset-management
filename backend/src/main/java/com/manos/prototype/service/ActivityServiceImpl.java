@@ -6,21 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.ActivityDao;
+import com.manos.prototype.dao.ActivityDaoImpl;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
 
 @Service
-public class ActivityServiceImpl implements ActivityService{
+public class ActivityServiceImpl {
 	
 	@Autowired
-	private ActivityDao activityDao;
+	private ActivityDaoImpl activityDao;
 	
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 	
-	@Override
 	@Transactional
 	public List<Activity> getActivities() {
 		
@@ -32,7 +31,6 @@ public class ActivityServiceImpl implements ActivityService{
 	}
 
 	
-	@Override
 	@Transactional
 	public void saveActivity(Activity activity) {
 		// get current user id, then get user

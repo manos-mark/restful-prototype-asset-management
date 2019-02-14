@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.manos.prototype.entity.User;
 
 @Repository
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl {
 
 	
 	// need to inject the session factory
@@ -17,7 +17,6 @@ public class UserDaoImpl implements UserDao {
 	private SessionFactory sessionFactory;
 
 	
-	@Override
 	public User getUserByEmail(String theEmail) {
 		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
@@ -28,21 +27,18 @@ public class UserDaoImpl implements UserDao {
 		return theQuery.getSingleResult();
 	}
 	
-	@Override
 	public void saveUser(User theUser) {
 		// get current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.save(theUser);
 	}
 	
-	@Override
 	public void updateUser(User theUser) {
 		// get current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.update(theUser);
 	}
 	
-	@Override
 	public User getUserById(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -54,7 +50,6 @@ public class UserDaoImpl implements UserDao {
 		return theQuery.getSingleResult();
 	}
 
-	@Override
 	public void deleteUser(long userId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.manos.prototype.dto.ActivityDto;
 import com.manos.prototype.dto.ActivityRequestDto;
 import com.manos.prototype.entity.Activity;
-import com.manos.prototype.service.ActivityService;
+import com.manos.prototype.service.ActivityServiceImpl;
 import com.pastelstudios.convert.ConversionService;
 
 @RestController
@@ -20,7 +20,7 @@ import com.pastelstudios.convert.ConversionService;
 public class ActivityController {
 	
 	@Autowired
-	private ActivityService activityService;
+	private ActivityServiceImpl activityService;
 
 	@Autowired
 	private ConversionService conversionService;

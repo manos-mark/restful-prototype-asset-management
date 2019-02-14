@@ -10,6 +10,16 @@ import { Subscription } from 'rxjs';
 })
 export class ForgottenPasswordComponent implements OnInit {
   @Input() forgottenPass: Boolean;
+  @Output() forgottenPassChange = new EventEmitter<string>();
+
+  forgotPassFormSubmited = false;
+  forgotPassFormError = false;
+
+  onCancel() {
+    this.forgottenPassChange.emit();
+    this.forgotPassForm.reset();
+    this.forgotPassFormError = false;
+  }
   
   constructor(public authService: AuthService) { }
 
@@ -21,17 +31,24 @@ export class ForgottenPasswordComponent implements OnInit {
   })
   
   onForgotPassSubmit() {
-    this.authService.forgotPassFormError = false;
-    this.authService.sentNewUserPassword(this.forgotPassForm.value.email);
+    this.forgotPassFormError = false;
+    this.authService.sentNewUserPassword(this.forgotPassForm.value.email)
+        .subscribe(
+            res => { 
+                this.forgotPassFormSubmited = true;
+                setTimeout(() => {
+                    this.forgottenPass=false;
+                    this.forgottenPassChange.emit();
+                    this.forgotPassFormSubmited = false;
+                }, 1200);
+            },
+            error => {
+                console.log(error)
+                this.forgotPassFormError = true;
+            }
+        );
     this.forgotPassForm.reset();
-  }
-
-  onCancel() {
-    this.forgotPassForm.reset();
-    this.authService.forgotPassFormError = false;
-    this.authService.forgottenPass = false;
   }
 
   get email() { return this.forgotPassForm.get('email'); }
-
 }

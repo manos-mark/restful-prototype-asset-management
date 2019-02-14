@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-  
+    forgottenPass = false;
 
   loginForm = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   }
 
   onForgottenPass() {
-    this.authService.forgottenPass = !this.authService.forgottenPass;
+    this.forgottenPass = !this.forgottenPass;
   }
 
   get email() { return this.loginForm.get('email'); }

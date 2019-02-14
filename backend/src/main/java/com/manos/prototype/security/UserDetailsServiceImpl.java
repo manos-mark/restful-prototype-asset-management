@@ -7,14 +7,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.UserDao;
+import com.manos.prototype.dao.UserDaoImpl;
 import com.manos.prototype.entity.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
-	private UserDao userDao;
+	private UserDaoImpl userDao;
 
 	@Override
 	@Transactional(readOnly = true)

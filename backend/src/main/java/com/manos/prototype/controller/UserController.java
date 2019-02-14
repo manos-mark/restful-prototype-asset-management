@@ -19,8 +19,8 @@ import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.security.UserDetailsImpl;
-import com.manos.prototype.service.EmailService;
-import com.manos.prototype.service.UserService;
+import com.manos.prototype.service.EmailServiceImpl;
+import com.manos.prototype.service.UserServiceImpl;
 import com.pastelstudios.convert.ConversionService;
 
 @RestController
@@ -28,10 +28,10 @@ import com.pastelstudios.convert.ConversionService;
 public class UserController {
 	
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 	
 	@Autowired
-	private EmailService emailService;
+	private EmailServiceImpl emailService;
 	
 	@Autowired
 	private ConversionService conversionService;
@@ -59,7 +59,6 @@ public class UserController {
 	@PutMapping("/{id}")
 	public void updateUser(@RequestBody NewUserPassRequestDto requestDto,
 			@PathVariable("id") long userId) {
-		
 		String oldPass = requestDto.getOldPassword();
 		String newPass = requestDto.getPassword();
 		

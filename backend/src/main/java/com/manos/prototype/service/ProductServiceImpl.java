@@ -6,22 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.ProductDao;
-import com.manos.prototype.dao.ProjectDao;
+import com.manos.prototype.dao.ProductDaoImpl;
+import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.exception.EntityNotFoundException;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl {
 
 	@Autowired
-	private ProductDao productDao;
+	private ProductDaoImpl productDao;
 	
 	@Autowired
-	private ProjectDao projectDao;
+	private ProjectDaoImpl projectDao;
 
-	@Override
 	@Transactional
 	public void deleteProduct(int id) {
 		Product product = productDao.getProduct(id);
@@ -31,7 +30,6 @@ public class ProductServiceImpl implements ProductService {
 		productDao.deleteProduct(id);
 	}
 
-	@Override
 	@Transactional
 	public void saveProduct(Product product) {
 		// if id is not 0 then update
@@ -52,7 +50,6 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
-	@Override
 	@Transactional
 	public List<Product> getProductsByProjectId(int id) {
 		Project project = projectDao.getProject(id);
@@ -63,7 +60,6 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.getProductsByProjectId(id);
 	}
 
-	@Override
 	@Transactional
 	public Long getProductsCountByStatus(int statusId) {
 		return productDao.getProductsCountByStatus(statusId);

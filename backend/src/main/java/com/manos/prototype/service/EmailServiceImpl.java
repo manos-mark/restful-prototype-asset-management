@@ -19,7 +19,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailServiceImpl implements EmailService {
+public class EmailServiceImpl {
 	
 	@Autowired
 	private Environment env;
@@ -49,7 +49,6 @@ public class EmailServiceImpl implements EmailService {
         return javaMailSender;
     }
 
-	@Override
 	public void sendNewPassword(String email, String password) {
 		Message message = new MimeMessage(session);
 		

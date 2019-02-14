@@ -14,8 +14,8 @@ import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.exception.EntityNotFoundException;
-import com.manos.prototype.service.ProductService;
-import com.manos.prototype.service.ProjectService;
+import com.manos.prototype.service.ProductServiceImpl;
+import com.manos.prototype.service.ProjectServiceImpl;
 import com.pastelstudios.convert.ConversionService;
 
 @RestController
@@ -23,10 +23,10 @@ import com.pastelstudios.convert.ConversionService;
 public class ProductController {
 	
 	@Autowired
-	private ProductService productService;
+	private ProductServiceImpl productService;
 	
 	@Autowired
-	private ProjectService projectService;
+	private ProjectServiceImpl projectService;
 	
 	@Autowired
 	private ConversionService conversionService;

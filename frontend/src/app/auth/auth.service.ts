@@ -6,9 +6,6 @@ import { ActivityService } from '../general/home/activity/activity.service';
 
 @Injectable()
 export class AuthService {
-  forgotPassFormSubmited = false;
-  forgotPassFormError = false;
-  forgottenPass = false;
   currentUser: User;
   rememberMe = false;
   windowPopLogout = false;
@@ -87,19 +84,6 @@ export class AuthService {
         params: new HttpParams().set('email', email),
         observe: 'response'
       })
-      .subscribe(
-        res => { 
-          this.forgotPassFormSubmited = true;
-          setTimeout(() => {
-            this.forgottenPass=false;
-            this.forgotPassFormSubmited = false;
-          }, 1200);
-        },
-        error => {
-          console.log(error)
-          this.forgotPassFormError = true;
-        }
-      );
   }
 
   updateUser(oldPassword:number, newPassword: number, repeatNewPassword: number) {

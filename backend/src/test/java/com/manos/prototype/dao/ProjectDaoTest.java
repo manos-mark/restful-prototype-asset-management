@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
-import com.manos.prototype.dao.ProjectDao;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
 
@@ -28,7 +27,7 @@ import com.manos.prototype.entity.Status;
 public class ProjectDaoTest {
 		
 	@Autowired 
-	private ProjectDao projectDao;
+	private ProjectDaoImpl projectDao;
 	
 	@Test
 	@Transactional

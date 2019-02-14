@@ -14,25 +14,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.manos.prototype.dao.ProductDao;
-import com.manos.prototype.dao.ProjectDao;
+import com.manos.prototype.dao.ProductDaoImpl;
+import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
-import com.manos.prototype.service.ProductServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductServiceTest {
 
 	@Mock
-	private ProductDao productDao;
+	private ProductDaoImpl productDao;
 	
 	@InjectMocks
 	private ProductServiceImpl productService;
 	
 	@Mock
-	private ProjectDao projectDao;
+	private ProjectDaoImpl projectDao;
 	
 //	@Test
 //	public void getProducts_success() {

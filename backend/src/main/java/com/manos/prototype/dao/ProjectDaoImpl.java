@@ -9,26 +9,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.search.ProjectSearch;
+import com.pastelstudios.db.PagingAndSortingSupport;
+import com.pastelstudios.db.SearchSupport;
+import com.pastelstudios.paging.PageRequest;
 
 @Repository
-public class ProjectDaoImpl implements ProjectDao{
+public class ProjectDaoImpl {
 
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	@Override
-	public List<Project> getProjects() {
+	@Autowired
+	private PagingAndSortingSupport pagingSupport;
+	
+	@Autowired
+	private SearchSupport searchSupport;
+	
+	public List<Project> getProjects(PageRequest pageRequest, ProjectSearch search) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Project p "
-				+ "left join fetch p.status ");
-		Query<Project> theQuery = currentSession
-				.createQuery(queryBuilder.toString(), Project.class);
-		return theQuery.getResultList();
+		queryBuilder.append("from Project p ")
+					.append("join fetch p.status pStatus ");
+		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
+		queryString = pagingSupport.applySorting(queryString, pageRequest);
+
+		return pagingSupport.applyPaging(currentSession.createQuery(queryString, Project.class), pageRequest)
+				.setProperties(search)
+				.getResultList();
 	}
 
-	@Override
+	public int count(ProjectSearch search) {
+		//TODO: impleent
+		return 0;
+	}
+	
 	public Project getProject(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -43,7 +58,6 @@ public class ProjectDaoImpl implements ProjectDao{
 		return theQuery.getSingleResult();
 	}
 
-	@Override
 	public void deleteProject(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -55,19 +69,16 @@ public class ProjectDaoImpl implements ProjectDao{
 		currentSession.delete(project);	
 	}
 
-	@Override
 	public void saveProject(Project project) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.save(project);
 	}
 	
-	@Override
 	public void updateProject(Project project) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.update(project);
 	}
 
-	@Override
 	public Long getProjectsCountByStatus(int statusId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		

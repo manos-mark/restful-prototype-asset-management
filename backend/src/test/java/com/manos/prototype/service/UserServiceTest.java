@@ -12,18 +12,17 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.manos.prototype.dao.UserDao;
+import com.manos.prototype.dao.UserDaoImpl;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
-import com.manos.prototype.service.UserServiceImpl;
 import com.manos.prototype.util.SecurityUtil;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 	
 	@Mock
-	private UserDao userDao;
+	private UserDaoImpl userDao;
 
 	@InjectMocks
 	private UserServiceImpl userService;

@@ -16,7 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
-import com.manos.prototype.dao.UserDao;
 import com.manos.prototype.entity.User;
 
 @ExtendWith(SpringExtension.class)
@@ -25,7 +24,7 @@ import com.manos.prototype.entity.User;
 class UserDaoTest {
 
 	@Autowired
-	private UserDao userDao;
+	private UserDaoImpl userDao;
 	
 	@Test
 	@Transactional

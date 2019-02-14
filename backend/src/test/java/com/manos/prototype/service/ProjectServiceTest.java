@@ -14,17 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.manos.prototype.dao.ProjectDao;
+import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
-import com.manos.prototype.service.ProjectServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectServiceTest {
 
 	@Mock
-	private ProjectDao projectDao;
+	private ProjectDaoImpl projectDao;
 	
 	@InjectMocks
 	private ProjectServiceImpl projectService;
