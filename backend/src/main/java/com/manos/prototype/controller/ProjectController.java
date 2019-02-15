@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.manos.prototype.controller.params.OrderAndPageParams;
 import com.manos.prototype.controller.params.ProjectFilterParams;
 import com.manos.prototype.controller.params.ProjectOrderAndPageParams;
 import com.manos.prototype.dto.PageResultDto;

@@ -26,7 +26,7 @@ public class ProductPageParamsToPageRequestConverter implements Converter<Produc
 		OrderDirection orderDirection = null;
 		if (OrderAndPageParams.DIRECTION_ASC.equals(from.getDirection())) {
 			orderDirection = OrderDirection.ASCENDING;
-		} else {
+		} else if (OrderAndPageParams.DIRECTION_DESC.equals(from.getDirection())){
 			orderDirection = OrderDirection.DESCENDING;
 		}
 		

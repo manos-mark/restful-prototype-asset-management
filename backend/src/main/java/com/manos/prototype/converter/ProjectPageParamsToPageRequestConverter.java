@@ -25,14 +25,14 @@ public class ProjectPageParamsToPageRequestConverter implements Converter<Projec
 		OrderDirection orderDirection = null;
 		if (OrderAndPageParams.DIRECTION_ASC.equals(from.getDirection())) {
 			orderDirection = OrderDirection.ASCENDING;
-		} else {
+		} else if (OrderAndPageParams.DIRECTION_DESC.equals(from.getDirection())){
 			orderDirection = OrderDirection.DESCENDING;
 		}
 		
 		String field = null;
 		if (from.getField().equals(ProjectOrderAndPageParams.DATE_CREATED)) {
 			field = "date";
-		} else {
+		} else if (from.getField().equals(ProjectOrderAndPageParams.PRODUCTS_COUNT)){
 			field = "product";
 		}
 		

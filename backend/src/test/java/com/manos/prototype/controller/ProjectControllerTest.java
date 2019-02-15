@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.queryParam;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,7 +48,6 @@ public class ProjectControllerTest extends AbstractMvcTest{
 	        		+ "\"statusId\": \"1\""
 	        		+ "}");
 		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andDo(print())
 			.andExpect(status().isOk());
 	}
 	
@@ -170,7 +170,7 @@ public class ProjectControllerTest extends AbstractMvcTest{
 	}
 	
 	@Test
-	public void getProjectsPaginated() throws Exception {
+	public void getProjectsPaginated_success() throws Exception {
 		MockHttpServletRequestBuilder request = get("/projects/")
 			.contentType(MediaType.APPLICATION_JSON)
 			.param("page", "1")
@@ -180,8 +180,47 @@ public class ProjectControllerTest extends AbstractMvcTest{
 			.param("statusId", "2");
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andDo(print())
 			.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getProjectsPaginated_direction_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/projects/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("field", "created")
+			.param("statusId", "2");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProjectsPaginated_field_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/projects/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("statusId", "2");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProjectsPaginated_statusId_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/projects/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("field", "created")
+			.param("direction", "asc");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
 	}
 }
 
