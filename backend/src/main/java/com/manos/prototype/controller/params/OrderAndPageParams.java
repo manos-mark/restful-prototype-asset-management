@@ -7,6 +7,9 @@ import javax.validation.constraints.Pattern;
 
 public class OrderAndPageParams {
 
+	public static final String DIRECTION_ASC = "asc";
+	public static final String DIRECTION_DESC = "desc";
+	
 	@NotNull
 	@Min(1)
 	private Integer page = 1;
@@ -16,19 +19,9 @@ public class OrderAndPageParams {
 	private Integer pageSize = 10;
 	
 	@NotBlank
-	private String field = null;
-	
-	@NotBlank
-	@Pattern(regexp= "asc | desc")
+	@Pattern(regexp = DIRECTION_ASC + " | " + DIRECTION_DESC)
 	private String direction = null;
 
-	public String getField() {
-		return field;
-	}
-
-	public void setField(String field) {
-		this.field = field;
-	}
 
 	public String getDirection() {
 		return direction;

@@ -94,7 +94,7 @@ public class ProjectControllerTest extends AbstractMvcTest{
 	
 	@Test
 	public void updateProject_success() throws Exception {
-		MockHttpServletRequestBuilder request = put("/projects/{id}", 3)
+		MockHttpServletRequestBuilder request = put("/projects/{id}", 1)
 			.contentType(MediaType.APPLICATION_JSON)
 			.content("{"
 					+ "\"date\": \"2018-12-17\","
@@ -167,6 +167,21 @@ public class ProjectControllerTest extends AbstractMvcTest{
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProjectsPaginated() throws Exception {
+		MockHttpServletRequestBuilder request = get("/projects/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "created")
+			.param("statusId", "2");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andDo(print())
+			.andExpect(status().isOk());
 	}
 }
 

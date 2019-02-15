@@ -22,6 +22,8 @@ import com.pastelstudios.convert.ConversionService;
 import com.pastelstudios.convert.ConversionServiceImpl;
 import com.pastelstudios.db.GenericFinder;
 import com.pastelstudios.db.GenericGateway;
+import com.pastelstudios.db.PagingAndSortingSupport;
+import com.pastelstudios.db.SearchSupport;
 
 @Configuration
 @EnableWebMvc
@@ -112,5 +114,15 @@ public class AppConfig {
 	@Bean
 	public GenericGateway genericGateway() {
 		return new GenericGateway();
+	}
+	
+	@Bean
+	public PagingAndSortingSupport pagingAndSortingSupport() {
+		return new PagingAndSortingSupport();
+	}
+	
+	@Bean
+	public SearchSupport searchSupport() {
+		return new SearchSupport();
 	}
 }

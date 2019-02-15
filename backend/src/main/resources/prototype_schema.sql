@@ -49,6 +49,18 @@ CREATE TABLE `product` (
 );
 INSERT INTO `product` (date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
 	('2011-12-17','productName','serialNumber','description',12,2,1);
+    
+--
+-- Table structure for `pictures`
+--
+CREATE TABLE `product_pictures` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+    `picture` MEDIUMBLOB NOT NULL,
+    `product_id` INT(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`product_id`)
+		REFERENCES product (`id`)
+);
 --
 -- Table structure for (enum) table `e_action`
 --

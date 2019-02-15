@@ -21,8 +21,8 @@ public class ProductDaoImpl {
 		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Product p "
-				+ "left join fetch p.status "
-				+ "left join fetch p.project "
+				+ "join fetch p.status "
+				+ "join fetch p.project "
 				+ "where p.id = :id");
 		Query<Product> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Product.class);
@@ -36,8 +36,8 @@ public class ProductDaoImpl {
 		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Product p "
-				+ "left join fetch p.status "
-				+ "left join fetch p.project "
+				+ "join fetch p.status "
+				+ "join fetch p.project "
 				+ "where p.project.id = :id");
 		Query<Product> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Product.class);

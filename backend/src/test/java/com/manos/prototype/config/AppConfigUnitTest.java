@@ -14,6 +14,9 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
+import com.pastelstudios.db.PagingAndSortingSupport;
+import com.pastelstudios.db.SearchSupport;
+
 @Configuration
 @ComponentScan(basePackages = "com.manos.prototype.dao")
 public class AppConfigUnitTest {
@@ -56,5 +59,15 @@ public class AppConfigUnitTest {
 		txManager.setSessionFactory(sessionFactory);
 
 		return txManager;
+	}
+	
+	@Bean
+	public PagingAndSortingSupport pagingAndSortingSupport() {
+		return new PagingAndSortingSupport();
+	}
+	
+	@Bean
+	public SearchSupport searchSupport() {
+		return new SearchSupport();
 	}
 }

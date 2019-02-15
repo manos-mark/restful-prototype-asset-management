@@ -1,7 +1,5 @@
 package com.manos.prototype.dto;
 
-import com.manos.prototype.entity.Status;
-
 public class ProjectDto {
 	
 	private int id;
@@ -14,15 +12,15 @@ public class ProjectDto {
 
 	private String date;
 
-	private Status status;
+	private int statusId;
 
-	public ProjectDto(int id, String projectName, String companyName, String projectManager, String date, Status status) {
+	public ProjectDto(int id, String projectName, String companyName, String projectManager, String date, int statusId) {
 		this.id = id;
 		this.projectName = projectName;
 		this.companyName = companyName;
 		this.projectManager = projectManager;
 		this.date = date;
-		this.status = status;
+		this.statusId = statusId;
 	}
 	
 	public ProjectDto() {}
@@ -67,11 +65,11 @@ public class ProjectDto {
 		this.date = date;
 	}
 
-	public Status getStatus() {
-		return status;
+	public int getStatusId() {
+		return statusId;
 	}
 
-	public void setStatus(Status status) {
-		this.status = status;
+	public void setStatusId(int statusId) {
+		this.statusId = statusId;
 	}
 }

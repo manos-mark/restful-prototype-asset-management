@@ -33,56 +33,6 @@ public class ProductServiceTest {
 	@Mock
 	private ProjectDaoImpl projectDao;
 	
-//	@Test
-//	public void getProducts_success() {
-//		when(productDao.getProducts())
-//			.thenReturn(mockProducts);
-//		
-//		List<ProductDto> products = productService.getProducts();
-//		assertThat(products).isEqualTo(mockProducts);
-//		assertThat(products.get(0))
-//			.isEqualToComparingFieldByFieldRecursively(mockProducts.get(0));
-//		
-//		verify(productDao, times(1)).getProducts();
-//	}
-//	
-//	@Test
-//	public void getProducts_emptyProductsFail() {
-//		mockProducts = new ArrayList<Product>();
-//		when(productDao.getProducts())
-//			.thenReturn(mockProducts);
-//		
-//		assertThatExceptionOfType(EntityNotFoundException.class)
-//			.isThrownBy(() -> {
-//				productService.getProducts();
-//			});
-//	}
-//	
-//	@Test
-//	public void getProducts_nullProductsFail() {
-//		when(productDao.getProducts())
-//			.thenReturn(null);
-//		
-//		assertThatExceptionOfType(NullPointerException.class)
-//			.isThrownBy(() -> {
-//				productService.getProducts();
-//			});
-//	}
-//
-//	@Test
-//	public void getProduct_success() {
-//		Product mockProduct = createMockProduct();
-//		when(productDao.getProduct(1))
-//			.thenReturn(mockProduct);
-//		
-//		Product product = productDao.getProduct(1);
-//		
-//		assertThat(product).isEqualTo(mockProduct);
-//		assertThat(product)
-//			.isEqualToComparingFieldByFieldRecursively(mockProduct);
-//		verify(productDao, times(1)).getProduct(1);
-//	}
-	
 	@Test 
 	public void getProductsCount() {
 		assertThatCode(() -> {

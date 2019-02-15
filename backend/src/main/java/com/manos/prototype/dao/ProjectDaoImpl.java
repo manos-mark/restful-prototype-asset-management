@@ -34,18 +34,22 @@ public class ProjectDaoImpl {
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
 		queryString = pagingSupport.applySorting(queryString, pageRequest);
 
-		return pagingSupport.applyPaging(currentSession.createQuery(queryString, Project.class), pageRequest)
+		return pagingSupport
+				.applyPaging(currentSession.createQuery(queryString, Project.class), pageRequest)
 				.setProperties(search)
 				.getResultList();
+//		return currentSession.createQuery(queryBuilder.toString(), Project.class).getResultList();
 	}
 
-	public int count(ProjectSearch search) {
+	public Long count(ProjectSearch search) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("select count(p.id) from Project p ")
-					.append("join fetch p.status pStatus ");
+					.append("join p.status pStatus ");
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
-		return currentSession.createQuery(queryString, Integer.class).getSingleResult();
+		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
+		theQuery.setParameter("statusId", search.getStatusId());
+		return theQuery.getSingleResult();
 	}
 	
 	public Project getProject(int id) {
@@ -53,7 +57,7 @@ public class ProjectDaoImpl {
 		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Project p "
-				+ "left join fetch p.status "
+				+ "join fetch p.status "
 				+ "where p.id = :id");
 		Query<Project> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Project.class);

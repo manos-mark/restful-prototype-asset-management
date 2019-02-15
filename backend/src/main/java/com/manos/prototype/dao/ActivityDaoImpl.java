@@ -20,8 +20,8 @@ public class ActivityDaoImpl {
         Session currentSession = sessionFactory.getCurrentSession();
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("from Activity a "
-                + "left join fetch a.action "
-                + "left join fetch a.user "
+                + "join fetch a.action "
+                + "join fetch a.user "
                 + "where a.user.id = :userId "
                 + "order by a.id desc");
         Query<Activity> theQuery = currentSession

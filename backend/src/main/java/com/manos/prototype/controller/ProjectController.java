@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.manos.prototype.controller.params.OrderAndPageParams;
 import com.manos.prototype.controller.params.ProjectFilterParams;
+import com.manos.prototype.controller.params.ProjectOrderAndPageParams;
 import com.manos.prototype.dto.PageResultDto;
 import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProjectDto;
@@ -44,7 +45,7 @@ public class ProjectController {
 	private ConversionService conversionService;
 
 	@GetMapping
-	public PageResultDto<Project> getProjectsPaginated(@Valid OrderAndPageParams pageParams,
+	public PageResultDto<ProjectDto> getProjectsPaginated(@Valid ProjectOrderAndPageParams pageParams,
 			@Valid ProjectFilterParams filterParams) {
 		
 		PageRequest pageRequest = conversionService.convert(pageParams, PageRequest.class);
@@ -52,10 +53,11 @@ public class ProjectController {
 		
 		PageResult<Project> pageResult = projectService.getProjects(pageRequest, search);
 		
-		PageResultDto<Project> pageResultDto = new PageResultDto<>();
-		pageResultDto.setItems(pageResult.getEntities());
+		List<ProjectDto> projectsDto = conversionService.convertList(pageResult.getEntities(), ProjectDto.class);
+		
+		PageResultDto<ProjectDto> pageResultDto = new PageResultDto<>();
+		pageResultDto.setItems(projectsDto);
 		pageResultDto.setTotalCount(pageResult.getTotalCount());
-		pageResultDto.setPageSize(pageResult.getPageSize());
 		return pageResultDto;
 	}
 

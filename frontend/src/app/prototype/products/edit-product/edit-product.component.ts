@@ -7,6 +7,7 @@ import { ActivityService } from 'src/app/general/home/activity/activity.service'
   styleUrls: ['./edit-product.component.css']
 })
 export class EditProductComponent implements OnInit {
+    editMode = false;
 
   constructor(private activityService: ActivityService) { }
 

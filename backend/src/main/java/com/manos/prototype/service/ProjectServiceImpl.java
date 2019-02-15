@@ -22,8 +22,8 @@ public class ProjectServiceImpl {
 	@Transactional
 	public PageResult<Project> getProjects(PageRequest pageRequest, ProjectSearch search) {
 		List<Project> projects = projectDao.getProjects(pageRequest, search);
-		int totalCount = projectDao.count(search);
-		return new PageResult<>(projects, totalCount, pageRequest.getPageSize());
+		Long totalCount = projectDao.count(search);
+		return new PageResult<>(projects, totalCount.intValue(), pageRequest.getPageSize());
 	}
 
 	@Transactional
