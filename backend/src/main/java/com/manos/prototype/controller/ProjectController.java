@@ -45,11 +45,18 @@ public class ProjectController {
 
 	@GetMapping
 	public PageResultDto<Project> getProjectsPaginated(@Valid OrderAndPageParams pageParams,
-			ProjectFilterParams filterParams) {
+			@Valid ProjectFilterParams filterParams) {
+		
 		PageRequest pageRequest = conversionService.convert(pageParams, PageRequest.class);
 		ProjectSearch search = conversionService.convert(filterParams, ProjectSearch.class);
+		
 		PageResult<Project> pageResult = projectService.getProjects(pageRequest, search);
-		return conversionService.convert(pageResult, PageResultDto.class);
+		
+		PageResultDto<Project> pageResultDto = new PageResultDto<>();
+		pageResultDto.setItems(pageResult.getEntities());
+		pageResultDto.setTotalCount(pageResult.getTotalCount());
+		pageResultDto.setPageSize(pageResult.getPageSize());
+		return pageResultDto;
 	}
 
 	@GetMapping("/{id}/products")

@@ -40,8 +40,12 @@ public class ProjectDaoImpl {
 	}
 
 	public int count(ProjectSearch search) {
-		//TODO: impleent
-		return 0;
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("select count(p.id) from Project p ")
+					.append("join fetch p.status pStatus ");
+		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
+		return currentSession.createQuery(queryString, Integer.class).getSingleResult();
 	}
 	
 	public Project getProject(int id) {

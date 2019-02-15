@@ -6,6 +6,7 @@ public class PageResultDto<ITEM_TYPE> {
 
 	private List<ITEM_TYPE> items = null;
 	private Integer totalCount = null;
+	private Integer pageSize = null;// added
 
 	public List<ITEM_TYPE> getItems() {
 		return items;
@@ -22,4 +23,13 @@ public class PageResultDto<ITEM_TYPE> {
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
 	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
 }
