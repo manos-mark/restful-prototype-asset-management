@@ -74,4 +74,9 @@ public class ProductServiceImpl {
 		Long totalCount = productDao.count(search);
 		return new PageResult<>(products, totalCount.intValue(), pageRequest.getPageSize());
 	}
+
+	@Transactional
+	public Long getProductsCountByProjectId(int projectId) {
+		return productDao.getProductsCountByProjectId(projectId);
+	}
 }

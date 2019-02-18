@@ -65,6 +65,19 @@ public class ProjectController {
 		List<Product> products = productService.getProductsByProjectId(projectId);
 		return conversionService.convertList(products, ProductDto.class);
 	}
+	
+	@GetMapping("/{id}/name")
+	public ProjectDto getProjectName(@PathVariable("id") int projectId) {
+		ProjectDto tempDto = new ProjectDto();
+		Project entity = projectService.getProject(projectId);
+		tempDto.setProjectName(entity.getProjectName());
+		return tempDto;
+	}
+	
+	@GetMapping("/{id}/products/count")
+	public Long getProductsCountByProjectId(@PathVariable("id") int projectId) {
+		return productService.getProductsCountByProjectId(projectId);
+	}
 
 	@GetMapping("/{id}")
 	public ProjectDto getProject(@PathVariable("id") int projectId) {

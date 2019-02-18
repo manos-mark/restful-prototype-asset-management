@@ -7,8 +7,8 @@ export class Product {
     public serialNumber: string;
     public quantity: string;
     public description: string;
-    public project: number;
-    public status: number;
+    public projectId: number;
+    public statusId: number;
 
     constructor(dto:any) {
         this.id = dto.id;
@@ -17,7 +17,7 @@ export class Product {
         this.serialNumber = dto.serialNumber;
         this.quantity = dto.quantity;
         this.description = dto.description;
-        this.project = dto.projectId;
-        this.status = dto.statusId;
+        this.projectId = dto.projectId;
+        this.statusId = dto.statusId;
     } 
 }

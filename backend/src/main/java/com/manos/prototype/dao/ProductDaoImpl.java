@@ -108,12 +108,30 @@ public class ProductDaoImpl {
 
 	public Long count(ProductSearch search) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("select count(p.id) from Product p ")
 					.append("join p.status pStatus ");
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
+		
 		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
 		theQuery.setParameter("statusId", search.getStatusId());
+		
+		return theQuery.getSingleResult();
+	}
+
+	public Long getProductsCountByProjectId(int projectId) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("select count(p.id) from Product p "
+				+ "inner join p.project pr "
+				+ "where pr.id = :projectId");
+		
+		Query<Long> theQuery = currentSession
+				.createQuery(queryBuilder.toString(), Long.class);
+		theQuery.setParameter("projectId", projectId);
+		
 		return theQuery.getSingleResult();
 	}
 

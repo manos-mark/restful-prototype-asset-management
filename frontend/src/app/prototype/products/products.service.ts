@@ -4,6 +4,8 @@ import { Product } from './product.model';
 
 @Injectable()
 export class ProductsService {
+    editMode = false;
+
     constructor(private httpClient: HttpClient) {}
 
     getProductsCountByStatusId(id: number) {

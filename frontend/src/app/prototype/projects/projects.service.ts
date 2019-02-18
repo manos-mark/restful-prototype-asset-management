@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Project } from './project.model';
 
 @Injectable()
 export class ProjectsService {
+    editMode = false;
 
     constructor(private httpClient: HttpClient) {}
 
@@ -17,4 +19,34 @@ export class ProjectsService {
         
     }
 
+    getProductsCountByProjectId(id: number) {
+        return this.httpClient.get<number>('api/projects/' + id + '/products/count', 
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+        
+    }
+
+    getProjects(statusId: number, field: string, page: number, pageSize: number, direction: string) {
+        return this.httpClient.get<Project>('api/projects/',  
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body',
+            params: new HttpParams()
+                            .set('statusId', String(statusId))
+                            .set('field', field) 
+                            .set('page', String(page))
+                            .set('pageSize', String(pageSize))
+                            .set('direction', direction) 
+        })
+    }
+
+    getProjectName(projectId: number) {
+        return this.httpClient.get<Project>('api/projects/' + projectId + '/name',
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
 }

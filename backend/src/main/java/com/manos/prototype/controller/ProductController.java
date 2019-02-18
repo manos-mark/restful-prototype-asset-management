@@ -65,7 +65,7 @@ public class ProductController {
 	}
 	
 	@PostMapping("/count")
-	public Long getProductsCount(@RequestBody StatusRequestDto statusId) {
+	public Long getProductsCountByStatus(@RequestBody StatusRequestDto statusId) {
 		return productService.getProductsCountByStatus(statusId.getStatusId());
 	}
 

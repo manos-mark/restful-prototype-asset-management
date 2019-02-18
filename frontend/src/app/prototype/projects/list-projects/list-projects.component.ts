@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Project } from '../project.model';
+import { ProjectsService } from '../projects.service';
 
 @Component({
   selector: 'app-list-projects',
@@ -6,10 +8,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list-projects.component.css']
 })
 export class ListProjectsComponent implements OnInit {
+    projects: Project[];
+    totalCount: number;
 
-  constructor() { }
+    constructor(private projectService: ProjectsService) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+        this.projectService.getProjects(2,'date',1,5,'asc')
+            .subscribe(
+                res => {this.projects = res['items']; this.totalCount = res['totalCount']},
+                error => console.log(error)
+            )
+    }
 
 }

@@ -1,7 +1,7 @@
 <div class="heading">
   <div class="pageTtl">
     <i class="products"></i>
-    <p>Products(65)</p>
+    <p>Products({{ totalCount }})</p>
   </div>
   <div class="action">
     <a class="blueBtn" routerLink="new">Add product</a>
@@ -64,7 +64,7 @@
         <app-product-item 
           *ngFor="let product of products"
           [product]="product"
-        ></app-product-item> <!--for product in products-->
+        ></app-product-item>
     </div>
   </div>
   <div class="actionTtl">

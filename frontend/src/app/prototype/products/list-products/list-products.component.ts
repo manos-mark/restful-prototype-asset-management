@@ -9,13 +9,14 @@ import { Product } from '../product.model';
 })
 export class ListProductsComponent implements OnInit {
   products: Product[];
+  totalCount: number;
   
   constructor(private productService: ProductsService) { }
 
   ngOnInit() {
     this.productService.getProducts(2,'date',1,5,'asc')
       .subscribe(
-        res => {this.products = res['items']; console.log(this.products)},
+        res => {this.products = res['items']; this.totalCount = res['totalCount']},
         error => console.log(error)
       )
   }

@@ -1,7 +1,7 @@
 <div class="heading">
     <div class="pageTtl">
       <i class="projects"></i>
-      <p>Projects(16)</p>
+      <p>Projects({{ totalCount }})</p>
     </div>
     <div class="action">
       <a class="greenBtn" routerLink="new">Add project</a>
@@ -54,7 +54,10 @@
         <div class="settings"><i></i></div>
       </div>
       <div class="content">
-        <app-project-item></app-project-item> <!--for project in projects-->
+        <app-project-item
+            *ngFor="let project of projects"
+            [project]="project"
+        ></app-project-item>
       </div>
     </div>
     <div class="actionTtl">
