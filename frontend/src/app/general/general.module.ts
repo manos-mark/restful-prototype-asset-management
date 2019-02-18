@@ -5,6 +5,7 @@ import { GeneralComponent } from './general.component';
 import { RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import { CommonModule } from '@angular/common';
     ],
     imports: [
         RouterModule,
-        CommonModule
+        CommonModule,
+        SharedModule
     ]
 })
 export class GeneralModule {}

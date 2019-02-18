@@ -176,11 +176,26 @@ public class ProjectControllerTest extends AbstractMvcTest{
 			.param("page", "1")
 			.param("pageSize", "5")
 			.param("direction", "asc")
-			.param("field", "created")
+			.param("field", "date")
 			.param("statusId", "2");
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isOk());
+	}
+	
+
+	@Test
+	public void getProjectsPaginated_wrongField_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/projects/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "wrong")
+			.param("statusId", "2");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
 	}
 	
 	@Test

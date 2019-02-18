@@ -11,6 +11,9 @@ import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.search.ProductSearch;
+import com.pastelstudios.paging.PageRequest;
+import com.pastelstudios.paging.PageResult;
 
 @Service
 public class ProductServiceImpl {
@@ -63,5 +66,12 @@ public class ProductServiceImpl {
 	@Transactional
 	public Long getProductsCountByStatus(int statusId) {
 		return productDao.getProductsCountByStatus(statusId);
+	}
+
+	@Transactional
+	public PageResult<Product> getProducts(PageRequest pageRequest, ProductSearch search) {
+		List<Product> products = productDao.getProducts(pageRequest, search);
+		Long totalCount = productDao.count(search);
+		return new PageResult<>(products, totalCount.intValue(), pageRequest.getPageSize());
 	}
 }

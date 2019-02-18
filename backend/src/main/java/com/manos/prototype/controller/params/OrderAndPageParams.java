@@ -18,7 +18,7 @@ public class OrderAndPageParams {
 	private Integer pageSize = 10;
 	
 	@NotNull
-	@Pattern(regexp = DIRECTION_ASC + " | " + DIRECTION_DESC)
+	@Pattern(regexp = DIRECTION_ASC )// + " | " + DIRECTION_DESC)
 	private String direction = null;
 
 

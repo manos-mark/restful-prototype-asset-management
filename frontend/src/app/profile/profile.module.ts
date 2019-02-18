@@ -1,14 +1,17 @@
 import { NgModule } from "@angular/core";
 import { ProfileComponent } from './profile.component';
-import { ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { ReactiveFormsModule, AbstractControl, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [
-        ProfileComponent,
+        ProfileComponent
     ],
     imports: [
+        FormsModule,
         ReactiveFormsModule,
+        SharedModule,
         CommonModule
     ]
 })

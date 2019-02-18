@@ -3,14 +3,16 @@ import { HeaderComponent } from './header.component';
 import { SearchComponent } from './search/search.component';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from '../app-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [
         HeaderComponent,
-        SearchComponent,
+        SearchComponent
     ],
     imports: [
         CommonModule,
+        SharedModule,
         AppRoutingModule
     ],
     exports: [

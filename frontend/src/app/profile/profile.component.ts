@@ -8,6 +8,9 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+    windowPopSuccess = false;
+    windowPop = false;
+    windowPopFail = false;
 
   changePasswordForm = new FormGroup({
       oldPassword: new FormControl(null, [Validators.required, Validators.minLength(6)]),
@@ -35,12 +38,13 @@ export class ProfileComponent implements OnInit {
         this.newPassword.value, this.repeatNewPassword.value) 
         .subscribe(
             resp => {
-                this.authService.windowPop = true;
-                this.authService.windowPopSuccess = true;
+                this.windowPop = true;
+                this.windowPopSuccess = true;
+                console.log(this.windowPopSuccess)
             },
             error => {
-                this.authService.windowPop = true;
-                this.authService.windowPopFail = true;
+                this.windowPop = true;
+                this.windowPopFail = true;
             }
         );
   }
@@ -53,5 +57,4 @@ export class ProfileComponent implements OnInit {
   get newPassword() { return this.changePasswordForm.controls.passwords.get('newPassword'); }
   get repeatNewPassword() { return this.changePasswordForm.controls.passwords.get('repeatNewPassword'); }
   get passwords() { return this.changePasswordForm.controls.passwords; }
-  
 }

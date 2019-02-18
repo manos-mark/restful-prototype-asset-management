@@ -9,6 +9,8 @@ import { ProjectsService } from '../prototype/projects/projects.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  windowPopLogout = false;
+  windowPop = false;
   inProgressProductsCount: number;
   newProjectsCount: number;
 
@@ -37,8 +39,8 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-    this.authService.windowPopLogout = true;
-    this.authService.windowPop = true;
+    this.windowPopLogout = true;
+    this.windowPop = true;
   }
 
 }

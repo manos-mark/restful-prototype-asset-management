@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { Subscription } from 'rxjs';
 import { User } from '../user.model';
 import { Router } from '@angular/router';
+import { ActivityService } from 'src/app/general/home/activity/activity.service';
 
 
 @Component({
@@ -11,6 +12,8 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
+    windowPopFail = false;
+    windowPop = false;
     forgottenPass = false;
 
   loginForm = new FormGroup({
@@ -19,7 +22,8 @@ export class LoginComponent implements OnInit {
   })
 
   constructor(public authService: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private activityService: ActivityService) { }
 
   ngOnInit() {
     this.authService.getCsrf();   
@@ -27,8 +31,22 @@ export class LoginComponent implements OnInit {
 
 
   onSubmit() {
-    this.authService.loginUser(this.loginForm.value.email, 
-      this.loginForm.value.password);
+    this.authService.loginUser(this.loginForm.value.email, this.loginForm.value.password)
+      .subscribe(
+        res => { 
+          this.router.navigate(['/']);
+        },
+        error => {
+          if (error.status === 200) {
+            this.authService.getCurrentUser();
+            this.activityService.addActivity('1').subscribe();
+            this.router.navigate(['/']);
+          } else {
+            this.windowPopFail = true;
+            this.windowPop = true;
+          }
+        }
+    );
   }
 
   onForgottenPass() {

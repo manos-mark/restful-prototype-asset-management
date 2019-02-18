@@ -9,12 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.search.ProductSearch;
+import com.pastelstudios.db.PagingAndSortingSupport;
+import com.pastelstudios.db.SearchSupport;
+import com.pastelstudios.paging.PageRequest;
 
 @Repository
 public class ProductDaoImpl {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	private SearchSupport searchSupport;
+	
+	@Autowired
+	private PagingAndSortingSupport pagingSupport;
 	
 	public Product getProduct(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
@@ -79,6 +89,31 @@ public class ProductDaoImpl {
 				.createQuery(queryBuilder.toString(), Long.class);
 		theQuery.setParameter("statusId", statusId);
 		
+		return theQuery.getSingleResult();
+	}
+
+	public List<Product> getProducts(PageRequest pageRequest, ProductSearch search) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryByilder = new StringBuilder();
+		queryByilder.append("from Product p ")
+					.append("join fetch p.status pStatus");
+		String queryString = searchSupport.addSearchConstraints(queryByilder.toString(), search);
+		queryString = pagingSupport.applySorting(queryString, pageRequest);
+		
+		return pagingSupport
+				.applyPaging(currentSession.createQuery(queryString, Product.class), pageRequest)
+				.setProperties(search)
+				.getResultList();
+	}
+
+	public Long count(ProductSearch search) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("select count(p.id) from Product p ")
+					.append("join p.status pStatus ");
+		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
+		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
+		theQuery.setParameter("statusId", search.getStatusId());
 		return theQuery.getSingleResult();
 	}
 

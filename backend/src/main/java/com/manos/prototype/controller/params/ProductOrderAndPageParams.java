@@ -5,7 +5,7 @@ import javax.validation.constraints.Pattern;
 
 public class ProductOrderAndPageParams extends OrderAndPageParams{
 	
-	public static final String DATE_CREATED = "created";
+	public static final String DATE_CREATED = "date";
 
 	@NotNull
 	@Pattern(regexp = DATE_CREATED )

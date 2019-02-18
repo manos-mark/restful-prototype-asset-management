@@ -4,8 +4,8 @@
       <p>Product</p>
     </div>
     <div class="action">
-      <a class="blueBtn" (click)="onAddSave()">Add & Save</a>
-      <a class="grayDarkBtn m-r-5" href="products.html">Cancel & Close</a>
+      <a class="blueBtn" (click)="onAddSave()" [ngClass]="{ 'disabled': productForm.invalid }">Add & Save</a>
+      <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>
   </div>
   <div class="formCont">
@@ -16,35 +16,35 @@
         <h4>Please type product details</h4>
       </div>
     </div>
-    <div class="formGroup">
+    <div class="formGroup" [formGroup]="productForm">
       <div class="generalInfo">
-        <div class="inputWrp">
+        <div class="inputWrp" [ngClass]="{'error': productName.invalid && (productName.dirty || productName.touched)}">
           <div class="title">
             <i class="product"></i><span>Product name</span>
           </div>
-          <input type="text"/>
-          <span class="error">Incorrect value</span>
+          <input type="text" formControlName="productName"/>
+          <span class="error" *ngIf="productName.invalid && (productName.dirty || productName.touched)">Incorrect value</span>
         </div>
-        <div class="inputWrp">
+        <div class="inputWrp" [ngClass]="{'error': serialNumber.invalid && (serialNumber.dirty || serialNumber.touched)}">
           <div class="title">
             <i class="serialNum"></i><span>Serial number</span>
           </div>
-          <input type="text"/>
-          <span class="error">Incorrect value</span>
+          <input type="text" formControlName="serialNumber"/>
+          <span class="error" *ngIf="serialNumber.invalid && (serialNumber.dirty || serialNumber.touched)">Incorrect value</span>
         </div>
-        <div class="inputWrp">
+        <div class="inputWrp" [ngClass]="{'error': quantity.invalid && (quantity.dirty || quantity.touched)}">
           <div class="title">
             <i class="quantity"></i><span>Quantity</span>
           </div>
-          <input type="text"/>
-          <span class="error">Incorrect value</span>
+          <input type="number" min="1" formControlName="quantity"/>
+          <span class="error" *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)">Incorrect value</span>
         </div>
-        <div class="inputWrp">
+        <div class="inputWrp" [ngClass]="{'error': project.invalid && (project.dirty || project.touched)}">
           <div class="title">
             <i class="project"></i><span>Project</span>
           </div>
           <div class="dropdown">
-            <select>
+            <select formControlName="project">
               <option>Choose project</option>
               <option>Offset printing table</option>
               <option>Weather baloon drone</option>
@@ -53,12 +53,12 @@
           </div>
         </div>
       </div>
-      <div class="addDescription">
+      <div class="addDescription" [ngClass]="{'error': description.invalid && (description.dirty || description.touched)}">
         <div class="header">
           <i class="description"></i>
           <p>Description</p>
         </div>
-        <textarea rows="8" cols="110">
+        <textarea rows="8" cols="110" formControlName="description">
         
         </textarea>
       </div>
@@ -68,9 +68,9 @@
             <i class="picture"></i>
             <p>Picture</p>
           </div>
-          <div class="uploadWrp">
+          <div class="uploadWrp" [ngClass]="{'error': picture.invalid && (picture.dirty || picture.touched)}">
             <a class="grayDarkBtn">Upload</a>
-            <input type="file"/>
+            <input type="file" formControlName="picture"/>
           </div>
         </div>
         <div class="list">

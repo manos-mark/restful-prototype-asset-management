@@ -4,8 +4,8 @@ import { LoginComponent } from './login/login.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { CommonModule } from '@angular/common';
 import { InputTrimModule } from 'ng2-trim-directive';
-import { HttpClientXsrfModule, HttpClientModule } from '@angular/common/http';
 import { ForgottenPasswordComponent } from './login/forgotten-password/forgotten-password.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -18,6 +18,7 @@ import { ForgottenPasswordComponent } from './login/forgotten-password/forgotten
     FormsModule,
     InputTrimModule,
     ReactiveFormsModule,
+    SharedModule,
     AuthRoutingModule
   ]
 })

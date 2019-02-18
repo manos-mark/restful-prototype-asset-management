@@ -9,20 +9,21 @@ import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth-guard.service';
 import { HeaderModule } from './header/header.module';
 import { ProfileModule } from './profile/profile.module';
-import { WindowPopComponent } from './window-pop/window-pop.component';
 import { GeneralModule } from './general/general.module';
 import { TitleCasePipe } from '@angular/common';
 import { PrototypeModule } from './prototype/prototype.module';
 import { ActivityService } from './general/home/activity/activity.service';
 import { ProjectsService } from './prototype/projects/projects.service';
 import { ProductsService } from './prototype/products/products.service';
+import { FormsModule } from '@angular/forms';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
-    WindowPopComponent,
     AppComponent
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     HttpClientModule,
     HttpClientXsrfModule,
@@ -31,6 +32,7 @@ import { ProductsService } from './prototype/products/products.service';
     GeneralModule,
     PrototypeModule,
     ProfileModule,
+    SharedModule,
     AppRoutingModule
   ],
   providers: [

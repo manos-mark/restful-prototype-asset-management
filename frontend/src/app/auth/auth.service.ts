@@ -6,12 +6,9 @@ import { ActivityService } from '../general/home/activity/activity.service';
 
 @Injectable()
 export class AuthService {
+  // windowPopSuccess = false;
   currentUser: User;
   rememberMe = false;
-  windowPopLogout = false;
-  windowPopFail = false;
-  windowPopSuccess = false;
-  windowPop = false;
   
   constructor(private httpClient: HttpClient,
               private router: Router,
@@ -25,7 +22,6 @@ export class AuthService {
     .subscribe(
       resp => { 
         this.currentUser = resp.body;
-        console.log(this.currentUser)
         if (this.currentUser) {
           this.router.navigate(['/']);
         } 
@@ -60,21 +56,6 @@ export class AuthService {
                     .set('remember-me', String(this.rememberMe)),
         observe: 'response'
       })
-      .subscribe(
-        res => { 
-          this.router.navigate(['/']);
-        },
-        error => {
-          if (error.status === 200) {
-            this.getCurrentUser();
-            this.activityService.addActivity('1').subscribe();
-            this.router.navigate(['/']);
-          } else {
-            this.windowPopFail = true;
-            this.windowPop = true;
-          }
-        }
-    );
   }
 
   sentNewUserPassword(email: string) {
@@ -104,30 +85,9 @@ export class AuthService {
     return this.currentUser !== undefined && this.currentUser !== null
   }
 
-  logoutUser() {
-    this.activityService.addActivity('8').subscribe(
-      resp => { return this.logout() }
-    );
-  }
-
   logout() {
     return this.httpClient.post<any>('api/logout',{}, 
       {observe: 'response'})
-        .subscribe(
-          res => {
-            this.router.navigate(['/login']);
-            this.windowPopLogout = false;
-            this.windowPop = false;
-          },
-          error => {
-            if (error.status === 404) {
-              this.currentUser = undefined;
-              this.router.navigate(['/login']);
-              this.windowPopLogout = false;
-              this.windowPop = false;
-            }
-          }
-        )
   }
 
 }

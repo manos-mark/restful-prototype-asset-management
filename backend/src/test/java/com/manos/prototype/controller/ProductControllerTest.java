@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -141,6 +142,60 @@ public class ProductControllerTest extends AbstractMvcTest{
 	public void deleteProduct_fail() throws Exception {
 		MockHttpServletRequestBuilder request = delete("/products/{id}", 0)
 			.contentType(MediaType.APPLICATION_JSON);
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProductsPaginated_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "created")
+			.param("statusId", "2");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isOk());
+	}
+	
+//	@Test
+//	public void getProductsPaginated_wrongField_fail() throws Exception {
+//		MockHttpServletRequestBuilder request = get("/products/")
+//			.contentType(MediaType.APPLICATION_JSON)
+//			.param("page", "1")
+//			.param("pageSize", "5")
+//			.param("direction", "asc")
+//			.param("field", "wrong")
+//			.param("statusId", "2");
+//
+//		mockMvc.perform(request.with(user(user)).with(csrf()))
+//			.andExpect(status().isBadRequest());
+//	}
+	
+	@Test
+	public void getProductsPaginated_field_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("statusId", "2");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProductsPaginated_statusId_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("field", "created")
+			.param("direction", "asc");
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isBadRequest());

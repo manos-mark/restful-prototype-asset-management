@@ -5,7 +5,7 @@ import javax.validation.constraints.Pattern;
 
 public class ProjectOrderAndPageParams extends OrderAndPageParams{
 
-	public static final String DATE_CREATED = "created";
+	public static final String DATE_CREATED = "date";
 	public static final String PRODUCTS_COUNT = "products";
 	
 	@NotNull
