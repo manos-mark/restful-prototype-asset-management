@@ -9,9 +9,9 @@
     <span class="project">{{ projectName }}</span>
     <div class="picture">
         <a class="picWrp">
-        <img src="assets/img/example/wooden-frame.png"/>
-        <i>7</i>
-        <var class="zoom"><span></span></var>
+        <img [src]="thumbPicture"/>
+        <i>{{ picturesLength }}</i>
+        <var class="zoom" (click)="showCarousel()"><span></span></var>
         </a>
     </div>
     <div *ngIf="product.statusId == 1" class="status"><span class="orange">in progress</span></div>

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import javax.servlet.ServletContext;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.manos.prototype.entity.Product;
@@ -44,7 +46,6 @@ public class ProductControllerTest extends AbstractMvcTest{
 	        		+ "\"statusId\": \"1\""
 	        		+ "}");
 		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andDo(print())
 			.andExpect(status().isOk());
 	}
 	
@@ -199,6 +200,71 @@ public class ProductControllerTest extends AbstractMvcTest{
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getPicturesByProductId_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/{id}/pictures", 1)
+				.contentType(MediaType.APPLICATION_JSON);
+
+			mockMvc.perform(request.with(user(user)).with(csrf()))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getPicturesByProductId_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/{id}/pictures", 0)
+				.contentType(MediaType.APPLICATION_JSON);
+
+			mockMvc.perform(request.with(user(user)).with(csrf()))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getThumbPictureByProductId_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/{id}/thumb-picture", 1)
+				.contentType(MediaType.APPLICATION_JSON);
+
+			mockMvc.perform(request.with(user(user)).with(csrf()))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getThumbPictureByProductId_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/{id}/thumb-picture", 0)
+				.contentType(MediaType.APPLICATION_JSON);
+
+			mockMvc.perform(request.with(user(user)).with(csrf()))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getPicturesCountByProductId_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/{id}/pictures-count", 1)
+				.contentType(MediaType.APPLICATION_JSON);
+
+			mockMvc.perform(request.with(user(user)).with(csrf()))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void addPicture_success() throws Exception{
+		MockHttpServletRequestBuilder request = post("/products/{id}/pictures", 1)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{"
+						+ "\"picture\": \"x89504E470D0A1A0A0000000D494844520000001000000010080200000090916836000000017352474200AECE1CE90000000467414D410000B18F0BFC6105000000097048597300000EC300000EC301C76FA8640000001E49444154384F6350DAE843126220493550F1A80662426C349406472801006AC91F1040F796BD0000000049454E44AE426082\","
+						+ "\"productId\": \"1\","
+						+ "\"thumb\": \"false\""
+		        		+ "}");
+
+			mockMvc.perform(request.with(user(user)).with(csrf()))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void updatePicture_success() throws Exception{
+	
 	}
 }
 

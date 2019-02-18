@@ -43,19 +43,21 @@ public class PictureDaoTest {
 	@Transactional
 	public void getPicturesByProductId() {
 		List<ProductPicture> pictures = pictureDao.getPicturesByProductId(1);
-		assertThat(pictures.get(0)).isNotNull();
-		assertThat(pictures.get(0).getId()).isEqualTo(1);
-		assertThat(pictures.get(0).getProduct().getId()).isEqualTo(1);
-		assertThat(pictures.get(0).getPicture()).isNotNull();
+		assertThat(pictures.get(1)).isNotNull();
+		assertThat(pictures.get(1).getId()).isEqualTo(2);
+		assertThat(pictures.get(1).getProduct().getId()).isEqualTo(1);
+		assertThat(pictures.get(1).getPicture()).isNotNull();
+		assertThat(pictures.get(1).isThumb()).isFalse();
 	}
 	
 	@Test
 	@Transactional
 	public void getPicture() {
-		ProductPicture picture = pictureDao.getPicture(1);
-		assertThat(picture.getId()).isEqualTo(1);
+		ProductPicture picture = pictureDao.getPicture(2);
+		assertThat(picture.getId()).isEqualTo(2);
 		assertThat(picture.getProduct().getId()).isEqualTo(1);
 		assertThat(picture.getPicture()).isNotNull();
+		assertThat(picture.isThumb()).isFalse();
 	}
 	
 	@Test
@@ -80,6 +82,26 @@ public class PictureDaoTest {
 	
 	@Test
 	@Transactional
+	public void updatePicture() throws IOException {
+		BufferedImage img = new BufferedImage(600, 400, BufferedImage.TYPE_INT_RGB);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(img, "jpg", baos);
+		
+		Product product = new Product();
+		product.setId(1);
+		
+		ProductPicture picture = new ProductPicture();
+		picture.setPicture(baos.toByteArray());
+		picture.setProduct(product);
+		picture.setId(2);
+		
+		assertThatCode(() -> { 
+			pictureDao.updatePicture(picture);
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test
+	@Transactional
 	public void deletePicture() {
 		assertThatCode(() -> { 
 			pictureDao.deletePicture(1);
@@ -90,7 +112,18 @@ public class PictureDaoTest {
 	@Transactional
 	public void getPicturesCountByProductId() {
 		Long count = pictureDao.getPicturesCountByProductId(1);
-		assertThat(count).isEqualTo(1);
+		assertThat(count).isEqualTo(2);
+	}
+	
+	@Test
+	@Transactional
+	public void getThumbPictureByProductId() {
+		ProductPicture picture = pictureDao.getThumbPictureByProductId(1);
+		assertThat(picture).isNotNull();
+		assertThat(picture.getId()).isEqualTo(1);
+		assertThat(picture.getProduct().getId()).isEqualTo(1);
+		assertThat(picture.getPicture()).isNotNull();
+		assertThat(picture.isThumb()).isTrue();
 	}
 }
 

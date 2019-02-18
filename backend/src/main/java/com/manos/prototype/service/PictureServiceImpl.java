@@ -40,11 +40,31 @@ public class PictureServiceImpl {
 	}
 	
 	@Transactional
-	public void savePicture(ProductPicture picture) {
-		try {
-			pictureDao.savePicture(picture);			
-		} catch (Exception e) {
-			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+	public ProductPicture getThumbPictureByProductId(int productId) {
+		Product product = productDao.getProduct(productId);
+		if (product == null) {
+			throw new EntityNotFoundException("Product id not found - " + productId);
+		}
+		return pictureDao.getThumbPictureByProductId(productId);
+	}
+	
+	@Transactional
+	public void savePicture(ProductPicture pic) {
+		if (pic.getPicture() == null) {
+			throw new EntityNotFoundException("Picture cannot be null");
+		}
+		else if (pic.getProduct() == null) {
+			throw new EntityNotFoundException("Product cannot be null");
+		}
+		else {
+			// if id is not 0 then update
+			if (pic.getId() != 0) {
+				pictureDao.updatePicture(pic);			
+			} 
+			// if id is 0 then add new
+			else {
+				pictureDao.savePicture(pic);			
+			}
 		}
 	}
 	

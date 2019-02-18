@@ -69,6 +69,25 @@ public class PictureDaoImpl {
 		theQuery.setParameter("productId", productId);
 		return theQuery.getSingleResult();
 	}
+
+	public ProductPicture getThumbPictureByProductId(int productId) {
+		Session currentSession = sessionFactory.getCurrentSession();
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("from ProductPicture pic ")
+                	.append("join fetch pic.product pr ")
+                	.append("where pr.id = :productId ")
+        			.append("and pic.thumb = true");
+        Query<ProductPicture> theQuery = currentSession
+                .createQuery(queryBuilder.toString(), ProductPicture.class);
+        theQuery.setParameter("productId", productId);
+        
+        return theQuery.getSingleResult();
+	}
+
+	public void updatePicture(ProductPicture pic) {
+		Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.update(pic);
+	}
 }
 
 

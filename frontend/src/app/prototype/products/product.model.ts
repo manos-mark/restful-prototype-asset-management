@@ -1,4 +1,3 @@
-import { Project } from '../projects/project.model';
 
 export class Product {
     public id: number;

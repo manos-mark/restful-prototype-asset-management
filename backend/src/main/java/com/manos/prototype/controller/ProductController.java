@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.manos.prototype.controller.params.ProductFilterParams;
 import com.manos.prototype.controller.params.ProductOrderAndPageParams;
-import com.manos.prototype.controller.params.ProjectFilterParams;
-import com.manos.prototype.controller.params.ProjectOrderAndPageParams;
 import com.manos.prototype.dto.PageResultDto;
 import com.manos.prototype.dto.ProductDto;
+import com.manos.prototype.dto.ProductPictureDto;
+import com.manos.prototype.dto.ProductPictureRequestDto;
 import com.manos.prototype.dto.ProductRequestDto;
-import com.manos.prototype.dto.ProjectDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProductSearch;
-import com.manos.prototype.search.ProjectSearch;
+import com.manos.prototype.service.PictureServiceImpl;
 import com.manos.prototype.service.ProductServiceImpl;
 import com.manos.prototype.service.ProjectServiceImpl;
 import com.pastelstudios.convert.ConversionService;
@@ -43,6 +43,9 @@ public class ProductController {
 	
 	@Autowired
 	private ProjectServiceImpl projectService;
+	
+	@Autowired
+	private PictureServiceImpl pictureService;
 	
 	@Autowired
 	private ConversionService conversionService;
@@ -97,6 +100,40 @@ public class ProductController {
 		Product product = conversionService.convert(productRequestDto, Product.class);
 		product.setId(0);
 		productService.saveProduct(product);
+	}
+	
+	@GetMapping("/{id}/pictures")
+	public List<ProductPictureDto> getPicturesByProductId(@PathVariable("id") int productId) {
+		List<ProductPicture> pictures = pictureService.getPicturesByProductId(productId);
+		return conversionService.convertList(pictures, ProductPictureDto.class);
+	}
+	
+	@GetMapping("/{id}/thumb-picture")
+	public ProductPictureDto getThumbPictureByProductId(@PathVariable("id") int productId) {
+		ProductPicture picture = pictureService.getThumbPictureByProductId(productId);
+		return conversionService.convert(picture, ProductPictureDto.class);
+	}
+	
+	@GetMapping("/{id}/pictures-count")
+	public Long getPicturesCountByProductId(@PathVariable("id") int productId) {
+		return pictureService.getPicturesCountByProductId(productId);
+	}
+	
+	@PostMapping("/{id}/pictures")
+	public void addPicture(@PathVariable("id") int productId,
+			@RequestBody ProductPictureRequestDto pictureDto) {
+		ProductPicture picture = conversionService.convert(pictureDto, ProductPicture.class);
+		picture.setId(0);
+		pictureService.savePicture(picture);
+	}
+	
+	@PutMapping("/{id}/pictures/{pictureId}")
+	public void updatePicture(@PathVariable("id") int productId,
+			@PathVariable("pictureId") int pictureId,
+			@RequestBody ProductPictureRequestDto pictureDto) {
+		ProductPicture picture = conversionService.convert(pictureDto, ProductPicture.class);
+		picture.setId(pictureId);
+		pictureService.savePicture(picture);
 	}
 }
 

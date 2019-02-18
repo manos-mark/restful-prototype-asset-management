@@ -27,6 +27,17 @@ public class ProductPicture {
 	@JoinColumn(name = "product_id")
 	private Product product;
 	
+	@Column(name="thumb")
+	private boolean thumb;
+	
+	public boolean isThumb() {
+		return thumb;
+	}
+
+	public void setThumb(boolean thumb) {
+		this.thumb = thumb;
+	}
+
 	public Product getProduct() {
 		return product;
 	}
