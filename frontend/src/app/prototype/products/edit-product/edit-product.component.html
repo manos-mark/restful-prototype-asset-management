@@ -45,12 +45,14 @@
           </div>
           <div class="dropdown">
             <select formControlName="project">
-              <option>Choose project</option>
-              <option>Offset printing table</option>
-              <option>Weather baloon drone</option>
-              <option>Coffee cup maker</option>
+              <option disabled selected>Choose project</option>
+                <option 
+                    *ngFor="let project of projects"
+                    [value]="project.id"
+                >{{ project.projectName }}</option>
             </select>
           </div>
+          <span class="error" *ngIf="project.invalid && (project.dirty || project.touched)">Incorrect value</span>
         </div>
       </div>
       <div class="addDescription" [ngClass]="{'error': description.invalid && (description.dirty || description.touched)}">
@@ -58,23 +60,65 @@
           <i class="description"></i>
           <p>Description</p>
         </div>
-        <textarea rows="8" cols="110" formControlName="description">
-        
-        </textarea>
+        <textarea rows="8" cols="110" formControlName="description"></textarea>
+        <span class="error" *ngIf="description.invalid && (description.dirty || description.touched)">Incorrect value</span>
       </div>
-      <div class="attachedProducts">
+      <div class="attachedProducts" [ngClass]="{'error': picture.invalid && (picture.dirty || picture.touched)}">
         <div class="header">
           <div class="picture">
             <i class="picture"></i>
             <p>Picture</p>
           </div>
-          <div class="uploadWrp" [ngClass]="{'error': picture.invalid && (picture.dirty || picture.touched)}">
+          <div class="uploadWrp">
             <a class="grayDarkBtn">Upload</a>
-            <input type="file" formControlName="picture"/>
+            <input 
+                type="file" 
+                formControlName="picture" 
+                accept="image/gif, .jpg, image/png" 
+                (change)="readURL($event.target.files);"/>
           </div>
+          <span class="error" *ngIf="picture.invalid && (picture.dirty || picture.touched)">Max upload file size: 12 MB.</span>
+          <span class="error" *ngIf="picture.valid && thumb.invalid">Select one picture as thumb.</span>
         </div>
-        <div class="list">
+        <div class="list" *ngIf="picturesList.length == 0">
           <p>NO PICTURES</p>
+        </div>
+        <div class="list" *ngIf="picturesList.length != 0">
+            <div class="tableWrp">
+                <div class="table inner">
+                    <div class="header">
+                        <span class="thumb">Thumb</span>
+                        <span class="picture">Picture</span>
+                        <span class="fileName">File name</span>
+                        <span class="fileSize">File size</span>
+                        <span class="download">Download</span>
+                        <div class="delete">Delete</div>
+                    </div>
+                    <div class="content">
+                        <div [formGroup]="thumbFormGroup">
+                            <div class="row" *ngFor="let picture of picturesList; let i = index">
+                                <span class="thumb">
+                                    <input type="radio" [value]="i" formControlName="thumb">
+                                </span>
+                                <div class="picture">
+                                    <a class="picWrp">
+                                        <img [src]="imageSrc[i] || 'http://placehold.it/180'">
+                                        <var class="zoom"><span></span></var>
+                                    </a>
+                                </div>
+                                <span class="fileName">{{ picture.file.name }}</span>
+                                <span class="fileSize">{{ convertBytesToMegabytes(picture.file.size) }}</span>
+                                <span class="download">
+                                    <a class="greenBtn"><i></i></a>
+                                </span>
+                                <div class="delete">
+                                    <a class="grayDarkBtn"><i></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
       </div>
     </div>

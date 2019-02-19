@@ -133,28 +133,28 @@
 				</div>
 				<div class="formGroup">
 					<div class="generalInfo">
-						<div class="inputWrp">
+						<div class="inputWrp error">
 							<div class="title">
 								<i class="product"></i><span>Product name</span>
 							</div>
 							<input type="text"/>
 							<span class="error">Incorrect value</span>
 						</div>
-						<div class="inputWrp">
+						<div class="inputWrp error">
 							<div class="title">
 								<i class="serialNum"></i><span>Serial number</span>
 							</div>
 							<input type="text"/>
 							<span class="error">Incorrect value</span>
 						</div>
-						<div class="inputWrp">
+						<div class="inputWrp error">
 							<div class="title">
 								<i class="quantity"></i><span>Quantity</span>
 							</div>
 							<input type="text"/>
 							<span class="error">Incorrect value</span>
 						</div>
-						<div class="inputWrp">
+						<div class="inputWrp error">
 							<div class="title">
 								<i class="project"></i><span>Project</span>
 							</div>
@@ -166,19 +166,19 @@
 									<option>Coffee cup maker</option>
 								</select>
 							</div>
+							<span class="error">Incorrect value</span>
 						</div>
 					</div>
-					<div class="addDescription">
+					<div class="addDescription error">
 						<div class="header">
 							<i class="description"></i>
 							<p>Description</p>
 						</div>
-						<textarea rows="8" cols="110">
-						
-						</textarea>
+						<textarea rows="8" cols="110"></textarea>
+						<span class="error">Incorrect value</span>
 					</div>
-					<div class="attachedProducts">
-						<div class="header">
+					<div class="attachedProducts error">
+						<div class="header ">
 							<div class="picture">
 								<i class="picture"></i>
 								<p>Picture</p>
@@ -187,9 +187,63 @@
 								<a class="grayDarkBtn">Upload</a>
 								<input type="file"/>
 							</div>
+							<span class="error">Max upload file size: 12 MB.</span>
 						</div>
 						<div class="list">
-							<p>NO PICTURES</p>
+							<p style="display:none;">NO PICTURES</p>
+							
+							<div class="tableWrp">
+								<div class="table inner">
+									<div class="header">
+										<span class="thumb">Thumb</span>
+										<span class="picture">Picture</span>
+										<span class="fileName">File name</span>
+										<span class="fileSize">File size</span>
+										<span class="download">Download</span>
+										<div class="delete">Delete</div>
+									</div>
+									<div class="content">
+										<div class="row">
+											<span class="thumb">
+												<input type="radio" value="1"/>
+											</span>
+											<div class="picture">
+												<a class="picWrp">
+													<img src="assets/img/example/aluminium-arm2.png"/>
+													<var class="zoom"><span></span></var>
+												</a>
+											</div>
+											<span class="fileName">Aluminium-arm-1.png</span>
+											<span class="fileSize">2.7MB</span>
+											<span class="download">
+												<a class="greenBtn"><i></i></a>
+											</span>
+											<div class="delete">
+												<a class="grayDarkBtn"><i></i></a>
+											</div>
+										</div>
+										<div class="row">
+											<span class="thumb">
+												<input type="radio" value="2"/>
+											</span>
+											<div class="picture">
+												<a class="picWrp">
+													<img src="assets/img/example/aluminium-arm.png"/>
+													<var class="zoom"><span></span></var>
+												</a>
+											</div>
+											<span class="fileName">Aluminium-arm-final2.png</span>
+											<span class="fileSize">12MB</span>
+											<span class="download">
+												<a class="greenBtn"><i></i></a>
+											</span>
+											<div class="delete">
+												<a class="grayDarkBtn"><i></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

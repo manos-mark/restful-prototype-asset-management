@@ -42,6 +42,14 @@ export class ProjectsService {
         })
     }
 
+    getProjectsWithoutParams() {
+        return this.httpClient.get<Project>('api/projects/',  
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
+
     getProjectName(projectId: number) {
         return this.httpClient.get<Project>('api/projects/' + projectId + '/name',
         {

@@ -150,19 +150,32 @@ span.error{
 	display:none;
 }
 
-div.inputWrp.error input{
+div.formGroup div.generalInfo div.inputWrp.error div.dropdown,
+div.inputWrp.error input,
+div.formGroup div.addDescription.error textarea,
+div.formGroup div.attachedProducts.error div.list{
 	background: #ffe5e5;
     border: 1px solid #df1112;
 }
 
-div.inputWrp.error span.error{
-	font-size: 13px;
-    color: #cc415b;
+div.formGroup div.generalInfo div.inputWrp.error div.dropdown span.error,
+div.inputWrp.error span.error,
+div.formGroup div.addDescription.error span.error,
+div.formGroup div.attachedProducts.error span.error{
+	font-size: 13px !important;
+    color: #cc415b !important;
     margin-top: 3px;
     position: absolute;
    	top: 0;
     right: 0;
     display: block;
+}
+
+div.formGroup div.addDescription.error span.error{
+	top:12px;
+}
+div.formGroup div.attachedProducts.error span.error{
+	top:43px;
 }
 
 .disabled{

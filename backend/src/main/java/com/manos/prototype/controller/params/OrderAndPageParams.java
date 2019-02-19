@@ -1,7 +1,6 @@
 package com.manos.prototype.controller.params;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class OrderAndPageParams {
@@ -9,25 +8,32 @@ public class OrderAndPageParams {
 	public static final String DIRECTION_ASC = "asc";
 	public static final String DIRECTION_DESC = "desc";
 	
-	@NotNull
 	@Min(1)
 	private Integer page = 1;
 
-	@NotNull
 	@Min(1)
-	private Integer pageSize = 10;
+	private Integer pageSize = 100;
 	
-	@NotNull
 	@Pattern(regexp = DIRECTION_ASC )// + " | " + DIRECTION_DESC)
-	private String direction = null;
+	private String directionAsc = "asc";
+	
+	@Pattern(regexp = DIRECTION_DESC )// + " | " + DIRECTION_DESC)
+	private String directionDesc = null;
 
-
-	public String getDirection() {
-		return direction;
+	public String getDirectionAsc() {
+		return directionAsc;
 	}
 
-	public void setDirection(String direction) {
-		this.direction = direction;
+	public void setDirectionAsc(String directionAsc) {
+		this.directionAsc = directionAsc;
+	}
+
+	public String getDirectionDesc() {
+		return directionDesc;
+	}
+
+	public void setDirectionDesc(String directionDesc) {
+		this.directionDesc = directionDesc;
 	}
 
 	public Integer getPage() {

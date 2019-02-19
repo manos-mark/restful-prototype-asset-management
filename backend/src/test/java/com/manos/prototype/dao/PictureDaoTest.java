@@ -115,16 +115,6 @@ public class PictureDaoTest {
 		assertThat(count).isEqualTo(2);
 	}
 	
-	@Test
-	@Transactional
-	public void getThumbPictureByProductId() {
-		ProductPicture picture = pictureDao.getThumbPictureByProductId(1);
-		assertThat(picture).isNotNull();
-		assertThat(picture.getId()).isEqualTo(1);
-		assertThat(picture.getProduct().getId()).isEqualTo(1);
-		assertThat(picture.getPicture()).isNotNull();
-		assertThat(picture.isThumb()).isTrue();
-	}
 }
 
 

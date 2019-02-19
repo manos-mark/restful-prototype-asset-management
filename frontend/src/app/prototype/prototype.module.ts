@@ -1,15 +1,16 @@
-import { NgModule } from "@angular/core";
-import { ProductsComponent } from './products/products.component';
-import { ProjectsComponent } from './projects/projects.component';
 import { CommonModule } from '@angular/common';
-import { PrototypeRoutingModule } from './prototype-routing.module';
+import { NgModule } from "@angular/core";
+import { ReactiveFormsModule } from '@angular/forms';
+import { EditProductComponent } from './products/edit-product/edit-product.component';
+import { ListProductsComponent } from './products/list-products/list-products.component';
+import { ProductItemComponent } from './products/list-products/product-item/product-item.component';
+import { ProductsComponent } from './products/products.component';
 import { EditProjectComponent } from './projects/edit-project/edit-project.component';
 import { ListProjectsComponent } from './projects/list-projects/list-projects.component';
-import { ListProductsComponent } from './products/list-products/list-products.component';
-import { EditProductComponent } from './products/edit-product/edit-product.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ProductItemComponent } from './products/list-products/product-item/product-item.component';
 import { ProjectItemComponent } from './projects/list-projects/project-item/project-item.component';
+import { ProjectsComponent } from './projects/projects.component';
+import { PrototypeRoutingModule } from './prototype-routing.module';
+import { ProductPictureComponent } from './products/edit-product/product-picture/product-picture.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { ProjectItemComponent } from './projects/list-projects/project-item/proj
         ListProjectsComponent,
         ListProductsComponent,
         ProductItemComponent,
-        ProjectItemComponent
+        ProjectItemComponent,
+        ProductPictureComponent
     ],
     imports: [
         CommonModule,

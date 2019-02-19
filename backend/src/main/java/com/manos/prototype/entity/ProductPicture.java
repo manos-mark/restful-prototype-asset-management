@@ -30,6 +30,28 @@ public class ProductPicture {
 	@Column(name="thumb")
 	private boolean thumb;
 	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="size")
+	private Long size;
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getSize() {
+		return size;
+	}
+
+	public void setSize(Long size) {
+		this.size = size;
+	}
+
 	public boolean isThumb() {
 		return thumb;
 	}

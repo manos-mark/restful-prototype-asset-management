@@ -23,23 +23,34 @@ public class ProjectPageParamsToPageRequestConverter implements Converter<Projec
 		to.setPageSize(from.getPageSize());
 		
 		OrderDirection orderDirection = null;
-		if (OrderAndPageParams.DIRECTION_ASC.equals(from.getDirection())) {
+		if (OrderAndPageParams.DIRECTION_ASC.equals(from.getDirectionAsc())) {
 			orderDirection = OrderDirection.ASCENDING;
-		} else if (OrderAndPageParams.DIRECTION_DESC.equals(from.getDirection())){
+		} else if (OrderAndPageParams.DIRECTION_DESC.equals(from.getDirectionDesc())){
 			orderDirection = OrderDirection.DESCENDING;
 		}
 		
-		String field = null;
-		if (from.getField().equals(ProjectOrderAndPageParams.DATE_CREATED)) {
-			field = "date";
-		} else if (from.getField().equals(ProjectOrderAndPageParams.PRODUCTS_COUNT)){
-			field = "product";
+		String dateCreatedField = null;
+		String productsCountField = null;
+		List<OrderClause> orderClauses = new ArrayList<>();
+
+		if (from.getFieldDate() != null) {
+			if (from.getFieldDate().equals(ProjectOrderAndPageParams.DATE_CREATED)) {
+				dateCreatedField = "date";
+				OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
+				orderClauses.add(clause1);
+			}
+		}
+		if (from.getFieldProductsCount() != null) {
+			if (from.getFieldProductsCount().equals(ProjectOrderAndPageParams.PRODUCTS_COUNT)){
+				productsCountField = "product";
+				OrderClause clause3 = new OrderClause(productsCountField, orderDirection);
+				orderClauses.add(clause3);
+			}
 		}
 		
-		List<OrderClause> orderClauses = new ArrayList<>();
-		OrderClause clause = new OrderClause(field, orderDirection);
-		orderClauses.add(clause);
-		to.setOrderClauses(orderClauses);
+		if (!orderClauses.isEmpty()) {
+			to.setOrderClauses(orderClauses);
+		}
 		return to;
 	}
 

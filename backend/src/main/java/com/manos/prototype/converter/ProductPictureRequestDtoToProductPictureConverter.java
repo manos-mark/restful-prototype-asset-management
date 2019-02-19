@@ -15,6 +15,8 @@ public class ProductPictureRequestDtoToProductPictureConverter implements Conver
 		ProductPicture entity = new ProductPicture();
 		entity.setPicture(dto.getPicture());
 		entity.setThumb(dto.isThumb());
+		entity.setName(dto.getName());
+		entity.setSize(dto.getSize());
 		
 		int productId = dto.getProductId();
 		Product product = new Product(productId);

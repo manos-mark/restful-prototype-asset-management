@@ -40,15 +40,6 @@ public class PictureServiceImpl {
 	}
 	
 	@Transactional
-	public ProductPicture getThumbPictureByProductId(int productId) {
-		Product product = productDao.getProduct(productId);
-		if (product == null) {
-			throw new EntityNotFoundException("Product id not found - " + productId);
-		}
-		return pictureDao.getThumbPictureByProductId(productId);
-	}
-	
-	@Transactional
 	public void savePicture(ProductPicture pic) {
 		if (pic.getPicture() == null) {
 			throw new EntityNotFoundException("Picture cannot be null");

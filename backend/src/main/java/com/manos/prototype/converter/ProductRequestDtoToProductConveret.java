@@ -1,5 +1,8 @@
 package com.manos.prototype.converter;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.stereotype.Component;
 
 import com.manos.prototype.dto.ProductRequestDto;
@@ -15,7 +18,14 @@ public class ProductRequestDtoToProductConveret implements Converter<ProductRequ
 	public Product convert(ProductRequestDto productDto) {
 		
 		Product product = new Product();
-		product.setDate(productDto.getDate());
+		
+		// convert datetime
+		String tempDate = productDto.getDate();
+		DateTimeFormatter formatter = DateTimeFormatter
+				.ofPattern("dd/MM/yyyy, HH:mm:ss");
+		LocalDateTime date = LocalDateTime.parse(tempDate, formatter);
+		
+		product.setDate(date.toString());
 		product.setDescription(productDto.getDescription());
 		product.setProductName(productDto.getProductName());
 		product.setQuantity(productDto.getQuantity());

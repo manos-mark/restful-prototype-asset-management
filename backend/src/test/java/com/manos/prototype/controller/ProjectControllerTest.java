@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.queryParam;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -175,8 +174,8 @@ public class ProjectControllerTest extends AbstractMvcTest{
 			.contentType(MediaType.APPLICATION_JSON)
 			.param("page", "1")
 			.param("pageSize", "5")
-			.param("direction", "asc")
-			.param("field", "date")
+			.param("directionAsc", "asc")
+			.param("fieldDate", "date")
 			.param("statusId", "2");
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
@@ -185,58 +184,20 @@ public class ProjectControllerTest extends AbstractMvcTest{
 	
 
 	@Test
-	public void getProjectsPaginated_wrongField_fail() throws Exception {
+	public void getProjectsPaginated_nullParams_success() throws Exception {
 		MockHttpServletRequestBuilder request = get("/projects/")
-			.contentType(MediaType.APPLICATION_JSON)
-			.param("page", "1")
-			.param("pageSize", "5")
-			.param("direction", "asc")
-			.param("field", "wrong")
-			.param("statusId", "2");
-
-		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isBadRequest());
-	}
-	
-	@Test
-	public void getProjectsPaginated_direction_fail() throws Exception {
-		MockHttpServletRequestBuilder request = get("/projects/")
-			.contentType(MediaType.APPLICATION_JSON)
-			.param("page", "1")
-			.param("pageSize", "5")
-			.param("field", "created")
-			.param("statusId", "2");
+			.contentType(MediaType.APPLICATION_JSON);
+//			.param("page", "0")
+//			.param("pageSize", "5")
+//			.param("directionAsc", "asc")
+//			.param("fieldDate", "date")
+//			.param("statusId", "2");
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andDo(print())
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isOk());
 	}
 	
-	@Test
-	public void getProjectsPaginated_field_fail() throws Exception {
-		MockHttpServletRequestBuilder request = get("/projects/")
-			.contentType(MediaType.APPLICATION_JSON)
-			.param("page", "1")
-			.param("pageSize", "5")
-			.param("direction", "asc")
-			.param("statusId", "2");
-
-		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isBadRequest());
-	}
-	
-	@Test
-	public void getProjectsPaginated_statusId_fail() throws Exception {
-		MockHttpServletRequestBuilder request = get("/projects/")
-			.contentType(MediaType.APPLICATION_JSON)
-			.param("page", "1")
-			.param("pageSize", "5")
-			.param("field", "created")
-			.param("direction", "asc");
-
-		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isBadRequest());
-	}
 }
 
 

@@ -9,17 +9,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.pastelstudios.convert.ConversionService;
+import com.pastelstudios.convert.ConversionServiceImpl;
+import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 import com.pastelstudios.db.PagingAndSortingSupport;
 import com.pastelstudios.db.SearchSupport;
 
 @Configuration
-@ComponentScan(basePackages = "com.manos.prototype.dao")
-public class AppConfigUnitTest {
+@EnableWebMvc
+@EnableTransactionManagement
+//@ComponentScan(basePackages = "com.manos.prototype")
+@ComponentScan(basePackages = {"com.manos.prototype"}, excludeFilters={
+		  @ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=DatabaseConfig.class)})
+public class AppConfigIntegrationTest {
 	
 	@Bean
 	public DataSource dataSource() {
@@ -54,10 +65,27 @@ public class AppConfigUnitTest {
 	@Bean
 	@Autowired
 	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
+
+		// setup transaction manager based on session factory
 		HibernateTransactionManager txManager = new HibernateTransactionManager();
 		txManager.setSessionFactory(sessionFactory);
 
 		return txManager;
+	}
+
+	@Bean
+	public ConversionService conversionService() {
+		return new ConversionServiceImpl();
+	}
+	
+	@Bean
+	public GenericFinder genericFinder() {
+		return new GenericFinder();
+	}
+	
+	@Bean
+	public GenericGateway genericGateway() {
+		return new GenericGateway();
 	}
 	
 	@Bean

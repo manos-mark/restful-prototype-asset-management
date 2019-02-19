@@ -22,7 +22,10 @@ public class ProjectServiceImpl {
 	@Transactional
 	public PageResult<Project> getProjects(PageRequest pageRequest, ProjectSearch search) {
 		List<Project> projects = projectDao.getProjects(pageRequest, search);
-		Long totalCount = projectDao.count(search);
+		Long totalCount = 0L;
+		if (search.getStatusId() != null) {
+			totalCount = projectDao.count(search);
+		}
 		return new PageResult<>(projects, totalCount.intValue(), pageRequest.getPageSize());
 	}
 

@@ -1,6 +1,5 @@
 package com.manos.prototype.controller.params;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class ProjectOrderAndPageParams extends OrderAndPageParams{
@@ -8,15 +7,27 @@ public class ProjectOrderAndPageParams extends OrderAndPageParams{
 	public static final String DATE_CREATED = "date";
 	public static final String PRODUCTS_COUNT = "products";
 	
-	@NotNull
-	@Pattern(regexp = DATE_CREATED)// + " | " + PRODUCTS_COUNT)
-	private String field = null;
+	@Pattern(regexp = DATE_CREATED)
+	private String fieldDate = null;
 	
-	public String getField() {
-		return field;
+	@Pattern(regexp = PRODUCTS_COUNT)
+	private String fieldProductsCount = null;
+
+	public String getFieldDate() {
+		return fieldDate;
 	}
 
-	public void setField(String field) {
-		this.field = field;
+	public void setFieldDate(String fieldDate) {
+		this.fieldDate = fieldDate;
 	}
+
+	public String getFieldProductsCount() {
+		return fieldProductsCount;
+	}
+
+	public void setFieldProductsCount(String fieldProductsCount) {
+		this.fieldProductsCount = fieldProductsCount;
+	}
+	
+	
 }

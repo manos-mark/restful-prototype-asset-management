@@ -56,6 +56,7 @@ div.tableWrp div.filters a.blueDarkBtn{
 
 div.tableWrp div.filters div.right{
 	float:right;
+	width:335px;
 }
 
 div.tableWrp div.filters div.right a.grayBtn{
@@ -131,7 +132,7 @@ div.tableWrp div.filters div.right div.pagination a.arrowRight i{
 
 div.tableWrp div.filters div.right div.pagination div.center{
 	float:left;
-	width:100px;
+	width:110px;
 	text-align: center;
     line-height: 30px;
 }
@@ -262,13 +263,13 @@ div.tableWrp div.table div.content div.row div.settings{
 /* product table */
 div.tableWrp div.table div.header span.productName,
 div.tableWrp div.table div.content div.row span.productName{
-	width:15%;
+	width:10%;
 	font-weight:500;
 }
 
 div.tableWrp div.table div.header span.sn,
 div.tableWrp div.table div.content div.row span.sn{
-	width:5%;
+	width:10%;
 }
 
 div.tableWrp div.table div.header a.quantity,
@@ -595,6 +596,12 @@ div.tableWrp div.actionTtl p{
 	font-size:14px;
 	font-weight:500;
 	margin-top:3px;
+}
+
+div.tableWrp div.actionTtl span {
+    color: #49505a;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 div.tableWrp div.bottomActions{

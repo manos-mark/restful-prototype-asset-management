@@ -17,16 +17,16 @@ import com.pastelstudios.paging.PageRequest;
 public class ProductPageParamsToPageRequestConverter implements Converter<ProductOrderAndPageParams, PageRequest>{
 
 	@Override
-	public PageRequest convert(ProductOrderAndPageParams from) {
+	public PageRequest convert(ProductOrderAndPageParams from) { //CHANGEEEEEE
 		PageRequest to = new PageRequest();
 		
 		to.setPage(from.getPage());
 		to.setPageSize(from.getPageSize());
 		
 		OrderDirection orderDirection = null;
-		if (OrderAndPageParams.DIRECTION_ASC.equals(from.getDirection())) {
+		if (OrderAndPageParams.DIRECTION_ASC.equals(from.getDirectionAsc())) {
 			orderDirection = OrderDirection.ASCENDING;
-		} else if (OrderAndPageParams.DIRECTION_DESC.equals(from.getDirection())){
+		} else if (OrderAndPageParams.DIRECTION_DESC.equals(from.getDirectionDesc())){
 			orderDirection = OrderDirection.DESCENDING;
 		}
 		

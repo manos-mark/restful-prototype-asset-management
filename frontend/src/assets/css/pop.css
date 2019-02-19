@@ -58,7 +58,7 @@ div.windowPopWrp{
 
 div.windowPop{
 	width: 40%;
-    height: 40%;
+    height: 45%;
     position: absolute;
     top: 0;
     left: 0;
@@ -83,7 +83,7 @@ div.windowPop{
 div.windowPopWrp div.windowPop div.windowPopHeader{
 	float: left;
     color: white;
-    height: 39%;
+    height: 28%;
     width: 100%;
     background: #2b3245;
     padding: 5%;
@@ -137,7 +137,7 @@ div.windowPopWrp div.windowPop div.windowPopContents{
     width: 100%;
     clear: both;
     position: relative;
-    height: 39%;
+    height: 50%;
     background: white;
     
     display: -webkit-flex;
@@ -177,6 +177,7 @@ div.windowPopWrp div.windowPop div.windowPopContents div.centered div.inputWrp d
 	height:40px;
 	position:relative;
 }
+
 div.windowPopWrp div.windowPop div.windowPopContents div.centered div.inputWrp div.input i.email{
 	position: absolute;
     top: 12px;
@@ -190,7 +191,11 @@ div.windowPopWrp div.windowPop div.windowPopContents div.centered div.inputWrp d
 	float:left;
 	width:100%;
 	height:40px;
-	padding-left: 28px;
+	padding-left: 8px;
+}
+
+div.windowPopWrp div.windowPop div.windowPopContents div.centered div.inputWrp.emailPad div.input input{
+	padding-left:30px;
 }
 
 div.windowPopWrp div.windowPop div.windowPopContents div.centered span{

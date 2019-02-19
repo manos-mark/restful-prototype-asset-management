@@ -11,13 +11,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.manos.prototype.config.AppConfig;
+import com.manos.prototype.config.AppConfigIntegrationTest;
 import com.manos.prototype.config.SecurityConfig;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.security.UserDetailsImpl;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AppConfig.class, SecurityConfig.class })
+@ContextConfiguration(classes = { AppConfigIntegrationTest.class, SecurityConfig.class })
 @WebAppConfiguration
 public class AbstractMvcTest {
 

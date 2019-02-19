@@ -71,7 +71,10 @@ public class ProductServiceImpl {
 	@Transactional
 	public PageResult<Product> getProducts(PageRequest pageRequest, ProductSearch search) {
 		List<Product> products = productDao.getProducts(pageRequest, search);
-		Long totalCount = productDao.count(search);
+		Long totalCount = 0L;
+		if (search.getStatusId() != null) {
+			totalCount = productDao.count(search);
+		}
 		return new PageResult<>(products, totalCount.intValue(), pageRequest.getPageSize());
 	}
 

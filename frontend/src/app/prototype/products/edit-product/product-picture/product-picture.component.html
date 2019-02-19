@@ -1,0 +1,19 @@
+<div class="row">
+    <span class="thumb">
+        <input type="radio" [value]="index"> <!--formControlName="thumbFormGroup.thumb">-->
+    </span>
+    <div class="picture">
+        <a class="picWrp">
+            <img [src]="imageSrc || 'http://placehold.it/180'">
+            <var class="zoom"><span></span></var>
+        </a>
+    </div>
+    <span class="fileName">{{ picture.file.name }}</span>
+    <span class="fileSize">{{ convertBytesToMegabytes(picture.file.size) }}</span>
+    <span class="download">
+        <a class="greenBtn"><i></i></a>
+    </span>
+    <div class="delete">
+        <a class="grayDarkBtn"><i></i></a>
+    </div>
+</div>

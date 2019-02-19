@@ -350,9 +350,9 @@ div.contentWrapper div.content div.rightCont div.activity div.history div.row{
     display: -ms-flexbox;
     display: flex;
     
-    align-items:center;
- 	-webkit-align-items:center;
- 	-moz-align-items:center;
+    align-items:flex-start;
+ 	-webkit-align-items:flex-start;
+ 	-moz-align-items:flex-start;
     margin-bottom: 10px;
     position: relative;
     z-index: 2;
@@ -376,17 +376,19 @@ div.contentWrapper div.content div.rightCont div.activity div.history div.row p.
 div.contentWrapper div.content div.rightCont div.activity div.history div.row div.action{
 	float:left;
 	width:70%;
+	position:relative;
 }
 
 div.contentWrapper div.content div.rightCont div.activity div.history div.row  div.action i{
-	float:left;
-	margin-right: 10px;
+	position: absolute;
+    left: 0;
+    top: -5px;
 }
 
 div.contentWrapper div.content div.rightCont div.activity div.history div.row  div.action p{
 	color:black;
 	float:left;
-	margin-top:7px;
+	padding-left: 35px;
 }
 
 
@@ -562,6 +564,7 @@ div.formGroup div.attachedProducts{
 	float:left;
 	width:705px;
 	padding-left:20px;
+	position:relative;
 }
 
  div.formGroup div.addDescription{
@@ -670,6 +673,7 @@ div.formGroup div.list{
 	border:1px solid #bec2ca;
 	position:relative;
 	overflow: hidden;
+	margin-top: 19px;
 }
 
 div.formGroup div.list p{

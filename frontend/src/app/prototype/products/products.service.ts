@@ -57,4 +57,41 @@ export class ProductsService {
             observe: 'body'
         })
     }
+
+    addProduct(productName: string, serialNumber: string, description: string,
+        quantity: number, projectId: number, ) {
+        let currDate = (new Date).toLocaleString('en-GB');
+        
+        return this.httpClient.post<any>('api/products', 
+            {
+                productName: productName,
+                serialNumber: serialNumber,
+                description: description,
+                quantity: quantity,
+                projectId: projectId,
+                statusId: 2,
+                date: currDate
+            },
+            {
+                headers: new HttpHeaders().set('Content-Type', 'application/json'),
+                observe: 'body',
+            }
+        )
+    }
+
+    addPicture(productId: number, picture: ProductPicture) {
+        return this.httpClient.post<any>('api/products/' + productId + '/pictures',
+            {
+                productId: productId,
+                picture: picture.file,
+                thumb: picture.thumb,
+                name: picture.file.name, 
+                size: picture.file.size
+            },
+            {
+                headers: new HttpHeaders().set('Content-Type', 'application/json'),
+                observe: 'body',
+            }
+        )
+    }
 }
