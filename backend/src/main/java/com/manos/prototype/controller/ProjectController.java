@@ -1,5 +1,6 @@
 package com.manos.prototype.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -54,10 +55,29 @@ public class ProjectController {
 		
 		List<ProjectDto> projectsDto = conversionService.convertList(pageResult.getEntities(), ProjectDto.class);
 		
+		for (ProjectDto project : projectsDto) {
+			Long productsCount = productService.getProductsCountByProjectId(project.getId());
+			project.setProductsCount(productsCount);
+		}
+		
 		PageResultDto<ProjectDto> pageResultDto = new PageResultDto<>();
 		pageResultDto.setItems(projectsDto);
 		pageResultDto.setTotalCount(pageResult.getTotalCount());
+		
 		return pageResultDto;
+	}
+	
+	@GetMapping("/all")
+	public List<ProjectDto> getProjects() {
+		List<Project> entityList = projectService.getProjects();
+		List<ProjectDto> dtoList = new ArrayList<>();
+		for (Project entity : entityList) {
+			ProjectDto temp = new ProjectDto();
+			temp.setId(entity.getId());
+			temp.setProjectName(entity.getProjectName());
+			dtoList.add(temp);
+		}
+		return dtoList;
 	}
 
 	@GetMapping("/{id}/products")
@@ -66,18 +86,18 @@ public class ProjectController {
 		return conversionService.convertList(products, ProductDto.class);
 	}
 	
-	@GetMapping("/{id}/name")
-	public ProjectDto getProjectName(@PathVariable("id") int projectId) {
-		ProjectDto tempDto = new ProjectDto();
-		Project entity = projectService.getProject(projectId);
-		tempDto.setProjectName(entity.getProjectName());
-		return tempDto;
-	}
-	
-	@GetMapping("/{id}/products/count")
-	public Long getProductsCountByProjectId(@PathVariable("id") int projectId) {
-		return productService.getProductsCountByProjectId(projectId);
-	}
+//	@GetMapping("/{id}/name")
+//	public ProjectDto getProjectName(@PathVariable("id") int projectId) {
+//		ProjectDto tempDto = new ProjectDto();
+//		Project entity = projectService.getProject(projectId);
+//		tempDto.setProjectName(entity.getProjectName());
+//		return tempDto;
+//	}
+//	
+//	@GetMapping("/{id}/products/count")
+//	public Long getProductsCountByProjectId(@PathVariable("id") int projectId) {
+//		return productService.getProductsCountByProjectId(projectId);
+//	}
 
 	@GetMapping("/{id}")
 	public ProjectDto getProject(@PathVariable("id") int projectId) {

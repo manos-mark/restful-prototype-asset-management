@@ -7,7 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -41,9 +43,17 @@ public class Product {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_id")
 	private Project project;
+	
+	@OneToOne
+	@JoinTable(
+			name = "product_thumb_picture",
+			joinColumns = @JoinColumn(name = "product_id"),
+			inverseJoinColumns = @JoinColumn(name = "thumb_picture_id")
+		)
+	private ProductPicture thumbPicture;
 
 	public Product(String date, String productName, String serialNumber, String description, int quantity,
-			Status status, Project project) {
+			Status status, Project project, ProductPicture thumbPicture) {
 		this.date = date;
 		this.productName = productName;
 		this.serialNumber = serialNumber;
@@ -51,9 +61,18 @@ public class Product {
 		this.quantity = quantity;
 		this.status = status;
 		this.project = project;
+		this.thumbPicture = thumbPicture;
 	}
 	
 	public Product() {}
+
+	public ProductPicture getThumbPicture() {
+		return thumbPicture;
+	}
+
+	public void setThumbPicture(ProductPicture thumbPicture) {
+		this.thumbPicture = thumbPicture;
+	}
 
 	public Product(int productId) {
 		this.id = productId;

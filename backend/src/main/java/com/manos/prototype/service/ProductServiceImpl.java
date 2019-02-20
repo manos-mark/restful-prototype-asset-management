@@ -73,7 +73,10 @@ public class ProductServiceImpl {
 		List<Product> products = productDao.getProducts(pageRequest, search);
 		Long totalCount = 0L;
 		if (search.getStatusId() != null) {
-			totalCount = productDao.count(search);
+			totalCount = productDao.getProductsCountByStatus(search.getStatusId());
+		}
+		else {
+			totalCount = productDao.countAll();
 		}
 		return new PageResult<>(products, totalCount.intValue(), pageRequest.getPageSize());
 	}

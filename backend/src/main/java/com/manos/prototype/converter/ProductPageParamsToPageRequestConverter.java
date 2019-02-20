@@ -24,9 +24,9 @@ public class ProductPageParamsToPageRequestConverter implements Converter<Produc
 		to.setPageSize(from.getPageSize());
 		
 		OrderDirection orderDirection = null;
-		if (OrderAndPageParams.DIRECTION_ASC.equals(from.getDirectionAsc())) {
+		if (OrderAndPageParams.DIRECTION_ASC.equals(from.getDirection())) {
 			orderDirection = OrderDirection.ASCENDING;
-		} else if (OrderAndPageParams.DIRECTION_DESC.equals(from.getDirectionDesc())){
+		} else if (OrderAndPageParams.DIRECTION_DESC.equals(from.getDirection())){
 			orderDirection = OrderDirection.DESCENDING;
 		}
 		

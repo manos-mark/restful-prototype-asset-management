@@ -19,7 +19,7 @@ public class ProductPictureController {
 	
 	@GetMapping(value = "/{id}", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE,
 			MediaType.IMAGE_GIF_VALUE })
-	public byte[] getPictures(@PathVariable("id") int pictureId) {
+	public byte[] getPicture(@PathVariable("id") int pictureId) {
 		ProductPicture picture = pictureService.getPicture(pictureId);
 		return picture.getPicture();
 	}

@@ -7,7 +7,10 @@ export class Product {
     public quantity: string;
     public description: string;
     public projectId: number;
+    public projectName: string;
     public statusId: number;
+    public picturesCount: number;
+    public thumbPictureId: number; 
 
     constructor(dto:any) {
         this.id = dto.id;
@@ -17,6 +20,9 @@ export class Product {
         this.quantity = dto.quantity;
         this.description = dto.description;
         this.projectId = dto.projectId;
+        this.projectName = dto.projectName;
         this.statusId = dto.statusId;
+        this.picturesCount = dto.picturesCount;
+        this.thumbPictureId = dto.thumbPictureId;
     } 
 }

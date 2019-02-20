@@ -5,12 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,14 +17,9 @@ import com.manos.prototype.controller.params.ProductFilterParams;
 import com.manos.prototype.controller.params.ProductOrderAndPageParams;
 import com.manos.prototype.dto.PageResultDto;
 import com.manos.prototype.dto.ProductDto;
-import com.manos.prototype.dto.ProductPictureDto;
-import com.manos.prototype.dto.ProductPictureRequestDto;
-import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
-import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
-import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.service.PictureServiceImpl;
 import com.manos.prototype.service.ProductServiceImpl;
@@ -61,7 +54,15 @@ public class ProductController {
 		PageResult<Product> pageResult = productService.getProducts(pageRequest, search);
 
 		List<ProductDto> productsDto = conversionService.convertList(pageResult.getEntities(), ProductDto.class);
-
+		
+		for (ProductDto product : productsDto) {
+			Project project = projectService.getProject(product.getProjectId());
+			product.setProjectName(project.getProjectName());
+			
+			Long picturesCount = pictureService.getPicturesCountByProductId(product.getId());
+			product.setPicturesCount(picturesCount);
+		}
+		
 		PageResultDto<ProductDto> pageResultDto = new PageResultDto<>();
 		pageResultDto.setItems(productsDto);
 		pageResultDto.setTotalCount(pageResult.getTotalCount());
@@ -79,30 +80,30 @@ public class ProductController {
 		return "Deleted user with id - " + productId;
 	}
 
-	@PutMapping("/{id}")
-	public void updateProduct(@PathVariable("id") int productId, @RequestBody ProductRequestDto productRequestDto) {
-		Product product = conversionService.convert(productRequestDto, Product.class);
-		product.setId(productId);
-
-		// check if project exists
-		int projectId = product.getProject().getId();
-		Project project = projectService.getProject(projectId);
-
-		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + projectId);
-		}
-
-		productService.saveProduct(product);
-	}
-
-	@PostMapping
-	public int addProduct(@RequestBody ProductRequestDto productRequestDto) {
-		Product product = conversionService.convert(productRequestDto, Product.class);
-		product.setId(0);
-		productService.saveProduct(product);
-		return product.getId();
-	}
-
+//	@PutMapping("/{id}")
+//	public void updateProduct(@PathVariable("id") int productId, @RequestBody ProductRequestDto productRequestDto) {
+//		Product product = conversionService.convert(productRequestDto, Product.class);
+//		product.setId(productId);
+//
+//		// check if project exists
+//		int projectId = product.getProject().getId();
+//		Project project = projectService.getProject(projectId);
+//
+//		if (project == null) {
+//			throw new EntityNotFoundException("Project id not found - " + projectId);
+//		}
+//
+//		productService.saveProduct(product);
+//	}
+//
+//	@PostMapping
+//	public int addProduct(@RequestBody ProductRequestDto productRequestDto) {
+//		Product product = conversionService.convert(productRequestDto, Product.class);
+//		product.setId(0);
+//		productService.saveProduct(product);
+//		return product.getId();
+//	}
+//
 //	@GetMapping("/{id}/pictures")
 //	public List<ProductPictureDto> getPicturesByProductId(@PathVariable("id") int productId) {
 //		List<ProductPicture> pictures = pictureService.getPicturesByProductId(productId);

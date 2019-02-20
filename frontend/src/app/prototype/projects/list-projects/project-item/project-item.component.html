@@ -6,7 +6,7 @@
     <span class="companyName">{{ project.companyName }}</span>
     <span class="projectManager">{{ project.projectManager }}</span>
     <div class="products">
-      <span>{{ productsCount }}</span>
+      <span>{{ project.productsCount }}</span>
       <a class="grayBtn"><i></i></a>
     </div>
     <div *ngIf="project.statusId == 1" class="status"><span class="orange">in progress</span></div>

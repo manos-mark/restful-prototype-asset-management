@@ -13,17 +13,28 @@ public class ProjectDto {
 	private String date;
 
 	private int statusId;
+	
+	private Long productsCount;
 
-	public ProjectDto(int id, String projectName, String companyName, String projectManager, String date, int statusId) {
+	public ProjectDto(int id, Long productsCount, String projectName, String companyName, String projectManager, String date, int statusId) {
 		this.id = id;
 		this.projectName = projectName;
 		this.companyName = companyName;
 		this.projectManager = projectManager;
 		this.date = date;
 		this.statusId = statusId;
+		this.productsCount = productsCount;
 	}
 	
 	public ProjectDto() {}
+	
+	public Long getProductsCount() {
+		return productsCount;
+	}
+
+	public void setProductsCount(Long productsCount) {
+		this.productsCount = productsCount;
+	}
 
 	public int getId() {
 		return id;

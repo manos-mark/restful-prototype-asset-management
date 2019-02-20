@@ -18,8 +18,14 @@ public class ProductDto {
 	
 	private int projectId;
 	
+	private String projectName;
+	
+	private Long picturesCount;
+	
+	private int thumbPictureId;
+	
 	public ProductDto(String date, String productName, String serialNumber, String description, int quantity,
-			int status, int project) {
+			int status, int project, String projectName, Long picturesCount) {
 		this.date = date;
 		this.productName = productName;
 		this.serialNumber = serialNumber;
@@ -27,9 +33,35 @@ public class ProductDto {
 		this.quantity = quantity;
 		this.statusId = status;
 		this.projectId = project;
+		this.picturesCount = picturesCount;
 	}
 	
 	public ProductDto() {}
+
+	
+	public int getThumbPictureId() {
+		return thumbPictureId;
+	}
+
+	public void setThumbPictureId(int thumbPictureId) {
+		this.thumbPictureId = thumbPictureId;
+	}
+
+	public Long getPicturesCount() {
+		return picturesCount;
+	}
+
+	public void setPicturesCount(Long picturesCount) {
+		this.picturesCount = picturesCount;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
 
 	public int getId() {
 		return id;

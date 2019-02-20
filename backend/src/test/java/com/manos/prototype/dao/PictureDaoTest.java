@@ -47,7 +47,6 @@ public class PictureDaoTest {
 		assertThat(pictures.get(1).getId()).isEqualTo(2);
 		assertThat(pictures.get(1).getProduct().getId()).isEqualTo(1);
 		assertThat(pictures.get(1).getPicture()).isNotNull();
-		assertThat(pictures.get(1).isThumb()).isFalse();
 	}
 	
 	@Test
@@ -57,7 +56,6 @@ public class PictureDaoTest {
 		assertThat(picture.getId()).isEqualTo(2);
 		assertThat(picture.getProduct().getId()).isEqualTo(1);
 		assertThat(picture.getPicture()).isNotNull();
-		assertThat(picture.isThumb()).isFalse();
 	}
 	
 	@Test

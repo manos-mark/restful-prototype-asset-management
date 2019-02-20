@@ -6,11 +6,11 @@
     <span class="sn">{{ product.serialNumber }}</span>
     <span class="quantity">{{ product.quantity }}</span>
     <span class="description">{{ product.description }}</span>
-    <span class="project">{{ projectName }}</span>
+    <span class="project">{{ product.projectName }}</span>
     <div class="picture">
         <a class="picWrp">
-        <img [src]="thumbPicture"/>
-        <i>{{ picturesLength }}</i>
+        <img [src]="thumbPictureUrl"/>
+        <i>{{ product.picturesCount }}</i>
         <var class="zoom" (click)="showCarousel()"><span></span></var>
         </a>
     </div>

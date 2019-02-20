@@ -102,4 +102,24 @@ public class ProjectDaoImpl {
 		return theQuery.getSingleResult();
 	}
 
+	public Long countAll() {
+		Session currentSession = sessionFactory.getCurrentSession();
+		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("select count(p.id) from Project p ");
+		
+		Query<Long> theQuery = currentSession
+				.createQuery(queryBuilder.toString(), Long.class);
+		
+		return theQuery.getSingleResult();
+	}
+
+	public List<Project> getProjects() {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Project p ");
+		
+		return currentSession.createQuery(queryBuilder.toString(), Project.class).getResultList();
+	}
+
 }

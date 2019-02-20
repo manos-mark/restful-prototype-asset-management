@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
 
@@ -26,6 +27,7 @@ import com.manos.prototype.entity.Status;
 @Sql(scripts = "classpath:/sql/status.sql")
 @Sql(scripts = "classpath:/sql/projects.sql")
 @Sql(scripts = "classpath:/sql/products.sql")
+@Sql(scripts = "classpath:/sql/pictures.sql")
 public class ProductDaoTest {
 		
 	@Autowired 
@@ -53,6 +55,7 @@ public class ProductDaoTest {
 		assertThat(product.getQuantity()).isEqualTo(12);
 		assertThat(product.getStatus().getId()).isEqualTo(2);
 		assertThat(product.getProject().getId()).isEqualTo(1);
+		assertThat(product.getThumbPicture().getId()).isEqualTo(2);
 	}
 	
 	@Test
@@ -80,6 +83,7 @@ public class ProductDaoTest {
 		assertThat(product.getProject().getId()).isEqualTo(1);
 		assertThat(products).size().isEqualTo(1);
 		assertThat(products).doesNotContainNull();
+		assertThat(product.getThumbPicture().getId()).isEqualTo(2);
 	}
 	
 	@Test
@@ -121,6 +125,7 @@ public class ProductDaoTest {
 		product.setQuantity(122);
 		product.setSerialNumber("test");
 		product.setStatus(new Status(2));
+		product.setThumbPicture(new ProductPicture(1));
 		
 		assertThatCode(() -> {
 			productDao.saveProduct(product);
@@ -136,6 +141,7 @@ public class ProductDaoTest {
 		assertThat(savedProduct.getQuantity()).isEqualTo(122);
 		assertThat(savedProduct.getSerialNumber()).isEqualTo("test");
 		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
+		assertThat(product.getThumbPicture().getId()).isEqualTo(1);
 	}
 	
 	@Test
@@ -154,6 +160,7 @@ public class ProductDaoTest {
 		product.setSerialNumber("test");
 		product.setStatus(new Status(2));
 		product.setId(1);
+		product.setThumbPicture(new ProductPicture(1));
 		
 		assertThatCode(() -> {
 			productDao.updateProduct(product);
@@ -169,6 +176,7 @@ public class ProductDaoTest {
 		assertThat(savedProduct.getQuantity()).isEqualTo(122);
 		assertThat(savedProduct.getSerialNumber()).isEqualTo("test");
 		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
+		assertThat(product.getThumbPicture().getId()).isEqualTo(1);
 	}
 	
 	@Test

@@ -38,9 +38,9 @@ export class EditProductComponent implements OnInit {
         private productService: ProductsService) { }
 
     ngOnInit() {
-        this.projectService.getProjectsWithoutParams()
+        this.projectService.getAllProjects()
         .subscribe(
-            res => this.projects = res['items'],
+            res => this.projects = res,
             error => console.log(error)
         )
     }
@@ -74,26 +74,26 @@ export class EditProductComponent implements OnInit {
     }
 
     onAddSave() {
-        if (this.editMode == false) {
-            //save the product first
-            this.productService.addProduct(this.productName.value, this.serialNumber.value, 
-                this.description.value, this.quantity.value, this.project.value)
-                .subscribe(
-                    res => {
-                        let productId = res;
-                        //then add activity
-                        this.activityService.addActivity('5').subscribe();
-                        //set the thumb pic
-                        this.picturesList[this.thumb.value].thumb = true;
-                        //then save the pictures
-                        // this.picturesList.forEach(
-                        //     (pic) => this.productService.addPicture(productId, pic)
-                        //                 .subscribe()
-                        // )
-                    },
-                    error => console.log(error)
-                )
-        }
+        // if (this.editMode == false) {
+        //     //save the product first
+        //     this.productService.addProduct(this.productName.value, this.serialNumber.value, 
+        //         this.description.value, this.quantity.value, this.project.value)
+        //         .subscribe(
+        //             res => {
+        //                 let productId = res;
+        //                 //then add activity
+        //                 this.activityService.addActivity('5').subscribe();
+        //                 //set the thumb pic
+        //                 this.picturesList[this.thumb.value].thumb = true;
+        //                 //then save the pictures
+        //                 // this.picturesList.forEach(
+        //                 //     (pic) => this.productService.addPicture(productId, pic)
+        //                 //                 .subscribe()
+        //                 // )
+        //             },
+        //             error => console.log(error)
+        //         )
+        // }
     }
 
     onCancel() {

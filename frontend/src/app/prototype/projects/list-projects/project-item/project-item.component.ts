@@ -16,11 +16,6 @@ export class ProjectItemComponent implements OnInit {
                 private router: Router) { }
 
     ngOnInit() {
-        this.projectService.getProductsCountByProjectId(this.project.id)
-            .subscribe(
-                res => this.productsCount = res,
-                error => console.log(error)
-            )
     }
 
     onEdit() {

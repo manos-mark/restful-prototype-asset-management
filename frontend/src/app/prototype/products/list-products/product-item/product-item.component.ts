@@ -12,31 +12,36 @@ import { ProductPicture } from '../../product-picture.model';
 })
 export class ProductItemComponent implements OnInit {
   @Input() product: Product;
-  thumbPicture: ProductPicture;
-  pictures: ProductPicture[];
-  projectName: string = "";
-  picturesLength: number;
+  thumbPictureUrl: URL;
+//   pictures: ProductPicture[];
+//   projectName: string = "";
+//   picturesLength: number;
 
   constructor(private productService: ProductsService,
                 private router: Router,
                 private projectService: ProjectsService) { }
 
   ngOnInit() {
-    this.projectService.getProjectName(this.product.projectId)
-        .subscribe(
-            res => this.projectName = res.projectName,
-            error => console.log(error)
-        );
-    this.productService.getThumbPictureByProductId(this.product.id)
-        .subscribe(
-            res => {this.thumbPicture = res; console.log(this.thumbPicture)},
-            error => console.log(error)
-        );
-    this.productService.getPicturesCountByProductId(this.product.id)
-        .subscribe(
-            res => this.picturesLength = res,
-            error => console.log(error)
-        );
+      this.productService.getPictureUrl(this.product.thumbPictureId)
+            .subscribe(
+                res => this.thumbPictureUrl = res,
+                error => this.thumbPictureUrl = error.url
+            )
+    // this.projectService.getProjectName(this.product.projectId)
+    //     .subscribe(
+    //         res => this.projectName = res.projectName,
+    //         error => console.log(error)
+    //     );
+    // this.productService.getThumbPictureByProductId(this.product.id)
+    //     .subscribe(
+    //         res => {this.thumbPicture = res; console.log(this.thumbPicture)},
+    //         error => console.log(error)
+    //     );
+    // this.productService.getPicturesCountByProductId(this.product.id)
+    //     .subscribe(
+    //         res => this.picturesLength = res,
+    //         error => console.log(error)
+    //     );
   }
 
   onEdit() {
@@ -45,11 +50,11 @@ export class ProductItemComponent implements OnInit {
   }
 
   showCarousel() {
-    this.productService.getPicturesByProductId(this.product.id)
-        .subscribe(
-            res => {this.pictures = res; console.log(this.pictures)},
-            error => console.log(error)
-        );
+    // this.productService.getPicturesByProductId(this.product.id)
+    //     .subscribe(
+    //         res => {this.pictures = res; console.log(this.pictures)},
+    //         error => console.log(error)
+    //     );
   }
 
 }

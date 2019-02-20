@@ -21,6 +21,7 @@ public class ProductToProductDtoConveret implements Converter<Product, ProductDt
 		dto.setQuantity(entity.getQuantity());
 		dto.setSerialNumber(entity.getSerialNumber());
 		dto.setStatusId(entity.getStatus().getId());
+		dto.setThumbPictureId(entity.getThumbPicture().getId());
 		return dto;
 	}
 	

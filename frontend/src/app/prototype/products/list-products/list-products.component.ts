@@ -14,9 +14,9 @@ export class ListProductsComponent implements OnInit {
   constructor(private productService: ProductsService) { }
 
   ngOnInit() {
-    this.productService.getProducts(2,'date',1,5,'asc')
+    this.productService.getProductsNoFilter('date',1,5,'asc')
       .subscribe(
-        res => {this.products = res['items']; this.totalCount = res['totalCount']},
+        res => {this.products = res['items']; this.totalCount = res['totalCount'];},
         error => console.log(error)
       )
   }

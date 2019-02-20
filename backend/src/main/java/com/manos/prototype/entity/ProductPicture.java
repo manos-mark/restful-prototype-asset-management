@@ -27,15 +27,18 @@ public class ProductPicture {
 	@JoinColumn(name = "product_id")
 	private Product product;
 	
-	@Column(name="thumb")
-	private boolean thumb;
-	
 	@Column(name="name")
 	private String name;
 	
 	@Column(name="size")
 	private Long size;
 	
+	public ProductPicture(int id) {
+		this.id = id;
+	}
+	
+	public ProductPicture() {}
+
 	public String getName() {
 		return name;
 	}
@@ -50,14 +53,6 @@ public class ProductPicture {
 
 	public void setSize(Long size) {
 		this.size = size;
-	}
-
-	public boolean isThumb() {
-		return thumb;
-	}
-
-	public void setThumb(boolean thumb) {
-		this.thumb = thumb;
 	}
 
 	public Product getProduct() {

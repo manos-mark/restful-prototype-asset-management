@@ -81,13 +81,27 @@ public class ProductDaoImpl {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select count(p.id) from Product p "
-				+ "inner join p.status s "
-				+ "where s.id = :statusId");
+		queryBuilder.append("select count(p.id) from Product p ")
+					.append("inner join p.status s ")
+					.append("where s.id = :statusId");
 		
 		Query<Long> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Long.class);
 		theQuery.setParameter("statusId", statusId);
+		
+		return theQuery.getSingleResult();
+	}
+
+	public Long count(ProductSearch search) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("select count(p.id) from Product p ")
+					.append("join p.status pStatus ");
+		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
+		
+		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
+		theQuery.setParameter("statusId", search.getStatusId());
 		
 		return theQuery.getSingleResult();
 	}
@@ -106,20 +120,6 @@ public class ProductDaoImpl {
 				.getResultList();
 	}
 
-	public Long count(ProductSearch search) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select count(p.id) from Product p ")
-					.append("join p.status pStatus ");
-		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
-		
-		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
-		theQuery.setParameter("statusId", search.getStatusId());
-		
-		return theQuery.getSingleResult();
-	}
-
 	public Long getProductsCountByProjectId(int projectId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -131,6 +131,18 @@ public class ProductDaoImpl {
 		Query<Long> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Long.class);
 		theQuery.setParameter("projectId", projectId);
+		
+		return theQuery.getSingleResult();
+	}
+
+	public Long countAll() {
+		Session currentSession = sessionFactory.getCurrentSession();
+		
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("select count(p.id) from Product p ");
+		
+		Query<Long> theQuery = currentSession
+				.createQuery(queryBuilder.toString(), Long.class);
 		
 		return theQuery.getSingleResult();
 	}
