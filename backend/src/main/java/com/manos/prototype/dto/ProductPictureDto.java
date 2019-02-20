@@ -8,8 +8,6 @@ public class ProductPictureDto {
 	
 	private int productId;
 	
-	private boolean thumb;
-	
 	private String name;
 	
 	private Long size;
@@ -53,14 +51,5 @@ public class ProductPictureDto {
 	public void setProductId(int productId) {
 		this.productId = productId;
 	}
-
-	public boolean isThumb() {
-		return thumb;
-	}
-
-	public void setThumb(boolean thumb) {
-		this.thumb = thumb;
-	}
-	
 	
 }

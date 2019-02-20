@@ -50,34 +50,19 @@ export class ProductsService {
     getPictureUrl(id: number) {
         return this.httpClient.get<URL>('api/product-pictures/' + id, 
         {
-            headers: new HttpHeaders().set('Content-Type', 'image/png, image/jpg, image/gif'),
+            headers: new HttpHeaders().set('Content-Type', 'image/png, image/jpg, image/gif')
+                                        .set('Accept', 'image/png, image/jpg, image/gif'),
             observe: 'body'
         })
     }
 
-    // getThumbPictureByProductId(productId: number) {
-    //     return this.httpClient.get<ProductPicture>('api/products/' + productId + '/thumb-picture',  
-    //     {
-    //         headers: new HttpHeaders().set('Content-Type', 'application/json'),
-    //         observe: 'body'
-    //     })
-    // }
-
-    // getPicturesCountByProductId(productId: number) {
-    //     return this.httpClient.get<number>('api/products/' + productId + '/pictures-count',  
-    //     {
-    //         headers: new HttpHeaders().set('Content-Type', 'application/json'),
-    //         observe: 'body'
-    //     })
-    // }
-
-    // getPicturesByProductId(productId: number) {
-    //     return this.httpClient.get<Array<ProductPicture>>('api/products/' + productId + '/pictures',  
-    //     {
-    //         headers: new HttpHeaders().set('Content-Type', 'application/json'),
-    //         observe: 'body'
-    //     })
-    // }
+    getPicturesByProductId(productId: number) {
+        return this.httpClient.get<URL[]>('api/products/' + productId + '/pictures',  
+        {
+            headers: new HttpHeaders().set('Content-Type', 'image/png, image/jpg, image/gif'),
+            observe: 'body'
+        })
+    }
 
     // addProduct(productName: string, serialNumber: string, description: string,
     //     quantity: number, projectId: number, ) {

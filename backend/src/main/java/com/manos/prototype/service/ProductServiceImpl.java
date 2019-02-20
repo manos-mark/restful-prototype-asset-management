@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
+import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.exception.EntityNotFoundException;
@@ -34,22 +35,30 @@ public class ProductServiceImpl {
 	}
 
 	@Transactional
-	public void saveProduct(Product product) {
-		// if id is not 0 then update
-		if (product.getId() != 0) {
-			try {
-				productDao.updateProduct(product);			
-			} catch (Exception e) {
-				throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-			}
-		} 
-		// if id is 0 then add new
-		else {
-			try {
-				productDao.saveProduct(product);			
-			} catch (Exception e) {
-				throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-			}
+	public void saveProduct(ProductRequestDto dto) {
+		
+		Product product = new Product();
+		
+		
+		try {
+			productDao.saveProduct(product);			
+		} catch (Exception e) {
+			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
+		}
+	}
+	
+	@Transactional
+	public void updateProduct(ProductRequestDto dto, int productId) {
+		// check if project exists
+		Product product = getProductById(productId);
+		
+		product.setDate(dto.getDate());
+		
+		int projectId = product.getProjectId();
+		Project project = projectService.getProject(projectId);
+
+		if (project == null) {
+			throw new EntityNotFoundException("Project id not found - " + projectId);
 		}
 	}
 

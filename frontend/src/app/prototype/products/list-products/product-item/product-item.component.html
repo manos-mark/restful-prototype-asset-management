@@ -9,9 +9,9 @@
     <span class="project">{{ product.projectName }}</span>
     <div class="picture">
         <a class="picWrp">
-        <img [src]="thumbPictureUrl"/>
+        <img [src]="'/api/product-pictures/' + product.thumbPictureId"/>  
         <i>{{ product.picturesCount }}</i>
-        <var class="zoom" (click)="showCarousel()"><span></span></var>
+        <!-- <var class="zoom" (click)="getProductPictures()"><span></span></var> -->
         </a>
     </div>
     <div *ngIf="product.statusId == 1" class="status"><span class="orange">in progress</span></div>
