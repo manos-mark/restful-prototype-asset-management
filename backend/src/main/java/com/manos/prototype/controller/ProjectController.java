@@ -86,19 +86,6 @@ public class ProjectController {
 		return conversionService.convertList(products, ProductDto.class);
 	}
 	
-//	@GetMapping("/{id}/name")
-//	public ProjectDto getProjectName(@PathVariable("id") int projectId) {
-//		ProjectDto tempDto = new ProjectDto();
-//		Project entity = projectService.getProject(projectId);
-//		tempDto.setProjectName(entity.getProjectName());
-//		return tempDto;
-//	}
-//	
-//	@GetMapping("/{id}/products/count")
-//	public Long getProductsCountByProjectId(@PathVariable("id") int projectId) {
-//		return productService.getProductsCountByProjectId(projectId);
-//	}
-
 	@GetMapping("/{id}")
 	public ProjectDto getProject(@PathVariable("id") int projectId) {
 		Project project = projectService.getProject(projectId);
@@ -117,15 +104,11 @@ public class ProjectController {
 
 	@PostMapping
 	public void addProject(@RequestBody ProjectRequestDto projectDto) {
-		Project project = conversionService.convert(projectDto, Project.class);
-		project.setId(0);
-		projectService.saveProject(project);
+		projectService.saveProject(projectDto);
 	}
 
 	@PutMapping("/{id}")
 	public void updateProject(@RequestBody ProjectRequestDto projectDto, @PathVariable("id") int projectId) {
-		Project project = conversionService.convert(projectDto, Project.class);
-		project.setId(projectId);
-		projectService.saveProject(project);
+		projectService.updateProject(projectDto, projectId);
 	}
 }

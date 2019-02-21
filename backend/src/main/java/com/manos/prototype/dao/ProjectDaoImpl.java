@@ -38,20 +38,16 @@ public class ProjectDaoImpl {
 				.applyPaging(currentSession.createQuery(queryString, Project.class), pageRequest)
 				.setProperties(search)
 				.getResultList();
-//		return currentSession.createQuery(queryBuilder.toString(), Project.class).getResultList();
-	}
-
-	public Long count(ProjectSearch search) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select count(p.id) from Project p ")
-					.append("join p.status pStatus ");
-		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
-		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
-		theQuery.setParameter("statusId", search.getStatusId());
-		return theQuery.getSingleResult();
 	}
 	
+	public List<Project> getProjects() {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Project p ");
+		
+		return currentSession.createQuery(queryBuilder.toString(), Project.class).getResultList();
+	}
+
 	public Project getProject(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -102,7 +98,7 @@ public class ProjectDaoImpl {
 		return theQuery.getSingleResult();
 	}
 
-	public Long countAll() {
+	public Long count() {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
@@ -113,13 +109,16 @@ public class ProjectDaoImpl {
 		
 		return theQuery.getSingleResult();
 	}
-
-	public List<Project> getProjects() {
+	
+	public Long count(ProjectSearch search) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Project p ");
-		
-		return currentSession.createQuery(queryBuilder.toString(), Project.class).getResultList();
+		queryBuilder.append("select count(p.id) from Project p ")
+					.append("join p.status pStatus ");
+		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
+		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
+		theQuery.setParameter("statusId", search.getStatusId());
+		return theQuery.getSingleResult();
 	}
 
 }

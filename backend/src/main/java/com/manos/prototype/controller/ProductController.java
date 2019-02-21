@@ -88,8 +88,8 @@ public class ProductController {
 
 	@PutMapping("/{id}")
 	public void updateProduct(@PathVariable("id") int productId, @RequestBody ProductRequestDto productRequestDto) {
-		Product product = conversionService.convert(productRequestDto, Product.class);
-		product.setId(productId);
+//		Product product = conversionService.convert(productRequestDto, Product.class);
+//		product.setId(productId);
 
 //		// check if project exists
 //		int projectId = product.getProject().getId();

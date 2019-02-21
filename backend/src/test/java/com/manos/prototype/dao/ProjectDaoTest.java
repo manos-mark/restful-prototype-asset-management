@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -19,6 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
+import com.manos.prototype.search.ProjectSearch;
+import com.pastelstudios.paging.OrderClause;
+import com.pastelstudios.paging.OrderDirection;
+import com.pastelstudios.paging.PageRequest;
+
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigUnitTest.class })
@@ -41,6 +47,66 @@ public class ProjectDaoTest {
 		List<Project> projects = projectDao.getProjects();
 		assertThat(projects).size().isEqualTo(1);
 		assertThat(projects).doesNotContainNull();
+	}
+	
+	@Test
+	@Transactional
+	void getProjectsWithParams_dateCreatedField_success() {
+		OrderDirection orderDirection = OrderDirection.ASCENDING;
+//		orderDirection = OrderDirection.DESCENDING;
+		String dateCreatedField = "date";
+		OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
+		
+//		String productsCountField = null;
+//		productsCountField = "product";
+//		OrderClause clause3 = new OrderClause(productsCountField, orderDirection);
+//		orderClauses.add(clause3);
+		
+		List<OrderClause> orderClauses = new ArrayList<>();
+		orderClauses.add(clause1);
+		
+		PageRequest pageRequest = new PageRequest();
+		pageRequest.setPage(1);
+		pageRequest.setPageSize(5);
+		pageRequest.setOrderClauses(orderClauses);
+//		pageRequest.getPageOffset();
+		
+		ProjectSearch search = new ProjectSearch();
+		search.setStatusId(2);
+		
+		List<Project> projects = projectDao.getProjects(pageRequest, search);
+		assertThat(projects).size().isEqualTo(1);
+		assertThat(projects).doesNotContainNull();
+	}
+	
+	@Test
+	@Transactional
+	void getProjectsWithParams_nullDirection_fail() {
+		OrderDirection orderDirection = null;
+		String dateCreatedField = "date";
+		OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
+		
+//		String productsCountField = null;
+//		productsCountField = "product";
+//		OrderClause clause3 = new OrderClause(productsCountField, orderDirection);
+//		orderClauses.add(clause3);
+		
+		List<OrderClause> orderClauses = new ArrayList<>();
+		orderClauses.add(clause1);
+		
+		PageRequest pageRequest = new PageRequest();
+		pageRequest.setPage(1);
+		pageRequest.setPageSize(5);
+		pageRequest.setOrderClauses(orderClauses);
+//		pageRequest.getPageOffset();
+		
+		ProjectSearch search = new ProjectSearch();
+		search.setStatusId(2);
+		
+		assertThatExceptionOfType(NullPointerException.class)
+		.isThrownBy(() -> { 
+			projectDao.getProjects(pageRequest, search);
+		});
 	}
 	
 	@Test
@@ -145,6 +211,21 @@ public class ProjectDaoTest {
 	@Transactional
 	void getProjectsCount() {
 		assertThat(projectDao.getProjectsCountByStatus(2)).isEqualTo(1);
+	}
+	
+	@Test
+	@Transactional
+	void projectsCount() {
+		assertThat(projectDao.count()).isEqualTo(1);
+	}
+	
+	@Test
+	@Transactional
+	void projectsCountWithSearch() {
+		ProjectSearch search = new ProjectSearch();
+		search.setStatusId(2);
+		
+		assertThat(projectDao.count(search)).isEqualTo(1);
 	}
 	
 }

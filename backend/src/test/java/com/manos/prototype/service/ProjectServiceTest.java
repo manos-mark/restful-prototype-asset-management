@@ -15,9 +15,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.manos.prototype.dao.ProjectDaoImpl;
+import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.search.ProjectSearch;
+import com.pastelstudios.paging.OrderClause;
+import com.pastelstudios.paging.OrderDirection;
+import com.pastelstudios.paging.PageRequest;
+import com.pastelstudios.paging.PageResult;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectServiceTest {
@@ -36,7 +42,7 @@ public class ProjectServiceTest {
 	}
 	
 	@Test
-	public void getProjects() {
+	public void getProjects_noParams_success() {
 		List<Project> mockProjects = createMockProjects();
 		
 		when(projectDao.getProjects())
@@ -47,6 +53,64 @@ public class ProjectServiceTest {
 		assertThat(projects.get(0))
 			.isEqualTo(mockProjects.get(0));
 		assertThat(projects.get(0))
+			.isEqualToComparingFieldByFieldRecursively(mockProjects.get(0));
+	}
+	
+	@Test
+	public void getProjects_withParams_withStatus_success() {
+		OrderDirection orderDirection = OrderDirection.ASCENDING;
+		String dateCreatedField = "date";
+		OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
+		
+		List<OrderClause> orderClauses = new ArrayList<>();
+		orderClauses.add(clause1);
+		
+		PageRequest pageRequest = new PageRequest();
+		pageRequest.setPage(1);
+		pageRequest.setPageSize(5);
+		pageRequest.setOrderClauses(orderClauses);
+		
+		ProjectSearch search = new ProjectSearch();
+		search.setStatusId(2);
+		List<Project> mockProjects = createMockProjects();
+		
+		when(projectDao.getProjects(pageRequest, search))
+			.thenReturn(mockProjects);
+		
+		PageResult<Project> projects = projectService.getProjects(pageRequest, search);
+		
+		assertThat(projects.getEntities().get(0))
+			.isEqualTo(mockProjects.get(0));
+		assertThat(projects.getEntities().get(0))
+			.isEqualToComparingFieldByFieldRecursively(mockProjects.get(0));
+	}
+	
+	@Test
+	public void getProjects_withParams_noStatus_success() {
+		OrderDirection orderDirection = OrderDirection.ASCENDING;
+		String dateCreatedField = "date";
+		OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
+		
+		List<OrderClause> orderClauses = new ArrayList<>();
+		orderClauses.add(clause1);
+		
+		PageRequest pageRequest = new PageRequest();
+		pageRequest.setPage(1);
+		pageRequest.setPageSize(5);
+		pageRequest.setOrderClauses(orderClauses);
+		
+		ProjectSearch search = new ProjectSearch();
+		search.setStatusId(null);
+		List<Project> mockProjects = createMockProjects();
+		
+		when(projectDao.getProjects(pageRequest, search))
+			.thenReturn(mockProjects);
+		
+		PageResult<Project> projects = projectService.getProjects(pageRequest, search);
+		
+		assertThat(projects.getEntities().get(0))
+			.isEqualTo(mockProjects.get(0));
+		assertThat(projects.getEntities().get(0))
 			.isEqualToComparingFieldByFieldRecursively(mockProjects.get(0));
 	}
 	
@@ -77,13 +141,14 @@ public class ProjectServiceTest {
 	}
 	
 	@Test
-	public void saveProject_success() {
-		Project mockProject = createMockProject();
+	public void addProject_success() {
+		ProjectRequestDto dto = createMockProjectRequesDto();
 		
-		assertThat(mockProject).isNotNull();
-		assertThat(mockProject).hasNoNullFieldsOrProperties();
+		assertThat(dto).isNotNull();
+		assertThat(dto).hasNoNullFieldsOrProperties();
 		assertThatCode(() -> {
-			projectService.saveProject(mockProject);
+			projectService.saveProject(dto);
+			
 		}).doesNotThrowAnyException();
 	}
 	
@@ -95,7 +160,127 @@ public class ProjectServiceTest {
 			});
 	}
 	
+	@Test
+	public void saveProject_nullCompanyNameFail() {
+		ProjectRequestDto dto = createMockProjectRequesDto();
+		dto.setCompanyName(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+			.isThrownBy(() -> {
+				projectService.saveProject(dto);
+			});
+	}
 	
+	@Test
+	public void saveProject_nullDateFail() {
+		ProjectRequestDto dto = createMockProjectRequesDto();
+		dto.setDate(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+			.isThrownBy(() -> {
+				projectService.saveProject(dto);
+			});
+	}
+	
+	@Test
+	public void saveProject_nullProjectManagerFail() {
+		ProjectRequestDto dto = createMockProjectRequesDto();
+		dto.setProjectManager(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			projectService.saveProject(dto);
+		});
+	}
+	
+	@Test
+	public void saveProject_nullProjectNameFail() {
+		ProjectRequestDto dto = createMockProjectRequesDto();
+		dto.setProjectName(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			projectService.saveProject(dto);
+		});
+	}
+	
+	@Test
+	public void saveProject_wrongStatusIdFail() {
+		ProjectRequestDto dto = createMockProjectRequesDto();
+		dto.setStatusId(4);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+			.isThrownBy(() -> {
+				projectService.saveProject(dto);
+			});
+	}
+	
+	@Test
+	public void deleteProject_success() {
+		Project mockProject = createMockProject();
+		
+		when(projectDao.getProject(1))
+			.thenReturn(mockProject);
+		
+		assertThatCode(() -> {
+			projectService.deleteProject(1);
+			
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test
+	public void deleteProject_nullProject_fail() {
+		
+		when(projectDao.getProject(2))
+			.thenReturn(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			projectService.deleteProject(2);
+		});
+	}
+	
+	@Test
+	public void updateProject_success() {
+		Project mockProject = createMockProject();
+		ProjectRequestDto mockDto = createMockProjectRequesDto();
+		
+		when(projectDao.getProject(1))
+			.thenReturn(mockProject);
+		
+		assertThatCode(() -> {
+			projectService.updateProject(mockDto, 1);
+			
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test
+	public void updateProject_nullProjectFail() {
+		ProjectRequestDto mockDto = createMockProjectRequesDto();
+		
+		when(projectDao.getProject(1))
+		.thenReturn(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			projectService.updateProject(mockDto, 1);
+		});
+	}
+	
+	@Test
+	public void updateProject_wrongStatusIdFail() {
+		Project mockProject = createMockProject();
+		ProjectRequestDto mockDto = createMockProjectRequesDto();
+		mockDto.setStatusId(4);
+		
+		when(projectDao.getProject(1))
+			.thenReturn(mockProject);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+			.isThrownBy(() -> {
+				projectService.updateProject(mockDto, 1);
+			});
+	}
 	
 	
 	
@@ -115,6 +300,16 @@ public class ProjectServiceTest {
 		mockProject.setProjectManager("test");
 		mockProject.setProjectName("test");
 		mockProject.setStatus(createMockStatus());
+		return mockProject;
+	}
+	
+	public ProjectRequestDto createMockProjectRequesDto() {
+		ProjectRequestDto mockProject = new ProjectRequestDto();
+		mockProject.setCompanyName("test");
+		mockProject.setDate("2011-12-17 13:17:17");
+		mockProject.setProjectManager("test");
+		mockProject.setProjectName("test");
+		mockProject.setStatusId(2);
 		return mockProject;
 	}
 	
