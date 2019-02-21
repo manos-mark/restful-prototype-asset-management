@@ -1,5 +1,7 @@
 package com.manos.prototype.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +76,12 @@ public class ProjectServiceImpl {
 		if (dto.getDate() == null) {
 			throw new EntityNotFoundException("Save Project: - date cannot be null.");
 		}
-		project.setDate(dto.getDate());
+		// convert datetime
+		String tempDate = dto.getDate();
+		DateTimeFormatter formatter = DateTimeFormatter
+				.ofPattern("dd/MM/yyyy, HH:mm:ss");
+		LocalDateTime date = LocalDateTime.parse(tempDate, formatter);
+		project.setDate(date.toString());
 		
 		if (dto.getProjectManager() == null) {
 			throw new EntityNotFoundException("Save Project: - projectManager cannot be null.");

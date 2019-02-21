@@ -19,15 +19,6 @@ export class ProjectsService {
         
     }
 
-    // getProductsCountByProjectId(id: number) {
-    //     return this.httpClient.get<number>('api/projects/' + id + '/products/count', 
-    //     {
-    //         headers: new HttpHeaders().set('Content-Type', 'application/json'),
-    //         observe: 'body'
-    //     })
-        
-    // }
-
     getProjects(statusId: number, field: string, page: number, pageSize: number, direction: string) {
         return this.httpClient.get<Project>('api/projects/',  
         {
@@ -44,6 +35,22 @@ export class ProjectsService {
 
     getAllProjects() {
         return this.httpClient.get<Project[]>('api/projects/all',  
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
+
+    addProject(projectName: string, companyName: string, projectManager: string) {
+        let currDate = (new Date).toLocaleString('en-GB');
+        return this.httpClient.post<Project>('api/projects',
+        {
+            projectName: projectName,
+            companyName: companyName,
+            projectManager: projectManager,
+            date: currDate,
+            statusId: 2
+        },
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
             observe: 'body'
