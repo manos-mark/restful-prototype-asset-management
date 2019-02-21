@@ -30,6 +30,7 @@ public class ProjectDaoImpl {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Project p ")
+//					.append("join fetch p.projectManager")
 					.append("join fetch p.status pStatus ");
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
 		queryString = pagingSupport.applySorting(queryString, pageRequest);

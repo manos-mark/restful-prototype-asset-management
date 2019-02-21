@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.search.ProjectSearch;
 import com.pastelstudios.paging.OrderClause;
@@ -118,7 +119,7 @@ public class ProjectDaoTest {
 		assertThat(project).hasNoNullFieldsOrProperties();
 		assertThat(project.getProjectName()).isEqualTo("firstProject");
 		assertThat(project.getCompanyName()).isEqualTo("firstCompany");
-		assertThat(project.getProjectManager()).isEqualTo("firstProjectManager");
+		assertThat(project.getProjectManager().getName()).isEqualTo("project manager test");
 		assertThat(project.getDate()).isEqualTo("2011-12-17");
 		assertThat(project.getStatus().getId()).isEqualTo(2);
 		assertThat(projects).size().isEqualTo(1);
@@ -157,7 +158,7 @@ public class ProjectDaoTest {
 		Project project = new Project();
 		project.setCompanyName("test");
 		project.setProjectName("test");
-		project.setProjectManager("test");
+		project.setProjectManager(new ProjectManager(1));
 		project.setDate("2019-12-17 14:14:14");
 		project.setStatus(new Status(1));
 		
@@ -168,7 +169,7 @@ public class ProjectDaoTest {
 		Project savedProject = projectDao.getProject(2);
 		assertThat(savedProject).isNotNull();
 		assertThat(savedProject.getCompanyName()).isEqualTo("test");
-		assertThat(savedProject.getProjectManager()).isEqualTo("test");
+		assertThat(savedProject.getProjectManager().getId()).isEqualTo(1);
 		assertThat(savedProject.getProjectName()).isEqualTo("test");
 		assertThat(savedProject.getDate()).isEqualTo("2019-12-17 14:14:14");
 		assertThat(savedProject.getStatus().getId()).isEqualTo(1);
@@ -180,7 +181,7 @@ public class ProjectDaoTest {
 		Project project = new Project();
 		project.setCompanyName("test");
 		project.setProjectName("test");
-		project.setProjectManager("test");
+		project.setProjectManager(new ProjectManager(1));
 		project.setDate("2019-12-17 14:14:14");
 		project.setStatus(new Status(1));
 		project.setId(1);
@@ -192,7 +193,7 @@ public class ProjectDaoTest {
 		Project savedProject = projectDao.getProject(1);
 		assertThat(savedProject).isNotNull();
 		assertThat(savedProject.getCompanyName()).isEqualTo("test");
-		assertThat(savedProject.getProjectManager()).isEqualTo("test");
+		assertThat(savedProject.getProjectManager().getId()).isEqualTo(1);
 		assertThat(savedProject.getProjectName()).isEqualTo("test");
 		assertThat(savedProject.getDate()).isEqualTo("2019-12-17 14:14:14");
 		assertThat(savedProject.getStatus().getId()).isEqualTo(1);

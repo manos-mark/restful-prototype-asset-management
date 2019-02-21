@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.ProjectDaoImpl;
+import com.manos.prototype.dao.ProjectManagerDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
@@ -28,6 +30,9 @@ public class ProjectServiceImpl {
 	
 	@Autowired
 	private ProjectDaoImpl projectDao;
+	
+	@Autowired
+	private ProjectManagerDaoImpl projectManagerDao;
 	
 	@Transactional
 	public PageResult<Project> getProjects(PageRequest pageRequest, ProjectSearch search) {
@@ -69,12 +74,12 @@ public class ProjectServiceImpl {
 		}
 		
 		if (dto.getCompanyName() == null) {
-			throw new EntityNotFoundException("Save Project: - companyName cannot be null.");
+			throw new EntityNotFoundException("Save Project: companyName cannot be null.");
 		}
 		project.setCompanyName(dto.getCompanyName());
 		
 		if (dto.getDate() == null) {
-			throw new EntityNotFoundException("Save Project: - date cannot be null.");
+			throw new EntityNotFoundException("Save Project: date cannot be null.");
 		}
 		// convert datetime
 		String tempDate = dto.getDate();
@@ -83,18 +88,19 @@ public class ProjectServiceImpl {
 		LocalDateTime date = LocalDateTime.parse(tempDate, formatter);
 		project.setDate(date.toString());
 		
-		if (dto.getProjectManager() == null) {
-			throw new EntityNotFoundException("Save Project: - projectManager cannot be null.");
+		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
+		if (projectManager == null) {
+			throw new EntityNotFoundException("Save Project: projectManager id not found - " + dto.getProjectManagerId());
 		}
-		project.setProjectManager(dto.getProjectManager());
+		project.setProjectManager(projectManager);
 		
 		if (dto.getProjectName() == null) {
-			throw new EntityNotFoundException("Save Project: - projectName cannot be null.");
+			throw new EntityNotFoundException("Save Project: projectName cannot be null.");
 		}
 		project.setProjectName(dto.getProjectName());
 		
 		if (!acceptedStatuses.contains(dto.getStatusId())) {
-			throw new EntityNotFoundException("Save Project: - statusId must be 1, 2 or 3.");
+			throw new EntityNotFoundException("Save Project: statusId must be 1, 2 or 3.");
 		}
 		project.setStatus(new Status(dto.getStatusId()));
 		
@@ -117,8 +123,9 @@ public class ProjectServiceImpl {
 			project.setDate(dto.getDate());
 		}
 		
-		if (dto.getProjectManager() != null) {
-			project.setProjectManager(dto.getProjectManager());
+		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
+		if (projectManager != null) {
+			project.setProjectManager(projectManager);
 		}
 		
 		if (dto.getProjectName() != null) {

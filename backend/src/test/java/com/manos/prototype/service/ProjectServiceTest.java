@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
@@ -185,7 +186,7 @@ public class ProjectServiceTest {
 	@Test
 	public void saveProject_nullProjectManagerFail() {
 		ProjectRequestDto dto = createMockProjectRequesDto();
-		dto.setProjectManager(null);
+		dto.setProjectManagerId(0);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 		.isThrownBy(() -> {
@@ -293,11 +294,15 @@ public class ProjectServiceTest {
 	}
 	
 	public Project createMockProject() {
+		ProjectManager mockPrManager = new ProjectManager();
+		mockPrManager.setId(1);
+		mockPrManager.setName("name");
+		
 		Project mockProject = new Project();
 		mockProject.setCompanyName("test");
 		mockProject.setDate("2011-12-17 13:17:17");
 		mockProject.setId(1);
-		mockProject.setProjectManager("test");
+		mockProject.setProjectManager(mockPrManager);
 		mockProject.setProjectName("test");
 		mockProject.setStatus(createMockStatus());
 		return mockProject;
@@ -307,7 +312,7 @@ public class ProjectServiceTest {
 		ProjectRequestDto mockProject = new ProjectRequestDto();
 		mockProject.setCompanyName("test");
 		mockProject.setDate("2011-12-17 13:17:17");
-		mockProject.setProjectManager("test");
+		mockProject.setProjectManagerId(1);
 		mockProject.setProjectName("test");
 		mockProject.setStatusId(2);
 		return mockProject;

@@ -57,4 +57,21 @@ export class ProjectsService {
         })
     }
 
+    updateProject(projectName: string, companyName: string, 
+        projectManager: string, statusId: number, projectId: number) {
+        let currDate = (new Date).toLocaleString('en-GB');
+        return this.httpClient.put<Project>('api/projects/' + projectId,
+        {
+            projectName: projectName,
+            companyName: companyName,
+            projectManager: projectManager,
+            statusId: 2
+        },
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
+
+
 }

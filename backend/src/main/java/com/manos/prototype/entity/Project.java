@@ -25,17 +25,18 @@ public class Project {
 	@Column(name = "company_name")
 	private String companyName;
 	
-	@Column(name = "project_manager")
-	private String projectManager;
-	
 	@Column(name = "date")
 	private String date;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status_id")
 	private Status status;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "project_manager_id")
+	private ProjectManager projectManager;
 
-	public Project(String projectName, String companyName, String projectManager, String date, Status status) {
+	public Project(String projectName, String companyName, ProjectManager projectManager, String date, Status status) {
 		this.projectName = projectName;
 		this.companyName = companyName;
 		this.projectManager = projectManager;
@@ -73,11 +74,11 @@ public class Project {
 		this.companyName = companyName;
 	}
 
-	public String getProjectManager() {
+	public ProjectManager getProjectManager() {
 		return projectManager;
 	}
 
-	public void setProjectManager(String projectManager) {
+	public void setProjectManager(ProjectManager projectManager) {
 		this.projectManager = projectManager;
 	}
 

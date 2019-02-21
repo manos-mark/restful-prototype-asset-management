@@ -12,6 +12,16 @@ CREATE TABLE `e_status` (
 );
 INSERT INTO `e_status` (id,status) VALUES
  	(1, 'IN_PROGRESS'), (2, 'NEW'), (3, 'FINISHED');
+   
+--
+-- Table structure for table `project_manager`
+--
+CREATE TABLE `project_manager` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+INSERT INTO `project_manager` (name) VALUES ('project manager test');
 
 --
 -- Table structure for table `project`
@@ -20,15 +30,18 @@ CREATE TABLE `project` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`project_name` VARCHAR(45) NOT NULL,
 	`company_name` VARCHAR(45) NOT NULL,
-	`project_manager` VARCHAR(45) NOT NULL,
+	`project_manager_id` INT(11) NOT NULL,
 	`date` DATE NOT NULL,
 	`status_id` INT(11) NOT NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`status_id`)
-		REFERENCES e_status (`id`)
+		REFERENCES e_status (`id`),
+	FOREIGN KEY (`project_manager_id`)
+		REFERENCES project_manager (`id`)
 );
-INSERT INTO `project` (project_name,company_name,project_manager,date,status_id) VALUES
-('firstProject', 'firstCompany', 'firstProjectManager', '2011-12-17', 2);
+INSERT INTO `project` (project_name,company_name,project_manager_id,date,status_id) VALUES
+('firstProject', 'firstCompany', 1, '2011-12-17', 2);
+
 --
 -- Table structure for table `product`
 --
