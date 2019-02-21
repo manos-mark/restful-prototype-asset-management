@@ -86,7 +86,7 @@ public class ProjectServiceImpl {
 		}
 		project.setProjectName(dto.getProjectName());
 		
-		if (acceptedStatuses.contains(dto.getStatusId())) {
+		if (!acceptedStatuses.contains(dto.getStatusId())) {
 			throw new EntityNotFoundException("Save Project: - statusId must be 1, 2 or 3.");
 		}
 		project.setStatus(new Status(dto.getStatusId()));
@@ -118,12 +118,10 @@ public class ProjectServiceImpl {
 			project.setProjectName(dto.getProjectName());
 		}
 		
-		if (acceptedStatuses.contains(dto.getStatusId())) {
-			project.setStatus(new Status(dto.getStatusId()));
-		} else {
+		if (!acceptedStatuses.contains(dto.getStatusId())) {
 			throw new EntityNotFoundException("Save Project: - statusId must be 1, 2 or 3.");
 		}
-		
+		project.setStatus(new Status(dto.getStatusId()));
 	}
 
 	@Transactional
