@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.manos.prototype.dao.ProjectDaoImpl;
+import com.manos.prototype.dao.ProjectManagerDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
@@ -34,6 +35,9 @@ public class ProjectServiceTest {
 	
 	@InjectMocks
 	private ProjectServiceImpl projectService;
+	
+	@Mock 
+	private ProjectManagerDaoImpl projectManagerDao;
 	
 	@Test 
 	public void getProjectsCount() {
@@ -64,6 +68,7 @@ public class ProjectServiceTest {
 		OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
 		
 		List<OrderClause> orderClauses = new ArrayList<>();
+		
 		orderClauses.add(clause1);
 		
 		PageRequest pageRequest = new PageRequest();
@@ -144,6 +149,10 @@ public class ProjectServiceTest {
 	@Test
 	public void addProject_success() {
 		ProjectRequestDto dto = createMockProjectRequesDto();
+		ProjectManager projectManager = createMockProjectManager();
+		
+		when(projectManagerDao.getProjectManager(1))
+			.thenReturn(projectManager);
 		
 		assertThat(dto).isNotNull();
 		assertThat(dto).hasNoNullFieldsOrProperties();
@@ -189,26 +198,34 @@ public class ProjectServiceTest {
 		dto.setProjectManagerId(0);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			projectService.saveProject(dto);
-		});
+			.isThrownBy(() -> {
+				projectService.saveProject(dto);
+			});
 	}
 	
 	@Test
 	public void saveProject_nullProjectNameFail() {
 		ProjectRequestDto dto = createMockProjectRequesDto();
 		dto.setProjectName(null);
+		ProjectManager projectManager = createMockProjectManager();
+		
+		when(projectManagerDao.getProjectManager(1))
+			.thenReturn(projectManager);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			projectService.saveProject(dto);
-		});
+			.isThrownBy(() -> {
+				projectService.saveProject(dto);
+			});
 	}
 	
 	@Test
 	public void saveProject_wrongStatusIdFail() {
 		ProjectRequestDto dto = createMockProjectRequesDto();
 		dto.setStatusId(4);
+		ProjectManager projectManager = createMockProjectManager();
+		
+		when(projectManagerDao.getProjectManager(1))
+			.thenReturn(projectManager);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 			.isThrownBy(() -> {
@@ -245,27 +262,33 @@ public class ProjectServiceTest {
 	public void updateProject_success() {
 		Project mockProject = createMockProject();
 		ProjectRequestDto mockDto = createMockProjectRequesDto();
+		ProjectManager projectManager = createMockProjectManager();
 		
+		when(projectManagerDao.getProjectManager(1))
+			.thenReturn(projectManager);
 		when(projectDao.getProject(1))
 			.thenReturn(mockProject);
 		
 		assertThatCode(() -> {
 			projectService.updateProject(mockDto, 1);
-			
 		}).doesNotThrowAnyException();
 	}
 	
 	@Test
 	public void updateProject_nullProjectFail() {
 		ProjectRequestDto mockDto = createMockProjectRequesDto();
+		ProjectManager projectManager = createMockProjectManager();
+		
+		when(projectManagerDao.getProjectManager(1))
+			.thenReturn(projectManager);
 		
 		when(projectDao.getProject(1))
-		.thenReturn(null);
+			.thenReturn(null);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			projectService.updateProject(mockDto, 1);
-		});
+			.isThrownBy(() -> {
+				projectService.updateProject(mockDto, 1);
+			});
 	}
 	
 	@Test
@@ -273,6 +296,10 @@ public class ProjectServiceTest {
 		Project mockProject = createMockProject();
 		ProjectRequestDto mockDto = createMockProjectRequesDto();
 		mockDto.setStatusId(4);
+		ProjectManager projectManager = createMockProjectManager();
+		
+		when(projectManagerDao.getProjectManager(1))
+			.thenReturn(projectManager);
 		
 		when(projectDao.getProject(1))
 			.thenReturn(mockProject);
@@ -293,14 +320,18 @@ public class ProjectServiceTest {
 		return mockStatus;
 	}
 	
-	public Project createMockProject() {
+	public ProjectManager createMockProjectManager() {
 		ProjectManager mockPrManager = new ProjectManager();
 		mockPrManager.setId(1);
-		mockPrManager.setName("name");
-		
+		mockPrManager.setName("project manager test");
+		return mockPrManager;
+	}
+	
+	public Project createMockProject() {
+		ProjectManager mockPrManager = createMockProjectManager();
 		Project mockProject = new Project();
 		mockProject.setCompanyName("test");
-		mockProject.setDate("2011-12-17 13:17:17");
+		mockProject.setDate("17/12/2011, 13:17:17");
 		mockProject.setId(1);
 		mockProject.setProjectManager(mockPrManager);
 		mockProject.setProjectName("test");
@@ -311,7 +342,7 @@ public class ProjectServiceTest {
 	public ProjectRequestDto createMockProjectRequesDto() {
 		ProjectRequestDto mockProject = new ProjectRequestDto();
 		mockProject.setCompanyName("test");
-		mockProject.setDate("2011-12-17 13:17:17");
+		mockProject.setDate("17/12/2011, 13:17:17");
 		mockProject.setProjectManagerId(1);
 		mockProject.setProjectName("test");
 		mockProject.setStatusId(2);
