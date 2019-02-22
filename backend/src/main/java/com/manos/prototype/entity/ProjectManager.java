@@ -22,6 +22,11 @@ public class ProjectManager {
 	public ProjectManager(int id) {
 		this.id = id;
 	}
+	
+	public ProjectManager(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
 	public ProjectManager() {
 	}

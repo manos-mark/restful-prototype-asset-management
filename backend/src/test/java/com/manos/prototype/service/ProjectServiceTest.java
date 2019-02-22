@@ -331,7 +331,7 @@ public class ProjectServiceTest {
 		ProjectManager mockPrManager = createMockProjectManager();
 		Project mockProject = new Project();
 		mockProject.setCompanyName("test");
-		mockProject.setDate("17/12/2011, 13:17:17");
+		mockProject.setDate("17/12/2011");
 		mockProject.setId(1);
 		mockProject.setProjectManager(mockPrManager);
 		mockProject.setProjectName("test");
@@ -342,7 +342,7 @@ public class ProjectServiceTest {
 	public ProjectRequestDto createMockProjectRequesDto() {
 		ProjectRequestDto mockProject = new ProjectRequestDto();
 		mockProject.setCompanyName("test");
-		mockProject.setDate("17/12/2011, 13:17:17");
+		mockProject.setDate("17/12/2011");
 		mockProject.setProjectManagerId(1);
 		mockProject.setProjectName("test");
 		mockProject.setStatusId(2);

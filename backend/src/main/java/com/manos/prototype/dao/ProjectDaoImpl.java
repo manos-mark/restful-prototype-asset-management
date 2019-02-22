@@ -30,7 +30,7 @@ public class ProjectDaoImpl {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Project p ")
-//					.append("join fetch p.projectManager")
+					.append("join fetch p.projectManager ")
 					.append("join fetch p.status pStatus ");
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
 		queryString = pagingSupport.applySorting(queryString, pageRequest);
@@ -53,9 +53,10 @@ public class ProjectDaoImpl {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Project p "
-				+ "join fetch p.status "
-				+ "where p.id = :id");
+		queryBuilder.append("from Project p ")
+					.append("join fetch p.projectManager ")
+					.append("join fetch p.status ")
+					.append("where p.id = :id");
 		Query<Project> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Project.class);
 		theQuery.setParameter("id", id);

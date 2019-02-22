@@ -1,5 +1,7 @@
 package com.manos.prototype.dto;
 
+import com.manos.prototype.entity.ProjectManager;
+
 public class ProjectDto {
 	
 	private int id;
@@ -8,15 +10,15 @@ public class ProjectDto {
 	
 	private String companyName;
 	
-	private String projectManager;
-
+	private ProjectManager projectManager;
+	
 	private String date;
 
 	private int statusId;
 	
 	private Long productsCount;
 
-	public ProjectDto(int id, Long productsCount, String projectName, String companyName, String projectManager, String date, int statusId) {
+	public ProjectDto(int id, Long productsCount, String projectName, String companyName, ProjectManager projectManager, String date, int statusId) {
 		this.id = id;
 		this.projectName = projectName;
 		this.companyName = companyName;
@@ -60,11 +62,11 @@ public class ProjectDto {
 		this.companyName = companyName;
 	}
 
-	public String getProjectManager() {
+	public ProjectManager getProjectManager() {
 		return projectManager;
 	}
 
-	public void setProjectManager(String projectManager) {
+	public void setProjectManager(ProjectManager projectManager) {
 		this.projectManager = projectManager;
 	}
 

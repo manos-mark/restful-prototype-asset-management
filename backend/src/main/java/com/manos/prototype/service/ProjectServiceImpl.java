@@ -1,7 +1,5 @@
 package com.manos.prototype.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,14 +54,16 @@ public class ProjectServiceImpl {
 		return project;
 	}
 
-	@Transactional
-	public void deleteProject(int id) {
-		Project project  = projectDao.getProject(id);
-		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + id);
-		}
-		projectDao.deleteProject(id);
-	}
+//	@Transactional
+//	public void deleteProject(int id) {
+//		Project project  = projectDao.getProject(id);
+//		if (project == null) {
+//			throw new EntityNotFoundException("Project id not found - " + id);
+//		}
+//		
+//		// should delete first all the products of this project
+//		projectDao.deleteProject(id);
+//	}
 
 	@Transactional
 	public void saveProject(ProjectRequestDto dto) {
@@ -81,12 +81,7 @@ public class ProjectServiceImpl {
 		if (dto.getDate() == null) {
 			throw new EntityNotFoundException("Save Project: date cannot be null.");
 		}
-		// convert datetime
-		String tempDate = dto.getDate();
-		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("dd/MM/yyyy, HH:mm:ss");
-		LocalDateTime date = LocalDateTime.parse(tempDate, formatter);
-		project.setDate(date.toString());
+		project.setDate(dto.getDate().toString());
 		
 		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
 		if (projectManager == null) {
