@@ -1,5 +1,7 @@
 package com.manos.prototype.dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -23,5 +25,13 @@ public class ProjectManagerDaoImpl {
 		Query<ProjectManager> theQuery = currentSession.createQuery(queryBuilder.toString(), ProjectManager.class);
 		theQuery.setParameter("id", id);
 		return theQuery.getSingleResult();
+	}
+	
+	public List<ProjectManager> getProjectManagers() {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from ProjectManager pm ");
+		Query<ProjectManager> theQuery = currentSession.createQuery(queryBuilder.toString(), ProjectManager.class);
+		return theQuery.getResultList();
 	}
 }

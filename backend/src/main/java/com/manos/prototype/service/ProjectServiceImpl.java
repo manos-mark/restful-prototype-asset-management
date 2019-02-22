@@ -142,5 +142,10 @@ public class ProjectServiceImpl {
 	public List<Project> getProjects() {
 		return projectDao.getProjects();
 	}
+	
+	@Transactional
+	public List<ProjectManager> getProjectManagers() {
+		return projectManagerDao.getProjectManagers();
+	}
 
 }

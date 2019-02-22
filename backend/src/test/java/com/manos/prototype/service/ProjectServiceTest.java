@@ -136,6 +136,21 @@ public class ProjectServiceTest {
 	}
 	
 	@Test
+	public void getProjectManagers() {
+		ProjectManager mockPrManager = createMockProjectManager();
+		List<ProjectManager> mockPrManagers = new ArrayList<>();
+		mockPrManagers.add(mockPrManager);
+		
+		when(projectManagerDao.getProjectManagers())
+			.thenReturn(mockPrManagers);
+		
+		List<ProjectManager> prManagers = projectService.getProjectManagers();
+		
+		assertThat(prManagers.get(0))
+			.isEqualToComparingFieldByFieldRecursively(mockPrManager);
+	}
+	
+	@Test
 	public void getProject_nullProjectFail() {
 		when(projectDao.getProject(1))
 			.thenReturn(null);
@@ -233,30 +248,30 @@ public class ProjectServiceTest {
 			});
 	}
 	
-	@Test
-	public void deleteProject_success() {
-		Project mockProject = createMockProject();
-		
-		when(projectDao.getProject(1))
-			.thenReturn(mockProject);
-		
-		assertThatCode(() -> {
-			projectService.deleteProject(1);
-			
-		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	public void deleteProject_nullProject_fail() {
-		
-		when(projectDao.getProject(2))
-			.thenReturn(null);
-		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			projectService.deleteProject(2);
-		});
-	}
+//	@Test
+//	public void deleteProject_success() {
+//		Project mockProject = createMockProject();
+//		
+//		when(projectDao.getProject(1))
+//			.thenReturn(mockProject);
+//		
+//		assertThatCode(() -> {
+//			projectService.deleteProject(1);
+//			
+//		}).doesNotThrowAnyException();
+//	}
+//	
+//	@Test
+//	public void deleteProject_nullProject_fail() {
+//		
+//		when(projectDao.getProject(2))
+//			.thenReturn(null);
+//		
+//		assertThatExceptionOfType(EntityNotFoundException.class)
+//		.isThrownBy(() -> {
+//			projectService.deleteProject(2);
+//		});
+//	}
 	
 	@Test
 	public void updateProject_success() {

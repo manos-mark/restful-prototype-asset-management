@@ -174,6 +174,21 @@ public class ProjectControllerTest extends AbstractMvcTest{
 	}
 	
 	@Test
+	public void getProjectManagers_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/projects/project-managers")
+			.contentType(MediaType.APPLICATION_JSON);
+
+		MvcResult mvcResult = mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(content().string(containsString("project manager test")))
+			.andExpect(content().string(containsString("1")))
+			.andReturn();
+		
+		assertThat("application/json;charset=UTF-8")
+			.isEqualTo(mvcResult.getResponse().getContentType());
+	}
+	
+	@Test
 	public void getProjectsPaginated_success() throws Exception {
 		MockHttpServletRequestBuilder request = get("/projects/")
 			.contentType(MediaType.APPLICATION_JSON)

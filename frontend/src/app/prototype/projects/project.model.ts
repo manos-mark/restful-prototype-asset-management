@@ -5,7 +5,10 @@ export class Project {
     public date: string;
     public projectName: string;
     public companyName: string;
-    public projectManager: string;
+    public projectManager: {
+        id: number;
+        name: string;
+    };
     public status: number;
 
     constructor(dto: any) {

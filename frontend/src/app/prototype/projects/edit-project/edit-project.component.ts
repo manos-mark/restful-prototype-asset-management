@@ -10,6 +10,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./edit-project.component.css']
 })
 export class EditProjectComponent implements OnInit {
+    projectManagers: {
+        id: number;
+        name: string;
+    }[];
 
     projectForm = new FormGroup({
         projectName: new FormControl(null, [Validators.required, Validators.minLength(2)]),

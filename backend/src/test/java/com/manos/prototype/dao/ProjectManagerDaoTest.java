@@ -2,6 +2,8 @@ package com.manos.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +35,12 @@ public class ProjectManagerDaoTest {
 	void getProjectManager_success() {
 		ProjectManager projectManager = projectManagerDao.getProjectManager(1);
 		assertThat(projectManager.getName()).isEqualTo("project manager test");
+	}
+	
+	@Test
+	@Transactional
+	void getProjectManagers_success() {
+		List<ProjectManager> projectManagers = projectManagerDao.getProjectManagers();
+		assertThat(projectManagers.size()).isEqualTo(1);
 	}
 }

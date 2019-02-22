@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +20,12 @@ import com.manos.prototype.controller.params.ProjectOrderAndPageParams;
 import com.manos.prototype.dto.PageResultDto;
 import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProjectDto;
+import com.manos.prototype.dto.ProjectManagerDto;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.service.ProductServiceImpl;
 import com.manos.prototype.service.ProjectServiceImpl;
@@ -75,6 +78,18 @@ public class ProjectController {
 			temp.setId(entity.getId());
 			temp.setProjectName(entity.getProjectName());
 			dtoList.add(temp);
+		}
+		return dtoList;
+	}
+	
+	@GetMapping("/project-managers")
+	public List<ProjectManagerDto> getProjectManagers() {
+		List<ProjectManager> entityList = projectService.getProjectManagers();
+		List<ProjectManagerDto> dtoList = new ArrayList<>();
+		for (ProjectManager entity : entityList) {
+			ProjectManagerDto dto = new ProjectManagerDto();
+			BeanUtils.copyProperties(entity, dto);
+			dtoList.add(dto);
 		}
 		return dtoList;
 	}
