@@ -8,6 +8,14 @@ export class ProjectsService {
 
     constructor(private httpClient: HttpClient) {}
 
+    getProjectManagers() {
+        return this.httpClient.get<any>('api/projects/project-managers',
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
+
     getProjectsCountByStatusId(id: number) {
         return this.httpClient.post<number>('api/projects/count', {
             statusId: id
@@ -41,13 +49,13 @@ export class ProjectsService {
         })
     }
 
-    addProject(projectName: string, companyName: string, projectManager: string) {
-        let currDate = (new Date).toLocaleString('en-GB');
+    addProject(projectName: string, companyName: string, projectManagerId: number) {
+        let currDate = (new Date).toLocaleDateString('en-GB');
         return this.httpClient.post<Project>('api/projects',
         {
             projectName: projectName,
             companyName: companyName,
-            projectManager: projectManager,
+            projectManagerId: projectManagerId,
             date: currDate,
             statusId: 2
         },
@@ -58,14 +66,13 @@ export class ProjectsService {
     }
 
     updateProject(projectName: string, companyName: string, 
-        projectManager: string, statusId: number, projectId: number) {
-        let currDate = (new Date).toLocaleString('en-GB');
+        projectManagerId: number, statusId: number, projectId: number) {
         return this.httpClient.put<Project>('api/projects/' + projectId,
         {
             projectName: projectName,
             companyName: companyName,
-            projectManager: projectManager,
-            statusId: 2
+            projectManagerId: projectManagerId,
+            statusId: statusId
         },
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),

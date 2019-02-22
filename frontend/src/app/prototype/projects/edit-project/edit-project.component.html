@@ -32,12 +32,21 @@
           <input type="text" formControlName="companyName"/>
           <span class="error" *ngIf="companyName.invalid && (companyName.dirty || companyName.touched)">Incorrect value</span>
         </div>
-        <div class="inputWrp" [ngClass]="{'error': projectManager.invalid && (projectManager.dirty || projectManager.touched)}">
+        <div class="inputWrp" [ngClass]="{'error': projectManagerId.invalid && (projectManagerId.dirty || projectManagerId.touched)}">
           <div class="title">
             <i class="manager"></i><span>Project manager</span>
           </div>
-          <input type="text" formControlName="projectManager"/>
-          <span class="error" *ngIf="projectManager.invalid && (projectManager.dirty || projectManager.touched)">Incorrect value</span>
+          <!-- <input type="text" formControlName="projectManager"/> -->
+          <div class="dropdown">
+            <select formControlName="projectManagerId">
+              <option disabled selected>Choose project manager</option>
+                <option 
+                    *ngFor="let manager of projectManagers"
+                    [value]="manager.id"
+                >{{ manager.name }}</option><!--[value]="project.id"-->
+            </select>
+          </div>
+          <span class="error" *ngIf="projectManagerId.invalid && (projectManagerId.dirty || projectManagerId.touched)">Incorrect value</span>
         </div>
       </div>
       <div class="attachedProducts">

@@ -18,7 +18,7 @@ export class EditProjectComponent implements OnInit {
     projectForm = new FormGroup({
         projectName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
         companyName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
-        projectManager: new FormControl(null, [Validators.required, Validators.minLength(2)])
+        projectManagerId: new FormControl("Choose project manager", [Validators.required, Validators.pattern("^[0-9]+$")])
     })
 
     constructor(private activityService: ActivityService,
@@ -26,21 +26,26 @@ export class EditProjectComponent implements OnInit {
                 private router: Router) { }
 
     ngOnInit() {
+        this.projectService.getProjectManagers()
+            .subscribe(
+                res => this.projectManagers = res,
+                error => console.log(error)
+            )
     }
 
     onAddSave() {
         this.projectService.addProject(this.projectName.value, 
-            this.companyName.value, this.projectManager.value)
-            .subscribe(
-                res => {
-                    console.log(res);this.activityService.addActivity('2')
-                        .subscribe(
-                            res => this.router.navigate(['/prototype/projects']),
-                            error => console.log(error)
-                        )
-                },
-                error => console.log(error)
-            )
+            this.companyName.value, this.projectManagerId.value)
+                .subscribe(
+                    res => {
+                        console.log(res);this.activityService.addActivity('2')
+                            .subscribe(
+                                res => this.router.navigate(['/prototype/projects']),
+                                error => console.log(error)
+                            )
+                    },
+                    error => console.log(error)
+                )
     }
 
     onCancel() {
@@ -49,5 +54,5 @@ export class EditProjectComponent implements OnInit {
 
     get projectName() {return this.projectForm.get('projectName')}
     get companyName() {return this.projectForm.get('companyName')}
-    get projectManager() {return this.projectForm.get('projectManager')}
+    get projectManagerId() {return this.projectForm.get('projectManagerId')}
 }

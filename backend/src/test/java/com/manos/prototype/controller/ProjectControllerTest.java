@@ -80,7 +80,7 @@ public class ProjectControllerTest extends AbstractMvcTest{
 		
 		Project savedProject = projectTestService.getLastProject();
 		assertThat(savedProject.getCompanyName()).isEqualTo("companyName");
-		assertThat(savedProject.getDate()).isEqualTo("17/12/2018");
+		assertThat(savedProject.getDate()).isEqualTo("2018-12-17");
 		assertThat(savedProject.getProjectManager().getId()).isEqualTo(1);
 		assertThat(savedProject.getProjectName()).isEqualTo("projectName");
 		assertThat(savedProject.getStatus().getId()).isEqualTo(1);
