@@ -65,12 +65,35 @@
         <div class="header">
           <div class="count">
             <i class="product"></i>
-            <p>Attached products <span>(0)</span></p>
+            <p *ngIf="!products">Attached products <span>(0)</span></p>
+            <p *ngIf="products">Attached products <span>({{ products.length }})</span></p>
           </div>
           <a class="grayDarkBtn disabled">View all</a>
         </div>
         <div class="list">
-          <p>NO PRODUCTS</p>
-      </div>
+            <p *ngIf="!products">NO PRODUCTS</p>
+
+            <div *ngIf="products" class="tableWrp">
+                <div class="table inner">
+                    <div class="header">
+                        <span class="number">#</span>
+                        <span class="productName">Product name</span>
+                        <span class="sn">SN</span>
+                        <span class="quantity">Qty</span>
+                        <span class="picture">Picture</span>
+                        <div class="status">Status</div>
+                        <div class="settings"><i></i></div>
+                    </div>
+                    <div class="content">
+                        <app-product-item 
+                            *ngFor="let product of products"
+                            [product]="product"
+                            [inProject]=true
+                        ></app-product-item>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
   </div>

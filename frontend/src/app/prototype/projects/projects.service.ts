@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Project } from './project.model';
+import { Product } from '../products/product.model';
 
 @Injectable()
 export class ProjectsService {
@@ -93,5 +94,11 @@ export class ProjectsService {
         })
     }
 
-
+    getProductsByProjectId(projectId: number) {
+        return this.httpClient.get<Product[]>('api/projects/' + projectId + '/products',  
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
 }

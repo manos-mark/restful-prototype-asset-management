@@ -12,6 +12,7 @@ import { ProductPicture } from '../../product-picture.model';
 })
 export class ProductItemComponent implements OnInit {
   @Input() product: Product;
+  @Input() inProject: Boolean = false;
   thumbPictureUrl: URL;
   pictures: URL[];
 //   projectName: string = "";

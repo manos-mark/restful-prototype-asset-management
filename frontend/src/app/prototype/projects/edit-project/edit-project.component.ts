@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
 import { ProjectsService } from '../projects.service';
 import { Project } from '../project.model';
+import { Product } from '../../products/product.model';
 
 @Component({
   selector: 'app-edit-project',
@@ -16,6 +17,7 @@ export class EditProjectComponent implements OnInit {
         name: string;
     }[];
     projectId: number;
+    products: Product[];
 
     projectForm = new FormGroup({
         projectName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
@@ -52,7 +54,11 @@ export class EditProjectComponent implements OnInit {
                 },
                 error => console.log(error)
             )
-            
+            this.projectService.getProductsByProjectId(this.projectId)
+                .subscribe(
+                    res => this.products = res,
+                    error => console.log(error)
+                )
         }
     }
 
