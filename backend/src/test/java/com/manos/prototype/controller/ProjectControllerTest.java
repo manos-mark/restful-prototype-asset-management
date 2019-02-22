@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -127,24 +128,24 @@ public class ProjectControllerTest extends AbstractMvcTest{
 			.andExpect(status().isBadRequest());
 	}
 	
-//	@Test
-//	public void deleteProject_success() throws Exception {
-//		MockHttpServletRequestBuilder request = delete("/projects/{id}", 1)
-//			.contentType(MediaType.APPLICATION_JSON);
-//
-//		mockMvc.perform(request.with(user(user)).with(csrf()))
-//			.andDo(print())
-//			.andExpect(status().isOk());
-//	}
-//	
-//	@Test
-//	public void deleteProject_fail() throws Exception {
-//		MockHttpServletRequestBuilder request = delete("/projects/{id}", 0)
-//			.contentType(MediaType.APPLICATION_JSON);
-//
-//		mockMvc.perform(request.with(user(user)).with(csrf()))
-//			.andExpect(status().isBadRequest());
-//	}
+	@Test
+	public void deleteProject_success() throws Exception {
+		MockHttpServletRequestBuilder request = delete("/projects/{id}", 1)
+			.contentType(MediaType.APPLICATION_JSON);
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void deleteProject_fail() throws Exception {
+		MockHttpServletRequestBuilder request = delete("/projects/{id}", 0)
+			.contentType(MediaType.APPLICATION_JSON);
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
 	
 	@Test
 	public void getProject_success() throws Exception {

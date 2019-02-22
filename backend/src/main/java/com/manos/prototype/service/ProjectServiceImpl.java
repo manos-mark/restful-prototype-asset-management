@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dao.ProjectManagerDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
+import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
@@ -30,6 +32,9 @@ public class ProjectServiceImpl {
 	
 	@Autowired
 	private ProjectDaoImpl projectDao;
+
+	@Autowired
+	private ProductDaoImpl productDao;
 	
 	@Autowired
 	private ProjectManagerDaoImpl projectManagerDao;
@@ -56,16 +61,18 @@ public class ProjectServiceImpl {
 		return project;
 	}
 
-//	@Transactional
-//	public void deleteProject(int id) {
-//		Project project  = projectDao.getProject(id);
-//		if (project == null) {
-//			throw new EntityNotFoundException("Project id not found - " + id);
-//		}
-//		
-//		// should delete first all the products of this project
-//		projectDao.deleteProject(id);
-//	}
+	@Transactional
+	public void deleteProject(int id, List<Product> products) {
+		Project project  = projectDao.getProject(id);
+		if (project == null) {
+			throw new EntityNotFoundException("Project id not found - " + id);
+		}
+		// should delete first all the products of this project
+		for (Product product : products) {
+			productDao.deleteProduct(product.getId());
+		}
+		projectDao.deleteProject(id);
+	}
 
 	@Transactional
 	public void saveProject(ProjectRequestDto dto) {

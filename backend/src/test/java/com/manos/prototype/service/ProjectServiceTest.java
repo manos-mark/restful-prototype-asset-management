@@ -14,9 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dao.ProjectManagerDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
+import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
@@ -38,6 +40,9 @@ public class ProjectServiceTest {
 	
 	@Mock 
 	private ProjectManagerDaoImpl projectManagerDao;
+	
+	@Mock
+	private ProductDaoImpl productDao;
 	
 	@Test 
 	public void getProjectsCount() {
@@ -248,30 +253,36 @@ public class ProjectServiceTest {
 			});
 	}
 	
-//	@Test
-//	public void deleteProject_success() {
-//		Project mockProject = createMockProject();
-//		
-//		when(projectDao.getProject(1))
-//			.thenReturn(mockProject);
-//		
-//		assertThatCode(() -> {
-//			projectService.deleteProject(1);
-//			
-//		}).doesNotThrowAnyException();
-//	}
-//	
-//	@Test
-//	public void deleteProject_nullProject_fail() {
-//		
-//		when(projectDao.getProject(2))
-//			.thenReturn(null);
-//		
-//		assertThatExceptionOfType(EntityNotFoundException.class)
-//		.isThrownBy(() -> {
-//			projectService.deleteProject(2);
-//		});
-//	}
+	@Test
+	public void deleteProject_success() {
+		Project mockProject = createMockProject();
+		Product mockProduct = createMockProduct();
+		List<Product> mockProducts = new ArrayList<>();
+		mockProducts.add(mockProduct);
+		
+		when(projectDao.getProject(1))
+			.thenReturn(mockProject);
+		
+		assertThatCode(() -> {
+			projectService.deleteProject(1, mockProducts);
+			
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test
+	public void deleteProject_nullProject_fail() {
+		Product mockProduct = createMockProduct();
+		List<Product> mockProducts = new ArrayList<>();
+		mockProducts.add(mockProduct);
+		
+		when(projectDao.getProject(2))
+			.thenReturn(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			projectService.deleteProject(2, mockProducts);
+		});
+	}
 	
 	@Test
 	public void updateProject_success() {
@@ -368,5 +379,18 @@ public class ProjectServiceTest {
 		List<Project> projects = new ArrayList<Project>();
 		projects.add(createMockProject());
 		return projects;
+	}
+	
+	public Product createMockProduct() {
+		Product mockProduct = new Product();
+		mockProduct.setDate("2011-12-17 13:17:17");
+		mockProduct.setDescription("test");
+		mockProduct.setId(1);
+		mockProduct.setProductName("test");
+		mockProduct.setProject(createMockProject());
+		mockProduct.setQuantity(12);
+		mockProduct.setSerialNumber("test");
+		mockProduct.setStatus(createMockStatus());
+		return mockProduct;
 	}
 }
