@@ -202,6 +202,19 @@ public class ProjectControllerTest extends AbstractMvcTest{
 			.andExpect(status().isOk());
 	}
 	
+	@Test
+	public void getProjectsPaginated_withoutStatusId_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/projects/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("directionAsc", "asc")
+			.param("fieldDate", "date");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isOk());
+	}
+	
 }
 
 

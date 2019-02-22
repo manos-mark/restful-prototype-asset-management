@@ -9,7 +9,7 @@ export class Project {
         id: number;
         name: string;
     };
-    public status: number;
+    public statusId: number;
 
     constructor(dto: any) {
         this.id = dto.id;
@@ -17,6 +17,6 @@ export class Project {
         this.projectName = dto.projectName;
         this.companyName = dto.companyName;
         this.projectManager = dto.projectManager;
-        this.status = dto.statusId;
+        this.statusId = dto.statusId;
     }
 }

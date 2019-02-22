@@ -36,17 +36,29 @@
           <div class="title">
             <i class="manager"></i><span>Project manager</span>
           </div>
-          <!-- <input type="text" formControlName="projectManager"/> -->
           <div class="dropdown">
             <select formControlName="projectManagerId">
               <option disabled selected>Choose project manager</option>
                 <option 
                     *ngFor="let manager of projectManagers"
                     [value]="manager.id"
-                >{{ manager.name }}</option><!--[value]="project.id"-->
+                >{{ manager.name }}</option>
             </select>
           </div>
           <span class="error" *ngIf="projectManagerId.invalid && (projectManagerId.dirty || projectManagerId.touched)">Incorrect value</span>
+        </div>
+        <div class="inputWrp" [ngClass]="{'error': statusId.invalid && (statusId.dirty || statusId.touched)}">
+            <div class="title">
+                <i class="status"></i><span>Status</span>
+            </div>
+            <div class="dropdown">
+                <select formControlName="statusId">
+                    <option value="1">In progress</option>
+                    <option value="2">New</option>
+                    <option value="3">Finished</option>
+                </select>
+            </div>
+            <span class="error" *ngIf="statusId.invalid && (statusId.dirty || statusId.touched)">Incorrect value</span>
         </div>
       </div>
       <div class="attachedProducts">

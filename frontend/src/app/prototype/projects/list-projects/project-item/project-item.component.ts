@@ -20,6 +20,15 @@ export class ProjectItemComponent implements OnInit {
 
     onEdit() {
         this.projectService.editMode = true;
-        this.router.navigate(['prototype/projects/' + this.project.id + '/edit']);
+        this.router.navigate(['/prototype/projects/', this.project.id, 'edit'], 
+            {queryParams: {
+                projectName: this.project.projectName,
+                companyName: this.project.companyName,
+                projectManagerName: this.project.projectManager.name,
+                projectManagerId: this.project.projectManager.id,
+                statusId: this.project.statusId,
+                projectId: this.project.id
+            }}
+        );
     }
 }

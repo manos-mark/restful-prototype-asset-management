@@ -14,7 +14,7 @@ export class ListProjectsComponent implements OnInit {
     constructor(private projectService: ProjectsService) { }
 
     ngOnInit() {
-        this.projectService.getProjects(2,'date',1,5,'asc')
+        this.projectService.getProjectsWithoutStatus('date',1,5,'asc')
             .subscribe(
                 res => {this.projects = res['items']; this.totalCount = res['totalCount']},
                 error => console.log(error)

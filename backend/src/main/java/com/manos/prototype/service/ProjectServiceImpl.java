@@ -121,14 +121,14 @@ public class ProjectServiceImpl {
 			project.setCompanyName(dto.getCompanyName());
 		}
 		
-		if (dto.getDate() != null) {
-			// convert datetime
-			String tempDate = dto.getDate();
-			DateTimeFormatter formatter = DateTimeFormatter
-					.ofPattern("dd/MM/yyyy");
-			LocalDate date = LocalDate.parse(tempDate, formatter);
-			project.setDate(date.toString());
-		}
+//		if (dto.getDate() != null) {
+//			// convert datetime
+//			String tempDate = dto.getDate();
+//			DateTimeFormatter formatter = DateTimeFormatter
+//					.ofPattern("dd/MM/yyyy");
+//			LocalDate date = LocalDate.parse(tempDate, formatter);
+//			project.setDate(date.toString());
+//		}
 		
 		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
 		if (projectManager != null) {

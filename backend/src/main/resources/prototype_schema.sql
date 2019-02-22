@@ -21,7 +21,7 @@ CREATE TABLE `project_manager` (
     `name` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`id`)
 );
-INSERT INTO `project_manager` (name) VALUES ('project manager test');
+INSERT INTO `project_manager` (name) VALUES ('project manager test'), ('noob');
 
 --
 -- Table structure for table `project`
