@@ -11,7 +11,7 @@
     <span *ngIf="!inProject" class="project">{{ product.projectName }}</span>
     <div class="picture">
         <a class="picWrp">
-        <img [src]="'/api/product-pictures/' + product.thumbPictureId"/>  
+        <img [src]="'api/product-pictures/' + product.thumbPictureId"/>  
         <i>{{ product.picturesCount }}</i>
         <var class="zoom" (click)="getProductPictures()"><span></span></var>
         </a>

@@ -68,7 +68,9 @@
             <p *ngIf="!products">Attached products <span>(0)</span></p>
             <p *ngIf="products">Attached products <span>({{ products.length }})</span></p>
           </div>
-          <a class="grayDarkBtn disabled">View all</a>
+            <a 
+                class="grayDarkBtn" [ngClass]="{'disabled': !editMode}"
+            >View all</a>
         </div>
         <div class="list">
             <p *ngIf="!products">NO PRODUCTS</p>

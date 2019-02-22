@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
@@ -11,7 +11,7 @@ import { Product } from '../../products/product.model';
   templateUrl: './edit-project.component.html',
   styleUrls: ['./edit-project.component.css']
 })
-export class EditProjectComponent implements OnInit {
+export class EditProjectComponent implements OnInit, OnDestroy {
     projectManagers: {
         id: number;
         name: string;
@@ -99,8 +99,13 @@ export class EditProjectComponent implements OnInit {
         this.projectForm.reset();
     }
 
+    ngOnDestroy() {
+        this.projectService.editMode = false;
+    }
+
     get projectName() {return this.projectForm.get('projectName')}
     get companyName() {return this.projectForm.get('companyName')}
     get projectManagerId() {return this.projectForm.get('projectManagerId')}
     get statusId() {return this.projectForm.get('statusId')}
+    get editMode() {return this.projectService.editMode}
 }
