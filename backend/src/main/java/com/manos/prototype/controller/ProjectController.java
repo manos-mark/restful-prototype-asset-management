@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -111,10 +112,11 @@ public class ProjectController {
 		return projectService.getProjectsCountByStatus(statusId.getStatusId());
 	}
 
-//	@DeleteMapping("/{id}")
-//	public void deleteProject(@PathVariable("id") int projectId) {
-//		projectService.deleteProject(projectId);
-//	}
+	@DeleteMapping("/{id}")
+	public void deleteProject(@PathVariable("id") int projectId) {
+		List<Product> products = productService.getProductsByProjectId(projectId);
+		projectService.deleteProject(projectId, products);
+	}
 
 	@PostMapping
 	public void addProject(@RequestBody ProjectRequestDto projectDto) {
