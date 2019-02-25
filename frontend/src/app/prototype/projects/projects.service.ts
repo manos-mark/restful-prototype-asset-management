@@ -87,13 +87,13 @@ export class ProjectsService {
         })
     }
 
-    updateProject(project: Project) {
-        return this.httpClient.put<Project>('api/projects/' + project.id,
+    updateProject(project: any) {
+        return this.httpClient.put<any>('api/projects/' + project.id,
         {
             projectName: project.projectName,
             companyName: project.companyName,
-            projectManagerId: project.projectManager.id,
-            statusId: project.status.id
+            projectManagerId: project.projectManagerId,
+            statusId: project.statusId
         },
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),

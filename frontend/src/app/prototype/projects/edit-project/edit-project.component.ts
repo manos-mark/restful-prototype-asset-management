@@ -48,7 +48,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 res => {
                     this.projectService.getProjectById(res.projectId).subscribe(
                         res => {
-                            this.project = new Project(res)
+                            this.project = new Project(res);
                             this.projectForm.controls.projectName.setValue(this.project.projectName);
                             this.projectForm.controls.companyName.setValue(this.project.companyName);
                             this.projectForm.controls.projectManagerId.setValue(this.project.projectManager.id);
@@ -76,13 +76,14 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     onAddSave() {
         // on edit mode update
         if (this.projectService.editMode) {
-            let tempProject: Project;
-            tempProject.projectName = this.projectName.value;
-            tempProject.companyName = this.companyName.value;
-            tempProject.projectManager.id = this.projectManagerId.value;
-            tempProject.status.id = this.statusId.value
-            tempProject.id = this.project.id;
-
+            let tempProject = new Object({
+                projectName: this.projectName.value,
+                companyName: this.companyName.value,
+                projectManagerId: this.projectManagerId.value,
+                statusId: this.statusId.value,
+                id: this.project.id,
+            });
+            console.log(tempProject)
             this.projectService.updateProject(tempProject)
                     .subscribe(
                         res => {

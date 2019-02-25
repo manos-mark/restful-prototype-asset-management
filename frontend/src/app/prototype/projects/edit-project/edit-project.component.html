@@ -53,9 +53,9 @@
             </div>
             <div class="dropdown">
                 <select formControlName="statusId">
-                    <option value="1">In Progress</option>
-                    <option value="2">New</option>
-                    <option value="3">Finished</option>
+                    <option value=1>In Progress</option>
+                    <option value=2>New</option>
+                    <option value=3>Finished</option>
                 </select>
             </div>
             <span class="error" *ngIf="statusId.invalid && (statusId.dirty || statusId.touched)">Incorrect value</span>

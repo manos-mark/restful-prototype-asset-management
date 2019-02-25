@@ -61,7 +61,6 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
                 if (project.isChecked) {
                     this.projectService.deleteProject(project.id)
                         .subscribe(
-                            res => {this.ngOnDestroy(); this.ngOnInit()},
                             error => console.log(error)
                         )
                 }
@@ -76,7 +75,6 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
                 project.status.id = selectedStatus;
                 this.projectService.updateProject(project)
                     .subscribe(
-                        res => {this.ngOnDestroy(); this.ngOnInit()},
                         error => console.log(error)
                     )
             }
@@ -84,7 +82,7 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.projects = [];
+        this.projects = new Array();
     }
 
 }
