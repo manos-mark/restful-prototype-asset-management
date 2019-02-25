@@ -9,6 +9,14 @@ export class ProjectsService {
 
     constructor(private httpClient: HttpClient) {}
 
+    getProjectById(id: number) {
+        return this.httpClient.get<Project>('api/projects/' + id,
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
+
     getProjectManagers() {
         return this.httpClient.get<any>('api/projects/project-managers',
         {
@@ -79,14 +87,13 @@ export class ProjectsService {
         })
     }
 
-    updateProject(projectName: string, companyName: string, 
-        projectManagerId: number, statusId: number, projectId: number) {
-        return this.httpClient.put<Project>('api/projects/' + projectId,
+    updateProject(project: Project) {
+        return this.httpClient.put<Project>('api/projects/' + project.id,
         {
-            projectName: projectName,
-            companyName: companyName,
-            projectManagerId: projectManagerId,
-            statusId: statusId
+            projectName: project.projectName,
+            companyName: project.companyName,
+            projectManagerId: project.projectManager.id,
+            statusId: project.status.id
         },
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
@@ -96,6 +103,14 @@ export class ProjectsService {
 
     getProductsByProjectId(projectId: number) {
         return this.httpClient.get<Product[]>('api/projects/' + projectId + '/products',  
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
+
+    deleteProject(projectId: number) {
+        return this.httpClient.delete('api/projects/' + projectId,  
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
             observe: 'body'

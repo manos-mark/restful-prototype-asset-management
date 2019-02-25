@@ -42,23 +42,45 @@
       </div>
     </div>
     <div class="table">
-      <div class="header">
-        <div class="checkbox"><a class="checkbox"><i></i></a></div>
-        <span class="number">#</span>
-        <a class="date"><i class="sort up"></i>Created</a>
-        <span class="projectName">Project name</span>
-        <span class="companyName">Company name</span>
-        <span class="projectManager">Project manager</span>
-        <a class="products"><i class="sort up"></i>Products</a>
-        <div class="status">Status</div>
-        <div class="settings"><i></i></div>
-      </div>
-      <div class="content">
-        <app-project-item
-            *ngFor="let project of projects"
-            [project]="project"
-        ></app-project-item>
-      </div>
+        <div class="header">
+            <div class="checkbox">
+                <a class="checkbox" 
+                    (click)="onSelectAll()"
+                    [ngClass]="{'active': isMasterChecked}"
+                ><i></i></a>
+            </div>
+            <span class="number">#</span>
+            <a class="date"><i class="sort up"></i>Created</a>
+            <span class="projectName">Project name</span>
+            <span class="companyName">Company name</span>
+            <span class="projectManager">Project manager</span>
+            <a class="products"><i class="sort up"></i>Products</a>
+            <div class="status">Status</div>
+            <div class="settings"><i></i></div>
+        </div>
+        <div class="content">
+            <div class="row" *ngFor="let project of projects; let i index">
+                <div class="checkbox">
+                    <a class="checkbox" 
+                        [ngClass]="{'active': project.isChecked}"
+                        (click)="project.isChecked = !project.isChecked; isMasterChecked = false;"
+                    ><i></i></a>
+                </div>
+                <span class="number">{{ project.id }}</span>
+                <span class="date">{{ project.date }}</span>
+                <span class="projectName">{{ project.projectName }}</span>
+                <span class="companyName">{{ project.companyName }}</span>
+                <span class="projectManager">{{ project.projectManager.name }}</span>
+                <div class="products">
+                    <span><a class="blueBtn">{{ project.productsCount }}</a></span>
+                    <a class="grayBtn"><i></i></a>
+                </div>
+                <div class="status">
+                    <span [ngClass]="project.status.cssClass">{{ project.status.name }}</span>
+                </div>
+                <div class="settings"><a class="grayBtn" (click)="onEdit(project.id)"><i></i></a></div>
+            </div>
+        </div>
     </div>
     <div class="actionTtl">
       <i></i>
@@ -67,14 +89,14 @@
     <div class="bottomActions">
       <p>Actions</p>
       <div class="dropdown">
-        <select>
-          <option>Select</option>
-          <option>Change status to New</option>
-          <option>Change status to In progress</option>
-          <option>Change status to Finished</option>
-          <option>Delete</option>
+        <select #actionsDropdown>
+          <option selected disabled>Select</option>
+          <option value="NEW">Change status to New</option>
+          <option value="IN_PROGRESS">Change status to In progress</option>
+          <option value="FINISHED">Change status to Finished</option>
+          <option value="DELETE">Delete</option>
         </select>
       </div>
-      <a class="blueDarkBtn">Apply</a>
+      <a class="blueDarkBtn" (click)="applyChanges(actionsDropdown.value)">Apply</a>
     </div>
   </div>

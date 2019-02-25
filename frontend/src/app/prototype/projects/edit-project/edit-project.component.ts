@@ -5,6 +5,7 @@ import { ActivityService } from 'src/app/general/home/activity/activity.service'
 import { ProjectsService } from '../projects.service';
 import { Project } from '../project.model';
 import { Product } from '../../products/product.model';
+import { Statuses, StatusesMap } from '../../status.enum';
 
 @Component({
   selector: 'app-edit-project',
@@ -16,7 +17,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         id: number;
         name: string;
     }[];
-    projectId: number;
+    project: Project;
     products: Product[];
 
     projectForm = new FormGroup({
@@ -33,7 +34,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         // when add new project status always will be new and disabled
-        this.projectForm.controls.statusId.setValue(2);
+        this.projectForm.controls.statusId.setValue(Statuses.NEW);
         this.projectForm.controls.statusId.disable();
         // get project managers for the dropdown
         this.projectService.getProjectManagers()
@@ -45,31 +46,47 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         if (this.projectService.editMode) {
             this.route.queryParams.subscribe(
                 res => {
-                    this.projectForm.controls.projectName.setValue(res.projectName);
-                    this.projectForm.controls.companyName.setValue(res.companyName);
-                    this.projectForm.controls.projectManagerId.setValue(res.projectManagerId);
-                    this.projectForm.controls.statusId.enable();
-                    this.projectForm.controls.statusId.setValue(res.statusId);
-                    this.projectId = res.projectId;
+                    this.projectService.getProjectById(res.projectId).subscribe(
+                        res => {
+                            this.project = new Project(res)
+                            this.projectForm.controls.projectName.setValue(this.project.projectName);
+                            this.projectForm.controls.companyName.setValue(this.project.companyName);
+                            this.projectForm.controls.projectManagerId.setValue(this.project.projectManager.id);
+                            this.projectForm.controls.statusId.enable();
+                            this.projectForm.controls.statusId.setValue(this.project.status.id);
+                            this.projectService.getProductsByProjectId(this.project.id)
+                                .subscribe(
+                                    res => this.products = res,
+                                    error => console.log(error)
+                                )
+                        },
+                        error => console.log(error)
+                    )
                 },
                 error => console.log(error)
             )
-            this.projectService.getProductsByProjectId(this.projectId)
-                .subscribe(
-                    res => this.products = res,
-                    error => console.log(error)
-                )
+            // this.projectService.getProductsByProjectId(this.project.id)
+            //     .subscribe(
+            //         res => this.products = res,
+            //         error => console.log(error)
+            //     )
         }
     }
 
     onAddSave() {
         // on edit mode update
         if (this.projectService.editMode) {
-            this.projectService.updateProject(this.projectName.value, 
-                this.companyName.value, this.projectManagerId.value, this.statusId.value, this.projectId)
+            let tempProject: Project;
+            tempProject.projectName = this.projectName.value;
+            tempProject.companyName = this.companyName.value;
+            tempProject.projectManager.id = this.projectManagerId.value;
+            tempProject.status.id = this.statusId.value
+            tempProject.id = this.project.id;
+
+            this.projectService.updateProject(tempProject)
                     .subscribe(
                         res => {
-                            this.activityService.addActivity('1')
+                            this.activityService.addActivity(Statuses.IN_PROGRESS.toString())
                                 .subscribe(
                                     res => this.router.navigate(['/prototype/projects']),
                                     error => console.log(error)
@@ -84,7 +101,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 this.companyName.value, this.projectManagerId.value)
                     .subscribe(
                         res => {
-                            this.activityService.addActivity('2')
+                            this.activityService.addActivity(Statuses.NEW.toString())
                                 .subscribe(
                                     res => this.router.navigate(['/prototype/projects']),
                                     error => console.log(error)
@@ -97,6 +114,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
     onCancel() {
         this.projectForm.reset();
+        this.router.navigate(['prototype','projects']);
     }
 
     ngOnDestroy() {

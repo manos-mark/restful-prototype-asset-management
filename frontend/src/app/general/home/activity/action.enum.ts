@@ -22,17 +22,17 @@ export const ActionsMap = new Map<Actions, Action>([
     }],
     [Actions.CREATED_PROJECT, {
         id: Actions.CREATED_PROJECT,
-        name: 'Created new Projet',
+        name: 'Created new Project',
         cssClass: 'project'
     }],
     [Actions.UPDATED_PROJECT, {
         id: Actions.UPDATED_PROJECT,
-        name: 'Updated a Projet',
+        name: 'Updated a Project',
         cssClass: 'project'
     }],
     [Actions.DELETED_PROJECT, {
         id: Actions.DELETED_PROJECT,
-        name: 'Deleted a Projet',
+        name: 'Deleted a Project',
         cssClass: 'project'
     }],
     [Actions.CREATED_PRODUCT, {

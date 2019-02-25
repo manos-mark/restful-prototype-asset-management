@@ -26,19 +26,5 @@ export class ActivityComponent implements OnInit {
         error => { console.log(error) }
       );
   }
-  // ngOnInit() {
-  //   this.actService.getActivities()
-  //     .then(
-  //       activities => { 
-  //         this.activities = activities.map(
-  //           activity => { 
-  //             return new Activity(activity);
-  //           },
-  //           error => { console.log(error) }
-  //           )
-  //       },
-  //       error => { console.log(error) }
-  //     );
-  // }
 
 }

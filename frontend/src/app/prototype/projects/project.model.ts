@@ -1,4 +1,4 @@
-import { Product } from '../products/product.model';
+import { StatusesMap, Status } from '../status.enum';
 
 export class Project {
     public id: number;
@@ -9,7 +9,9 @@ export class Project {
         id: number;
         name: string;
     };
-    public statusId: number;
+    public status: Status;
+    public productsCount: number;
+    public isChecked: boolean;
 
     constructor(dto: any) {
         this.id = dto.id;
@@ -17,6 +19,7 @@ export class Project {
         this.projectName = dto.projectName;
         this.companyName = dto.companyName;
         this.projectManager = dto.projectManager;
-        this.statusId = dto.statusId;
+        this.status = StatusesMap.get(dto.statusId);
+        this.productsCount = dto.productsCount;
     }
 }

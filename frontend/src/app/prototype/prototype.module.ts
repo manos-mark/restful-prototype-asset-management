@@ -7,7 +7,6 @@ import { ProductItemComponent } from './products/list-products/product-item/prod
 import { ProductsComponent } from './products/products.component';
 import { EditProjectComponent } from './projects/edit-project/edit-project.component';
 import { ListProjectsComponent } from './projects/list-projects/list-projects.component';
-import { ProjectItemComponent } from './projects/list-projects/project-item/project-item.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { PrototypeRoutingModule } from './prototype-routing.module';
 import { ProductPictureComponent } from './products/edit-product/product-picture/product-picture.component';
@@ -21,7 +20,6 @@ import { ProductPictureComponent } from './products/edit-product/product-picture
         ListProjectsComponent,
         ListProductsComponent,
         ProductItemComponent,
-        ProjectItemComponent,
         ProductPictureComponent
     ],
     imports: [
