@@ -9,16 +9,23 @@ import { Statuses } from '../../status.enum'
   templateUrl: './list-projects.component.html',
   styleUrls: ['./list-projects.component.css']
 })
-export class ListProjectsComponent implements OnInit, OnDestroy {
+export class ListProjectsComponent implements OnInit {
+    field = 'date';
+    page = 1;
+    pageSize = 5;
+    direction = 'asc';
+    sortByDateAsc = true;
+    sortByProductsCountAsc = true;
     projects: Project[] = [];
     totalCount: number;
     isMasterChecked: boolean;
+    selectedProjectsCount = 0;
 
     constructor(private projectService: ProjectsService,
                 private router: Router) {}
 
     ngOnInit() {
-        this.projectService.getProjectsWithoutStatus('date',1,5,'asc')
+        this.projectService.getProjectsWithoutStatus(this.field, this.page, this.pageSize, this.direction)
             .subscribe(
                 res => {
                     res['items'].map(
@@ -33,16 +40,34 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
 
     onEdit(projectId: number) {
         this.projectService.editMode = true;
-        this.router.navigate(['/prototype/projects/', projectId, 'edit'], 
+        this.router.navigate(['prototype/projects/', projectId, 'edit'], 
             {queryParams: { projectId: projectId }}
         );
     }
 
+    onSelect(project: Project) {
+        if (project.isChecked) {
+            --this.selectedProjectsCount;
+        } else {
+            ++this.selectedProjectsCount;
+        }
+        project.isChecked = !project.isChecked; 
+        this.isMasterChecked = false;
+    }
+
     onSelectAll() {
+        let projectsCount = 0;
         for (let project of this.projects) {
             project.isChecked = !this.isMasterChecked;
+            projectsCount++;
         }
         this.isMasterChecked = !this.isMasterChecked;
+        
+        if (this.isMasterChecked) {
+            this.selectedProjectsCount = projectsCount;
+        } else {
+            this.selectedProjectsCount = 0;
+        }
     }
 
     applyChanges(action) {
@@ -59,30 +84,36 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
         else if (action == "DELETE") {
             for (let project of this.projects) {
                 if (project.isChecked) {
-                    this.projectService.deleteProject(project.id)
-                        .subscribe(
-                            error => console.log(error)
-                        )
+                    this.projectService.deleteProject(project.id).subscribe()
                 }
             }
+            return;
         } 
         else {
             return;
         }
 
         for (let project of this.projects) {
-            if (project.isChecked) {
+            if ( project.isChecked && (project.status.id !== selectedStatus) ) {
+                this.projects = new Array();
                 project.status.id = selectedStatus;
                 this.projectService.updateProject(project)
                     .subscribe(
+                        res => {
+                            this.ngOnInit();
+                        },
                         error => console.log(error)
                     )
             }
         }
     }
 
-    ngOnDestroy() {
-        this.projects = new Array();
-    }
+    sortByDate() {
+        this.sortByDateAsc = !this.sortByDateAsc;
 
+    }
+    sortByProductsCount() {
+        this.sortByProductsCountAsc = !this.sortByProductsCountAsc;
+
+    }
 }

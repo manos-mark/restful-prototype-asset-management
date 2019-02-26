@@ -83,7 +83,7 @@ export class ProjectsService {
         },
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
-            observe: 'body'
+            observe: 'response'
         })
     }
 
@@ -92,12 +92,12 @@ export class ProjectsService {
         {
             projectName: project.projectName,
             companyName: project.companyName,
-            projectManagerId: project.projectManagerId,
-            statusId: project.statusId
+            projectManagerId: project.projectManager.id,
+            statusId: project.status.id
         },
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
-            observe: 'body'
+            observe: 'response'
         })
     }
 
@@ -113,7 +113,7 @@ export class ProjectsService {
         return this.httpClient.delete('api/projects/' + projectId,  
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
-            observe: 'body'
+            observe: 'response'
         })
     }
 }
