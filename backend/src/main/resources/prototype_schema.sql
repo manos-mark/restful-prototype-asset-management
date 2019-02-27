@@ -31,7 +31,7 @@ CREATE TABLE `project` (
 	`project_name` VARCHAR(45) NOT NULL,
 	`company_name` VARCHAR(45) NOT NULL,
 	`project_manager_id` INT(11) NOT NULL,
-	`date` DATE NOT NULL,
+	`creation_date` DATE NOT NULL,
 	`status_id` INT(11) NOT NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`status_id`)
@@ -39,15 +39,17 @@ CREATE TABLE `project` (
 	FOREIGN KEY (`project_manager_id`)
 		REFERENCES project_manager (`id`)
 );
-INSERT INTO `project` (project_name,company_name,project_manager_id,date,status_id) VALUES
-('firstProject', 'firstCompany', 1, '2011-12-17', 2);
-
+INSERT INTO `project` (project_name,company_name,project_manager_id,creation_date,status_id) VALUES
+	('firstProject', 'firstCompany', 1, '2011-12-17', 2);
+INSERT INTO `project` (project_name,company_name,project_manager_id,creation_date,status_id) VALUES
+	('secondProject', 'secondCompany', 1, '2011-10-17', 2);
+    
 --
 -- Table structure for table `product`
 --
 CREATE TABLE `product` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`date` DATE NOT NULL,
+	`creation_date` DATE NOT NULL,
 	`product_name` VARCHAR(45) NOT NULL,
 	`serial_number` VARCHAR(45) NOT NULL,
 	`description` VARCHAR(500) NOT NULL,
@@ -60,8 +62,12 @@ CREATE TABLE `product` (
 	FOREIGN KEY (`project_id`)
 		REFERENCES project (`id`)	
 );
-INSERT INTO `product` (date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
-	('2011-12-17','productName','serialNumber','description',12,2,1);
+INSERT INTO `product` (creation_date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
+	('2011-11-17','productName','serialNumber','description',12,2,1);
+INSERT INTO `product` (creation_date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
+    ('2011-10-17','second','serialNumber','description',10,2,1);
+INSERT INTO `product` (creation_date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
+    ('2011-12-17','third','serialNumber','description',1,2,2);
     
 --
 -- Table structure for `product_pictures`
@@ -136,12 +142,12 @@ CREATE TABLE `activity` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`action_id` INT(11) NOT NULL,
 	`user_id` INT(11) NOT NULL,
-	`date` DATETIME NOT NULL,
+	`creation_date` DATETIME NOT NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`action_id`) 
 		REFERENCES e_activity_action (`id`),
 	FOREIGN KEY (`user_id`) 
 		REFERENCES user (`id`)
 );
-INSERT INTO `activity` (id,action_id,user_id,date) VALUES
+INSERT INTO `activity` (id,action_id,user_id,creation_date) VALUES
 	(1,1,1,'2011-12-17 13:17:17'), (2,8,1,'2011-12-17 14:17:17'), (3,1,2,'2011-12-17 13:17:17');

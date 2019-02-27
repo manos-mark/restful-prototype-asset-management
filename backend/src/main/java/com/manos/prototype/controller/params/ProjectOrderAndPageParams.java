@@ -9,7 +9,7 @@ public class ProjectOrderAndPageParams extends OrderAndPageParams{
 	public static final String PRODUCTS_COUNT = "products";
 	
 	@NotNull
-	@Pattern(regexp = DATE_CREATED)
+	@Pattern(regexp = "(" + DATE_CREATED + "|" + PRODUCTS_COUNT + ")")
 	private String field = null;
 
 	public String getField() {

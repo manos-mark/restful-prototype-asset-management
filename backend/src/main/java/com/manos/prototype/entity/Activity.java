@@ -28,7 +28,7 @@ public class Activity {
 	@JoinColumn(name = "user_id")
     private User user;
 	
-	@Column(name = "date")
+	@Column(name = "creation_date")
 	private String date;
 
 	public Activity(ActivityAction action, User user, String date) {

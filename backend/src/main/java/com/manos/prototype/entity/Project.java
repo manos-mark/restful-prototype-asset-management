@@ -1,5 +1,8 @@
 package com.manos.prototype.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -25,7 +29,7 @@ public class Project {
 	@Column(name = "company_name")
 	private String companyName;
 	
-	@Column(name = "date")
+	@Column(name = "creation_date")
 	private String date;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -35,7 +39,10 @@ public class Project {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_manager_id")
 	private ProjectManager projectManager;
-
+	
+	@OneToMany(mappedBy = "project")
+	private List<Product> products = new ArrayList<>();
+	
 	public Project(String projectName, String companyName, ProjectManager projectManager, String date, Status status) {
 		this.projectName = projectName;
 		this.companyName = companyName;
@@ -50,6 +57,14 @@ public class Project {
 
 	public Project() {}
 	
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 	public int getId() {
 		return id;
 	}

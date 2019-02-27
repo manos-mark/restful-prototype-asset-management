@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
+import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
 
@@ -40,8 +42,8 @@ public class ProjectServiceImpl {
 	private ProjectManagerDaoImpl projectManagerDao;
 	
 	@Transactional
-	public PageResult<Project> getProjects(PageRequest pageRequest, ProjectSearch search) {
-		List<Project> projects = projectDao.getProjects(pageRequest, search);
+	public PageResult<ProjectVo> getProjects(PageRequest pageRequest, ProjectSearch search) {
+		List<ProjectVo> projects = projectDao.getProjects(pageRequest, search);
 		Long totalCount = 0L;
 		if (acceptedStatuses.contains(search.getStatusId())) {
 			totalCount = projectDao.getProjectsCountByStatus(search.getStatusId());
@@ -49,6 +51,12 @@ public class ProjectServiceImpl {
 		else {
 			totalCount = projectDao.count();
 		}
+		// fetch because of lazy loading
+		for (ProjectVo projectVo : projects) {
+			Hibernate.initialize(projectVo.getProject().getProjectManager());
+			Hibernate.initialize(projectVo.getProject().getStatus());
+		}
+		
 		return new PageResult<>(projects, totalCount.intValue(), pageRequest.getPageSize());
 	}
 	
@@ -90,7 +98,7 @@ public class ProjectServiceImpl {
 		if (dto.getDate() == null) {
 			throw new EntityNotFoundException("Save Project: date cannot be null.");
 		}
-		// convert datetime
+		// convert date
 		String tempDate = dto.getDate();
 		DateTimeFormatter formatter = DateTimeFormatter
 				.ofPattern("dd/MM/yyyy");
@@ -124,15 +132,6 @@ public class ProjectServiceImpl {
 		if (dto.getCompanyName() != null) {
 			project.setCompanyName(dto.getCompanyName());
 		}
-		
-//		if (dto.getDate() != null) {
-//			// convert datetime
-//			String tempDate = dto.getDate();
-//			DateTimeFormatter formatter = DateTimeFormatter
-//					.ofPattern("dd/MM/yyyy");
-//			LocalDate date = LocalDate.parse(tempDate, formatter);
-//			project.setDate(date.toString());
-//		}
 		
 		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
 		if (projectManager != null) {

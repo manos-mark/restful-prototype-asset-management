@@ -30,6 +30,7 @@ import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.service.ProductServiceImpl;
 import com.manos.prototype.service.ProjectServiceImpl;
+import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.convert.ConversionService;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
@@ -54,14 +55,9 @@ public class ProjectController {
 		PageRequest pageRequest = conversionService.convert(pageParams, PageRequest.class);
 		ProjectSearch search = conversionService.convert(filterParams, ProjectSearch.class);
 		
-		PageResult<Project> pageResult = projectService.getProjects(pageRequest, search);
+		PageResult<ProjectVo> pageResult = projectService.getProjects(pageRequest, search);
 		
 		List<ProjectDto> projectsDto = conversionService.convertList(pageResult.getEntities(), ProjectDto.class);
-		
-		for (ProjectDto project : projectsDto) {
-			Long productsCount = productService.getProductsCountByProjectId(project.getId());
-			project.setProductsCount(productsCount);
-		}
 		
 		PageResultDto<ProjectDto> pageResultDto = new PageResultDto<>();
 		pageResultDto.setItems(projectsDto);

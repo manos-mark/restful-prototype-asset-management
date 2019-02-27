@@ -79,8 +79,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
             let tempProject = new Object({
                 projectName: this.projectName.value,
                 companyName: this.companyName.value,
-                projectManagerId: this.projectManagerId.value,
-                statusId: this.statusId.value,
+                projectManager: { id: this.projectManagerId.value },
+                status: { id: this.statusId.value },
                 id: this.project.id,
             });
             console.log(tempProject)
