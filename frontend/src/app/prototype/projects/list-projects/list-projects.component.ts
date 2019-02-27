@@ -24,23 +24,27 @@ export class ListProjectsComponent implements OnInit {
     selectedProjectsCount = 0;
     totalPages = this.projects.length / this.pageSize;
     pagesArray = [];
+    dateFromFilter: string = null;
+    dateToFilter: string = null;
+    statusFilter: number = 0;
 
     constructor(private projectService: ProjectsService,
                 private router: Router) {}
 
     ngOnInit() {
-        this.projectService.getProjectsWithoutFilter(this.field, this.page, this.pageSize, this.direction)
-            .subscribe(
-                res => {
-                    res['items'].map(
-                        item => { this.projects.push(new Project(item)) }
-                    )
-                    this.totalCount = res['totalCount']
-                    this.totalPages = Math.ceil(this.totalCount / this.pageSize);
-                    this.pagesArray =  Array(this.totalPages).fill(1).map((x,i)=>++i);
-                },
-                error => console.log(error)
-            )
+        this.projectService.getProjects(this.field, this.page, this.pageSize, this.direction,
+            this.dateFromFilter, this.dateToFilter, this.statusFilter)
+                .subscribe(
+                    res => {
+                        res['items'].map(
+                            item => { this.projects.push(new Project(item)) }
+                        )
+                        this.totalCount = res['totalCount']
+                        this.totalPages = Math.ceil(this.totalCount / this.pageSize);
+                        this.pagesArray =  Array(this.totalPages).fill(1).map((x,i)=>++i);
+                    },
+                    error => console.log(error)
+                )
     }
 
 
@@ -177,6 +181,23 @@ export class ListProjectsComponent implements OnInit {
         if (target >= 1 && target <= this.totalPages && target !== this.page) {
             this.projects = new Array();
             this.page = target;
+            this.ngOnInit();
+        }
+    }
+
+    applyFilters(statusId: number, dateFrom: Date, dateTo: Date) {
+        console.log(statusId, dateFrom, dateTo)
+        
+        // this.dateFromFilter = dateFrom.toLocaleString('en-GB');
+        // this.dateToFilter = dateTo.toLocaleString('en-GB');
+
+        if(statusId >= 1 && statusId <=3) {
+            this.projects = new Array();
+            this.statusFilter = statusId;
+            this.ngOnInit();
+        } else {
+            this.projects = new Array();
+            this.statusFilter = 0;
             this.ngOnInit();
         }
     }

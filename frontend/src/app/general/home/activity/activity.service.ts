@@ -7,12 +7,6 @@ export class ActivityService {
     
   constructor(private httpClient: HttpClient) {}
 
-    // getActivities():Promise<Array<Activity>>  {
-    //   return this.httpClient.get<Array<Activity>>('api/activities', {
-    //     headers: new HttpHeaders().set('Content-Type', 'application/json')
-    //   })
-    //   .toPromise()
-    // }
     getActivities() {
       return this.httpClient.get<Array<Activity>>('api/activities', {
         headers: new HttpHeaders().set('Content-Type', 'application/json'),

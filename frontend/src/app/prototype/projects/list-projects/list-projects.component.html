@@ -18,17 +18,22 @@
     <div class="filters">
       <p>Filters</p>
       <div class="inputWrp date">
-        <input value="Date from"/>
+        <input #dateFrom placeholder="Date from" type="date"/>
       </div>
       <div class="inputWrp date">
-        <input value="Date to"/>
+        <input #dateTo placeholder="Date to" type="date"/>
       </div>
       <div class="dropdown status">
-        <select>
-          <option>Status:All</option>
+        <select #statusDropdown>
+          <option value=0 selected>Status: All</option>
+          <option value=1>Status: In Progress</option>
+          <option value=2>Status: New</option>
+          <option value=3>Status: Finished</option>
         </select>
       </div>
-      <a class="blueDarkBtn">Apply</a>
+      <a class="blueDarkBtn" 
+        (click)="applyFilters(statusDropdown.value, dateFrom.value, dateTo.value)"
+      >Apply</a>
       <div class="right">
         <a class="grayBtn"><span>Clear filters</span><i></i></a>
         <div class="pagination">
