@@ -3,10 +3,10 @@ package com.manos.prototype.controller.params;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import org.springframework.lang.Nullable;
+
 public class ProjectFilterParams {
 
-	@Min(1)
-	@Max(3)
 	private Integer statusId = null;
 
 	public Integer getStatusId() {
@@ -14,6 +14,8 @@ public class ProjectFilterParams {
 	}
 
 	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
+		if (statusId >= 1 && statusId <=3) {
+			this.statusId = statusId;
+		}
 	}
 }
