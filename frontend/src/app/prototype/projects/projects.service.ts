@@ -36,21 +36,7 @@ export class ProjectsService {
         
     }
 
-    getProjects(statusId: number, field: string, page: number, pageSize: number, direction: string) {
-        return this.httpClient.get<Project>('api/projects/',  
-        {
-            headers: new HttpHeaders().set('Content-Type', 'application/json'),
-            observe: 'body',
-            params: new HttpParams()
-                            .set('statusId', String(statusId))
-                            .set('field', field) 
-                            .set('page', String(page))
-                            .set('pageSize', String(pageSize))
-                            .set('direction', direction) 
-        })
-    }
-
-    getProjectsWithoutStatus(field: string, page: number, pageSize: number, direction: string) {
+    getProjectsWithoutFilter(field: string, page: number, pageSize: number, direction: string) {
         return this.httpClient.get<Project>('api/projects/',  
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),

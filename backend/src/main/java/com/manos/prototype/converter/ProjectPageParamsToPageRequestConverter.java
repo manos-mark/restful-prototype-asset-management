@@ -29,19 +29,18 @@ public class ProjectPageParamsToPageRequestConverter implements Converter<Projec
 			orderDirection = OrderDirection.DESCENDING;
 		}
 		
-		String dateCreatedField = null;
-		String productsCountField = null;
+		String field = null;
 		List<OrderClause> orderClauses = new ArrayList<>();
 
 		if (from.getField() != null) {
 			if (from.getField().equals(ProjectOrderAndPageParams.DATE_CREATED)) {
-				dateCreatedField = "date";
-				OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
+				field = "project.date";
+				OrderClause clause1 = new OrderClause(field, orderDirection);
 				orderClauses.add(clause1);
 			}
 			else if (from.getField().equals(ProjectOrderAndPageParams.PRODUCTS_COUNT)){
-				productsCountField = "product";
-				OrderClause clause3 = new OrderClause(productsCountField, orderDirection);
+				field = "productsCount";
+				OrderClause clause3 = new OrderClause(field, orderDirection);
 				orderClauses.add(clause3);
 			}
 		}

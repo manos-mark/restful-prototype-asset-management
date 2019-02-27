@@ -6,9 +6,10 @@
     <div class="action">
       <a class="greenBtn" routerLink="new">Add project</a>
       <div class="dropdown">
-        <select>
-          <option>Results per page:5</option>
-          <option>Results per page:10</option>
+        <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
+          <option value=5>Results per page:5</option>
+          <option value=20>Results per page:20</option>
+          <option value=50>Results per page:50</option>
         </select>
       </div>
     </div>
@@ -31,13 +32,21 @@
       <div class="right">
         <a class="grayBtn"><span>Clear filters</span><i></i></a>
         <div class="pagination">
-          <a class="arrowLeft"><i></i></a>
+          <a class="arrowLeft"
+            [ngClass]="{'disabled': page == 1}"
+            (click)="changePageDown()"
+          ><i></i></a>
           <div class="center">
-            <a class="active">1</a>
-            <a>2</a>
-            <a>3</a>
+            <a 
+            *ngFor="let curPage of pagesArray"
+                (click)="changePage(curPage)"
+                [ngClass]="{'active': page == curPage}">{{ curPage }}
+            </a>
           </div>
-          <a class="arrowRight disabled"><i></i></a>
+          <a class="arrowRight"
+            [ngClass]="{'disabled': page == totalPages}"
+            (click)="changePageUp()"
+          ><i></i></a>
         </div>
       </div>
     </div>

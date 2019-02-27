@@ -22,6 +22,7 @@ import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.search.ProjectSearch;
+import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.paging.OrderClause;
 import com.pastelstudios.paging.OrderDirection;
 import com.pastelstudios.paging.PageRequest;
@@ -31,6 +32,7 @@ import com.pastelstudios.paging.PageRequest;
 @ContextConfiguration(classes = { AppConfigUnitTest.class })
 @Sql(scripts = "classpath:/sql/status.sql")
 @Sql(scripts = "classpath:/sql/projects.sql")
+@Sql(scripts = "classpath:/sql/products.sql")
 public class ProjectDaoTest {
 		
 	@Autowired 
@@ -52,15 +54,14 @@ public class ProjectDaoTest {
 	
 	@Test
 	@Transactional
-	void getProjectsWithParams_dateCreatedField_success() {
+	void getProjectsWithParams_dateOrder_success() {
 		OrderDirection orderDirection = OrderDirection.ASCENDING;
-//		orderDirection = OrderDirection.DESCENDING;
-		String dateCreatedField = "date";
-		OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
+		String field = "project.date";
+		OrderClause clause1 = new OrderClause(field, orderDirection);
 		
-//		String productsCountField = null;
-//		productsCountField = "product";
-//		OrderClause clause3 = new OrderClause(productsCountField, orderDirection);
+//		String field = null;
+//		String field = "productsCount";
+//		OrderClause clause1 = new OrderClause(field, orderDirection);
 //		orderClauses.add(clause3);
 		
 		List<OrderClause> orderClauses = new ArrayList<>();
@@ -75,9 +76,36 @@ public class ProjectDaoTest {
 		ProjectSearch search = new ProjectSearch();
 		search.setStatusId(2);
 		
-		List<Project> projects = projectDao.getProjects(pageRequest, search);
-		assertThat(projects).size().isEqualTo(1);
-		assertThat(projects).doesNotContainNull();
+		List<ProjectVo> projects = projectDao.getProjects(pageRequest, search);
+		assertThat(projects).isNotNull();
+		assertThat(projects).isNotEmpty();
+		assertThat(projects.get(0).getProject().getId()).isEqualTo(1);
+	}
+	
+	@Test
+	@Transactional
+	void getProjectsWithParams_productsCountOrder_success() {
+		OrderDirection orderDirection = OrderDirection.ASCENDING;
+		
+		String field = "productsCount";
+		OrderClause clause1 = new OrderClause(field, orderDirection);
+		
+		List<OrderClause> orderClauses = new ArrayList<>();
+		orderClauses.add(clause1);
+		
+		PageRequest pageRequest = new PageRequest();
+		pageRequest.setPage(1);
+		pageRequest.setPageSize(5);
+		pageRequest.setOrderClauses(orderClauses);
+//		pageRequest.getPageOffset();
+		
+		ProjectSearch search = new ProjectSearch();
+		search.setStatusId(2);
+		
+		List<ProjectVo> projects = projectDao.getProjects(pageRequest, search);
+		assertThat(projects).isNotNull();
+		assertThat(projects).isNotEmpty();
+		assertThat(projects.get(0).getProject().getId()).isEqualTo(1);
 	}
 	
 	@Test

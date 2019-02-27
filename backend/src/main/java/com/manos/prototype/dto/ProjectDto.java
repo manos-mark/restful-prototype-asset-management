@@ -1,35 +1,34 @@
 package com.manos.prototype.dto;
 
-import com.manos.prototype.entity.ProjectManager;
-
 public class ProjectDto {
-	
+
 	private int id;
-	
+
 	private String projectName;
-	
+
 	private String companyName;
-	
-	private ProjectManager projectManager;
-	
+
+	private ProjectManagerDto projectManager;
+
 	private String date;
 
 	private int statusId;
-	
+
 	private Long productsCount;
 
-	public ProjectDto(int id, Long productsCount, String projectName, String companyName, ProjectManager projectManager, String date, int statusId) {
-		this.id = id;
-		this.projectName = projectName;
-		this.companyName = companyName;
-		this.projectManager = projectManager;
-		this.date = date;
-		this.statusId = statusId;
-		this.productsCount = productsCount;
+//	public ProjectDto(int id, Long productsCount, String projectName, String companyName, ProjectManager projectManager, String date, int statusId) {
+//		this.id = id;
+//		this.projectName = projectName;
+//		this.companyName = companyName;
+//		this.projectManager = projectManager;
+//		this.date = date;
+//		this.statusId = statusId;
+//		this.productsCount = productsCount;
+//	}
+
+	public ProjectDto() {
 	}
-	
-	public ProjectDto() {}
-	
+
 	public Long getProductsCount() {
 		return productsCount;
 	}
@@ -62,11 +61,11 @@ public class ProjectDto {
 		this.companyName = companyName;
 	}
 
-	public ProjectManager getProjectManager() {
+	public ProjectManagerDto getProjectManager() {
 		return projectManager;
 	}
 
-	public void setProjectManager(ProjectManager projectManager) {
+	public void setProjectManager(ProjectManagerDto projectManager) {
 		this.projectManager = projectManager;
 	}
 

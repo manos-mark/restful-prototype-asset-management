@@ -21,7 +21,7 @@ public class Product {
 	@Column(name="id")
 	private int id;
 	
-	@Column(name = "date")
+	@Column(name = "creation_date")
 	private String date;
 	
 	@Column(name = "product_name")

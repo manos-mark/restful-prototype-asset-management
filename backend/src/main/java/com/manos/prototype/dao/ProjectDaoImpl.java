@@ -5,11 +5,13 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.search.ProjectSearch;
+import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.db.PagingAndSortingSupport;
 import com.pastelstudios.db.SearchSupport;
 import com.pastelstudios.paging.PageRequest;
@@ -26,17 +28,21 @@ public class ProjectDaoImpl {
 	@Autowired
 	private SearchSupport searchSupport;
 	
-	public List<Project> getProjects(PageRequest pageRequest, ProjectSearch search) {
+	public List<ProjectVo> getProjects(PageRequest pageRequest, ProjectSearch search) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Project p ")
-					.append("join fetch p.projectManager ")
-					.append("join fetch p.status pStatus ");
+		queryBuilder.append("select new com.manos.prototype.vo.ProjectVo(project, count(product.id) as productsCount) ")
+					.append(" from Project project ")
+					.append(" left join project.products product ")
+					.append(" join project.projectManager projectManager ")
+					.append(" join project.status pStatus ");
+					
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
+		queryString += " group by project.id ";
 		queryString = pagingSupport.applySorting(queryString, pageRequest);
 
 		return pagingSupport
-				.applyPaging(currentSession.createQuery(queryString, Project.class), pageRequest)
+				.applyPaging(currentSession.createQuery(queryString, ProjectVo.class), pageRequest)
 				.setProperties(search)
 				.getResultList();
 	}
@@ -44,7 +50,7 @@ public class ProjectDaoImpl {
 	public List<Project> getProjects() {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Project p ");
+		queryBuilder.append("from Project project ");
 		
 		return currentSession.createQuery(queryBuilder.toString(), Project.class).getResultList();
 	}
@@ -53,10 +59,10 @@ public class ProjectDaoImpl {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Project p ")
-					.append("join fetch p.projectManager ")
-					.append("join fetch p.status ")
-					.append("where p.id = :id");
+		queryBuilder.append("from Project project ")
+					.append("join fetch project.projectManager ")
+					.append("join fetch project.status ")
+					.append("where project.id = :id");
 		Query<Project> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Project.class);
 		theQuery.setParameter("id", id);
