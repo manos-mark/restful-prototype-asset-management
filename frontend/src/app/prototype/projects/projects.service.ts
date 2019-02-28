@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Project } from './project.model';
 import { Product } from '../products/product.model';
+import { FilterParams } from './filter-params.model';
+import { PageParams } from './page-params.model';
 
 @Injectable()
 export class ProjectsService {
@@ -36,20 +38,23 @@ export class ProjectsService {
         
     }
 
-    getProjects(field: string, page: number, pageSize: number, direction: string,
-        dateFromFilter: string, dateToFilter: string, statusFilter: number) {
+    getProjects(pageParams: PageParams,filterParams: FilterParams) {
+
+        // let params = new HttpClient
+
         return this.httpClient.get<Project>('api/projects/',  
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
             observe: 'body',
-            params: new HttpParams()
-                            .set('field', field) 
-                            .set('page', String(page))
-                            .set('pageSize', String(pageSize))
-                            .set('direction', direction)
-                            .set('dateFromFilter',dateFromFilter) 
-                            .set('dateToFilter', dateToFilter) 
-                            .set('statusId', String(statusFilter)) 
+            
+            params: 
+                            // .set('field', field) 
+                            // .set('page', String(page))
+                            // .set('pageSize', String(pageSize))
+                            // .set('direction', direction)
+                            // .set('dateFrom', String(dateFromFilter)) 
+                            // .set('dateTo', String(dateToFilter)) 
+                            // .set('statusId', String(statusFilter)) 
         })
     }
 
@@ -62,13 +67,11 @@ export class ProjectsService {
     }
 
     addProject(projectName: string, companyName: string, projectManagerId: number) {
-        let currDate = (new Date).toLocaleDateString('en-GB');
         return this.httpClient.post<Project>('api/projects',
         {
             projectName: projectName,
             companyName: companyName,
             projectManagerId: projectManagerId,
-            date: currDate,
             statusId: 2
         },
         {

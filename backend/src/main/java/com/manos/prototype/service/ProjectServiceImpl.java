@@ -1,7 +1,6 @@
 package com.manos.prototype.service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,20 +43,14 @@ public class ProjectServiceImpl {
 	@Transactional
 	public PageResult<ProjectVo> getProjects(PageRequest pageRequest, ProjectSearch search) {
 		List<ProjectVo> projects = projectDao.getProjects(pageRequest, search);
-		Long totalCount = 0L;
-		if (acceptedStatuses.contains(search.getStatusId())) {
-			totalCount = projectDao.getProjectsCountByStatus(search.getStatusId());
-		}
-		else {
-			totalCount = projectDao.count();
-		}
+		int totalCount = projectDao.count(search);
 		// fetch because of lazy loading
 		for (ProjectVo projectVo : projects) {
 			Hibernate.initialize(projectVo.getProject().getProjectManager());
 			Hibernate.initialize(projectVo.getProject().getStatus());
 		}
 		
-		return new PageResult<>(projects, totalCount.intValue(), pageRequest.getPageSize());
+		return new PageResult<>(projects, totalCount, pageRequest.getPageSize());
 	}
 	
 	@Transactional
@@ -95,15 +88,7 @@ public class ProjectServiceImpl {
 		}
 		project.setCompanyName(dto.getCompanyName());
 		
-		if (dto.getDate() == null) {
-			throw new EntityNotFoundException("Save Project: date cannot be null.");
-		}
-		// convert date
-		String tempDate = dto.getDate();
-		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("dd/MM/yyyy");
-		LocalDate date = LocalDate.parse(tempDate, formatter);
-		project.setDate(date.toString());
+		project.setCreatedAt(LocalDate.now());
 		
 		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
 		if (projectManager == null) {

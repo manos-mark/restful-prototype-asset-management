@@ -18,10 +18,20 @@
     <div class="filters">
       <p>Filters</p>
       <div class="inputWrp date">
-        <input #dateFrom placeholder="Date from" type="date"/>
+        <input #dateFrom 
+            placeholder="Date from" 
+            type="date" 
+            [max]="dateToFilter"
+            (change)="dateFromFilter = dateFrom.value.toLocaleString('en-GB')"
+        />
       </div>
       <div class="inputWrp date">
-        <input #dateTo placeholder="Date to" type="date"/>
+        <input #dateTo 
+            placeholder="Date to" 
+            type="date" 
+            [min]="dateFromFilter"
+            (change)="dateToFilter = dateTo.value.toLocaleString('en-GB')"
+        />
       </div>
       <div class="dropdown status">
         <select #statusDropdown>
@@ -85,7 +95,7 @@
                     ><i></i></a>
                 </div>
                 <span class="number">{{ project.id }}</span>
-                <span class="date">{{ project.date }}</span>
+                <span class="date">{{ project.createdAt | date:'mediumDate' }}</span>
                 <span class="projectName">{{ project.projectName }}</span>
                 <span class="companyName">{{ project.companyName }}</span>
                 <span class="projectManager">{{ project.projectManager.name }}</span>

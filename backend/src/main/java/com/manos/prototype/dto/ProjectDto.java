@@ -1,5 +1,7 @@
 package com.manos.prototype.dto;
 
+import java.time.LocalDate;
+
 public class ProjectDto {
 
 	private int id;
@@ -10,21 +12,11 @@ public class ProjectDto {
 
 	private ProjectManagerDto projectManager;
 
-	private String date;
+	private LocalDate createdAt;
 
 	private int statusId;
 
 	private Long productsCount;
-
-//	public ProjectDto(int id, Long productsCount, String projectName, String companyName, ProjectManager projectManager, String date, int statusId) {
-//		this.id = id;
-//		this.projectName = projectName;
-//		this.companyName = companyName;
-//		this.projectManager = projectManager;
-//		this.date = date;
-//		this.statusId = statusId;
-//		this.productsCount = productsCount;
-//	}
 
 	public ProjectDto() {
 	}
@@ -69,12 +61,12 @@ public class ProjectDto {
 		this.projectManager = projectManager;
 	}
 
-	public String getDate() {
-		return date;
+	public LocalDate getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setCreatedAt(LocalDate createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public int getStatusId() {

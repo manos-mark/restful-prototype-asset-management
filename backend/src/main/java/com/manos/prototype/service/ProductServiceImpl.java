@@ -50,16 +50,16 @@ public class ProductServiceImpl {
 	@Transactional
 	public void updateProduct(ProductRequestDto dto, int productId) {
 		// check if project exists
-		Product product = getProductById(productId);
-		
-		product.setDate(dto.getDate());
-		
-		int projectId = product.getProjectId();
-		Project project = projectService.getProject(projectId);
-
-		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + projectId);
-		}
+//		Product product = getProductById(productId);
+//		
+//		product.setDate(dto.getDate());
+//		
+//		int projectId = product.getProjectId();
+//		Project project = projectService.getProject(projectId);
+//
+//		if (project == null) {
+//			throw new EntityNotFoundException("Project id not found - " + projectId);
+//		}
 	}
 
 	@Transactional
@@ -69,7 +69,8 @@ public class ProductServiceImpl {
 			throw new EntityNotFoundException("Project id not found - " + id);
 		}
 		
-		return productDao.getProductsByProjectId(id);
+		List<Product> list = productDao.getProductsByProjectId(id);
+		return list;
 	}
 
 	@Transactional
@@ -81,8 +82,8 @@ public class ProductServiceImpl {
 	public PageResult<Product> getProducts(PageRequest pageRequest, ProductSearch search) {
 		List<Product> products = productDao.getProducts(pageRequest, search);
 		Long totalCount = 0L;
-		if (search.getStatusId() != null) {
-			totalCount = productDao.getProductsCountByStatus(search.getStatusId());
+		if (search.getStatusIdSearchConstraint() != null) {
+			totalCount = productDao.getProductsCountByStatus(search.getStatusIdSearchConstraint());
 		}
 		else {
 			totalCount = productDao.countAll();

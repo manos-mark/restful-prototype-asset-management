@@ -99,15 +99,15 @@ public class ProductController {
 //			throw new EntityNotFoundException("Project id not found - " + projectId);
 //		}
 
-		productService.saveProduct(product);
+		productService.saveProduct(productRequestDto);
 	}
 
 	@PostMapping
-	public int addProduct(@RequestBody ProductRequestDto productRequestDto) {
-		Product product = conversionService.convert(productRequestDto, Product.class);
-		product.setId(0);
-		productService.saveProduct(product);
-		return product.getId();
+	public void addProduct(@RequestBody ProductRequestDto productRequestDto) {
+//		Product product = conversionService.convert(productRequestDto, Product.class);
+//		product.setId(0);
+		productService.saveProduct(productRequestDto);
+//		return product.getId();
 	}
 	
 	@GetMapping(value = "/{id}/pictures", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE,

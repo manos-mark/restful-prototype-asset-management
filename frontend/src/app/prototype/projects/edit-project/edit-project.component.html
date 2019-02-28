@@ -65,8 +65,9 @@
         <div class="header">
           <div class="count">
             <i class="product"></i>
-            <p *ngIf="!products">Attached products <span>(0)</span></p>
-            <p *ngIf="products">Attached products <span>({{ products.length }})</span></p>
+            <!-- <p *ngIf="!products">Attached products <span>(0)</span></p> -->
+            <!-- <p *ngIf="products">Attached products <span>({{ products.length }})</span></p> -->
+            <p>Attached products <span>({{ products.length }})</span></p>
           </div>
             <a 
                 routerLink="/prototype/products"
@@ -74,9 +75,9 @@
             >View all</a>
         </div>
         <div class="list">
-            <p *ngIf="!products">NO PRODUCTS</p>
+            <p *ngIf="products.length == 0">NO PRODUCTS</p>
 
-            <div *ngIf="products" class="tableWrp">
+            <div *ngIf="products.length > 0" class="tableWrp">
                 <div class="table inner">
                     <div class="header">
                         <span class="number">#</span>

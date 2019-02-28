@@ -18,7 +18,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         name: string;
     }[];
     project: Project;
-    products: Product[];
+    products: Product[] = [];
 
     projectForm = new FormGroup({
         projectName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
@@ -56,7 +56,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                             this.projectForm.controls.statusId.setValue(this.project.status.id);
                             this.projectService.getProductsByProjectId(this.project.id)
                                 .subscribe(
-                                    res => this.products = res,
+                                    res => {this.products = res; console.log(this.products)},
                                     error => console.log(error)
                                 )
                         },
@@ -65,11 +65,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 },
                 error => console.log(error)
             )
-            // this.projectService.getProductsByProjectId(this.project.id)
-            //     .subscribe(
-            //         res => this.products = res,
-            //         error => console.log(error)
-            //     )
         }
     }
 

@@ -45,10 +45,10 @@ public class ProductDaoImpl {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Product p "
-				+ "join fetch p.status "
-				+ "join fetch p.project "
-				+ "where p.project.id = :id");
+		queryBuilder.append("from Product p ")
+					.append("join fetch p.status ")
+					.append("join fetch p.project ")
+					.append("where p.project.id = :id");
 		Query<Product> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Product.class);
 		theQuery.setParameter("id", id);
@@ -101,7 +101,7 @@ public class ProductDaoImpl {
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
 		
 		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
-		theQuery.setParameter("statusId", search.getStatusId());
+		theQuery.setParameter("statusId", search.getStatusIdSearchConstraint());
 		
 		return theQuery.getSingleResult();
 	}
@@ -109,8 +109,8 @@ public class ProductDaoImpl {
 	public List<Product> getProducts(PageRequest pageRequest, ProductSearch search) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryByilder = new StringBuilder();
-		queryByilder.append("from Product p ")
-					.append("join fetch p.status pStatus");
+		queryByilder.append("from Product product ")
+					.append("join fetch product.status productStatus");
 		String queryString = searchSupport.addSearchConstraints(queryByilder.toString(), search);
 		queryString = pagingSupport.applySorting(queryString, pageRequest);
 		

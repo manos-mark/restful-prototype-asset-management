@@ -13,7 +13,10 @@ public class ProductFilterParamsToProjectSearch implements Converter<ProductFilt
 	public ProductSearch convert(ProductFilterParams from) {
 		ProductSearch productSearch = new ProductSearch();
 		
-		productSearch.setStatusId(from.getStatusId());
+		productSearch.setStatusIdSearchConstraint(from.getStatusId());
+		
+		productSearch.setDateRangeSearchConstraint(from.getDateFrom(), from.getDateTo());
+		
 		return productSearch;
 	}
 

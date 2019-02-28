@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.manos.prototype.controller.params.OrderAndPageParams;
 import com.manos.prototype.controller.params.ProductOrderAndPageParams;
-import com.manos.prototype.controller.params.ProjectOrderAndPageParams;
 import com.pastelstudios.convert.Converter;
 import com.pastelstudios.paging.OrderClause;
 import com.pastelstudios.paging.OrderDirection;
@@ -17,7 +16,7 @@ import com.pastelstudios.paging.PageRequest;
 public class ProductPageParamsToPageRequestConverter implements Converter<ProductOrderAndPageParams, PageRequest>{
 
 	@Override
-	public PageRequest convert(ProductOrderAndPageParams from) { //CHANGEEEEEE
+	public PageRequest convert(ProductOrderAndPageParams from) { 
 		PageRequest to = new PageRequest();
 		
 		to.setPage(from.getPage());
@@ -31,14 +30,24 @@ public class ProductPageParamsToPageRequestConverter implements Converter<Produc
 		}
 		
 		String field = null;
-		if (from.getField().equals(ProjectOrderAndPageParams.DATE_CREATED)) {
-			field = "date";
+		List<OrderClause> orderClauses = new ArrayList<>();
+
+		if (from.getField() != null) {
+			if (from.getField().equals(ProductOrderAndPageParams.DATE_CREATED)) {
+				field = "product.date";
+				OrderClause clause1 = new OrderClause(field, orderDirection);
+				orderClauses.add(clause1);
+			}
+			else if (from.getField().equals(ProductOrderAndPageParams.QUANTITY)){
+				field = "product.quantity";
+				OrderClause clause3 = new OrderClause(field, orderDirection);
+				orderClauses.add(clause3);
+			}
 		}
 		
-		List<OrderClause> orderClauses = new ArrayList<>();
-		OrderClause clause = new OrderClause(field, orderDirection);
-		orderClauses.add(clause);
-		to.setOrderClauses(orderClauses);
+		if (!orderClauses.isEmpty()) {
+			to.setOrderClauses(orderClauses);
+		}
 		return to;
 	}
 

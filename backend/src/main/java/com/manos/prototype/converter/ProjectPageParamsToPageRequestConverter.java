@@ -34,7 +34,7 @@ public class ProjectPageParamsToPageRequestConverter implements Converter<Projec
 
 		if (from.getField() != null) {
 			if (from.getField().equals(ProjectOrderAndPageParams.DATE_CREATED)) {
-				field = "project.date";
+				field = "project.createdAt";
 				OrderClause clause1 = new OrderClause(field, orderDirection);
 				orderClauses.add(clause1);
 			}
