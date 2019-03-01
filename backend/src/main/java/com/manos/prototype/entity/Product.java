@@ -1,5 +1,7 @@
 package com.manos.prototype.entity;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +24,7 @@ public class Product {
 	private int id;
 	
 	@Column(name = "creation_date")
-	private String date;
+	private LocalDate createdAt;
 	
 	@Column(name = "product_name")
 	private String productName;
@@ -52,18 +54,6 @@ public class Product {
 		)
 	private ProductPicture thumbPicture;
 
-	public Product(String date, String productName, String serialNumber, String description, int quantity,
-			Status status, Project project, ProductPicture thumbPicture) {
-		this.date = date;
-		this.productName = productName;
-		this.serialNumber = serialNumber;
-		this.description = description;
-		this.quantity = quantity;
-		this.status = status;
-		this.project = project;
-		this.thumbPicture = thumbPicture;
-	}
-	
 	public Product() {}
 
 	public ProductPicture getThumbPicture() {
@@ -86,12 +76,12 @@ public class Product {
 		this.id = id;
 	}
 
-	public String getDate() {
-		return date;
+	public LocalDate getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setCreatedAt(LocalDate date) {
+		this.createdAt = date;
 	}
 
 	public String getProductName() {

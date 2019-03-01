@@ -18,9 +18,7 @@ public class ProjectSearch {
 	}
 
 	public void setStatusId(Integer statusId) {
-//		if (statusId != 0) {
-			this.statusId = statusId;
-//		}
+		this.statusId = statusId;
 	}
 
 	public LocalDate getFromDate() {
@@ -42,11 +40,11 @@ public class ProjectSearch {
 	@GeneratedSearchConstraint
 	public String getDateRangeSearchConstraint() {
 		if (fromDate != null && toDate != null) {
-			return "project.date BETWEEN :fromDate AND :toDate";// emit the first AND
+			return "project.createdAt BETWEEN :fromDate AND :toDate";// emit the first AND
 		} else if (fromDate != null) {
-			return "project.date >= :fromDate";
+			return "project.createdAt >= :fromDate";
 		} else if (toDate != null) {
-			return "project.date <= :toDate";
+			return "project.createdAt <= :toDate";
 		}
 		return null;
 	}

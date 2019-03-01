@@ -110,7 +110,6 @@ public class ProjectDaoImpl {
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("select count(project.id) as projectsCount")
 					.append(" from Project project ")
-					.append(" left join project.products product ")
 					.append(" join project.status projectStatus ");
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
 		

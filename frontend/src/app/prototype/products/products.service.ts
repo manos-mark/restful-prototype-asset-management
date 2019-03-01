@@ -2,6 +2,10 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Product } from './product.model';
 import { ProductPicture } from './product-picture.model';
+import { PageParams } from '../projects/page-params.model';
+import { FilterParams } from '../projects/filter-params.model';
+import { toHttpParams } from 'src/app/shared/http-params-converter';
+import { Statuses } from '../status.enum';
 
 @Injectable()
 export class ProductsService {
@@ -20,70 +24,74 @@ export class ProductsService {
         
     }
 
-    getProducts(statusId: number, field: string, page: number, pageSize: number, direction: string) {
-        return this.httpClient.get<Product>('api/products/',  
+    getProducts(pageParams: PageParams, filterParams: FilterParams) {
+
+        const params = {
+            field: pageParams.field,
+            page: pageParams.page,
+            pageSize: pageParams.pageSize,
+            direction: pageParams.direction,
+            fromDate: filterParams.fromDate,
+            toDate: filterParams.toDate,
+            statusId: filterParams.statusId,
+            projectName: filterParams.projectName
+        }
+        return this.httpClient.get<Product[]>('api/products/',  
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
             observe: 'body',
-            params: new HttpParams()
-                            .set('statusId', String(statusId))
-                            .set('field', field) 
-                            .set('page', String(page))
-                            .set('pageSize', String(pageSize))
-                            .set('direction', direction) 
+            params: toHttpParams(params)
         })
     }
 
-    getProductsNoFilter(field: string, page: number, pageSize: number, direction: string) {
-        return this.httpClient.get<Product>('api/products/',  
+    updateProduct(product: Product) {
+        return this.httpClient.put<any>('api/products/' + product.id,
+        {
+            productName: product.productName,
+            serialNumber: product.serialNumber,
+            description: product.description,
+            quantity: product.quantity,
+            statusId: Statuses.NEW,
+            projectId: product.projectId
+        },
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
-            observe: 'body',
-            params: new HttpParams()
-                            .set('field', field) 
-                            .set('page', String(page))
-                            .set('pageSize', String(pageSize))
-                            .set('direction', direction) 
+            observe: 'response'
         })
     }
 
-    getPictureUrl(id: number) {
-        return this.httpClient.get<URL>('api/product-pictures/' + id, 
+    addProduct(product: Product) {
+        return this.httpClient.post<any>('api/products', 
+            {
+                productName: product.productName,
+                serialNumber: product.serialNumber,
+                description: product.description,
+                quantity: product.quantity,
+                statusId: product.status.id,
+                projectId: product.projectId
+            },
+            {
+                headers: new HttpHeaders().set('Content-Type', 'application/json'),
+                observe: 'body',
+            }
+        )
+    }
+
+    deleteProduct(productId: number) {
+        return this.httpClient.delete('api/products/' + productId,  
         {
-            headers: new HttpHeaders().set('Content-Type', 'image/png, image/jpg, image/gif')
-                                        .set('Accept', 'image/png, image/jpg, image/gif'),
-            observe: 'body'
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'response'
         })
     }
 
-    getPicturesByProductId(productId: number) {
-        return this.httpClient.get<URL[]>('api/products/' + productId + '/pictures',  
+    getProductById(productId: number) {
+        return this.httpClient.get('api/products/' + productId,  
         {
-            headers: new HttpHeaders().set('Content-Type', 'image/png, image/jpg, image/gif'),
-            observe: 'body'
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'response'
         })
     }
-
-    // addProduct(productName: string, serialNumber: string, description: string,
-    //     quantity: number, projectId: number, ) {
-    //     let currDate = (new Date).toLocaleString('en-GB');
-        
-    //     return this.httpClient.post<any>('api/products', 
-    //         {
-    //             productName: productName,
-    //             serialNumber: serialNumber,
-    //             description: description,
-    //             quantity: quantity,
-    //             projectId: projectId,
-    //             statusId: 2,
-    //             date: currDate
-    //         },
-    //         {
-    //             headers: new HttpHeaders().set('Content-Type', 'application/json'),
-    //             observe: 'body',
-    //         }
-    //     )
-    // }
 
     // addPicture(productId: number, picture: ProductPicture) {
     //     return this.httpClient.post<any>('api/products/' + productId + '/pictures',
@@ -99,5 +107,13 @@ export class ProductsService {
     //             observe: 'body',
     //         }
     //     )
+    // }
+
+    // getPicturesByProductId(productId: number) {
+    //     return this.httpClient.get<URL[]>('api/products/' + productId + '/pictures',  
+    //     {
+    //         headers: new HttpHeaders().set('Content-Type', 'image/png, image/jpg, image/gif'),
+    //         observe: 'body'
+    //     })
     // }
 }

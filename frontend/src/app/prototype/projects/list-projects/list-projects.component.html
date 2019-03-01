@@ -45,21 +45,22 @@
         (click)="applyFilters(statusDropdown.value, dateFrom.value, dateTo.value)"
       >Apply</a>
       <div class="right">
-        <a class="grayBtn"><span>Clear filters</span><i></i></a>
+        <a class="grayBtn" (click)="clearFilters()"><span>Clear filters</span><i></i></a>
         <div class="pagination">
           <a class="arrowLeft"
-            [ngClass]="{'disabled': page == 1}"
+            [ngClass]="{'disabled': pageParams.page == 1}"
             (click)="changePageDown()"
           ><i></i></a>
           <div class="center">
+            <a *ngIf="pagesArray.length == 0" class="disabled">0</a>
             <a 
-            *ngFor="let curPage of pagesArray"
+                *ngFor="let curPage of pagesArray"
                 (click)="changePage(curPage)"
-                [ngClass]="{'active': page == curPage}">{{ curPage }}
+                [ngClass]="{'active': pageParams.page == curPage}">{{ curPage }}
             </a>
           </div>
           <a class="arrowRight"
-            [ngClass]="{'disabled': page == totalPages}"
+            [ngClass]="{'disabled': pageParams.page == totalPages}"
             (click)="changePageUp()"
           ><i></i></a>
         </div>

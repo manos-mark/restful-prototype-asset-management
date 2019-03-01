@@ -79,28 +79,14 @@ public class ProjectServiceImpl {
 	public void saveProject(ProjectRequestDto dto) {
 		Project project = new Project();
 		
-		if (dto == null) {
-			throw new EntityNotFoundException("Save Project: cannot be null.");
-		}
-		
-		if (dto.getCompanyName() == null) {
-			throw new EntityNotFoundException("Save Project: companyName cannot be null.");
-		}
-		project.setCompanyName(dto.getCompanyName());
-		
-		project.setCreatedAt(LocalDate.now());
-		
 		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
 		if (projectManager == null) {
 			throw new EntityNotFoundException("Save Project: projectManager id not found - " + dto.getProjectManagerId());
 		}
+		project.setCompanyName(dto.getCompanyName());
+		project.setCreatedAt(LocalDate.now());
 		project.setProjectManager(projectManager);
-		
-		if (dto.getProjectName() == null) {
-			throw new EntityNotFoundException("Save Project: projectName cannot be null.");
-		}
 		project.setProjectName(dto.getProjectName());
-		
 		project.setStatus(new Status(Status.NEW_ID));
 		
 		projectDao.saveProject(project);
@@ -113,7 +99,7 @@ public class ProjectServiceImpl {
 		if (project == null) {
 			throw new EntityNotFoundException("Update Project: cannot find project with id - " + projectId);
 		}
-		
+		// den xreiazomai auta ta if giati xrisimopoiw not null sto projectRequestDto
 		if (dto.getCompanyName() != null) {
 			project.setCompanyName(dto.getCompanyName());
 		}

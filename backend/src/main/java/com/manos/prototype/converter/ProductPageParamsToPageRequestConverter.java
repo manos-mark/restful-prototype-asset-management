@@ -34,7 +34,7 @@ public class ProductPageParamsToPageRequestConverter implements Converter<Produc
 
 		if (from.getField() != null) {
 			if (from.getField().equals(ProductOrderAndPageParams.DATE_CREATED)) {
-				field = "product.date";
+				field = "product.createdAt";
 				OrderClause clause1 = new OrderClause(field, orderDirection);
 				orderClauses.add(clause1);
 			}

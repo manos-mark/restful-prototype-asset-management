@@ -58,9 +58,4 @@ public class PictureServiceImpl {
 			}
 		}
 	}
-	
-	@Transactional
-	public Long getPicturesCountByProductId(int productId) {
-		return pictureDao.getPicturesCountByProductId(productId);
-	}
 }

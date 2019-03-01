@@ -1,55 +1,57 @@
 package com.manos.prototype.controller.params;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class ProductFilterParams {
 
-private Integer statusId = null;
+	private static final String DATE_FORMAT = "yyyy-MM-dd";
 	
-	private String dateFrom = null;
+	@Min(0)
+	@Max(3)
+	private Integer statusId = null;
 	
-	private String dateTo = null;
-
-	public String getDateFrom() {
-		return dateFrom;
+	@DateTimeFormat(pattern = DATE_FORMAT)
+	private LocalDate fromDate = null;
+	
+	@DateTimeFormat(pattern = DATE_FORMAT)
+	private LocalDate toDate = null;
+	
+	private String projectName = null;
+	
+	public String getProjectName() {
+		return projectName;
 	}
 
-	public void setDateFrom(String dateFrom) {
-		if ( !dateFrom.isEmpty() ) {
-			// convert date
-			String tempDate = dateFrom;
-			DateTimeFormatter formatter = DateTimeFormatter
-					.ofPattern("yyyy-MM-dd");
-			LocalDate date = LocalDate.parse(tempDate, formatter);
-			
-			this.dateFrom = date.toString();
-		}
-	}
-
-	public String getDateTo() {
-		return dateTo;
-	}
-
-	public void setDateTo(String dateTo) {
-		if ( !dateTo.isEmpty() ) {
-			// convert date
-			String tempDate = dateTo;
-			DateTimeFormatter formatter = DateTimeFormatter
-					.ofPattern("yyyy-MM-dd");
-			LocalDate date = LocalDate.parse(tempDate, formatter);
-			
-			this.dateTo = date.toString();
-		}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 
 	public Integer getStatusId() {
 		return statusId;
 	}
-
+	
 	public void setStatusId(Integer statusId) {
-		if (statusId >= 1 && statusId <=3) {
-			this.statusId = statusId;
-		}
+		this.statusId = statusId;
+	}
+	
+	public LocalDate getFromDate() {
+		return fromDate;
+	}
+	
+	public void setFromDate(LocalDate fromDate) {
+		this.fromDate = fromDate;
+	}
+	
+	public LocalDate getToDate() {
+		return toDate;
+	}
+	
+	public void setToDate(LocalDate toDate) {
+		this.toDate = toDate;
 	}
 }

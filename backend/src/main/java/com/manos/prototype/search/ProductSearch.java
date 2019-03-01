@@ -1,39 +1,62 @@
 package com.manos.prototype.search;
 
+import java.time.LocalDate;
+
 import com.pastelstudios.db.GeneratedSearchConstraint;
 import com.pastelstudios.db.SearchConstraint;
 
 public class ProductSearch {
 
 	private Integer statusId = null;
+
+	private LocalDate fromDate = null;
+	private LocalDate toDate = null;
 	
-	private String dateRange = null;
+	private String projectName = null;
 	
-	@GeneratedSearchConstraint
-	public String getDateRangeSearchConstraint() {
-		return dateRange;
+	@SearchConstraint(value = "project.projectName")
+	public String getProjectName() {
+		return projectName;
 	}
-	
-	public void setDateRangeSearchConstraint(String dateFrom, String dateTo) {
-		if (dateFrom != null && dateTo != null) {
-			this.dateRange = " project.date BETWEEN " + dateFrom + " AND " + dateTo;// emit the first AND
-		}
-		else if (dateFrom != null) {
-			this.dateRange = " project.date >= " + dateFrom;
-		} 
-		else if (dateTo != null) {
-			this.dateRange = " project.date <= " + dateTo;
-		}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
-	
-//	@SearchConstraint(expression = "pStatus = ? ")
-	@SearchConstraint(value = "projectStatus.id")
-	public Integer getStatusIdSearchConstraint() {
+
+	@SearchConstraint(value = "productStatus.id")
+	public Integer getStatusId() {
 		return statusId;
 	}
 
-	public void setStatusIdSearchConstraint(Integer statusId) {
+	public void setStatusId(Integer statusId) {
 		this.statusId = statusId;
 	}
 
+	public LocalDate getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(LocalDate fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public LocalDate getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(LocalDate toDate) {
+		this.toDate = toDate;
+	}
+
+	@GeneratedSearchConstraint
+	public String getDateRangeSearchConstraint() {
+		if (fromDate != null && toDate != null) {
+			return "project.createdAt BETWEEN :fromDate AND :toDate";// emit the first AND
+		} else if (fromDate != null) {
+			return "project.createdAt >= :fromDate";
+		} else if (toDate != null) {
+			return "project.createdAt <= :toDate";
+		}
+		return null;
+	}
 }

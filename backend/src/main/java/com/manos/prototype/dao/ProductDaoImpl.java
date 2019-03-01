@@ -26,6 +26,22 @@ public class ProductDaoImpl {
 	@Autowired
 	private PagingAndSortingSupport pagingSupport;
 	
+	public List<Product> getProducts(PageRequest pageRequest, ProductSearch search) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryByilder = new StringBuilder();
+		queryByilder.append("from Product product ")
+					.append(" join fetch product.project project ")
+					.append(" join fetch product.thumbPicture thumbPicture ")
+					.append(" join fetch product.status productStatus ");
+		String queryString = searchSupport.addSearchConstraints(queryByilder.toString(), search);
+		queryString = pagingSupport.applySorting(queryString, pageRequest);
+		
+		return pagingSupport
+				.applyPaging(currentSession.createQuery(queryString, Product.class), pageRequest)
+				.setProperties(search)
+				.getResultList();
+	}
+	
 	public Product getProduct(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -92,34 +108,6 @@ public class ProductDaoImpl {
 		return theQuery.getSingleResult();
 	}
 
-	public Long count(ProductSearch search) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select count(p.id) from Product p ")
-					.append("join p.status pStatus ");
-		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
-		
-		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
-		theQuery.setParameter("statusId", search.getStatusIdSearchConstraint());
-		
-		return theQuery.getSingleResult();
-	}
-
-	public List<Product> getProducts(PageRequest pageRequest, ProductSearch search) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		StringBuilder queryByilder = new StringBuilder();
-		queryByilder.append("from Product product ")
-					.append("join fetch product.status productStatus");
-		String queryString = searchSupport.addSearchConstraints(queryByilder.toString(), search);
-		queryString = pagingSupport.applySorting(queryString, pageRequest);
-		
-		return pagingSupport
-				.applyPaging(currentSession.createQuery(queryString, Product.class), pageRequest)
-				.setProperties(search)
-				.getResultList();
-	}
-
 	public Long getProductsCountByProjectId(int projectId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -135,16 +123,19 @@ public class ProductDaoImpl {
 		return theQuery.getSingleResult();
 	}
 
-	public Long countAll() {
+	public int count(ProductSearch search) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select count(p.id) from Product p ");
+		queryBuilder.append("select count(product.id) from Product product ")
+					.append(" join product.project project ")
+					.append(" join product.status productStatus ");
+		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
 		
-		Query<Long> theQuery = currentSession
-				.createQuery(queryBuilder.toString(), Long.class);
-		
-		return theQuery.getSingleResult();
+		Long count = currentSession.createQuery(queryString, Long.class)
+							.setProperties(search)
+							.getSingleResult();
+		return count == null ? 0 : count.intValue();
 	}
 
 }

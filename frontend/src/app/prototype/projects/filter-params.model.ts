@@ -1,8 +1,9 @@
 export class FilterParams {
 
-    fromDate: Date = null;
-    toDate: Date = null;
-    statusId: number = null;
+    fromDate: Date;
+    toDate: Date;
+    statusId: number;
+    projectName: String;
 
     constructor() {}
 }

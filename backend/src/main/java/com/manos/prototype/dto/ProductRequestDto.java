@@ -6,10 +6,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ProductRequestDto {
-
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
-	private String date;
 	
 	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
@@ -36,29 +32,7 @@ public class ProductRequestDto {
 	@Min(value=1)
 	private int projectId;
 	
-	public ProductRequestDto(@NotNull(message = "is required") @Size(min = 1, message = "is required") String date,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String productName,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String serialNumber,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String description,
-			@NotNull @Min(1) int quantity, @NotNull @Min(1) @Max(3) int statusId, @NotNull @Min(1) int projectId) {
-		this.date = date;
-		this.productName = productName;
-		this.serialNumber = serialNumber;
-		this.description = description;
-		this.quantity = quantity;
-		this.statusId = statusId;
-		this.projectId = projectId;
-	}
-
 	public ProductRequestDto() {}
-	
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
 
 	public String getProductName() {
 		return productName;

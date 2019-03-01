@@ -1,9 +1,14 @@
 export class PageParams {
 
-    field: string = 'date';
-    page: number = 1;
-    pageSize: number = 5;
-    direction: string = 'asc';
+    field: string;
+    page: number;
+    pageSize: number;
+    direction: string;
 
-    constructor() {}
+    constructor() {
+        this.field = 'date';
+        this.page = 1;
+        this.pageSize = 5;
+        this.direction = 'asc';
+    }
 }

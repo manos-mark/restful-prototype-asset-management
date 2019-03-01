@@ -4,6 +4,8 @@ import { Project } from './project.model';
 import { Product } from '../products/product.model';
 import { FilterParams } from './filter-params.model';
 import { PageParams } from './page-params.model';
+import { toHttpParams } from 'src/app/shared/http-params-converter';
+import { Statuses } from '../status.enum';
 
 @Injectable()
 export class ProjectsService {
@@ -40,21 +42,21 @@ export class ProjectsService {
 
     getProjects(pageParams: PageParams,filterParams: FilterParams) {
 
-        // let params = new HttpClient
+        const params = {
+            field: pageParams.field,
+            page: pageParams.page,
+            pageSize: pageParams.pageSize,
+            direction: pageParams.direction,
+            fromDate: filterParams.fromDate,
+            toDate: filterParams.toDate,
+            statusId: filterParams.statusId
+        }
 
         return this.httpClient.get<Project>('api/projects/',  
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
             observe: 'body',
-            
-            params: 
-                            // .set('field', field) 
-                            // .set('page', String(page))
-                            // .set('pageSize', String(pageSize))
-                            // .set('direction', direction)
-                            // .set('dateFrom', String(dateFromFilter)) 
-                            // .set('dateTo', String(dateToFilter)) 
-                            // .set('statusId', String(statusFilter)) 
+            params: toHttpParams(params)
         })
     }
 
@@ -72,7 +74,7 @@ export class ProjectsService {
             projectName: projectName,
             companyName: companyName,
             projectManagerId: projectManagerId,
-            statusId: 2
+            statusId: Statuses.NEW
         },
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),

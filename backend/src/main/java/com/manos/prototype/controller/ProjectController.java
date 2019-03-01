@@ -24,12 +24,12 @@ import com.manos.prototype.dto.ProjectDto;
 import com.manos.prototype.dto.ProjectManagerDto;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
-import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.service.ProductServiceImpl;
 import com.manos.prototype.service.ProjectServiceImpl;
+import com.manos.prototype.vo.ProductVo;
 import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.convert.ConversionService;
 import com.pastelstudios.paging.PageRequest;
@@ -93,7 +93,7 @@ public class ProjectController {
 
 	@GetMapping("/{id}/products")
 	public List<ProductDto> getProducts(@PathVariable("id") int projectId) {
-		List<Product> products = productService.getProductsByProjectId(projectId);
+		List<ProductVo> products = productService.getProductsByProjectId(projectId);
 		return conversionService.convertList(products, ProductDto.class);
 	}
 	
@@ -110,8 +110,8 @@ public class ProjectController {
 
 	@DeleteMapping("/{id}")
 	public void deleteProject(@PathVariable("id") int projectId) {
-		List<Product> products = productService.getProductsByProjectId(projectId);
-		projectService.deleteProject(projectId, products);
+//		List<Product> products = productService.getProductsByProjectId(projectId);
+//		projectService.deleteProject(projectId, products);
 	}
 
 	@PostMapping

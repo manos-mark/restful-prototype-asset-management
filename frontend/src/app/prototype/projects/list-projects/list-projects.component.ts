@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Project } from '../project.model';
 import { ProjectsService } from '../projects.service';
 import { Router } from '@angular/router';
@@ -18,9 +18,9 @@ export class ListProjectsComponent implements OnInit {
     pageParams = new PageParams;
     sortByDateAsc = true;
     sortByProductsCountAsc = true;
+    isMasterChecked: boolean = false;
     projects: Project[] = [];
     totalCount: number;
-    isMasterChecked: boolean;
     selectedProjectsCount = 0;
     pagesArray = [];
     totalPages = this.projects.length / this.pageParams.pageSize;
@@ -29,6 +29,7 @@ export class ListProjectsComponent implements OnInit {
                 private router: Router) {}
 
     ngOnInit() {
+        this.isMasterChecked = false;
         this.projectService.getProjects(this.pageParams, this.filterParams)
                 .subscribe(
                     res => {
@@ -88,19 +89,7 @@ export class ListProjectsComponent implements OnInit {
             selectedStatus = Statuses.FINISHED;
         }
         else if (action == "DELETE") {
-            for (let project of this.projects) {
-                if (project.isChecked) {
-                    this.projectService.deleteProject(project.id).subscribe(
-                        res => {
-                            this.router.navigateByUrl('/', {skipLocationChange: true})
-                                .then(()=>
-                                    this.router.navigate(['prototype/projects/'])
-                                );
-                        }
-                    )
-                }
-            }
-            return;
+            selectedStatus = null;
         } 
         else {
             return;
@@ -109,10 +98,9 @@ export class ListProjectsComponent implements OnInit {
         this.changeStatus(selectedStatus)
             .subscribe(
                 dataArray => {
-                    this.router.navigateByUrl('/', {skipLocationChange: true})
-                        .then(()=>
-                            this.router.navigate(['prototype/projects/'])
-                        );
+                    this.projects = new Array();
+                    this.isMasterChecked = false;
+                    this.ngOnInit();
                 },
                 error => console.log(error)
             );
@@ -124,8 +112,15 @@ export class ListProjectsComponent implements OnInit {
         this.projects.forEach(
             (project) => {
                 if ( project.isChecked) {
-                    project.status.id = selectedStatus;
-                    observables.push(this.projectService.updateProject(project));
+                    // delete
+                    if (selectedStatus == null) {
+                        observables.push(this.projectService.deleteProject(project.id));
+                    }
+                    // change status
+                    else {
+                        project.status.id = selectedStatus;
+                        observables.push(this.projectService.updateProject(project));
+                    }
                 }
             }
         )
@@ -190,8 +185,8 @@ export class ListProjectsComponent implements OnInit {
 
     applyFilters(statusId: number, dateFrom: Date, dateTo: Date) {
         
-        this.filterParams.fromDate = dateFrom;//.toLocaleString('en-GB');
-        this.filterParams.toDate = dateTo;//.toLocaleString('en-GB');
+        this.filterParams.fromDate = dateFrom;
+        this.filterParams.toDate = dateTo;
 
         if(statusId >= 1 && statusId <=3) {
             this.projects = new Array();
@@ -202,6 +197,13 @@ export class ListProjectsComponent implements OnInit {
             this.filterParams.statusId = null;
             this.ngOnInit();
         }
+    }
+
+    clearFilters() {
+        this.router.navigateByUrl('/', {skipLocationChange: true})
+            .then(()=>
+                this.router.navigate(['prototype/projects/'])
+            );
     }
 
 }

@@ -1,5 +1,6 @@
 package com.manos.prototype.converter;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import com.manos.prototype.controller.params.ProductFilterParams;
@@ -12,11 +13,7 @@ public class ProductFilterParamsToProjectSearch implements Converter<ProductFilt
 	@Override
 	public ProductSearch convert(ProductFilterParams from) {
 		ProductSearch productSearch = new ProductSearch();
-		
-		productSearch.setStatusIdSearchConstraint(from.getStatusId());
-		
-		productSearch.setDateRangeSearchConstraint(from.getDateFrom(), from.getDateTo());
-		
+		BeanUtils.copyProperties(from,productSearch);
 		return productSearch;
 	}
 
