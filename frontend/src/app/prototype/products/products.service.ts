@@ -43,46 +43,35 @@ export class ProductsService {
         })
     }
 
-    updateProduct(product, pictures) {
-        return this.httpClient.put<any>('api/products/' + product.id,
-        {
-            productName: product.productName,
-            serialNumber: product.serialNumber,
-            description: product.description,
-            quantity: product.quantity,
-            statusId: Statuses.NEW,
-            projectId: product.projectId,
-            pictures: product.pictures,
-            thumbPictureId: product.thumbPictureId
-        },
-        {
-            headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
-            observe: 'response'
-        })
-    }
-
-    // test(productPicture, file) {
-    //     var fd = new FormData();
-    //     fd.append('file', file);
-    //     fd.append('productPicture', new Blob([JSON.stringify(productPicture)], {
-    //         type: "application/json"
-    //     }));
-    //     return this.httpClient.post<any>('api/test', 
-    //         fd,
-    //         {
-    //             observe: 'body'
-    //         }
-    //     )
-    // }
-
-    addProduct(productRequestDto, files) {
+    updateProduct(productRequestDto, files, productId) {
         let formData = new FormData();
+
         files.forEach((element) => {
             formData.append('pictures', element.file)
         });
+
         formData.append('productRequestDto', new Blob([JSON.stringify(productRequestDto)], {
             type: "application/json"
         }));
+
+        return this.httpClient.put<any>('api/products/' + productId, formData,
+            {
+                observe: 'body'
+            }
+        )
+    }
+
+    addProduct(productRequestDto, files) {
+        let formData = new FormData();
+
+        files.forEach((element) => {
+            formData.append('pictures', element.file)
+        });
+
+        formData.append('productRequestDto', new Blob([JSON.stringify(productRequestDto)], {
+            type: "application/json"
+        }));
+        
         return this.httpClient.post<any>('api/products', formData,
             {
                 observe: 'body'

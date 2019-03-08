@@ -106,7 +106,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
             statusId: this.statusId.value,
             projectId: this.project.value,
             description: this.description.value,
-            thumbPictureIndex: this.thumb.value+1
+            thumbPictureIndex: this.thumb.value
         });
         console.log(tempProduct, this.pictures)
 
@@ -121,7 +121,14 @@ export class EditProductComponent implements OnInit, OnDestroy {
     }
 
     updateProduct(product) {
-        this.productService.updateProduct(product, this.pictures)
+        let tempPictures = [];
+        this.pictures.forEach(picture => {
+            if (!picture.id) {
+                tempPictures.push(picture);
+            }
+        })
+
+        this.productService.updateProduct(product, tempPictures, this.product.id)
             .subscribe(
                 res => {
                     // this.activityService.addActivity()

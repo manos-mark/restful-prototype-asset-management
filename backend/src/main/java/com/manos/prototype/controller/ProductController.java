@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.manos.prototype.controller.params.ProductFilterParams;
 import com.manos.prototype.controller.params.ProductOrderAndPageParams;
 import com.manos.prototype.dto.PageResultDto;
+import com.manos.prototype.dto.PictureTypeRequestDto;
 import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProductPictureDto;
 import com.manos.prototype.dto.ProductRequestDto;
@@ -81,7 +82,15 @@ public class ProductController {
 
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void updateProduct(@PathVariable("id") int productId, 
-			@RequestPart ProductRequestDto productRequestDto, @RequestPart List<MultipartFile> pictures) {
+			@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
+			@RequestPart("pictures") List<MultipartFile> pictures) {
+		
+		Product product = conversionService.convert(productRequestDto, Product.class);
+
+		List<ProductPicture> existingPictures = product.getPictures();
+		
+		List<ProductPicture> newPictures = conversionService.convertList(pictures, ProductPicture.class);
+		
 		productService.updateProduct(productRequestDto, productId);
 	}
 
