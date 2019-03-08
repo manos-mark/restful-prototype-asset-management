@@ -8,7 +8,6 @@ import { EditProjectComponent } from './projects/edit-project/edit-project.compo
 import { ListProjectsComponent } from './projects/list-projects/list-projects.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { PrototypeRoutingModule } from './prototype-routing.module';
-import { ProductPictureComponent } from './products/edit-product/product-picture/product-picture.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -18,8 +17,7 @@ import { SharedModule } from '../shared/shared.module';
         EditProjectComponent,
         EditProductComponent,
         ListProjectsComponent,
-        ListProductsComponent,
-        ProductPictureComponent
+        ListProductsComponent
     ],
     imports: [
         CommonModule,

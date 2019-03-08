@@ -6,6 +6,7 @@ import { PageParams } from '../../projects/page-params.model';
 import { Router } from '@angular/router';
 import { Statuses } from '../../status.enum';
 import { Observable, forkJoin } from 'rxjs';
+import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
 
 @Component({
   selector: 'app-list-products',
@@ -14,6 +15,7 @@ import { Observable, forkJoin } from 'rxjs';
 })
 export class ListProductsComponent implements OnInit {
     products: Product[] = [];
+    pictures: File[] = [];
     projectsNames: string[] = [];
     filterParams = new FilterParams;
     pageParams = new PageParams;
@@ -26,7 +28,8 @@ export class ListProductsComponent implements OnInit {
     totalPages = this.products.length / this.pageParams.pageSize;
   
     constructor(private productService: ProductsService,
-                private router: Router) { }
+                private router: Router,
+                private carouselService: ImageCarouselService) { }
 
     ngOnInit() {
         this.isMasterChecked = false;
@@ -216,12 +219,18 @@ export class ListProductsComponent implements OnInit {
             );
     }
     
-    //   getProductPictures() {
-    //     this.productService.getPicturesByProductId(this.product.id)
-    //         .subscribe(
-    //             res => {this.pictures = res; console.log(this.pictures)},
-    //             error => console.log(error)
-    //         );
-    //   }
+    getProductPictures(productId: number) {
+        this.productService.getPicturesByProductId(productId)
+            .subscribe(
+                res => {
+                    res.map( picture => {
+                        this.pictures.push(picture);
+                    })
+                    this.carouselService.pictures = this.pictures;
+                    this.carouselService.activate = true;
+                },
+                error => console.log(error)
+            );
+    }
 
 }

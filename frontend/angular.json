@@ -23,7 +23,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+                "src/styles.css"
             ],
             "scripts": []
           },
@@ -80,7 +80,8 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.css"
+                "./node_modules/ngx-lightbox/lightbox.css",
+                "src/styles.css"
             ],
             "scripts": [],
             "assets": [

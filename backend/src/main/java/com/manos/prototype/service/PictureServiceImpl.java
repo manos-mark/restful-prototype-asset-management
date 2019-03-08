@@ -25,7 +25,7 @@ public class PictureServiceImpl {
 	public List<ProductPicture> getPicturesByProductId(int productId) {
 		Product product = productDao.getProduct(productId);
 		if (product == null) {
-			throw new EntityNotFoundException("Product id not found - " + productId);
+			throw new EntityNotFoundException(Product.class, productId);
 		}
 		return pictureDao.getPicturesByProductId(productId);
 	}
@@ -34,7 +34,7 @@ public class PictureServiceImpl {
 	public ProductPicture getPicture(int id) {
 		ProductPicture picture = pictureDao.getPicture(id);
 		if (picture == null) {
-			throw new EntityNotFoundException("Picture id not found - " + id);
+			throw new EntityNotFoundException(ProductPicture.class, id);
 		}
 		return picture;
 	}
@@ -42,20 +42,13 @@ public class PictureServiceImpl {
 	@Transactional
 	public void savePicture(ProductPicture pic) {
 		if (pic.getPicture() == null) {
-			throw new EntityNotFoundException("Picture cannot be null");
+			throw new EntityNotFoundException(ProductPicture.class);
 		}
 		else if (pic.getProduct() == null) {
-			throw new EntityNotFoundException("Product cannot be null");
+			throw new EntityNotFoundException(ProductPicture.class);
 		}
 		else {
-			// if id is not 0 then update
-			if (pic.getId() != 0) {
-				pictureDao.updatePicture(pic);			
-			} 
-			// if id is 0 then add new
-			else {
-				pictureDao.savePicture(pic);			
-			}
+			pictureDao.savePicture(pic);			
 		}
 	}
 }

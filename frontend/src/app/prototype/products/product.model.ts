@@ -12,7 +12,8 @@ export class Product {
     public projectName: string;
     public picturesCount: number;
     public thumbPictureId: number;
-    public isChecked: boolean; 
+    public isChecked: boolean;
+    public pictures: []; 
 
     constructor(dto:any) {
         this.id = dto.id;

@@ -4,10 +4,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ProjectsService } from '../../projects/projects.service';
 import { Project } from '../../projects/project.model';
 import { ProductsService } from '../products.service';
-import { ProductPicture } from '../product-picture.model';
 import { Product } from '../product.model';
 import { Statuses } from '../../status.enum';
 import { Router, ActivatedRoute } from '@angular/router';
+import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -16,14 +16,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class EditProductComponent implements OnInit, OnDestroy {
     product: Product;
-    windowPop = false;
-    windowPopFail = false;
     projects: Project[];
-    picturesList: ProductPicture[] = [];
-    // eventFileList: FileList;
+    pictures: File[] = [];
     imageSrc: string[] = [];
     i = 0;
-    // tempPicture: File = null;
 
     productForm = new FormGroup({
         productName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
@@ -42,7 +38,8 @@ export class EditProductComponent implements OnInit, OnDestroy {
         private projectService: ProjectsService,
         private productService: ProductsService,
         private router: Router,
-        private route: ActivatedRoute) { }
+        private route: ActivatedRoute,
+        private windowPopService: WindowPopService) { }
 
     ngOnInit() {
         // when add new project status always will be new and disabled
@@ -55,20 +52,23 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         // on edit mode init the fields        
-        if (this.productService.editMode) {
+        if (this.editMode) {
             this.route.queryParams.subscribe(
                 res => {
                     this.productService.getProductById(res.productId).subscribe(
                         res => {
-                            this.product = new Product(res);
+                            this.product = new Product(res.body);
                             this.productForm.controls.productName.setValue(this.product.productName);
                             this.productForm.controls.serialNumber.setValue(this.product.serialNumber);
                             this.productForm.controls.quantity.setValue(this.product.quantity);
                             this.productForm.controls.statusId.setValue(this.product.status.id);
                             this.productForm.controls.project.setValue(this.product.projectId);
                             this.productForm.controls.description.setValue(this.product.description);
+                            this.getProductPictures(this.product.id);
                             // this.productForm.controls.picture.setValue(this.product.picture);
-                            // this.productForm.controls.thumbFormGroup.controls.thumb
+                            this.productForm.controls.thumbFormGroup.get('thumb').setValue(this.product.thumbPictureId);
+                            // console.log(this.productForm.controls.thumbFormGroup.get('thumb'))
+                            // console.log(this.product.thumbPictureId)
                         },
                         error => console.log(error)
                     )
@@ -76,6 +76,105 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         }
+    }
+
+    onUploadPicture(eventFileList: FileList): void {
+        // preview images
+        if (eventFileList && eventFileList[0]) {
+            const file = eventFileList[0];
+    
+            const reader = new FileReader();
+            reader.onload = e => this.imageSrc.push(reader.result.toString());
+            reader.readAsDataURL(file);
+        }
+        this.pictures.push(eventFileList.item(0))
+    }
+
+    onSelectThumb(event) {
+        // console.log(event)
+    }
+
+    onAddSave() {
+        let tempProduct = new Object({
+            productName: this.productName.value,
+            serialNumber: this.serialNumber.value,
+            quantity: this.quantity.value,
+            statusId: this.statusId.value,
+            projectId: this.project.value,
+            description: this.description.value,
+            thumbPictureId: this.thumb.value
+        });
+        console.log(tempProduct, this.pictures)
+
+        // on edit mode update
+        if (this.editMode) {
+            this.updateProduct(tempProduct);
+        }
+        // else add new product
+        else {
+            this.saveProduct(tempProduct);
+        }
+    }
+
+    updateProduct(product) {
+        this.productService.updateProduct(product, this.pictures)
+            .subscribe(
+                res => {
+                    // this.activityService.addActivity()
+                    //     .subscribe(
+                    //         res => this.router.navigate(['/prototype/projects']),
+                    //         error => console.log(error)
+                    //     )
+                },
+                error => {
+                    console.log(error)
+                    this.windowPopService.title = "Update product Failed";
+                    this.windowPopService.context = "Your request is not successful!";
+                    this.windowPopService.details = "Try again with different credentials.";
+                    this.windowPopService.activate = true;
+                }
+            )
+    }
+    
+    saveProduct(product) {
+        this.productService.addProduct(product, this.pictures)
+            .subscribe(
+                res => {
+                    // this.activityService.addActivity()
+                    //     .subscribe(
+                    //         res => this.router.navigate(['/prototype/projects']),
+                    //         error => console.log(error)
+                    //     )
+                },
+                error => {
+                    console.log(error)
+                    this.windowPopService.title = "Add new product Failed";
+                    this.windowPopService.context = "Your request is not successful!";
+                    this.windowPopService.details = "Try again with different credentials.";
+                    this.windowPopService.activate = true;
+                }
+            )
+    }
+
+    getProductPictures(productId: number) {
+        this.productService.getPicturesByProductId(productId)
+            .subscribe(
+                res => {
+                    res.map( picture => {
+                        this.pictures.push(picture);
+                    })
+                },
+                error => console.log(error)
+            );
+    }
+
+    onCancel() {
+        this.productForm.reset();
+        this.router.navigate(['prototype','products']);
+    }
+
+    ngOnDestroy() {
+        this.productService.editMode = false;
     }
 
     convertBytesToMegabytes(bytes,decimals) {
@@ -88,101 +187,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
-    readURL(eventFileList: FileList): void {
-        // preview images
-        if (eventFileList && eventFileList[0]) {
-            const file = eventFileList[0];
-    
-            const reader = new FileReader();
-            reader.onload = e => this.imageSrc.push(reader.result.toString());
-            reader.readAsDataURL(file);
-        }
-        
-        let tempPicture = new ProductPicture();
-        tempPicture.id = this.i++;
-        tempPicture.file = eventFileList.item(0);
-        tempPicture.productId = 0
-        tempPicture.thumb = false;
-        this.picturesList.push(tempPicture)
-    }
-
-    onAddSave() {
-        // if (this.editMode == false) {
-        //     //save the product first
-        //     this.productService.addProduct(this.productName.value, this.serialNumber.value, 
-        //         this.description.value, this.quantity.value, this.project.value)
-        //         .subscribe(
-        //             res => {
-        //                 let productId = res;
-        //                 //then add activity
-        //                 this.activityService.addActivity('5').subscribe();
-        //                 //set the thumb pic
-        //                 this.picturesList[this.thumb.value].thumb = true;
-        //                 //then save the pictures
-        //                 // this.picturesList.forEach(
-        //                 //     (pic) => this.productService.addPicture(productId, pic)
-        //                 //                 .subscribe()
-        //                 // )
-        //             },
-        //             error => console.log(error)
-        //         )
-        // }
-
-        let tempProduct = new Product({
-            productName: this.productName.value,
-            serialNumber: this.serialNumber.value,
-            quantity: this.quantity.value,
-            statusId: this.statusId.value,
-            project: this.project.value,
-            description: this.description.value
-        });
-        // on edit mode update
-        if (this.productService.editMode) {
-            this.productService.updateProduct(tempProduct)
-                    .subscribe(
-                        res => {
-                            // this.activityService.addActivity(Statuses.IN_PROGRESS.toString())
-                            //     .subscribe(
-                            //         res => this.router.navigate(['/prototype/projects']),
-                            //         error => console.log(error)
-                            //     )
-                        },
-                        error => {
-                            console.log(error)
-                            this.windowPop = true;
-                            this.windowPopFail = true;
-                        }
-                    )
-        }
-        // else add new product
-        else {
-            this.productService.addProduct(tempProduct)
-                    .subscribe(
-                        res => {
-                            // this.activityService.addActivity(Statuses.NEW.toString())
-                            //     .subscribe(
-                            //         res => this.router.navigate(['/prototype/projects']),
-                            //         error => console.log(error)
-                            //     )
-                        },
-                        error => {
-                            console.log(error)
-                            this.windowPop = true;
-                            this.windowPopFail = true;
-                        }
-                    )
-        }
-    }
-
-    onCancel() {
-        this.productForm.reset();
-        this.router.navigate(['prototype','products']);
-    }
-
-    ngOnDestroy() {
-        this.productService.editMode = false;
-    }
-
     get productName() { return this.productForm.get('productName') }
     get serialNumber() { return this.productForm.get('serialNumber') }
     get quantity() { return this.productForm.get('quantity') }
@@ -192,4 +196,5 @@ export class EditProductComponent implements OnInit, OnDestroy {
     get picture() { return this.productForm.get('picture') }
     get thumbFormGroup() { return this.productForm.get('thumbFormGroup') }
     get thumb() { return this.productForm.get('thumbFormGroup').get('thumb') }
+    get editMode() { return this.productService.editMode }
 }

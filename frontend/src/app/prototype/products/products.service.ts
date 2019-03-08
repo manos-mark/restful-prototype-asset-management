@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Product } from './product.model';
-import { ProductPicture } from './product-picture.model';
 import { PageParams } from '../projects/page-params.model';
 import { FilterParams } from '../projects/filter-params.model';
 import { toHttpParams } from 'src/app/shared/http-params-converter';
@@ -44,7 +43,7 @@ export class ProductsService {
         })
     }
 
-    updateProduct(product: Product) {
+    updateProduct(product, pictures) {
         return this.httpClient.put<any>('api/products/' + product.id,
         {
             productName: product.productName,
@@ -52,27 +51,41 @@ export class ProductsService {
             description: product.description,
             quantity: product.quantity,
             statusId: Statuses.NEW,
-            projectId: product.projectId
+            projectId: product.projectId,
+            pictures: product.pictures,
+            thumbPictureId: product.thumbPictureId
         },
         {
-            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
             observe: 'response'
         })
     }
 
-    addProduct(product: Product) {
-        return this.httpClient.post<any>('api/products', 
+    // test(productPicture, file) {
+    //     var fd = new FormData();
+    //     fd.append('file', file);
+    //     fd.append('productPicture', new Blob([JSON.stringify(productPicture)], {
+    //         type: "application/json"
+    //     }));
+    //     return this.httpClient.post<any>('api/test', 
+    //         fd,
+    //         {
+    //             observe: 'body'
+    //         }
+    //     )
+    // }
+
+    addProduct(productRequestDto, files) {
+        let formData = new FormData();
+        files.forEach((element) => {
+            formData.append('pictures', element)
+        });
+        formData.append('productRequestDto', new Blob([JSON.stringify(productRequestDto)], {
+            type: "application/json"
+        }));
+        return this.httpClient.post<any>('api/products', formData,
             {
-                productName: product.productName,
-                serialNumber: product.serialNumber,
-                description: product.description,
-                quantity: product.quantity,
-                statusId: product.status.id,
-                projectId: product.projectId
-            },
-            {
-                headers: new HttpHeaders().set('Content-Type', 'application/json'),
-                observe: 'body',
+                observe: 'body'
             }
         )
     }
@@ -93,27 +106,11 @@ export class ProductsService {
         })
     }
 
-    // addPicture(productId: number, picture: ProductPicture) {
-    //     return this.httpClient.post<any>('api/products/' + productId + '/pictures',
-    //         {
-    //             productId: productId,
-    //             picture: picture.file,
-    //             thumb: picture.thumb,
-    //             name: picture.file.name, 
-    //             size: picture.file.size
-    //         },
-    //         {
-    //             headers: new HttpHeaders().set('Content-Type', 'application/json'),
-    //             observe: 'body',
-    //         }
-    //     )
-    // }
-
-    // getPicturesByProductId(productId: number) {
-    //     return this.httpClient.get<URL[]>('api/products/' + productId + '/pictures',  
-    //     {
-    //         headers: new HttpHeaders().set('Content-Type', 'image/png, image/jpg, image/gif'),
-    //         observe: 'body'
-    //     })
-    // }
+    getPicturesByProductId(productId: number) {
+        return this.httpClient.get<any>('api/products/' + productId + '/pictures',  
+        {
+            headers: new HttpHeaders().set('Content-Type', 'application/json'),
+            observe: 'body'
+        })
+    }
 }

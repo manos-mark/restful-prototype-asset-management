@@ -1,5 +1,8 @@
 package com.manos.prototype.config;
 
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletRegistration;
+
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -21,5 +24,4 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
 		// TODO Auto-generated method stub
 		return new String[] { "/" };
 	}
-
 }

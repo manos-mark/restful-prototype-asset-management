@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.pastelstudios.convert.ConversionService;
@@ -32,6 +33,13 @@ public class AppConfig {
 		return txManager;
 	}
 
+	@Bean
+	public CommonsMultipartResolver multipartResolver() {
+	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+	    multipartResolver.setMaxUploadSize(12000000);
+	    return multipartResolver;
+	}
+	
 	@Bean
 	public ConversionService conversionService() {
 		return new ConversionServiceImpl();

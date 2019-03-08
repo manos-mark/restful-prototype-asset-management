@@ -1,6 +1,5 @@
 package com.manos.prototype.service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
@@ -55,7 +55,7 @@ public class ProductServiceImpl {
 	public List<ProductVo> getProductsByProjectId(int id) {
 		Project project = projectDao.getProject(id);
 		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + id);
+			throw new EntityNotFoundException(Product.class, id);
 		}
 		
 		List<Product> list = productDao.getProductsByProjectId(id);
@@ -77,41 +77,45 @@ public class ProductServiceImpl {
 	public void deleteProduct(int id) {
 		Product product = productDao.getProduct(id);
 		if (product == null) {
-			throw new EntityNotFoundException("Product id not found - " + id);
+			throw new EntityNotFoundException(Product.class, id);
 		}
 		productDao.deleteProduct(id);
 	}
 
 	@Transactional
-	public void saveProduct(ProductRequestDto dto) {
-		Product product = new Product();
+	public void saveProduct(Product product, List<ProductPicture> pictures) {
 		
-		Project project = projectDao.getProject(dto.getProjectId());
+		// Set the thumb picture for the product
+		int index = product.getThumbPicture().getId() - 1;
+		ProductPicture thumbPicture = pictures.get(index);
+		thumbPicture.setProduct(product);
+		product.setThumbPicture(thumbPicture);
+		
+		// Save the product
+		Project project = projectDao.getProject(product.getProject().getId());
 		if (project == null) {
-			throw new EntityNotFoundException("Save Product: project not found with id - " + dto.getProjectId());
+			throw new EntityNotFoundException(Project.class, product.getProject().getId());
 		}
 		product.setProject(project);
-		product.setCreatedAt(LocalDate.now());
-		product.setDescription(dto.getDescription());
-		product.setProductName(dto.getProductName());
-		product.setQuantity(dto.getQuantity());
-		product.setSerialNumber(dto.getSerialNumber());
-		product.setStatus(new Status(Status.NEW_ID));
-//		product.setThumbPicture(thumbPicture);
+		productDao.saveProduct(product);
 		
-		productDao.saveProduct(product);			
+		// Save the pictures
+		for (ProductPicture picture : pictures) {
+			picture.setProduct(product);
+			pictureDao.savePicture(picture);
+		}
 	}
 	
 	@Transactional
 	public void updateProduct(ProductRequestDto dto, int productId) {
 		Product product = productDao.getProduct(productId);
 		if (product == null) {
-			throw new EntityNotFoundException("Update Product: cannot find product with id - " + productId);
+			throw new EntityNotFoundException(Product.class, productId);
 		}
 		
 		Project project = projectDao.getProject(dto.getProjectId());
 		if (project == null) {
-			throw new EntityNotFoundException("Save Product: project not found with id - " + dto.getProjectId());
+			throw new EntityNotFoundException(Project.class, dto.getProjectId());
 		}
 		product.setProject(project);
 		product.setDescription(dto.getDescription());
@@ -131,7 +135,7 @@ public class ProductServiceImpl {
 	public Product getProduct(int id) {
 		Product product = productDao.getProduct(id);
 		if (product == null) {
-			throw new EntityNotFoundException("Product id not found - " + id);
+			throw new EntityNotFoundException(Product.class, id);
 		}
 		return product;
 	}

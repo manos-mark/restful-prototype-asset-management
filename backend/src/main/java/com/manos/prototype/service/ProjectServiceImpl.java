@@ -57,7 +57,7 @@ public class ProjectServiceImpl {
 	public Project getProject(int id) {
 		Project project = projectDao.getProject(id);
 		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + id);
+			throw new EntityNotFoundException(Project.class, id);
 		}
 		return project;
 	}
@@ -66,7 +66,7 @@ public class ProjectServiceImpl {
 	public void deleteProject(int id, List<Product> products) {
 		Project project  = projectDao.getProject(id);
 		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + id);
+			throw new EntityNotFoundException(Project.class, id);
 		}
 		// should delete first all the products of this project
 		for (Product product : products) {
@@ -81,7 +81,7 @@ public class ProjectServiceImpl {
 		
 		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
 		if (projectManager == null) {
-			throw new EntityNotFoundException("Save Project: projectManager id not found - " + dto.getProjectManagerId());
+			throw new EntityNotFoundException(ProjectManager.class, dto.getProjectManagerId());
 		}
 		project.setCompanyName(dto.getCompanyName());
 		project.setCreatedAt(LocalDate.now());
@@ -97,7 +97,7 @@ public class ProjectServiceImpl {
 		
 		Project project = projectDao.getProject(projectId);
 		if (project == null) {
-			throw new EntityNotFoundException("Update Project: cannot find project with id - " + projectId);
+			throw new EntityNotFoundException(Project.class, projectId);
 		}
 		// den xreiazomai auta ta if giati xrisimopoiw not null sto projectRequestDto
 		if (dto.getCompanyName() != null) {
@@ -114,7 +114,7 @@ public class ProjectServiceImpl {
 		}
 		
 		if (!acceptedStatuses.contains(dto.getStatusId())) {
-			throw new EntityNotFoundException("Save Project: - statusId must be 1, 2 or 3.");
+			throw new EntityNotFoundException(Status.class, dto.getStatusId());
 		}
 		project.setStatus(new Status(dto.getStatusId()));
 	}

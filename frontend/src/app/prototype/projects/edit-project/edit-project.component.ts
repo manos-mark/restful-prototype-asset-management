@@ -9,6 +9,7 @@ import { Statuses, StatusesMap } from '../../status.enum';
 import { ProductsService } from '../../products/products.service';
 import { PageParams } from '../page-params.model';
 import { FilterParams } from '../filter-params.model';
+import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -22,8 +23,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     }[];
     project: Project;
     products: Product[] = [];
-    windowPop = false;
-    windowPopFail = false;
     pageParams = new PageParams();
     filterParams = new FilterParams();
 
@@ -39,7 +38,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 private projectService: ProjectsService,
                 private router: Router,
                 private route: ActivatedRoute,
-                private productService: ProductsService) { }
+                private productService: ProductsService,
+                private windowPopService: WindowPopService) { }
 
     ngOnInit() {
         // when add new project status always will be new and disabled
@@ -104,8 +104,10 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                         },
                         error => {
                             console.log(error)
-                            this.windowPop = true;
-                            this.windowPopFail = true;
+                            this.windowPopService.title = "Update project Failed";
+                            this.windowPopService.context = "Your request is not successful!";
+                            this.windowPopService.details = "Try again with different credentials.";
+                            this.windowPopService.activate = true;
                         }
                     )
         }
@@ -123,8 +125,10 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                         },
                         error => {
                             console.log(error)
-                            this.windowPop = true;
-                            this.windowPopFail = true;
+                            this.windowPopService.title = "Add new project Failed";
+                            this.windowPopService.context = "Your request is not successful!";
+                            this.windowPopService.details = "Try again with different credentials.";
+                            this.windowPopService.activate = true;
                         }
                     )
         }

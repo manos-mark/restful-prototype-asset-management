@@ -1,7 +1,3 @@
-<app-window-pop
-  [(active)]="windowPop"
-  [windowPopFail]="windowPopFail"
-></app-window-pop>
 <div class="heading">
     <div class="pageTtl">
       <i class="products"></i>
@@ -92,15 +88,15 @@
                 type="file" 
                 formControlName="picture" 
                 accept="image/gif, .jpg, image/png" 
-                (change)="readURL($event.target.files);"/>
+                (change)="onUploadPicture($event.target.files);"/>
           </div>
           <span class="error" *ngIf="picture.invalid && (picture.dirty || picture.touched)">Max upload file size: 12 MB.</span>
           <span class="error" *ngIf="picture.valid && thumb.invalid">Select one picture as thumb.</span>
         </div>
-        <div class="list" *ngIf="picturesList.length == 0">
+        <div class="list" *ngIf="pictures.length == 0">
           <p>NO PICTURES</p>
         </div>
-        <div class="list" *ngIf="picturesList.length != 0">
+        <div class="list" *ngIf="pictures.length != 0">
             <div class="tableWrp">
                 <div class="table inner">
                     <div class="header">
@@ -113,18 +109,19 @@
                     </div>
                     <div class="content">
                         <div [formGroup]="thumbFormGroup">
-                            <div class="row" *ngFor="let picture of picturesList; let i = index">
+                            <div class="row" *ngFor="let picture of pictures; let i = index">
                                 <span class="thumb">
-                                    <input type="radio" [value]="i" formControlName="thumb">
+                                    <input type="radio" [value]="i+1" formControlName="thumb" (click)="onSelectThumb($event)">
                                 </span>
                                 <div class="picture">
                                     <a class="picWrp">
-                                        <img [src]="imageSrc[i] || 'http://placehold.it/180'">
+                                        <img *ngIf="!editMode" [src]="imageSrc[i]">
+                                        <img *ngIf="editMode" [src]="'api/product-pictures/' + picture.id">
                                         <var class="zoom"><span></span></var>
                                     </a>
                                 </div>
-                                <span class="fileName">{{ picture.file.name }}</span>
-                                <span class="fileSize">{{ convertBytesToMegabytes(picture.file.size) }}</span>
+                                <span class="fileName">{{ picture.name }}</span>
+                                <span class="fileSize">{{ convertBytesToMegabytes(picture.size) }}</span>
                                 <span class="download">
                                     <a class="greenBtn"><i></i></a>
                                 </span>

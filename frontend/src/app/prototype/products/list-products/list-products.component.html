@@ -117,7 +117,7 @@
                 <a class="picWrp">
                 <img [src]="'api/product-pictures/' + product.thumbPictureId"/>  
                 <i>{{ product.picturesCount }}</i>
-                <var class="zoom" (click)="getProductPictures()"><span></span></var>
+                <var class="zoom" (click)="getProductPictures(product.id)"><span></span></var>
                 </a>
             </div>
             <div class="status">

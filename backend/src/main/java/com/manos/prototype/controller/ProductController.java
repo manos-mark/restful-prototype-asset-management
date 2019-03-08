@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.manos.prototype.controller.params.ProductFilterParams;
 import com.manos.prototype.controller.params.ProductOrderAndPageParams;
@@ -22,6 +24,7 @@ import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProductPictureDto;
 import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
+import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.service.PictureServiceImpl;
@@ -76,18 +79,23 @@ public class ProductController {
 		productService.deleteProduct(productId);
 	}
 
-	@PutMapping("/{id}")
-	public void updateProduct(@PathVariable("id") int productId, @RequestBody ProductRequestDto productRequestDto) {
+	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void updateProduct(@PathVariable("id") int productId, 
+			@RequestPart ProductRequestDto productRequestDto, @RequestPart List<MultipartFile> pictures) {
 		productService.updateProduct(productRequestDto, productId);
 	}
 
-	@PostMapping
-	public void addProduct(@RequestBody ProductRequestDto productRequestDto) {
-		productService.saveProduct(productRequestDto);
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void addProduct(@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
+			@RequestPart("pictures") List<MultipartFile> pictures) {
+		
+		Product product = conversionService.convert(productRequestDto, Product.class);
+		List<ProductPicture> productPictures = conversionService.convertList(pictures, ProductPicture.class);
+		
+		productService.saveProduct(product, productPictures);
 	}
 	
-	@GetMapping(value = "/{id}/pictures", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE,
-			MediaType.IMAGE_GIF_VALUE })
+	@GetMapping(value = "/{id}/pictures")
 	public List<ProductPictureDto> getPicturesByProductId(@PathVariable("id") int productId) {
 		List<ProductPicture> pictures = pictureService.getPicturesByProductId(productId);
 		return conversionService.convertList(pictures, ProductPictureDto.class);

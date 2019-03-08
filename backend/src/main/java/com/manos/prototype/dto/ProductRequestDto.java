@@ -32,6 +32,10 @@ public class ProductRequestDto {
 	@Min(value=1)
 	private int projectId;
 	
+	@NotNull
+	@Min(value=1)
+	private int thumbPictureId;
+	
 	public ProductRequestDto() {}
 
 	public String getProductName() {
@@ -80,5 +84,13 @@ public class ProductRequestDto {
 
 	public void setProjectId(int projectId) {
 		this.projectId = projectId;
+	}
+
+	public int getThumbPictureId() {
+		return thumbPictureId;
+	}
+
+	public void setThumbPictureId(int thumbPictureId) {
+		this.thumbPictureId = thumbPictureId;
 	}
 }

@@ -1,32 +1,16 @@
 package com.manos.prototype.exception;
 
-public class EntityNotFoundException extends RuntimeException {
+import java.io.Serializable;
 
-	/**
-	 * 
-	 */
+public class EntityNotFoundException extends ApplicationException {
+
 	private static final long serialVersionUID = 1L;
 
-	public EntityNotFoundException() {
-		super();
-	}
-
-	public EntityNotFoundException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public EntityNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public EntityNotFoundException(String message) {
-		super(message);
-	}
-
-	public EntityNotFoundException(Throwable cause) {
-		super(cause);
+	public EntityNotFoundException(Class<?> entityType, Serializable id) {
+		super("Could not find entity of type " + entityType.getSimpleName() + " with id=" + id);
 	}
 	
-	
+	public EntityNotFoundException(Class<?> entityType) {
+		super("Could not find entity of type " + entityType.getSimpleName());
+	}
 }

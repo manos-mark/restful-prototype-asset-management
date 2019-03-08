@@ -13,7 +13,6 @@ public class ProductPictureToProductPictureDtoConverter implements Converter<Pro
 	public ProductPictureDto convert(ProductPicture from) {
 		ProductPictureDto dto = new ProductPictureDto();
 		dto.setId(from.getId());
-		dto.setPicture(from.getPicture());
 		dto.setProductId(from.getProduct().getId());
 		dto.setName(from.getName());
 		dto.setSize(from.getSize());

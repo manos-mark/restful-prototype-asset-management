@@ -17,6 +17,9 @@ import { ProjectsService } from './prototype/projects/projects.service';
 import { ProductsService } from './prototype/products/products.service';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from './shared/shared.module';
+import { WindowPopService } from './shared/window-pop/window-pop.service';
+import { ImageCarouselService } from './shared/image-carousel/image-carousel.service';
+import { LightboxModule } from 'ngx-lightbox';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,8 @@ import { SharedModule } from './shared/shared.module';
     PrototypeModule,
     ProfileModule,
     SharedModule,
-    AppRoutingModule
+    AppRoutingModule,
+    LightboxModule
   ],
   providers: [
     AuthService, 
@@ -41,7 +45,9 @@ import { SharedModule } from './shared/shared.module';
     AuthGuard, 
     TitleCasePipe, 
     ProjectsService,
-    ProductsService
+    ProductsService,
+    WindowPopService,
+    ImageCarouselService
   ],
   bootstrap: [AppComponent]
 })

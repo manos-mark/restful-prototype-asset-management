@@ -1,5 +1,10 @@
 <div class="wrapper">
-    <!-- <app-window-pop [active]="this.authService.windowPop"></app-window-pop> -->
+    <app-window-pop 
+        [(active)]="this.windowPopService.activate" 
+    ></app-window-pop>
+    <app-image-carousel
+        [(active)]="this.carouselService.activate"
+    ></app-image-carousel>
     <div *ngIf="this.authService.isAuthenticated()">
         <app-header></app-header>
         <div class="contentWrapper">
