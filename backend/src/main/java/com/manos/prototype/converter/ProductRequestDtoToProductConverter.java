@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.entity.Product;
-import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
 import com.pastelstudios.convert.Converter;
@@ -26,7 +25,6 @@ public class ProductRequestDtoToProductConverter implements Converter<ProductReq
 		entity.setSerialNumber(dto.getSerialNumber());
 		entity.setStatus(new Status(Status.NEW_ID));
 		entity.setProject(new Project(dto.getProjectId()));
-		entity.setThumbPicture(new ProductPicture(dto.getThumbPictureId()));
 		
 		return entity;
 	}

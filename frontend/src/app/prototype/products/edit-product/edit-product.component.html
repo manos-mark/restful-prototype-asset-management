@@ -76,7 +76,7 @@
         <textarea rows="8" cols="110" formControlName="description"></textarea>
         <span class="error" *ngIf="description.invalid && (description.dirty || description.touched)">Incorrect value</span>
       </div>
-      <div class="attachedProducts" [ngClass]="{'error': picture.invalid && (picture.dirty || picture.touched)}">
+      <div class="attachedProducts" [ngClass]="{'error': uploadPicture.invalid && (uploadPicture.dirty || uploadPicture.touched)}">
         <div class="header">
           <div class="picture">
             <i class="picture"></i>
@@ -86,12 +86,12 @@
             <a class="grayDarkBtn">Upload</a>
             <input 
                 type="file" 
-                formControlName="picture" 
+                formControlName="uploadPicture" 
                 accept="image/gif, .jpg, image/png" 
                 (change)="onUploadPicture($event.target.files);"/>
           </div>
-          <span class="error" *ngIf="picture.invalid && (picture.dirty || picture.touched)">Max upload file size: 12 MB.</span>
-          <span class="error" *ngIf="picture.valid && thumb.invalid">Select one picture as thumb.</span>
+          <span class="error" *ngIf="uploadPicture.invalid && (uploadPicture.dirty || uploadPicture.touched)">Max upload file size: 12 MB.</span>
+          <span class="error" *ngIf="uploadPicture.valid && thumb.invalid">Select one picture as thumb.</span>
         </div>
         <div class="list" *ngIf="pictures.length == 0">
           <p>NO PICTURES</p>
@@ -109,14 +109,14 @@
                     </div>
                     <div class="content">
                         <div [formGroup]="thumbFormGroup">
-                            <div class="row" *ngFor="let picture of pictures; let i = index">
+                            <div class="row" *ngFor="let picture of pictures, let i=index">
                                 <span class="thumb">
-                                    <input type="radio" [value]="i+1" formControlName="thumb" (click)="onSelectThumb($event)">
+                                    <input type="radio" [value]="i" formControlName="thumb" (click)="onSelectThumb($event)">
                                 </span>
                                 <div class="picture">
                                     <a class="picWrp">
-                                        <img *ngIf="!editMode" [src]="imageSrc[i]">
-                                        <img *ngIf="editMode" [src]="'api/product-pictures/' + picture.id">
+                                        <img *ngIf="picture.file" [src]="imageSrc[i]">
+                                        <img *ngIf="!picture.file" [src]="'api/product-pictures/' + picture.id">
                                         <var class="zoom"><span></span></var>
                                     </a>
                                 </div>

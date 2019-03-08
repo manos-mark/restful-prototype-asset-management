@@ -92,7 +92,7 @@ public class ProductController {
 		Product product = conversionService.convert(productRequestDto, Product.class);
 		List<ProductPicture> productPictures = conversionService.convertList(pictures, ProductPicture.class);
 		
-		productService.saveProduct(product, productPictures);
+		productService.saveProduct(product, productPictures, productRequestDto.getThumbPictureIndex());
 	}
 	
 	@GetMapping(value = "/{id}/pictures")

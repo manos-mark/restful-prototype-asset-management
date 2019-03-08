@@ -83,11 +83,9 @@ public class ProductServiceImpl {
 	}
 
 	@Transactional
-	public void saveProduct(Product product, List<ProductPicture> pictures) {
-		
+	public void saveProduct(Product product, List<ProductPicture> pictures, int thumbIndex) {
 		// Set the thumb picture for the product
-		int index = product.getThumbPicture().getId() - 1;
-		ProductPicture thumbPicture = pictures.get(index);
+		ProductPicture thumbPicture = pictures.get(thumbIndex);
 		thumbPicture.setProduct(product);
 		product.setThumbPicture(thumbPicture);
 		

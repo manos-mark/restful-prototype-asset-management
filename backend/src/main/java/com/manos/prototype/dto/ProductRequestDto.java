@@ -34,7 +34,7 @@ public class ProductRequestDto {
 	
 	@NotNull
 	@Min(value=1)
-	private int thumbPictureId;
+	private int thumbPictureIndex;
 	
 	public ProductRequestDto() {}
 
@@ -86,11 +86,11 @@ public class ProductRequestDto {
 		this.projectId = projectId;
 	}
 
-	public int getThumbPictureId() {
-		return thumbPictureId;
+	public int getThumbPictureIndex() {
+		return thumbPictureIndex;
 	}
 
-	public void setThumbPictureId(int thumbPictureId) {
-		this.thumbPictureId = thumbPictureId;
+	public void setThumbPictureIndex(int thumbPictureIndex) {
+		this.thumbPictureIndex = thumbPictureIndex;
 	}
 }

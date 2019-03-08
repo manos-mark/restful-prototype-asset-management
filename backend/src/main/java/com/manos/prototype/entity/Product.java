@@ -1,6 +1,8 @@
 package com.manos.prototype.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -53,6 +56,9 @@ public class Product {
 			inverseJoinColumns = @JoinColumn(name = "thumb_picture_id")
 		)
 	private ProductPicture thumbPicture;
+	
+	@OneToMany(mappedBy = "product")
+	private List<ProductPicture> pictures = new ArrayList<>();
 
 	public Product() {}
 
@@ -130,5 +136,13 @@ public class Product {
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	public List<ProductPicture> getPictures() {
+		return pictures;
+	}
+
+	public void setPictures(List<ProductPicture> pictures) {
+		this.pictures = pictures;
 	}
 }

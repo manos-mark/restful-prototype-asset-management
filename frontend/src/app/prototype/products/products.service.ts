@@ -78,7 +78,7 @@ export class ProductsService {
     addProduct(productRequestDto, files) {
         let formData = new FormData();
         files.forEach((element) => {
-            formData.append('pictures', element)
+            formData.append('pictures', element.file)
         });
         formData.append('productRequestDto', new Blob([JSON.stringify(productRequestDto)], {
             type: "application/json"

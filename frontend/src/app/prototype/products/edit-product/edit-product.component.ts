@@ -8,6 +8,7 @@ import { Product } from '../product.model';
 import { Statuses } from '../../status.enum';
 import { Router, ActivatedRoute } from '@angular/router';
 import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
+import { ProductPicture } from '../../product-picture.model';
 
 @Component({
   selector: 'app-edit-product',
@@ -17,7 +18,7 @@ import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 export class EditProductComponent implements OnInit, OnDestroy {
     product: Product;
     projects: Project[];
-    pictures: File[] = [];
+    pictures: ProductPicture[] = [];
     imageSrc: string[] = [];
     i = 0;
 
@@ -28,7 +29,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
         statusId: new FormControl(null, [Validators.required, Validators.pattern("^[0-9]+$")]),
         project: new FormControl("Choose project", [Validators.required, Validators.pattern("^[0-9]+$")]),
         description: new FormControl(null, [Validators.required, Validators.minLength(1)]),
-        picture: new FormControl(null, [Validators.required]),
+        uploadPicture: new FormControl(null, [Validators.required]),
         thumbFormGroup: new FormGroup({
             thumb: new FormControl(null, [Validators.required])
         })
@@ -53,6 +54,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
             )
         // on edit mode init the fields        
         if (this.editMode) {
+            this.productForm.controls.statusId.enable();
             this.route.queryParams.subscribe(
                 res => {
                     this.productService.getProductById(res.productId).subscribe(
@@ -65,10 +67,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
                             this.productForm.controls.project.setValue(this.product.projectId);
                             this.productForm.controls.description.setValue(this.product.description);
                             this.getProductPictures(this.product.id);
-                            // this.productForm.controls.picture.setValue(this.product.picture);
-                            this.productForm.controls.thumbFormGroup.get('thumb').setValue(this.product.thumbPictureId);
-                            // console.log(this.productForm.controls.thumbFormGroup.get('thumb'))
-                            // console.log(this.product.thumbPictureId)
                         },
                         error => console.log(error)
                     )
@@ -87,7 +85,13 @@ export class EditProductComponent implements OnInit, OnDestroy {
             reader.onload = e => this.imageSrc.push(reader.result.toString());
             reader.readAsDataURL(file);
         }
-        this.pictures.push(eventFileList.item(0))
+        this.pictures.push(new ProductPicture({
+            id: undefined,
+            productId: undefined,
+            name: eventFileList.item(0).name,
+            size: eventFileList.item(0).size,
+            file: eventFileList.item(0)
+        }))
     }
 
     onSelectThumb(event) {
@@ -102,7 +106,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
             statusId: this.statusId.value,
             projectId: this.project.value,
             description: this.description.value,
-            thumbPictureId: this.thumb.value
+            thumbPictureIndex: this.thumb.value+1
         });
         console.log(tempProduct, this.pictures)
 
@@ -145,6 +149,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
                     //         res => this.router.navigate(['/prototype/projects']),
                     //         error => console.log(error)
                     //     )
+                    this.router.navigate(['/prototype/products'])
                 },
                 error => {
                     console.log(error)
@@ -160,8 +165,12 @@ export class EditProductComponent implements OnInit, OnDestroy {
         this.productService.getPicturesByProductId(productId)
             .subscribe(
                 res => {
-                    res.map( picture => {
-                        this.pictures.push(picture);
+                    res.map( (picture, index) => {
+                        let tempPicture = new ProductPicture(picture);
+                        this.pictures.push(tempPicture);
+                        if (picture.id == this.product.thumbPictureId) {
+                            this.productForm.controls.thumbFormGroup.get('thumb').setValue(index);
+                        }
                     })
                 },
                 error => console.log(error)
@@ -193,7 +202,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     get project() { return this.productForm.get('project') }
     get statusId() { return this.productForm.get('statusId') }
     get description() { return this.productForm.get('description') }
-    get picture() { return this.productForm.get('picture') }
+    get uploadPicture() { return this.productForm.get('uploadPicture') }
     get thumbFormGroup() { return this.productForm.get('thumbFormGroup') }
     get thumb() { return this.productForm.get('thumbFormGroup').get('thumb') }
     get editMode() { return this.productService.editMode }
