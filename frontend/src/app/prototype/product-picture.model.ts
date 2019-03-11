@@ -22,4 +22,14 @@ export class ProductPicture {
             reader.readAsDataURL(this.file);
         }
     }
+
+    toDto() {
+        return {
+            id: this.id,
+            name: this.name,
+            size: this.size,
+            productId: this.productId,
+            file: this.file
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.manos.prototype.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -27,6 +28,7 @@ import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
+import com.manos.prototype.entity.Status;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.service.PictureServiceImpl;
 import com.manos.prototype.service.ProductServiceImpl;
@@ -88,12 +90,9 @@ public class ProductController {
 			@RequestPart("pictures") List<MultipartFile> pictures,
 			@RequestPart("pictureTypeRequestDto") List<PictureTypeRequestDto> pictureTypeRequestDto) {
 		
-		Product product = conversionService.convert(productRequestDto, Product.class);
-		product.setId(productId);
-		
 		List<ProductPicture> newPictures = conversionService.convertList(pictures, ProductPicture.class);
 		
-		productService.updateProduct(product, newPictures, pictureTypeRequestDto, productRequestDto.getThumbPictureIndex());
+		productService.updateProduct(productRequestDto, productId, newPictures, pictureTypeRequestDto);
 	}
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -102,9 +101,12 @@ public class ProductController {
 			@RequestPart("pictures") List<MultipartFile> pictures) {
 		
 		Product product = conversionService.convert(productRequestDto, Product.class);
+		product.setStatus(new Status(Status.NEW_ID));
+		product.setCreatedAt(LocalDate.now());
+		
 		List<ProductPicture> productPictures = conversionService.convertList(pictures, ProductPicture.class);
 		
-		productService.saveProduct(product, productPictures, productRequestDto.getThumbPictureIndex());
+		productService.saveProduct(product, productPictures, productRequestDto.getThumbPictureIndex(), productRequestDto.getProjectId());
 	}
 	
 	@GetMapping(value = "/{id}/pictures")

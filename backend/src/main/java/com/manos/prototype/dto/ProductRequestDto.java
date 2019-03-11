@@ -33,7 +33,6 @@ public class ProductRequestDto {
 	private int projectId;
 	
 	@NotNull
-	@Min(value=1)
 	private int thumbPictureIndex;
 	
 	public ProductRequestDto() {}

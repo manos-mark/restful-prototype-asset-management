@@ -11,9 +11,11 @@ import com.manos.prototype.dao.PictureDaoImpl;
 import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dto.PictureTypeRequestDto;
+import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.vo.ProductVo;
@@ -82,16 +84,16 @@ public class ProductServiceImpl {
 	}
 
 	@Transactional
-	public void saveProduct(Product product, List<ProductPicture> pictures, int thumbIndex) {
+	public void saveProduct(Product product, List<ProductPicture> pictures, int thumbIndex, int projectId) {
 		// Set the thumb picture for the product
 		ProductPicture thumbPicture = pictures.get(thumbIndex);
 		thumbPicture.setProduct(product);
 		product.setThumbPicture(thumbPicture);
 		
 		// Save the product
-		Project project = projectDao.getProject(product.getProject().getId());
+		Project project = projectDao.getProject(projectId);
 		if (project == null) {
-			throw new EntityNotFoundException(Project.class, product.getProject().getId());
+			throw new EntityNotFoundException(Project.class, projectId);
 		}
 		product.setProject(project);
 		productDao.saveProduct(product);
@@ -104,17 +106,17 @@ public class ProductServiceImpl {
 	}
 	
 	@Transactional
-	public void updateProduct(Product newProduct, List<ProductPicture> newPictures, 
-			List<PictureTypeRequestDto> pictureTypeList, int thumbIndex) {
+	public void updateProduct(ProductRequestDto productDto, int productId, List<ProductPicture> newPictures, 
+			List<PictureTypeRequestDto> pictureTypeList) {
 		
-		Product existingProduct = productDao.getProduct(newProduct.getId());
+		Product existingProduct = productDao.getProduct(productId);
 		if (existingProduct == null) {
-			throw new EntityNotFoundException(Product.class, newProduct.getId());
+			throw new EntityNotFoundException(Product.class, productId);
 		}
 		
-		Project project = projectDao.getProject(newProduct.getProject().getId());
+		Project project = projectDao.getProject(productDto.getProjectId());
 		if (project == null) {
-			throw new EntityNotFoundException(Project.class, newProduct.getProject().getId());
+			throw new EntityNotFoundException(Project.class, productDto.getProjectId());
 		}
 		existingProduct.setProject(project);
 
@@ -133,10 +135,19 @@ public class ProductServiceImpl {
 			}
 			
 		}
+		
+		existingProduct.setDescription(productDto.getDescription());
+		existingProduct.setProductName(productDto.getProductName());
+		existingProduct.setQuantity(productDto.getQuantity());
+		existingProduct.setSerialNumber(productDto.getSerialNumber());
+		existingProduct.setStatus(new Status(productDto.getStatusId()));
+		
 		// Set the thumb picture for the product
-		ProductPicture thumbPicture = existingPictures.get(thumbIndex);
-		thumbPicture.setProduct(newProduct);
-		existingProduct.setThumbPicture(thumbPicture);
+		if (productDto.getThumbPictureIndex() >= 0) {
+			ProductPicture thumbPicture = existingPictures.get(productDto.getThumbPictureIndex());
+			thumbPicture.setProduct(existingProduct);
+			existingProduct.setThumbPicture(thumbPicture);
+		}
 	}
 
 	@Transactional

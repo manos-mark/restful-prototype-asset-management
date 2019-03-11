@@ -1,5 +1,6 @@
 package com.manos.prototype.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,6 +27,7 @@ import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
+import com.manos.prototype.entity.Status;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.service.ProductServiceImpl;
 import com.manos.prototype.service.ProjectServiceImpl;
@@ -111,16 +112,20 @@ public class ProjectController {
 
 	@DeleteMapping("/{id}")
 	public void deleteProject(@PathVariable("id") int projectId) {
-//		List<Product> products = productService.getProductsByProjectId(projectId);
-//		projectService.deleteProject(projectId, products);
+		projectService.deleteProject(projectId);
 	}
 
 	@PostMapping
 	public void addProject(@RequestBody ProjectRequestDto projectDto) {
-		projectService.saveProject(projectDto);
+		
+		Project project = conversionService.convert(projectDto, Project.class);
+		project.setStatus(new Status(Status.NEW_ID));
+		project.setCreatedAt(LocalDate.now());
+		
+		projectService.saveProject(project, projectDto.getProjectManagerId());
 	}
 
-	@PatchMapping("/{id}")
+	@PutMapping("/{id}")
 	public void updateProject(@RequestBody ProjectRequestDto projectDto, @PathVariable("id") int projectId) {
 		projectService.updateProject(projectDto, projectId);
 	}

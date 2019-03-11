@@ -1,6 +1,5 @@
 package com.manos.prototype.service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.manos.prototype.dao.PictureDaoImpl;
 import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dao.ProjectManagerDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
@@ -36,6 +37,9 @@ public class ProjectServiceImpl {
 
 	@Autowired
 	private ProductDaoImpl productDao;
+	
+	@Autowired
+	private PictureDaoImpl pictureDao;
 	
 	@Autowired
 	private ProjectManagerDaoImpl projectManagerDao;
@@ -63,60 +67,56 @@ public class ProjectServiceImpl {
 	}
 
 	@Transactional
-	public void deleteProject(int id, List<Product> products) {
+	public void deleteProject(int id) {
+		List<Product> products = productDao.getProductsByProjectId(id);
+				
 		Project project  = projectDao.getProject(id);
 		if (project == null) {
 			throw new EntityNotFoundException(Project.class, id);
 		}
 		// should delete first all the products of this project
 		for (Product product : products) {
+			List<ProductPicture> pictures = pictureDao.getPicturesByProductId(product.getId());
+			for (ProductPicture picture: pictures) {
+				pictureDao.deletePicture(picture.getId());
+			}
 			productDao.deleteProduct(product.getId());
 		}
 		projectDao.deleteProject(id);
 	}
 
 	@Transactional
-	public void saveProject(ProjectRequestDto dto) {
-		Project project = new Project();
-		
-		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
+	public void saveProject(Project project, int projectManagerId) {
+		ProjectManager projectManager = projectManagerDao.getProjectManager(projectManagerId);
 		if (projectManager == null) {
-			throw new EntityNotFoundException(ProjectManager.class, dto.getProjectManagerId());
+			throw new EntityNotFoundException(ProjectManager.class, projectManagerId);
 		}
-		project.setCompanyName(dto.getCompanyName());
-		project.setCreatedAt(LocalDate.now());
 		project.setProjectManager(projectManager);
-		project.setProjectName(dto.getProjectName());
-		project.setStatus(new Status(Status.NEW_ID));
 		
 		projectDao.saveProject(project);
 	}
 	
 	@Transactional
-	public void updateProject(ProjectRequestDto dto, int projectId) {
+	public void updateProject(ProjectRequestDto projectDto, int projectId) {
+		
 		
 		Project project = projectDao.getProject(projectId);
 		if (project == null) {
 			throw new EntityNotFoundException(Project.class, projectId);
 		}
-		// den xreiazomai auta ta if giati xrisimopoiw not null sto projectRequestDto
-		if (dto.getCompanyName() != null) {
-			project.setCompanyName(dto.getCompanyName());
-		}
 		
-		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
+		ProjectManager projectManager = projectManagerDao.getProjectManager(projectDto.getProjectManagerId());
 		if (projectManager != null) {
 			project.setProjectManager(projectManager);
 		}
 		
-		if (dto.getProjectName() != null) {
-			project.setProjectName(dto.getProjectName());
+		if (!acceptedStatuses.contains(projectDto.getStatusId())) {
+			throw new EntityNotFoundException(Status.class, projectDto.getStatusId());
 		}
+		project.setStatus(new Status(projectDto.getStatusId()));
 		
-		if (!acceptedStatuses.contains(dto.getStatusId())) {
-			throw new EntityNotFoundException(Status.class, dto.getStatusId());
-		}
-		project.setStatus(new Status(dto.getStatusId()));
+		project.setCompanyName(projectDto.getCompanyName());
+		project.setProjectName(projectDto.getProjectName());
 	}
 
 	@Transactional

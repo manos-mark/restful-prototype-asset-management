@@ -117,13 +117,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
     }
 
     updateProduct(product) {
-        // let tempPictures = [];
-        // this.pictures.forEach(picture => {
-        //     if (!picture.id) {
-        //         tempPictures.push(picture);
-        //     }
-        // })
-        console.log(this.pictures)
         this.productService.updateProduct(product, this.pictures, this.product.id)
             .subscribe(
                 res => {

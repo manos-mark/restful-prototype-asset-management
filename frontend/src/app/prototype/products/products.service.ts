@@ -5,6 +5,7 @@ import { PageParams } from '../projects/page-params.model';
 import { FilterParams } from '../projects/filter-params.model';
 import { toHttpParams } from 'src/app/shared/http-params-converter';
 import { Statuses } from '../status.enum';
+import { projection } from '@angular/core/src/render3';
 
 @Injectable()
 export class ProductsService {
@@ -46,7 +47,7 @@ export class ProductsService {
     updateProduct(productRequestDto, files, productId) {
         let formData = new FormData();
         let tempTypeArray = [];
-        
+        console.log(files)
         files.forEach((element) => {
             let tempTypeObj = { 
                 pictureId: element.id ? element.id : 0,
@@ -64,7 +65,41 @@ export class ProductsService {
             type: "application/json"
         }));
         
-        return this.httpClient.patch<any>('api/products/' + productId, formData)
+        return this.httpClient.put<any>('api/products/' + productId, formData)
+    }
+
+    updateProductStatus(product) {
+        let formData = new FormData();
+        let tempTypeArray = [];
+        console.log(product)
+        for (let i = 0; i < product.picturesCount; i++) {
+            let tempTypeObj = { 
+                pictureId: 0,
+                type: "existing"
+            }
+            tempTypeArray.push(tempTypeObj);
+        };
+        formData.append('pictures', new Blob([JSON.stringify({})], { type: "application/json" }))
+        
+        formData.append('pictureTypeRequestDto', 
+            new Blob([JSON.stringify(tempTypeArray)], { type: "application/json" })
+        )
+        
+        formData.append('productRequestDto', new Blob([JSON.stringify(
+            {
+                productName: product.productName,
+                serialNumber: product.serialNumber,
+                description: product.description,
+                quantity: product.quantity,
+                statusId: product.status.id,
+                projectId: product.projectId,
+                thumbPictureIndex: -1
+            }
+        )], {
+            type: "application/json"
+        }));
+        
+        return this.httpClient.put<any>('api/products/' + product.id, formData)
     }
 
     addProduct(productRequestDto, files) {
