@@ -126,7 +126,7 @@ export class ListProductsComponent implements OnInit {
                     // change status
                     else {
                         product.status.id = selectedStatus;
-                        observables.push(this.productService.updateProduct(product));
+                        // observables.push(this.productService.updateProduct(product));
                     }
                 }
             }

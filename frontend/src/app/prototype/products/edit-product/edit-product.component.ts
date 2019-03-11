@@ -29,7 +29,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
         statusId: new FormControl(null, [Validators.required, Validators.pattern("^[0-9]+$")]),
         project: new FormControl("Choose project", [Validators.required, Validators.pattern("^[0-9]+$")]),
         description: new FormControl(null, [Validators.required, Validators.minLength(1)]),
-        uploadPicture: new FormControl(null, [Validators.required]),
+        uploadPicture: new FormControl(null),
         thumbFormGroup: new FormGroup({
             thumb: new FormControl(null, [Validators.required])
         })
@@ -77,14 +77,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
     }
 
     onUploadPicture(eventFileList: FileList): void {
-        // preview images
-        if (eventFileList && eventFileList[0]) {
-            const file = eventFileList[0];
-    
-            const reader = new FileReader();
-            reader.onload = e => this.imageSrc.push(reader.result.toString());
-            reader.readAsDataURL(file);
-        }
         this.pictures.push(new ProductPicture({
             id: undefined,
             productId: undefined,
@@ -108,8 +100,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
             description: this.description.value,
             thumbPictureIndex: this.thumb.value
         });
-        console.log(tempProduct, this.pictures)
-
         // on edit mode update
         if (this.editMode) {
             this.updateProduct(tempProduct);
@@ -121,14 +111,14 @@ export class EditProductComponent implements OnInit, OnDestroy {
     }
 
     updateProduct(product) {
-        let tempPictures = [];
-        this.pictures.forEach(picture => {
-            if (!picture.id) {
-                tempPictures.push(picture);
-            }
-        })
-
-        this.productService.updateProduct(product, tempPictures, this.product.id)
+        // let tempPictures = [];
+        // this.pictures.forEach(picture => {
+        //     if (!picture.id) {
+        //         tempPictures.push(picture);
+        //     }
+        // })
+        console.log(this.pictures)
+        this.productService.updateProduct(product, this.pictures, this.product.id)
             .subscribe(
                 res => {
                     // this.activityService.addActivity()

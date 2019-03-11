@@ -1,5 +1,7 @@
 package com.manos.prototype.config;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +37,20 @@ public class AppConfig {
 
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
-	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-	    multipartResolver.setMaxUploadSize(12000000);
-	    return multipartResolver;
+		CommonsMultipartResolver multipartResolver = new CommonsMultiPartResolverMine();
+		multipartResolver.setMaxUploadSize(12000000);
+		return multipartResolver;
+	}
+
+	public static class CommonsMultiPartResolverMine extends CommonsMultipartResolver {
+		@Override
+		public boolean isMultipart(HttpServletRequest request) {
+			final String header = request.getHeader("Content-Type");
+			if(header == null){
+				return false;
+			}
+			return header.contains("multipart/form-data");
+		}
 	}
 	
 	@Bean

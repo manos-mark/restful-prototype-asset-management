@@ -83,7 +83,7 @@ export class ProjectsService {
     }
 
     updateProject(project: any) {
-        return this.httpClient.put<any>('api/projects/' + project.id,
+        return this.httpClient.patch<any>('api/projects/' + project.id,
         {
             projectName: project.projectName,
             companyName: project.companyName,

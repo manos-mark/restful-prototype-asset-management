@@ -49,7 +49,8 @@ public class ProductController {
 	private ConversionService conversionService;
 
 	@GetMapping
-	public PageResultDto<ProductDto> getProductsPaginated(@Valid ProductOrderAndPageParams pageParams,
+	public PageResultDto<ProductDto> getProductsPaginated(
+			@Valid ProductOrderAndPageParams pageParams,
 			@Valid ProductFilterParams filterParams) {
 
 		PageRequest pageRequest = conversionService.convert(pageParams, PageRequest.class);
@@ -80,22 +81,24 @@ public class ProductController {
 		productService.deleteProduct(productId);
 	}
 
-	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void updateProduct(@PathVariable("id") int productId, 
+	@PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void updateProduct(
+			@PathVariable("id") int productId, 
 			@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
-			@RequestPart("pictures") List<MultipartFile> pictures) {
+			@RequestPart("pictures") List<MultipartFile> pictures,
+			@RequestPart("pictureTypeRequestDto") List<PictureTypeRequestDto> pictureTypeRequestDto) {
 		
 		Product product = conversionService.convert(productRequestDto, Product.class);
-
-		List<ProductPicture> existingPictures = product.getPictures();
+		product.setId(productId);
 		
 		List<ProductPicture> newPictures = conversionService.convertList(pictures, ProductPicture.class);
 		
-		productService.updateProduct(productRequestDto, productId);
+		productService.updateProduct(product, newPictures, pictureTypeRequestDto, productRequestDto.getThumbPictureIndex());
 	}
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void addProduct(@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
+	public void addProduct(
+			@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
 			@RequestPart("pictures") List<MultipartFile> pictures) {
 		
 		Product product = conversionService.convert(productRequestDto, Product.class);

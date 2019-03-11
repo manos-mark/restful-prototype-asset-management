@@ -115,8 +115,7 @@
                                 </span>
                                 <div class="picture">
                                     <a class="picWrp">
-                                        <img *ngIf="picture.file" [src]="imageSrc[i]">
-                                        <img *ngIf="!picture.file" [src]="'api/product-pictures/' + picture.id">
+                                        <img [src]="picture.imageSrc">
                                         <var class="zoom"><span></span></var>
                                     </a>
                                 </div>

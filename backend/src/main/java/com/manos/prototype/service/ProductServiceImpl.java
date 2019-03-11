@@ -10,11 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.manos.prototype.dao.PictureDaoImpl;
 import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
-import com.manos.prototype.dto.ProductRequestDto;
+import com.manos.prototype.dto.PictureTypeRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
-import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.vo.ProductVo;
@@ -105,23 +104,39 @@ public class ProductServiceImpl {
 	}
 	
 	@Transactional
-	public void updateProduct(ProductRequestDto dto, int productId) {
-		Product product = productDao.getProduct(productId);
-		if (product == null) {
-			throw new EntityNotFoundException(Product.class, productId);
+	public void updateProduct(Product newProduct, List<ProductPicture> newPictures, 
+			List<PictureTypeRequestDto> pictureTypeList, int thumbIndex) {
+		
+		Product existingProduct = productDao.getProduct(newProduct.getId());
+		if (existingProduct == null) {
+			throw new EntityNotFoundException(Product.class, newProduct.getId());
 		}
 		
-		Project project = projectDao.getProject(dto.getProjectId());
+		Project project = projectDao.getProject(newProduct.getProject().getId());
 		if (project == null) {
-			throw new EntityNotFoundException(Project.class, dto.getProjectId());
+			throw new EntityNotFoundException(Project.class, newProduct.getProject().getId());
 		}
-		product.setProject(project);
-		product.setDescription(dto.getDescription());
-		product.setProductName(dto.getProductName());
-		product.setQuantity(dto.getQuantity());
-		product.setSerialNumber(dto.getSerialNumber());
-		product.setStatus(new Status(dto.getStatusId()));
-//		product.setThumbPicture(thumbPicture);
+		existingProduct.setProject(project);
+
+		List<ProductPicture> existingPictures = existingProduct.getPictures();
+		
+		int newPicturesIndex = 0;
+		for (int i = 0; i < pictureTypeList.size(); i++) {
+			
+			if (pictureTypeList.get(i).getType().equals(PictureTypeRequestDto.TYPE_DELETED)) {
+				pictureDao.deletePicture(existingPictures.get(i).getId());
+			} 
+			else if (pictureTypeList.get(i).getType().equals(PictureTypeRequestDto.TYPE_NEW)) {
+				ProductPicture tempPicture = newPictures.get(newPicturesIndex++);
+				tempPicture.setProduct(existingProduct);
+				pictureDao.savePicture(tempPicture);
+			}
+			
+		}
+		// Set the thumb picture for the product
+		ProductPicture thumbPicture = existingPictures.get(thumbIndex);
+		thumbPicture.setProduct(newProduct);
+		existingProduct.setThumbPicture(thumbPicture);
 	}
 
 	@Transactional

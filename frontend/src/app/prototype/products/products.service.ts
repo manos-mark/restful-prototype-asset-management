@@ -45,20 +45,26 @@ export class ProductsService {
 
     updateProduct(productRequestDto, files, productId) {
         let formData = new FormData();
-
+        let tempTypeArray = [];
+        
         files.forEach((element) => {
+            let tempTypeObj = { 
+                pictureId: element.id ? element.id : 0,
+                type: element.id ? "existing" : "new"
+            }
+            tempTypeArray.push(tempTypeObj);
             formData.append('pictures', element.file)
         });
-
+        
+        formData.append('pictureTypeRequestDto', 
+            new Blob([JSON.stringify(tempTypeArray)], { type: "application/json" })
+        )
+        
         formData.append('productRequestDto', new Blob([JSON.stringify(productRequestDto)], {
             type: "application/json"
         }));
-
-        return this.httpClient.put<any>('api/products/' + productId, formData,
-            {
-                observe: 'body'
-            }
-        )
+        
+        return this.httpClient.patch<any>('api/products/' + productId, formData)
     }
 
     addProduct(productRequestDto, files) {
@@ -72,11 +78,7 @@ export class ProductsService {
             type: "application/json"
         }));
         
-        return this.httpClient.post<any>('api/products', formData,
-            {
-                observe: 'body'
-            }
-        )
+        return this.httpClient.post<any>('api/products', formData)
     }
 
     deleteProduct(productId: number) {

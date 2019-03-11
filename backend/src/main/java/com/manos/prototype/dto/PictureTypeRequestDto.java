@@ -8,12 +8,14 @@ public class PictureTypeRequestDto {
 	
 	public static final String TYPE_NEW = "new";
 	public static final String TYPE_EXISTING = "existing";
+	public static final String TYPE_DELETED = "deleted";
 	
-	@Min(value=1)
+	@NotNull
+	@Min(0)
 	private int pictureId;
 	
 	@NotNull
-	@Pattern(regexp = "(" + TYPE_NEW + "|" + TYPE_EXISTING + ")" )
+	@Pattern(regexp = "(" + TYPE_NEW + "|" + TYPE_EXISTING + "|" +  TYPE_DELETED + ")" )
 	private String type;
 
 	public int getPictureId() {
