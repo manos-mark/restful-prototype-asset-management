@@ -83,12 +83,18 @@
             <p>Picture</p>
           </div>
           <div class="uploadWrp">
-            <a class="grayDarkBtn">Upload</a>
+            <a class="grayDarkBtn" 
+                [ngClass]="{'disabled': pictures.length >= MAX_UPLOAD_FILES_LENGTH
+                 || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE}"
+            >Upload</a>
             <input 
                 type="file" 
                 formControlName="uploadPicture" 
                 accept="image/gif, .jpg, image/png" 
-                (change)="onUploadPicture($event.target.files);"/>
+                (change)="onUploadPicture($event.target.files);"
+                [ngClass]="{'disabled': pictures.length >= MAX_UPLOAD_FILES_LENGTH
+                 || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE}"
+            />
           </div>
           <span class="error" *ngIf="uploadPicture.invalid && (uploadPicture.dirty || uploadPicture.touched)">Max upload file size: 12 MB.</span>
           <span class="error" *ngIf="uploadPicture.valid && thumb.invalid">Select one picture as thumb.</span>

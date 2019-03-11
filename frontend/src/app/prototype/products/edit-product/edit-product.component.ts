@@ -16,10 +16,13 @@ import { ProductPicture } from '../../product-picture.model';
   styleUrls: ['./edit-product.component.css']
 })
 export class EditProductComponent implements OnInit, OnDestroy {
+    public static readonly MAX_UPLOAD_FILES_SIZE = 12582912;
+    public static readonly MAX_UPLOAD_FILES_LENGTH = 10;
     product: Product;
     projects: Project[];
     pictures: ProductPicture[] = [];
     imageSrc: string[] = [];
+    computedPicturesListSize: number = 0;
     i = 0;
 
     productForm = new FormGroup({
@@ -77,13 +80,16 @@ export class EditProductComponent implements OnInit, OnDestroy {
     }
 
     onUploadPicture(eventFileList: FileList): void {
-        this.pictures.push(new ProductPicture({
-            id: undefined,
-            productId: undefined,
-            name: eventFileList.item(0).name,
-            size: eventFileList.item(0).size,
-            file: eventFileList.item(0)
-        }))
+        if (this.pictures.length <= EditProductComponent.MAX_UPLOAD_FILES_LENGTH 
+            && this.computedPicturesListSize <= EditProductComponent.MAX_UPLOAD_FILES_SIZE) {
+            this.pictures.push(new ProductPicture({
+                id: undefined,
+                productId: undefined,
+                name: eventFileList.item(0).name,
+                size: eventFileList.item(0).size,
+                file: eventFileList.item(0)
+            }))
+        }
     }
 
     onSelectThumb(event) {
@@ -169,6 +175,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
                             this.productForm.controls.thumbFormGroup.get('thumb').setValue(index);
                         }
                     })
+                    this.computePicturesListSize();
                 },
                 error => console.log(error)
             );
@@ -193,6 +200,16 @@ export class EditProductComponent implements OnInit, OnDestroy {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
+    computePicturesListSize() {
+        let totalSize = 0;
+
+        this.pictures.forEach(element => {
+            totalSize += element.size;
+        });
+        
+        this.computedPicturesListSize = totalSize;
+    }
+
     get productName() { return this.productForm.get('productName') }
     get serialNumber() { return this.productForm.get('serialNumber') }
     get quantity() { return this.productForm.get('quantity') }
@@ -203,4 +220,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
     get thumbFormGroup() { return this.productForm.get('thumbFormGroup') }
     get thumb() { return this.productForm.get('thumbFormGroup').get('thumb') }
     get editMode() { return this.productService.editMode }
+    get MAX_UPLOAD_FILES_SIZE() { return EditProductComponent.MAX_UPLOAD_FILES_SIZE }
+    get MAX_UPLOAD_FILES_LENGTH() { return EditProductComponent.MAX_UPLOAD_FILES_LENGTH }
 }
