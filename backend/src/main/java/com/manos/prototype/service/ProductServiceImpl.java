@@ -80,6 +80,12 @@ public class ProductServiceImpl {
 		if (product == null) {
 			throw new EntityNotFoundException(Product.class, id);
 		}
+		
+		List<ProductPicture> pictures = pictureDao.getPicturesByProductId(id);
+		for (ProductPicture picture: pictures) {
+			pictureDao.deletePicture(picture.getId());
+		}
+		
 		productDao.deleteProduct(id);
 	}
 
