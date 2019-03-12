@@ -95,6 +95,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 file: eventFileList.item(0)
             }))
         }
+        console.log(this.pictures)
     }
 
     onAddSave() {
@@ -107,14 +108,15 @@ export class EditProductComponent implements OnInit, OnDestroy {
             description: this.description.value,
             thumbPictureIndex: this.thumb.value
         });
-        // on edit mode update
-        if (this.editMode) {
-            this.updateProduct(tempProduct);
-        }
-        // else add new product
-        else {
-            this.saveProduct(tempProduct);
-        }
+        console.log(tempProduct['thumbPictureIndex'])
+        // // on edit mode update
+        // if (this.editMode) {
+        //     this.updateProduct(tempProduct);
+        // }
+        // // else add new product
+        // else {
+        //     this.saveProduct(tempProduct);
+        // }
     }
 
     updateProduct(product) {
@@ -126,6 +128,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
                     //         res => this.router.navigate(['/prototype/projects']),
                     //         error => console.log(error)
                     //     )
+                    this.router.navigate(['/prototype/products'])
                 },
                 error => {
                     console.log(error)
@@ -182,22 +185,41 @@ export class EditProductComponent implements OnInit, OnDestroy {
         this.windowPopService.deleteImage = true;
         this.windowPopService.activate = true;
 
-        this.deleteImageSubscription = this.productService.deleteImageConfirmed
-            .subscribe( res => {
-                this.pictures[pictureIndex].id = null;
-                this.pictures[pictureIndex].file = null;
+        // this.deleteImageSubscription = this.productService.deleteImageConfirmed
+        //     .subscribe( res => {
+                // destroy the pop up
                 this.windowPopService.activate = false;
                 this.windowPopService.deleteImage = false;
 
-                this.pictures.forEach(
-                    picture => { if (!picture.id && !picture.file) {this.thumb.setValue(null);} }
-                )
+                // if this image is new, just delete from list 
+                // (no need to sent request to the backend)
+                if (this.pictures[pictureIndex].type.match("new")) {
+                    // if
+                    this.pictures.splice(pictureIndex,1);
+                    console.log(this.thumb.value)
+                }
+                // else the id and the file is null, deleted type on the service
+                else {
+                    this.pictures[pictureIndex].type = "deleted";
+                }
 
+                // check if the pictures list is empty, to disable the update button
+                let picturesIsEmpty = true;
+                this.pictures.forEach(
+                    picture => { 
+                        if (picture.type.match("new") || picture.type.match("existing")) {
+                            picturesIsEmpty = false;
+                        } 
+                    }
+                )
+                if (picturesIsEmpty) { this.thumb.setValue(null); }
+
+                // check if the picture is thumb, to disable the thumb
                 if (pictureIndex == this.thumb.value) {
                     this.thumb.setValue(null);
                 }
-
-            })
+                console.log(this.pictures)
+            // })
         }
 
     onCancel() {

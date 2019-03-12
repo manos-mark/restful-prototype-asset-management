@@ -125,34 +125,35 @@ public class ProductServiceImpl {
 			throw new EntityNotFoundException(Project.class, productDto.getProjectId());
 		}
 		existingProduct.setProject(project);
-
-		List<ProductPicture> existingPictures = existingProduct.getPictures();
-		
-		int newPicturesIndex = 0;
-		for (int i = 0; i < pictureTypeList.size(); i++) {
-			
-			if (pictureTypeList.get(i).getType().equals(PictureTypeRequestDto.TYPE_DELETED)) {
-				pictureDao.deletePicture(existingPictures.get(i).getId());
-			} 
-			else if (pictureTypeList.get(i).getType().equals(PictureTypeRequestDto.TYPE_NEW)) {
-				ProductPicture tempPicture = newPictures.get(newPicturesIndex++);
-				tempPicture.setProduct(existingProduct);
-				pictureDao.savePicture(tempPicture);
-			}
-			
-		}
-		
 		existingProduct.setDescription(productDto.getDescription());
 		existingProduct.setProductName(productDto.getProductName());
 		existingProduct.setQuantity(productDto.getQuantity());
 		existingProduct.setSerialNumber(productDto.getSerialNumber());
 		existingProduct.setStatus(new Status(productDto.getStatusId()));
+
+		List<ProductPicture> existingPictures = existingProduct.getPictures();
 		
+		int newPicturesIndex = 0;
+		for (int i = 0; i < pictureTypeList.size(); i++) {
+			if (pictureTypeList.get(i).getType().equals(PictureTypeRequestDto.TYPE_NEW)) {
+				ProductPicture tempPicture = newPictures.get(newPicturesIndex++);
+				tempPicture.setProduct(existingProduct);
+				pictureDao.savePicture(tempPicture);
+			}
+		}
+		
+		existingPictures = existingProduct.getPictures();
 		// Set the thumb picture for the product
 		if (productDto.getThumbPictureIndex() >= 0) {
 			ProductPicture thumbPicture = existingPictures.get(productDto.getThumbPictureIndex());
 			thumbPicture.setProduct(existingProduct);
 			existingProduct.setThumbPicture(thumbPicture);
+		}
+		
+		for (int i = 0; i < pictureTypeList.size(); i++) {
+			if (pictureTypeList.get(i).getType().equals(PictureTypeRequestDto.TYPE_DELETED)) {
+				pictureDao.deletePicture(existingPictures.get(i).getId());
+			} 
 		}
 	}
 

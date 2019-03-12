@@ -49,11 +49,11 @@ export class ProductsService {
     updateProduct(productRequestDto, files, productId) {
         let formData = new FormData();
         let tempTypeArray = [];
-        
+
         files.forEach((element) => {
             let tempTypeObj = { 
                 pictureId: element.id ? element.id : 0,
-                type: element.id ? "existing" : (element.file ? "new" : "deleted")
+                type: element.type
             }
             tempTypeArray.push(tempTypeObj);
             formData.append('pictures', element.file)

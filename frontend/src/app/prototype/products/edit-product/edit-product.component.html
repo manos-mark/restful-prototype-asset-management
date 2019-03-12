@@ -119,7 +119,7 @@
                     <div class="content">
                         <div [formGroup]="thumbFormGroup">
                             <div *ngFor="let picture of pictures, let i=index">
-                                <div class="row" *ngIf="picture.id || picture.file">
+                                <div class="row" *ngIf="!picture.type.match('deleted')">
                                     <span class="thumb">
                                         <input type="radio" [value]="i" formControlName="thumb">
                                     </span>
