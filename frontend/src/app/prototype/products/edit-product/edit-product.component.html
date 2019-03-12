@@ -128,10 +128,10 @@
                                 <span class="fileName">{{ picture.name }}</span>
                                 <span class="fileSize">{{ convertBytesToMegabytes(picture.size) }}</span>
                                 <span class="download">
-                                    <a class="greenBtn"><i></i></a>
+                                    <a class="greenBtn" [href]="picture.imageSrc" download><i></i></a>
                                 </span>
                                 <div class="delete">
-                                    <a class="grayDarkBtn"><i></i></a>
+                                    <a class="grayDarkBtn" (click)="onDeletePicture(i)"><i></i></a>
                                 </div>
                             </div>
                         </div>
