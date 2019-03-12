@@ -1,24 +1,26 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
 import { WindowPopService } from './window-pop.service';
+import { ProductsService } from 'src/app/prototype/products/products.service';
 
 @Component({
   selector: 'app-window-pop',
   templateUrl: './window-pop.component.html',
   styleUrls: ['./window-pop.component.css']
 })
-export class WindowPopComponent implements OnInit {
+export class WindowPopComponent implements OnInit, OnDestroy {
   @Input() active: Boolean;
   @Output() activeChange = new EventEmitter<string>();
   
   constructor(private authService: AuthService,
                 private activityService: ActivityService,
                 private router: Router,
-                private windowPopService: WindowPopService) { }
+                private windowPopService: WindowPopService,
+                private productService: ProductsService) { }
 
-  onSubmit() {
+  onLogout() {
     this.activityService.addActivity('8').subscribe(
           resp => { return this.authService.logout()
             .subscribe(
@@ -39,7 +41,12 @@ export class WindowPopComponent implements OnInit {
         );
   }
 
+  onDeleteImage() {
+    this.productService.deleteImageConfirmed.next(true);
+  }
+
   onCancel() {
+    this.windowPopService.deleteImage = false;
     this.windowPopService.logout = false;
     this.activeChange.emit(); 
   }
@@ -47,7 +54,13 @@ export class WindowPopComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy() {
+    this.windowPopService.deleteImage = false;
+    this.windowPopService.logout = false;
+  }
+
   get logout() { return this.windowPopService.logout }
+  get deleteImage() { return this.windowPopService.deleteImage }
   get title() { return this.windowPopService.title }
   get context() { return this.windowPopService.context }
   get details() { return this.windowPopService.details }

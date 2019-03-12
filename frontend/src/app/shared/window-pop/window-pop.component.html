@@ -18,9 +18,10 @@
       </div>
     </div>
     <div class="windowPopButtons">
-      <a *ngIf="!logout" class="grayDarkBtn" (click)="onCancel($event)">Okay</a>
-      <a *ngIf="logout" class="grayDarkBtn" (click)="onCancel($event)">Cancel</a>
-      <a *ngIf="logout" class="greenBtn" (click)="onSubmit($event)">Confirm</a>
+      <a *ngIf="!logout && !deleteImage" class="grayDarkBtn" (click)="onCancel($event)">Okay</a>
+      <a *ngIf="logout || deleteImage" class="grayDarkBtn" (click)="onCancel($event)">Cancel</a>
+      <a *ngIf="logout" class="greenBtn" (click)="onLogout($event)">Confirm</a>
+      <a *ngIf="deleteImage" class="greenBtn" (click)="onDeleteImage($event)">Confirm</a>
     </div>
   </div>
 </div>

@@ -9,6 +9,7 @@ import { Statuses } from '../../status.enum';
 import { Router, ActivatedRoute } from '@angular/router';
 import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 import { ProductPicture } from '../../product-picture.model';
+import { Observer, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-product',
@@ -23,6 +24,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     pictures: ProductPicture[] = [];
     imageSrc: string[] = [];
     computedPicturesListSize: number = 0;
+    deleteImageSubscription: Subscription = null;
     i = 0;
 
     productForm = new FormGroup({
@@ -173,6 +175,31 @@ export class EditProductComponent implements OnInit, OnDestroy {
             );
     }
 
+    onDeletePicture(pictureIndex: number) {
+        this.windowPopService.title = "Delete Image";
+        this.windowPopService.context = "Are you sure?";
+        this.windowPopService.details = "This image will be deleted permanently.";
+        this.windowPopService.deleteImage = true;
+        this.windowPopService.activate = true;
+
+        this.deleteImageSubscription = this.productService.deleteImageConfirmed
+            .subscribe( res => {
+                this.pictures[pictureIndex].id = null;
+                this.pictures[pictureIndex].file = null;
+                this.windowPopService.activate = false;
+                this.windowPopService.deleteImage = false;
+
+                this.pictures.forEach(
+                    picture => { if (!picture.id && !picture.file) {this.thumb.setValue(null);} }
+                )
+
+                if (pictureIndex == this.thumb.value) {
+                    this.thumb.setValue(null);
+                }
+
+            })
+        }
+
     onCancel() {
         this.productForm.reset();
         this.router.navigate(['prototype','products']);
@@ -180,6 +207,9 @@ export class EditProductComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.productService.editMode = false;
+        if (this.deleteImageSubscription) {
+            this.deleteImageSubscription.unsubscribe();
+        }
     }
 
     convertBytesToMegabytes(bytes,decimals) {

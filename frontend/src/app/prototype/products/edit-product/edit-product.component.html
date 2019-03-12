@@ -4,7 +4,10 @@
       <p>Product</p>
     </div>
     <div class="action">
-      <a class="blueBtn" (click)="onAddSave()" [ngClass]="{ 'disabled': productForm.invalid }">Add & Save</a>
+      <a class="blueBtn" 
+        (click)="onAddSave()" 
+        [ngClass]="{ 'disabled': productForm.invalid }"
+        >Add & Save</a>
       <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>
   </div>
@@ -115,27 +118,28 @@
                     </div>
                     <div class="content">
                         <div [formGroup]="thumbFormGroup">
-                            <div class="row" *ngFor="let picture of pictures, let i=index">
-                                <span class="thumb">
-                                    <input type="radio" [value]="i" formControlName="thumb">
-                                </span>
-                                <div class="picture">
-                                    <a class="picWrp">
-                                        <img [src]="picture.imageSrc">
-                                        <var class="zoom"><span></span></var>
-                                    </a>
-                                </div>
-                                <span class="fileName">{{ picture.name }}</span>
-                                <span class="fileSize">{{ convertBytesToMegabytes(picture.size) }}</span>
-                                <span class="download">
-                                    <a class="greenBtn" [href]="picture.imageSrc" download><i></i></a>
-                                </span>
-                                <div class="delete">
-                                    <a 
-                                        [ngClass]="{'disabled' : pictures.length == 1 || thumb.value == i }"
-                                        class="grayDarkBtn" 
-                                        (click)="onDeletePicture(i)"
-                                    ><i></i></a>
+                            <div *ngFor="let picture of pictures, let i=index">
+                                <div class="row" *ngIf="picture.id || picture.file">
+                                    <span class="thumb">
+                                        <input type="radio" [value]="i" formControlName="thumb">
+                                    </span>
+                                    <div class="picture">
+                                        <a class="picWrp">
+                                            <img [src]="picture.imageSrc">
+                                            <var class="zoom"><span></span></var>
+                                        </a>
+                                    </div>
+                                    <span class="fileName">{{ picture.name }}</span>
+                                    <span class="fileSize">{{ convertBytesToMegabytes(picture.size) }}</span>
+                                    <span class="download">
+                                        <a class="greenBtn" [href]="picture.imageSrc" download><i></i></a>
+                                    </span>
+                                    <div class="delete">
+                                        <a 
+                                            class="grayDarkBtn" 
+                                            (click)="onDeletePicture(i)"
+                                        ><i></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1,15 +1,17 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { Product } from './product.model';
 import { PageParams } from '../projects/page-params.model';
 import { FilterParams } from '../projects/filter-params.model';
 import { toHttpParams } from 'src/app/shared/http-params-converter';
 import { Statuses } from '../status.enum';
 import { projection } from '@angular/core/src/render3';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
     editMode = false;
+    deleteImageConfirmed = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient) {}
 
@@ -47,7 +49,7 @@ export class ProductsService {
     updateProduct(productRequestDto, files, productId) {
         let formData = new FormData();
         let tempTypeArray = [];
-        console.log(files)
+        
         files.forEach((element) => {
             let tempTypeObj = { 
                 pictureId: element.id ? element.id : 0,

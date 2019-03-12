@@ -4,4 +4,5 @@ export class WindowPopService {
     context: string;
     details: string;
     logout: Boolean = false;
+    deleteImage: Boolean = false;
 }
