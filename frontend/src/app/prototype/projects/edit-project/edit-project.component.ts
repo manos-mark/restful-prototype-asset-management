@@ -134,6 +134,13 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         }
     }
 
+    onEdit(productId: number) {
+        this.productService.editMode = true;
+        this.router.navigate(['prototype/products/', productId, 'edit'], 
+            {queryParams: { productId: productId }}
+        );
+    }
+
     onCancel() {
         this.projectForm.reset();
         this.router.navigate(['prototype','projects']);

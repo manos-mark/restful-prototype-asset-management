@@ -55,6 +55,9 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 res => this.projects = res,
                 error => console.log(error)
             )
+        this.route.queryParams.subscribe(
+            res => { this.productForm.controls.project.setValue(res.projectId) }
+        )
         // on edit mode init the fields        
         if (this.editMode) {
             this.productForm.controls.statusId.enable();

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductsService } from '../products.service';
-import { Product } from '../product.model';
+import { Router, ActivatedRoute } from '@angular/router';
+import { forkJoin, Observable } from 'rxjs';
+import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
 import { FilterParams } from '../../projects/filter-params.model';
 import { PageParams } from '../../projects/page-params.model';
-import { Router } from '@angular/router';
 import { Statuses } from '../../status.enum';
-import { Observable, forkJoin } from 'rxjs';
-import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
+import { Product } from '../product.model';
+import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-list-products',
@@ -29,9 +29,13 @@ export class ListProductsComponent implements OnInit {
   
     constructor(private productService: ProductsService,
                 private router: Router,
+                private route: ActivatedRoute,
                 private carouselService: ImageCarouselService) { }
 
     ngOnInit() {
+        this.route.queryParams.subscribe(
+            res => { this.filterParams.projectName = res.projectName }
+        )
         this.isMasterChecked = false;
         this.productService.getProducts(this.pageParams, this.filterParams)
                 .subscribe(

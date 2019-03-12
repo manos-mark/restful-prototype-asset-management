@@ -206,4 +206,15 @@ export class ListProjectsComponent implements OnInit {
             );
     }
 
+    onOpenProducts(projectName: string) {
+        this.router.navigate(['prototype/products/'], 
+            {queryParams: { projectName: projectName }}
+        );
+    }
+
+    onAddNewProduct(projectId: number) {
+        this.router.navigate(['prototype/products/new'], 
+            {queryParams: { projectId: projectId }}
+        );
+    }
 }
