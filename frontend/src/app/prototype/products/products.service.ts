@@ -51,7 +51,7 @@ export class ProductsService {
         files.forEach((element) => {
             let tempTypeObj = { 
                 pictureId: element.id ? element.id : 0,
-                type: element.id ? "existing" : "new"
+                type: element.id ? "existing" : (element.file ? "new" : "deleted")
             }
             tempTypeArray.push(tempTypeObj);
             formData.append('pictures', element.file)

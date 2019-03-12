@@ -117,7 +117,7 @@
                         <div [formGroup]="thumbFormGroup">
                             <div class="row" *ngFor="let picture of pictures, let i=index">
                                 <span class="thumb">
-                                    <input type="radio" [value]="i" formControlName="thumb" (click)="onSelectThumb($event)">
+                                    <input type="radio" [value]="i" formControlName="thumb">
                                 </span>
                                 <div class="picture">
                                     <a class="picWrp">
@@ -131,7 +131,11 @@
                                     <a class="greenBtn" [href]="picture.imageSrc" download><i></i></a>
                                 </span>
                                 <div class="delete">
-                                    <a class="grayDarkBtn" (click)="onDeletePicture(i)"><i></i></a>
+                                    <a 
+                                        [ngClass]="{'disabled' : pictures.length == 1 || thumb.value == i }"
+                                        class="grayDarkBtn" 
+                                        (click)="onDeletePicture(i)"
+                                    ><i></i></a>
                                 </div>
                             </div>
                         </div>

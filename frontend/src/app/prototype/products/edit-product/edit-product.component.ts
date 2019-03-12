@@ -95,10 +95,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSelectThumb(event) {
-        // console.log(event)
-    }
-
     onAddSave() {
         let tempProduct = new Object({
             productName: this.productName.value,
