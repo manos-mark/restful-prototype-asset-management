@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { ProjectsService } from '../../projects/projects.service';
 import { Project } from '../../projects/project.model';
 import { ProductsService } from '../products.service';
@@ -35,9 +35,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
         project: new FormControl("Choose project", [Validators.required, Validators.pattern("^[0-9]+$")]),
         description: new FormControl(null, [Validators.required, Validators.minLength(1)]),
         uploadPicture: new FormControl(null),
-        thumbFormGroup: new FormGroup({
-            thumb: new FormControl(null, [Validators.required])
-        })
+        thumbArray: new FormArray([],Validators.required)
     })
 
     constructor(private activityService: ActivityService,
@@ -74,7 +72,26 @@ export class EditProductComponent implements OnInit, OnDestroy {
                             this.productForm.controls.statusId.setValue(this.product.status.id);
                             this.productForm.controls.project.setValue(this.product.projectId);
                             this.productForm.controls.description.setValue(this.product.description);
-                            this.getProductPictures(this.product.id);
+                            
+                            this.productService.getPicturesByProductId(this.product.id)
+                                .subscribe(
+                                    res => {
+                                        res.map( (picture, index) => {
+                                            let tempPicture = new ProductPicture(picture);
+                                            this.pictures.push(tempPicture);
+
+                                            this.thumbArray.push(new FormControl(null,Validators.required))
+                                            console.log(this.productForm.controls.thumbArray)
+                                            
+                                            if (picture.id == this.product.thumbPictureId) {
+                                                // this.productForm.controls.thumbFormGroup.get('thumb').setValue(index);
+                                            }
+                                        })
+                                        this.computePicturesListSize();
+                                    },
+                                    error => console.log(error)
+                                );
+
                         },
                         error => console.log(error)
                     )
@@ -82,6 +99,10 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         }
+    }
+
+    onSelectThumb(index) {
+        console.log(index)
     }
 
     onUploadPicture(eventFileList: FileList): void {
@@ -161,23 +182,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
             )
     }
 
-    getProductPictures(productId: number) {
-        this.productService.getPicturesByProductId(productId)
-            .subscribe(
-                res => {
-                    res.map( (picture, index) => {
-                        let tempPicture = new ProductPicture(picture);
-                        this.pictures.push(tempPicture);
-                        if (picture.id == this.product.thumbPictureId) {
-                            this.productForm.controls.thumbFormGroup.get('thumb').setValue(index);
-                        }
-                    })
-                    this.computePicturesListSize();
-                },
-                error => console.log(error)
-            );
-    }
-
     onDeletePicture(pictureIndex: number) {
         this.windowPopService.title = "Delete Image";
         this.windowPopService.context = "Are you sure?";
@@ -196,7 +200,8 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 if (this.pictures[pictureIndex].type.match("new")) {
                     // if
                     this.pictures.splice(pictureIndex,1);
-                    console.log(this.thumb.value)
+                    this.thumbArray.removeAt(pictureIndex);
+                    console.log(this.thumbArray)
                 }
                 // else the id and the file is null, deleted type on the service
                 else {
@@ -212,12 +217,12 @@ export class EditProductComponent implements OnInit, OnDestroy {
                         } 
                     }
                 )
-                if (picturesIsEmpty) { this.thumb.setValue(null); }
+                // if (picturesIsEmpty) { this.thumb.setValue(null); }
 
-                // check if the picture is thumb, to disable the thumb
-                if (pictureIndex == this.thumb.value) {
-                    this.thumb.setValue(null);
-                }
+                // // check if the picture is thumb, to disable the thumb
+                // if (pictureIndex == this.thumb.value) {
+                //     this.thumb.setValue(null);
+                // }
                 console.log(this.pictures)
             // })
         }
@@ -261,8 +266,8 @@ export class EditProductComponent implements OnInit, OnDestroy {
     get statusId() { return this.productForm.get('statusId') }
     get description() { return this.productForm.get('description') }
     get uploadPicture() { return this.productForm.get('uploadPicture') }
-    get thumbFormGroup() { return this.productForm.get('thumbFormGroup') }
-    get thumb() { return this.productForm.get('thumbFormGroup').get('thumb') }
+    get thumbArray() { return this.productForm.get('thumbArray') as FormArray }
+    // get thumb() { return this.productForm.get('thumbFormGroup').get('thumb') }
     get editMode() { return this.productService.editMode }
     get MAX_UPLOAD_FILES_SIZE() { return EditProductComponent.MAX_UPLOAD_FILES_SIZE }
     get MAX_UPLOAD_FILES_LENGTH() { return EditProductComponent.MAX_UPLOAD_FILES_LENGTH }
