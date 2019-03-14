@@ -6,4 +6,5 @@ export class WindowPopService {
     logout: Boolean = false;
     deleteImage: Boolean = false;
     cookies: Boolean = false;
+    cookiesToDB: Boolean = false;
 }

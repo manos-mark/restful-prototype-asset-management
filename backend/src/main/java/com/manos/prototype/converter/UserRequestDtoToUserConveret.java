@@ -1,6 +1,7 @@
 package com.manos.prototype.converter;
 
-import org.springframework.beans.BeanUtils;
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import com.manos.prototype.dto.UserRequestDto;
@@ -13,7 +14,16 @@ public class UserRequestDtoToUserConveret implements Converter<UserRequestDto, U
 	@Override
 	public User convert(UserRequestDto from) {
 		User entity = new User();
-		BeanUtils.copyProperties(from, entity);
+
+		entity.setEmail(from.getEmail());
+		entity.setFirstName(from.getFirstName());
+		entity.setLastName(from.getLastName());
+		entity.setPassword(from.getPassword());
+		
+		if (from.isAcceptedCookies()) {
+			entity.setAcceptedCookiesDatetime(LocalDateTime.now());
+		}
+		
 		return entity;
 	}
 	

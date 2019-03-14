@@ -125,6 +125,7 @@ CREATE TABLE `user` (
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(254) NOT NULL,
+  `accepted_cookies_datetime` DATETIME,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

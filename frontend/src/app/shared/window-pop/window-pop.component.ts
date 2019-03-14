@@ -53,6 +53,17 @@ export class WindowPopComponent implements OnInit, OnDestroy {
     this.activeChange.emit(false);
   }
 
+  onAcceptCookiesToDB() {
+    this.authService.currentUser.acceptedCookies = true;
+    console.log(this.authService.currentUser)
+    this.authService.acceptCookies().subscribe(
+        res => {
+            this.windowPopService.cookiesToDB = false;
+            this.activeChange.emit(false);
+        }
+    );
+  }
+
   onCancel() {
     this.windowPopService.deleteImage = false;
     this.windowPopService.logout = false;
@@ -72,6 +83,7 @@ export class WindowPopComponent implements OnInit, OnDestroy {
   get logout() { return this.windowPopService.logout }
   get deleteImage() { return this.windowPopService.deleteImage }
   get cookies() { return this.windowPopService.cookies }
+  get cookiesToDB() { return this.windowPopService.cookiesToDB }
   get title() { return this.windowPopService.title }
   get context() { return this.windowPopService.context }
   get details() { return this.windowPopService.details }

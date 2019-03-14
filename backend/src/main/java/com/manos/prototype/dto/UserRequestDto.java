@@ -11,11 +11,9 @@ import com.manos.prototype.validation.ValidEmail;
 })
 public class UserRequestDto {
 
-	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
 	private String password;
 	
-	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
 	private String matchingPassword;
 
@@ -31,21 +29,15 @@ public class UserRequestDto {
 	@NotNull(message = "is required")
 	@Size(min = 1, message = "is required")
 	private String email;
-
-	public UserRequestDto() {
-
-	}
 	
-	public UserRequestDto(@NotNull(message = "is required") @Size(min = 1, message = "is required") String password,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String matchingPassword,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String firstName,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String lastName,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String email) {
-		this.password = password;
-		this.matchingPassword = matchingPassword;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
+	private boolean acceptedCookies;
+
+	public boolean isAcceptedCookies() {
+		return acceptedCookies;
+	}
+
+	public void setAcceptedCookies(boolean acceptedCookies) {
+		this.acceptedCookies = acceptedCookies;
 	}
 
 	public String getPassword() {
