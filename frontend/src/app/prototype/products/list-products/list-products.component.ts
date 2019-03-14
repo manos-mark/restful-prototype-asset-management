@@ -36,14 +36,15 @@ export class ListProductsComponent implements OnInit {
                 private route: ActivatedRoute,
                 private carouselService: ImageCarouselService,
                 private activityService: ActivityService,
-                private breadcrumbsService: BreadcrumbsService) { }
-
-    ngOnInit() {
+                private breadcrumbsService: BreadcrumbsService) { 
         this.breadcrumbsService.breadcrumbs = [];
         this.breadcrumbsService.breadcrumbs.push({
             name: "Prototype > Products",
             src: "prototype/products"
         });
+    }
+
+    ngOnInit() {
         this.route.queryParams.subscribe(
             res => { this.filterParams.projectName = res.projectName }
         )

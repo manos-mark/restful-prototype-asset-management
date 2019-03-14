@@ -31,13 +31,16 @@ export class ListProjectsComponent implements OnInit {
     constructor(private projectService: ProjectsService,
                 private router: Router,
                 private activityService: ActivityService,
-                private breadcrumbsService: BreadcrumbsService) {
+                private breadcrumbsService: BreadcrumbsService) { 
 
         this.breadcrumbsService.breadcrumbs = [];
         this.breadcrumbsService.breadcrumbs.push({
             name: "Prototype > Projects",
             src: "prototype/projects"
         });
+    }
+
+    ngOnInit() {
         this.isMasterChecked = false;
         this.projectService.getProjects(this.pageParams, this.filterParams)
             .subscribe(
@@ -51,9 +54,6 @@ export class ListProjectsComponent implements OnInit {
                 },
                 error => console.log(error)
             )
-    }
-
-    ngOnInit() {
     }
 
 

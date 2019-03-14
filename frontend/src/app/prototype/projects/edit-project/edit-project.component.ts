@@ -20,7 +20,7 @@ import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
   templateUrl: './edit-project.component.html',
   styleUrls: ['./edit-project.component.css']
 })
-export class EditProjectComponent implements OnInit, OnDestroy {
+export class EditProjectComponent implements OnDestroy {
     projectManagers: {
         id: number;
         name: string;
@@ -47,7 +47,28 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 private windowPopService: WindowPopService,
                 private carouselService: ImageCarouselService,
                 private breadcrumbsService: BreadcrumbsService) { 
-    
+        if (this.projectService.editMode) {
+            this.breadcrumbsService.breadcrumbs = [];
+            this.breadcrumbsService.breadcrumbs.push({
+                name: "Prototype > Projects",
+                src: "prototype/projects"
+            });
+            this.breadcrumbsService.breadcrumbs.push({
+                name: " > Edit Project",
+                src: null
+            });
+        } 
+        else {
+            this.breadcrumbsService.breadcrumbs = [];
+            this.breadcrumbsService.breadcrumbs.push({
+                name: "Prototype > Projects",
+                src: "prototype/projects"
+            });
+            this.breadcrumbsService.breadcrumbs.push({
+                name: " > New Project",
+                src: null
+            });
+        }
         // when add new project status always will be new and disabled
         this.projectForm.controls.statusId.setValue(Statuses.NEW);
         this.projectForm.controls.statusId.disable();
@@ -59,15 +80,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
             )
         // on edit mode init the fields        
         if (this.projectService.editMode) {
-            this.breadcrumbsService.breadcrumbs = [];
-            this.breadcrumbsService.breadcrumbs.push({
-                name: "Prototype > Products",
-                src: "prototype/products"
-            });
-            this.breadcrumbsService.breadcrumbs.push({
-                name: "> Edit Product",
-                src: null
-            });
             this.route.queryParams.subscribe(
                 res => {
                     this.projectService.getProjectById(res.projectId).subscribe(
@@ -94,20 +106,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         }
-        else {
-            this.breadcrumbsService.breadcrumbs = [];
-            this.breadcrumbsService.breadcrumbs.push({
-                name: "Prototype > Projects",
-                src: "prototype/projects"
-            });
-            this.breadcrumbsService.breadcrumbs.push({
-                name: "> New Project",
-                src: null
-            });
-        }
-    }
-
-    ngOnInit() {
     }
 
     onOpenCarousel(productId: number) {
