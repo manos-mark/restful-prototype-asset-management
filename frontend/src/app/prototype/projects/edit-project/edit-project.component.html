@@ -92,7 +92,7 @@
                             <span class="productName">{{ product.productName }}</span>
                             <span class="sn">{{ product.serialNumber }}</span>
                             <span class="quantity">{{ product.quantity }}</span>
-                            <div class="picture">
+                            <div class="picture" (click)="onOpenCarousel(product.id)">
                                 <a class="picWrp">
                                 <img [src]="'api/product-pictures/' + product.thumbPictureId"/>  
                                 <i>{{ product.picturesCount }}</i>

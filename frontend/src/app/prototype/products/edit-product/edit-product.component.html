@@ -131,7 +131,7 @@
                                             formControlName={{i}} 
                                             (click)="onSelectThumb(i)">
                                     </span>
-                                    <div class="picture">
+                                    <div class="picture" (click)="onOpenCarousel()">
                                         <a class="picWrp">
                                             <img [src]="pictures[i].imageSrc">
                                             <var class="zoom"><span></span></var>

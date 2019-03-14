@@ -2,25 +2,4 @@
     [(ngModel)]="active"
     ngDefaultControl
     [ngStyle]="{'display': active ? 'block' : 'none'}">
-        <div *ngFor="let image of albums; let i=index">
-            <img [src]="image.thumb" (click)="open(i)"/>
-        </div>
 </div>
-<!-- <div 
-    class="windowPopWrp" 
-    [(ngModel)]="active"
-    ngDefaultControl
-    [ngStyle]="{'display': active ? 'block' : 'none'}">
-    <div class="windowPop" style="width: 80% !important; height: 65% !important;">
-        <div class="">
-            <div class="centered">
-                <div *ngFor="let image of _albums; let i=index">
-                    <img [src]="image.thumb" (click)="open(i)"/>
-                  </div>
-            </div>
-        </div>
-        <div class="">
-            <a class="grayDarkBtn" (click)="onCancel($event)">Close</a>
-        </div>
-    </div>
-</div> -->

@@ -7,6 +7,7 @@ import { PageParams } from '../../projects/page-params.model';
 import { Statuses } from '../../status.enum';
 import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
+import { ProductPicture } from '../../product-picture.model';
 
 @Component({
   selector: 'app-list-products',
@@ -15,7 +16,7 @@ import { ProductsService } from '../products.service';
 })
 export class ListProductsComponent implements OnInit {
     products: Product[] = [];
-    pictures: File[] = [];
+    pictures: ProductPicture[] = [];
     projectsNames: string[] = [];
     filterParams = new FilterParams;
     pageParams = new PageParams;
@@ -227,8 +228,9 @@ export class ListProductsComponent implements OnInit {
         this.productService.getPicturesByProductId(productId)
             .subscribe(
                 res => {
+                    this.pictures = [];
                     res.map( picture => {
-                        this.pictures.push(picture);
+                        this.pictures.push(new ProductPicture(picture));
                     })
                     this.carouselService.pictures = this.pictures;
                     this.carouselService.activate = true;

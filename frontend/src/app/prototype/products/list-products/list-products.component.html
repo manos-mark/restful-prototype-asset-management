@@ -113,11 +113,11 @@
             <span class="quantity">{{ product.quantity }}</span>
             <span class="description">{{ product.description }}</span>
             <span class="project">{{ product.projectName }}</span>
-            <div class="picture">
+            <div class="picture" (click)="getProductPictures(product.id)">
                 <a class="picWrp">
                 <img [src]="'api/product-pictures/' + product.thumbPictureId"/>  
                 <i>{{ product.picturesCount }}</i>
-                <var class="zoom" (click)="getProductPictures(product.id)"><span></span></var>
+                <var class="zoom"><span></span></var>
                 </a>
             </div>
             <div class="status">

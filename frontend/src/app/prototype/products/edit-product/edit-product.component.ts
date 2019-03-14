@@ -10,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 import { ProductPicture } from '../../product-picture.model';
 import { Observer, Subscription } from 'rxjs';
+import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -45,7 +46,8 @@ export class EditProductComponent implements OnInit, OnDestroy {
         private productService: ProductsService,
         private router: Router,
         private route: ActivatedRoute,
-        private windowPopService: WindowPopService) { }
+        private windowPopService: WindowPopService,
+        private carouselService: ImageCarouselService) { }
 
     ngOnInit() {
         // when add new project status always will be new and disabled
@@ -103,6 +105,11 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         }
+    }
+
+    onOpenCarousel() {
+        this.carouselService.pictures = this.pictures;
+        this.carouselService.activate = true;
     }
 
     onSelectThumb(index: number) {

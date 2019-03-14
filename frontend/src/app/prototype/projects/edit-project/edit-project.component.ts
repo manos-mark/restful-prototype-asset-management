@@ -10,6 +10,8 @@ import { ProductsService } from '../../products/products.service';
 import { PageParams } from '../page-params.model';
 import { FilterParams } from '../filter-params.model';
 import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
+import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
+import { ProductPicture } from '../../product-picture.model';
 
 @Component({
   selector: 'app-edit-project',
@@ -23,6 +25,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     }[];
     project: Project;
     products: Product[] = [];
+    pictures: ProductPicture[] = [];
     pageParams = new PageParams();
     filterParams = new FilterParams();
 
@@ -39,7 +42,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private route: ActivatedRoute,
                 private productService: ProductsService,
-                private windowPopService: WindowPopService) { }
+                private windowPopService: WindowPopService,
+                private carouselService: ImageCarouselService) { }
 
     ngOnInit() {
         // when add new project status always will be new and disabled
@@ -79,6 +83,21 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         }
+    }
+
+    onOpenCarousel(productId: number) {
+        this.productService.getPicturesByProductId(productId)
+            .subscribe(
+                res => {
+                    this.pictures = [];
+                    res.map( picture => {
+                        this.pictures.push(new ProductPicture(picture));
+                    })
+                    this.carouselService.pictures = this.pictures;
+                    this.carouselService.activate = true;
+                },
+                error => console.log(error)
+            );
     }
 
     onAddSave() {
