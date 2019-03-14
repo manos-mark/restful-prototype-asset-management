@@ -56,7 +56,7 @@ public class UserController {
 		emailService.sendNewPassword(email.getEmail(), newPassword); 	// send email
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/{id}/new-password")
 	public void updateUser(@RequestBody NewUserPassRequestDto requestDto,
 			@PathVariable("id") long userId) {
 		String oldPass = requestDto.getOldPassword();
@@ -65,6 +65,12 @@ public class UserController {
 		User user = userService.getUser(userId);
 		
 		userService.updateUser(user, oldPass, newPass);
+	}
+	
+	@PutMapping("/{id}")
+	public void updateUser(@RequestBody UserRequestDto requestDto,
+			@PathVariable("id") long userId) {
+		userService.updateUser(requestDto, userId);
 	}
 	
 	@DeleteMapping("/{id}")

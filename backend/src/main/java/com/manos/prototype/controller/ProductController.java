@@ -1,14 +1,10 @@
 package com.manos.prototype.controller;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
-
 import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +41,7 @@ import com.pastelstudios.paging.PageResult;
 @RequestMapping("/products")
 public class ProductController {
 
-	private static final Logger logger = LogManager.getLogger(ProductController.class);
+//	private static final Logger logger = LogManager.getLogger(ProductController.class);
 	
 	@Autowired
 	private ProductServiceImpl productService;
@@ -95,10 +91,7 @@ public class ProductController {
 			@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
 			@RequestPart("pictures") List<MultipartFile> pictures,
 			@RequestPart("pictureTypeRequestDto") List<PictureTypeRequestDto> pictureTypeRequestDto) {
-		Long start = System.currentTimeMillis();
 		List<ProductPicture> newPictures = conversionService.convertList(pictures, ProductPicture.class);
-		Long end = System.currentTimeMillis();
-		logger.debug("time: " + (end-start));
 		
 		productService.updateProduct(productRequestDto, productId, newPictures, pictureTypeRequestDto);
 	}

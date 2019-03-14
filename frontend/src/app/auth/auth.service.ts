@@ -6,7 +6,6 @@ import { ActivityService } from '../general/home/activity/activity.service';
 
 @Injectable()
 export class AuthService {
-  // windowPopSuccess = false;
   currentUser: User;
   rememberMe = false;
   
@@ -19,15 +18,6 @@ export class AuthService {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
       observe: 'response'
     })
-    .subscribe(
-      resp => { 
-        this.currentUser = resp.body;
-        if (this.currentUser) {
-          this.router.navigate(['/']);
-        } 
-      },
-      error => { if (error.status !== 401) console.log(error) }
-    );
   }
 
   getCurrentUser() {
@@ -35,15 +25,6 @@ export class AuthService {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
       observe: 'response'
     })
-    .subscribe(
-      resp => { 
-        this.currentUser = resp.body;
-        if (this.currentUser) {
-          this.router.navigate(['/']);
-        } 
-      },
-      error => { if (error.status !== 401) console.log(error) }
-    );
   }
   
   loginUser(email: string, password: string) {
@@ -68,7 +49,7 @@ export class AuthService {
   }
 
   updateUser(oldPassword:number, newPassword: number, repeatNewPassword: number) {
-    return this.httpClient.put<any>('api/users/' + this.currentUser.id.toString(), 
+    return this.httpClient.put<any>('api/users/' + this.currentUser.id.toString() + "/new-password", 
       {
         oldPassword: oldPassword,
         password: newPassword,
@@ -78,6 +59,15 @@ export class AuthService {
         headers: new HttpHeaders().set('Content-Type', 'application/json'),
         observe: 'response'
       }
+    );
+  }
+
+  acceptCookies() {
+    return this.httpClient.put<any>('api/users/' + this.currentUser.id.toString(),  this.currentUser,
+        {
+        headers: new HttpHeaders().set('Content-Type', 'application/json'),
+        observe: 'response'
+        }
     );
   }
 

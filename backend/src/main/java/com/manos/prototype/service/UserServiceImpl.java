@@ -1,12 +1,15 @@
 package com.manos.prototype.service;
 
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.UserDaoImpl;
+import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
@@ -104,5 +107,25 @@ public class UserServiceImpl {
 		user.setPassword(passwordEncoder.encode(newPassword));
 		userDao.saveUser(user);
 		return newPassword;
+	}
+	
+	@Transactional
+	public void updateUser(UserRequestDto user, Long userId) {
+		
+		User oldUser = userDao.getUserById(userId);
+		if (oldUser == null) {
+			throw new EntityNotFoundException(User.class); // throw
+		}
+		oldUser.setId(userId);
+		
+		oldUser.setEmail(user.getEmail());
+		oldUser.setFirstName(user.getFirstName());
+		oldUser.setLastName(user.getLastName());
+		
+		if (user.isAcceptedCookies()) {
+			oldUser.setAcceptedCookiesDatetime(LocalDateTime.now());
+		}
+		
+		userDao.updateUser(oldUser);
 	}
 }

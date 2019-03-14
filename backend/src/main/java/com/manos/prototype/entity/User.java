@@ -1,5 +1,7 @@
 package com.manos.prototype.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 @Entity
 @Table(name = "user")
@@ -21,15 +23,16 @@ public class User {
 
 	@Column(name = "email")
 	private String email;
+	
+	@Column(name = "accepted_cookies_datetime")
+	private LocalDateTime acceptedCookiesDatetime;
 
-	public User() {
+	public LocalDateTime getAcceptedCookiesDatetime() {
+		return acceptedCookiesDatetime;
 	}
 
-	public User(String password, String firstName, String lastName, String email) {
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
+	public void setAcceptedCookiesDatetime(LocalDateTime acceptedCookiesDatetime) {
+		this.acceptedCookiesDatetime = acceptedCookiesDatetime;
 	}
 
 	public Long getId() {

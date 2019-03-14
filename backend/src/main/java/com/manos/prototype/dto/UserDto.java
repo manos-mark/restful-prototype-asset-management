@@ -9,9 +9,19 @@ public class UserDto {
 	private String lastName;
 
 	private String email;
+	
+	private boolean acceptedCookies;
 
 	public UserDto() {
 
+	}
+	
+	public boolean isAcceptedCookies() {
+		return acceptedCookies;
+	}
+
+	public void setAcceptedCookies(boolean acceptedCookies) {
+		this.acceptedCookies = acceptedCookies;
 	}
 
 	public Long getId() {

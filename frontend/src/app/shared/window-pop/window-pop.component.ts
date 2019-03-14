@@ -12,7 +12,7 @@ import { ProductsService } from 'src/app/prototype/products/products.service';
 })
 export class WindowPopComponent implements OnInit, OnDestroy {
   @Input() active: Boolean;
-  @Output() activeChange = new EventEmitter<string>();
+  @Output() activeChange = new EventEmitter<Boolean>();
   
   constructor(private authService: AuthService,
                 private activityService: ActivityService,
@@ -27,14 +27,14 @@ export class WindowPopComponent implements OnInit, OnDestroy {
               res => {
                 this.router.navigate(['/login']);
                 this.windowPopService.logout = false;
-                this.activeChange.emit();
+                this.activeChange.emit(false);
               },
               error => {
                 if (error.status === 404) {
                   this.authService.currentUser = undefined;
                   this.router.navigate(['/login']);
                   this.windowPopService.logout = false;
-                  this.activeChange.emit();
+                  this.activeChange.emit(false);
                 }
               }
             ) }
@@ -43,13 +43,32 @@ export class WindowPopComponent implements OnInit, OnDestroy {
 
   onDeleteImage() {
     this.productService.deleteImageConfirmed.next(true);
-    this.activeChange.emit();
+    this.windowPopService.deleteImage = false;
+    this.activeChange.emit(false);
+  }
+
+  onAcceptCookies() {
+    document.cookie = 'acceptedCookies=true'
+    this.windowPopService.cookies = false;
+    this.activeChange.emit(false);
+  }
+
+  onAcceptCookiesToDB() {
+    this.authService.currentUser.acceptedCookies = true;
+    console.log(this.authService.currentUser)
+    this.authService.acceptCookies().subscribe(
+        res => {
+            this.windowPopService.cookiesToDB = false;
+            this.activeChange.emit(false);
+        }
+    );
   }
 
   onCancel() {
     this.windowPopService.deleteImage = false;
     this.windowPopService.logout = false;
-    this.activeChange.emit(); 
+    this.windowPopService.cookies = false;
+    this.activeChange.emit(false); 
   }
 
   ngOnInit() {
@@ -58,10 +77,13 @@ export class WindowPopComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.windowPopService.deleteImage = false;
     this.windowPopService.logout = false;
+    this.windowPopService.cookies = false;
   }
 
   get logout() { return this.windowPopService.logout }
   get deleteImage() { return this.windowPopService.deleteImage }
+  get cookies() { return this.windowPopService.cookies }
+  get cookiesToDB() { return this.windowPopService.cookiesToDB }
   get title() { return this.windowPopService.title }
   get context() { return this.windowPopService.context }
   get details() { return this.windowPopService.details }

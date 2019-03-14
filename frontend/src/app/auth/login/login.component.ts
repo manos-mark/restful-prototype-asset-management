@@ -28,7 +28,23 @@ export class LoginComponent implements OnInit {
               private windowPopService: WindowPopService) { }
 
   ngOnInit() {
-    this.authService.getCsrf();   
+    this.authService.getCsrf()
+        .subscribe(
+            resp => { 
+                this.authService.currentUser = resp.body;
+                if (this.authService.currentUser) {
+                    this.router.navigate(['/']);
+                } 
+            },
+            error => { if (error.status !== 401) console.log(error) }
+        );  
+    if (!document.cookie.match('acceptedCookies')) {
+        this.windowPopService.title = "Cookies";
+        this.windowPopService.context = "This site uses cookies";
+        this.windowPopService.details = "Do you accept?";
+        this.windowPopService.cookies = true;
+        this.windowPopService.activate = true;
+    } 
   }
 
 
@@ -40,9 +56,17 @@ export class LoginComponent implements OnInit {
         },
         error => {
           if (error.status === 200) {
-            this.authService.getCurrentUser();
+            this.authService.getCurrentUser()
+                .subscribe(
+                    resp => { 
+                        this.authService.currentUser = resp.body;
+                        if (this.authService.currentUser) {
+                            this.router.navigate(['/']);
+                        } 
+                    },
+                    error => { if (error.status !== 401) console.log(error) }
+                );
             this.activityService.addActivity('1').subscribe();
-            this.router.navigate(['/']);
           } else {
             this.windowPopService.title = "Authentication Failed";
             this.windowPopService.context = "Your request is not successful!";

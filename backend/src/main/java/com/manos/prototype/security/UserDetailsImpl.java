@@ -17,6 +17,7 @@ public class UserDetailsImpl implements UserDetails {
 	private String email = null;
 	private String firstName = null;
 	private String lastName = null;
+	private boolean acceptedCookies = false;
 	
 	public UserDetailsImpl(User user) {
 		this.id = user.getId();
@@ -24,6 +25,7 @@ public class UserDetailsImpl implements UserDetails {
 		this.lastName = user.getLastName();
 		this.email = user.getEmail();
 		this.password = user.getPassword();
+		this.acceptedCookies = user.getAcceptedCookiesDatetime() != null;
 	}
 	
 	@Override
@@ -75,5 +77,9 @@ public class UserDetailsImpl implements UserDetails {
 	
 	public String getEmail() {
 		return email;
+	}
+	
+	public boolean getAcceptedCookies() {
+		return acceptedCookies;
 	}
 }
