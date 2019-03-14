@@ -42,12 +42,13 @@ export class LoginComponent implements OnInit {
           if (error.status === 200) {
             this.authService.getCurrentUser();
             this.activityService.addActivity('1').subscribe();
-
-            this.windowPopService.title = "Cookies";
-            this.windowPopService.context = "This site uses cookies";
-            this.windowPopService.details = "Do you accept?";
-            this.windowPopService.cookies = true;
-            this.windowPopService.activate = true;
+            if (!document.cookie.match('acceptedCookies')) {
+                this.windowPopService.title = "Cookies";
+                this.windowPopService.context = "This site uses cookies";
+                this.windowPopService.details = "Do you accept?";
+                this.windowPopService.cookies = true;
+                this.windowPopService.activate = true;
+            }
           } else {
             this.windowPopService.title = "Authentication Failed";
             this.windowPopService.context = "Your request is not successful!";

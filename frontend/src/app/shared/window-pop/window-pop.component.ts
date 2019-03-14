@@ -43,16 +43,20 @@ export class WindowPopComponent implements OnInit, OnDestroy {
 
   onDeleteImage() {
     this.productService.deleteImageConfirmed.next(true);
+    this.windowPopService.deleteImage = false;
     this.activeChange.emit(false);
   }
 
   onAcceptCookies() {
+    document.cookie = 'acceptedCookies=true'
+    this.windowPopService.cookies = false;
     this.activeChange.emit(false);
   }
 
   onCancel() {
     this.windowPopService.deleteImage = false;
     this.windowPopService.logout = false;
+    this.windowPopService.cookies = false;
     this.activeChange.emit(false); 
   }
 
