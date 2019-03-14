@@ -2,7 +2,7 @@ import { StatusesMap, Status } from '../status.enum';
 
 export class Project {
     public id: number;
-    public date: string;
+    public createdAt: Date;
     public projectName: string;
     public companyName: string;
     public projectManager: {
@@ -15,7 +15,7 @@ export class Project {
 
     constructor(dto: any) {
         this.id = dto.id;
-        this.date = dto.date;
+        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue, dto.createdAt.dayOfMonth);
         this.projectName = dto.projectName;
         this.companyName = dto.companyName;
         this.projectManager = dto.projectManager;

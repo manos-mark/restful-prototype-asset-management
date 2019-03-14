@@ -1,5 +1,6 @@
 package com.manos.prototype.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +18,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "project")
 public class Project {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
 
 	@Column(name = "project_name")
@@ -28,35 +29,28 @@ public class Project {
 
 	@Column(name = "company_name")
 	private String companyName;
-	
+
 	@Column(name = "creation_date")
-	private String date;
-	
+	private LocalDate createdAt;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status_id")
 	private Status status;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_manager_id")
 	private ProjectManager projectManager;
-	
+
 	@OneToMany(mappedBy = "project")
 	private List<Product> products = new ArrayList<>();
-	
-	public Project(String projectName, String companyName, ProjectManager projectManager, String date, Status status) {
-		this.projectName = projectName;
-		this.companyName = companyName;
-		this.projectManager = projectManager;
-		this.date = date;
-		this.status = status;
-	}
-	
+
 	public Project(int id) {
 		this.id = id;
 	}
 
-	public Project() {}
-	
+	public Project() {
+	}
+
 	public List<Product> getProducts() {
 		return products;
 	}
@@ -97,12 +91,12 @@ public class Project {
 		this.projectManager = projectManager;
 	}
 
-	public String getDate() {
-		return date;
+	public LocalDate getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setCreatedAt(LocalDate createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public Status getStatus() {

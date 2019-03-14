@@ -6,82 +6,142 @@
   <div class="action">
     <a class="blueBtn" routerLink="new">Add product</a>
     <div class="dropdown">
-      <select>
-        <option>Results per page:5</option>
-        <option>Results per page:10</option>
+      <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
+        <option value=5>Results per page:5</option>
+        <option value=20>Results per page:20</option>
+        <option value=50>Results per page:50</option>
       </select>
     </div>
   </div>
 </div>
 <div class="tableWrp">
-  <div class="filters">
-    <p>Filters</p>
-    <div class="inputWrp date">
-      <input value="Date from"/>
-    </div>
-    <div class="inputWrp date">
-      <input value="Date to"/>
-    </div>
-    <div class="dropdown status">
-      <select>
-        <option>Status:All</option>
-      </select>
-    </div>
-    <div class="dropdown status">
-      <select>
-        <option>Project:All</option>
-      </select>
-    </div>
-    <a class="blueDarkBtn">Apply</a>
-    <div class="right">
-      <a class="grayBtn"><span>Clear filters</span><i></i></a>
-      <div class="pagination">
-        <a class="arrowLeft"><i></i></a>
-        <div class="center">
-          <a class="active">1</a>
-          <a>2</a>
-          <a>3</a>
+    <div class="filters">
+        <p>Filters</p>
+        <div class="inputWrp date">
+            <input #dateFrom 
+                placeholder="Date from" 
+                type="date" 
+                [max]="dateToFilter"
+                (change)="dateFromFilter = dateFrom.value.toLocaleString('en-GB')"
+            />
         </div>
-        <a class="arrowRight disabled"><i></i></a>
-      </div>
+        <div class="inputWrp date">
+            <input #dateTo 
+                placeholder="Date to" 
+                type="date" 
+                [min]="dateFromFilter"
+                (change)="dateToFilter = dateTo.value.toLocaleString('en-GB')"
+            />
+        </div>
+        <div class="dropdown status">
+            <select #statusDropdown>
+                <option value=0 selected>Status: All</option>
+                <option value=1>Status: In Progress</option>
+                <option value=2>Status: New</option>
+                <option value=3>Status: Finished</option>
+            </select>
+        </div>
+        <div class="dropdown status">
+            <select #projectDropdown>
+                <option value="null" selected>Project: All</option>
+                <option 
+                    *ngFor="let project of projectsNames"
+                    [value]="project">Project: {{ project }}</option>
+            </select>
+        </div>
+        <a class="blueDarkBtn" 
+            (click)="applyFilters(statusDropdown.value, projectDropdown.value, dateFrom.value, dateTo.value)"
+        >Apply</a>
+        <div class="right">
+            <a class="grayBtn" (click)="clearFilters()"><span>Clear filters</span><i></i></a>
+            <div class="pagination">
+                <a class="arrowLeft"
+                    [ngClass]="{'disabled': pageParams.page == 1}"
+                    (click)="changePageDown()"
+                ><i></i></a>
+                <div class="center">
+                    <a *ngIf="pagesArray.length == 0" class="disabled">0</a>
+                    <a 
+                        *ngFor="let curPage of pagesArray"
+                        (click)="changePage(curPage)"
+                        [ngClass]="{'active': pageParams.page == curPage}">{{ curPage }}
+                    </a>
+                </div>
+                <a class="arrowRight"
+                    [ngClass]="{'disabled': pageParams.page == totalPages}"
+                    (click)="changePageUp()"
+                ><i></i></a>
+            </div>
+        </div>
     </div>
-  </div>
   <div class="table">
     <div class="header">
-      <div class="checkbox"><a class="checkbox active"><i></i></a></div>
-      <span class="number">#</span>
-      <a class="date"><i class="sort up"></i>Created</a>
-      <span class="productName">Product name</span>
-      <span class="sn">SN</span>
-      <a class="quantity"><i class="sort up"></i>Qty</a>
-      <span class="description">Description</span>
-      <span class="project">Project</span>
-      <span class="picture">Picture</span>
-      <div class="status">Status</div>
-      <div class="settings"><i></i></div>
+        <div class="checkbox">
+            <a class="checkbox" 
+                (click)="onSelectAll()"
+                [ngClass]="{'active': isMasterChecked}"
+            ><i></i></a>
+        </div>
+        <span class="number">#</span>
+        <a class="date" (click)="sortByDate()">
+            <i [ngClass]="sortByDateAsc ? 'sort up': 'sort down'"></i>
+        Created</a>
+        <span class="productName">Product name</span>
+        <span class="sn">SN</span>
+        <a class="quantity" (click)="sortByQuantity()">
+            <i [ngClass]="sortByQuantityAsc ? 'sort up': 'sort down'"></i>
+        Qty</a>
+        <span class="description">Description</span>
+        <span class="project">Project</span>
+        <span class="picture">Picture</span>
+        <div class="status">Status</div>
+        <div class="settings"><i></i></div>
     </div>
+    
     <div class="content">
-        <app-product-item 
-          *ngFor="let product of products"
-          [product]="product"
-        ></app-product-item>
+        <div class="row" *ngFor="let product of products">
+            <div class="checkbox">
+                <a class="checkbox" 
+                    [ngClass]="{'active': product.isChecked}"
+                    (click)="onSelect(product)"
+                ><i></i></a>
+            </div>
+            <span class="number">{{ product.id }}</span>
+            <span class="date">{{ product.createdAt | date: 'mediumDate' }}</span>
+            <span class="productName">{{ product.productName }}</span>
+            <span class="sn">{{ product.serialNumber }}</span>
+            <span class="quantity">{{ product.quantity }}</span>
+            <span class="description">{{ product.description }}</span>
+            <span class="project">{{ product.projectName }}</span>
+            <div class="picture">
+                <a class="picWrp">
+                <img [src]="'api/product-pictures/' + product.thumbPictureId"/>  
+                <i>{{ product.picturesCount }}</i>
+                <var class="zoom" (click)="getProductPictures(product.id)"><span></span></var>
+                </a>
+            </div>
+            <div class="status">
+                <span [ngClass]="product.status.cssClass">{{ product.status.name }}</span>
+            </div>
+            <div class="settings"><a class="grayBtn" (click)="onEdit(product.id)"><i></i></a></div>
+        </div>
     </div>
   </div>
   <div class="actionTtl">
     <i></i>
-    <p>With 4 project selected:</p>
+    <p>With {{ selectedProductsCount }} products selected:</p>
   </div>
-  <div class="bottomActions">
-    <p>Actions</p>
-    <div class="dropdown">
-      <select>
-        <option>Select</option>
-        <option>Change status to New</option>
-        <option>Change status to In progress</option>
-        <option>Change status to Finished</option>
-        <option>Delete</option>
-      </select>
+    <div class="bottomActions">
+        <p>Actions</p>
+        <div class="dropdown">
+            <select #actionsDropdown>
+            <option selected disabled>Select</option>
+            <option value="NEW">Change status to New</option>
+            <option value="IN_PROGRESS">Change status to In progress</option>
+            <option value="FINISHED">Change status to Finished</option>
+            <option value="DELETE">Delete</option>
+            </select>
+        </div>
+        <a class="blueDarkBtn" (click)="applyChanges(actionsDropdown.value)">Apply</a>
     </div>
-    <a class="blueDarkBtn">Apply</a>
-  </div>
 </div>

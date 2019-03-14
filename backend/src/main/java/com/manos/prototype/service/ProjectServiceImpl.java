@@ -1,7 +1,5 @@
 package com.manos.prototype.service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.manos.prototype.dao.PictureDaoImpl;
 import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dao.ProjectManagerDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
@@ -39,113 +39,84 @@ public class ProjectServiceImpl {
 	private ProductDaoImpl productDao;
 	
 	@Autowired
+	private PictureDaoImpl pictureDao;
+	
+	@Autowired
 	private ProjectManagerDaoImpl projectManagerDao;
 	
 	@Transactional
 	public PageResult<ProjectVo> getProjects(PageRequest pageRequest, ProjectSearch search) {
 		List<ProjectVo> projects = projectDao.getProjects(pageRequest, search);
-		Long totalCount = 0L;
-		if (acceptedStatuses.contains(search.getStatusId())) {
-			totalCount = projectDao.getProjectsCountByStatus(search.getStatusId());
-		}
-		else {
-			totalCount = projectDao.count();
-		}
+		int totalCount = projectDao.count(search);
 		// fetch because of lazy loading
 		for (ProjectVo projectVo : projects) {
 			Hibernate.initialize(projectVo.getProject().getProjectManager());
 			Hibernate.initialize(projectVo.getProject().getStatus());
 		}
 		
-		return new PageResult<>(projects, totalCount.intValue(), pageRequest.getPageSize());
+		return new PageResult<>(projects, totalCount, pageRequest.getPageSize());
 	}
 	
 	@Transactional
 	public Project getProject(int id) {
 		Project project = projectDao.getProject(id);
 		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + id);
+			throw new EntityNotFoundException(Project.class, id);
 		}
 		return project;
 	}
 
 	@Transactional
-	public void deleteProject(int id, List<Product> products) {
+	public void deleteProject(int id) {
+		List<Product> products = productDao.getProductsByProjectId(id);
+				
 		Project project  = projectDao.getProject(id);
 		if (project == null) {
-			throw new EntityNotFoundException("Project id not found - " + id);
+			throw new EntityNotFoundException(Project.class, id);
 		}
 		// should delete first all the products of this project
 		for (Product product : products) {
+			List<ProductPicture> pictures = pictureDao.getPicturesByProductId(product.getId());
+			for (ProductPicture picture: pictures) {
+				pictureDao.deletePicture(picture.getId());
+			}
 			productDao.deleteProduct(product.getId());
 		}
 		projectDao.deleteProject(id);
 	}
 
 	@Transactional
-	public void saveProject(ProjectRequestDto dto) {
-		Project project = new Project();
-		
-		if (dto == null) {
-			throw new EntityNotFoundException("Save Project: cannot be null.");
-		}
-		
-		if (dto.getCompanyName() == null) {
-			throw new EntityNotFoundException("Save Project: companyName cannot be null.");
-		}
-		project.setCompanyName(dto.getCompanyName());
-		
-		if (dto.getDate() == null) {
-			throw new EntityNotFoundException("Save Project: date cannot be null.");
-		}
-		// convert date
-		String tempDate = dto.getDate();
-		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("dd/MM/yyyy");
-		LocalDate date = LocalDate.parse(tempDate, formatter);
-		project.setDate(date.toString());
-		
-		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
+	public void saveProject(Project project, int projectManagerId) {
+		ProjectManager projectManager = projectManagerDao.getProjectManager(projectManagerId);
 		if (projectManager == null) {
-			throw new EntityNotFoundException("Save Project: projectManager id not found - " + dto.getProjectManagerId());
+			throw new EntityNotFoundException(ProjectManager.class, projectManagerId);
 		}
 		project.setProjectManager(projectManager);
-		
-		if (dto.getProjectName() == null) {
-			throw new EntityNotFoundException("Save Project: projectName cannot be null.");
-		}
-		project.setProjectName(dto.getProjectName());
-		
-		project.setStatus(new Status(Status.NEW_ID));
 		
 		projectDao.saveProject(project);
 	}
 	
 	@Transactional
-	public void updateProject(ProjectRequestDto dto, int projectId) {
+	public void updateProject(ProjectRequestDto projectDto, int projectId) {
+		
 		
 		Project project = projectDao.getProject(projectId);
 		if (project == null) {
-			throw new EntityNotFoundException("Update Project: cannot find project with id - " + projectId);
+			throw new EntityNotFoundException(Project.class, projectId);
 		}
 		
-		if (dto.getCompanyName() != null) {
-			project.setCompanyName(dto.getCompanyName());
-		}
-		
-		ProjectManager projectManager = projectManagerDao.getProjectManager(dto.getProjectManagerId());
+		ProjectManager projectManager = projectManagerDao.getProjectManager(projectDto.getProjectManagerId());
 		if (projectManager != null) {
 			project.setProjectManager(projectManager);
 		}
 		
-		if (dto.getProjectName() != null) {
-			project.setProjectName(dto.getProjectName());
+		if (!acceptedStatuses.contains(projectDto.getStatusId())) {
+			throw new EntityNotFoundException(Status.class, projectDto.getStatusId());
 		}
+		project.setStatus(new Status(projectDto.getStatusId()));
 		
-		if (!acceptedStatuses.contains(dto.getStatusId())) {
-			throw new EntityNotFoundException("Save Project: - statusId must be 1, 2 or 3.");
-		}
-		project.setStatus(new Status(dto.getStatusId()));
+		project.setCompanyName(projectDto.getCompanyName());
+		project.setProjectName(projectDto.getProjectName());
 	}
 
 	@Transactional

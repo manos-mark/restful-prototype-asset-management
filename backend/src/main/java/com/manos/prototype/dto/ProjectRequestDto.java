@@ -19,27 +19,10 @@ public class ProjectRequestDto {
 	@Min(value=1)
 	private int projectManagerId;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
-	private String date;
-
 	@NotNull
 	@Min(value=1)
 	@Max(value=3)
 	private int statusId;
-
-	public ProjectRequestDto(
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String projectName,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String companyName,
-			@NotNull(message = "is required") @Min(value=1) int projectManagerId,
-			@NotNull(message = "is required") @Size(min = 1, message = "is required") String date,
-			@NotNull @Min(1) @Max(3) int statusId) {
-		this.projectName = projectName;
-		this.companyName = companyName;
-		this.projectManagerId = projectManagerId;
-		this.date = date;
-		this.statusId = statusId;
-	}
 
 	public ProjectRequestDto() {}
 	
@@ -65,14 +48,6 @@ public class ProjectRequestDto {
 
 	public void setProjectManagerId(int projectManagerId) {
 		this.projectManagerId = projectManagerId;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
 	}
 
 	public int getStatusId() {

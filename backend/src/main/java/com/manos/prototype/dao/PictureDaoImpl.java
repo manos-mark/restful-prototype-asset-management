@@ -58,7 +58,7 @@ public class PictureDaoImpl {
 		currentSession.delete(project);	
 	}
 	
-	public Long getPicturesCountByProductId(int productId) {
+	public int getPicturesCountByProductId(int productId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("select count(pic.id) from ProductPicture pic ")
@@ -67,7 +67,9 @@ public class PictureDaoImpl {
 		Query<Long> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Long.class);
 		theQuery.setParameter("productId", productId);
-		return theQuery.getSingleResult();
+		
+		Long count = theQuery.getSingleResult();
+		return count == null ? 0 : count.intValue();
 	}
 
 	public void updatePicture(ProductPicture pic) {

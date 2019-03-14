@@ -1,5 +1,7 @@
 package com.manos.prototype.config;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.pastelstudios.convert.ConversionService;
@@ -32,6 +35,24 @@ public class AppConfig {
 		return txManager;
 	}
 
+	@Bean
+	public CommonsMultipartResolver multipartResolver() {
+		CommonsMultipartResolver multipartResolver = new CommonsMultiPartResolverMine();
+		multipartResolver.setMaxUploadSize(12000000);
+		return multipartResolver;
+	}
+
+	public static class CommonsMultiPartResolverMine extends CommonsMultipartResolver {
+		@Override
+		public boolean isMultipart(HttpServletRequest request) {
+			final String header = request.getHeader("Content-Type");
+			if(header == null){
+				return false;
+			}
+			return header.contains("multipart/form-data");
+		}
+	}
+	
 	@Bean
 	public ConversionService conversionService() {
 		return new ConversionServiceImpl();

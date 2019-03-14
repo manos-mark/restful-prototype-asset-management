@@ -1,34 +1,27 @@
 <div 
   class="windowPopWrp" 
   [(ngModel)]="active"
-  (windowPopFail)="windowPopFail"
-  (windowPopSuccess)="windowPopSuccess"
-  (windowPopLogout)="windowPopLogout"
+  (logout)="logout"
   ngDefaultControl
   [ngStyle]="{'display': active ? 'block' : 'none'}">
   <div class="windowPop">
     <div class="windowPopHeader">
       <i></i>
       <div class="title">
-        <p *ngIf="this.windowPopLogout">Log out</p>
-        <!-- <p *ngIf="!this.windowPop">Delete image</p> -->
-        <p *ngIf="this.windowPopFail">Authentication Failed</p>
-        <p *ngIf="this.windowPopSuccess">Success!</p>
+        <p>{{ title }}</p>
       </div>
     </div>
     <div class="windowPopContents">
       <div class="centered">
-        <h4 *ngIf="this.windowPopLogout">Are you sure?</h4>
-        <h4 *ngIf="this.windowPopFail">Your request is not successful!</h4>
-        <span *ngIf="this.windowPopLogout">You will be logged out!</span>
-        <span *ngIf="this.windowPopFail">Try again with different credentials.</span>
-        <span *ngIf="this.windowPopSuccess">Your request was successful.</span>
+          <h4>{{ context}}</h4>
+          <span>{{ details }}</span> 
       </div>
     </div>
     <div class="windowPopButtons">
-      <a *ngIf="!this.windowPopLogout" class="grayDarkBtn" (click)="onCancel($event)">Okay</a>
-      <a *ngIf="this.windowPopLogout" class="grayDarkBtn" (click)="onCancel($event)">Cancel</a>
-      <a *ngIf="this.windowPopLogout" class="greenBtn" (click)="onSubmit($event)">Confirm</a>
+      <a *ngIf="!logout && !deleteImage" class="grayDarkBtn" (click)="onCancel($event)">Okay</a>
+      <a *ngIf="logout || deleteImage" class="grayDarkBtn" (click)="onCancel($event)">Cancel</a>
+      <a *ngIf="logout" class="greenBtn" (click)="onLogout($event)">Confirm</a>
+      <a *ngIf="deleteImage" class="greenBtn" (click)="onDeleteImage($event)">Confirm</a>
     </div>
   </div>
 </div>

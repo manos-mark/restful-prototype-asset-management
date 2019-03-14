@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +34,7 @@ public class ProjectDaoImpl {
 					.append(" from Project project ")
 					.append(" left join project.products product ")
 					.append(" join project.projectManager projectManager ")
-					.append(" join project.status pStatus ");
+					.append(" join project.status projectStatus ");
 					
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
 		queryString += " group by project.id ";
@@ -95,9 +94,9 @@ public class ProjectDaoImpl {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select count(p.id) from Project p "
-				+ "inner join p.status s "
-				+ "where s.id = :statusId");
+		queryBuilder.append("select count(p.id) from Project p ")
+					.append("inner join p.status s ")
+					.append("where s.id = :statusId");
 		
 		Query<Long> theQuery = currentSession
 				.createQuery(queryBuilder.toString(), Long.class);
@@ -106,27 +105,18 @@ public class ProjectDaoImpl {
 		return theQuery.getSingleResult();
 	}
 
-	public Long count() {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select count(p.id) from Project p ");
-		
-		Query<Long> theQuery = currentSession
-				.createQuery(queryBuilder.toString(), Long.class);
-		
-		return theQuery.getSingleResult();
-	}
-	
-	public Long count(ProjectSearch search) {
+	public int count(ProjectSearch search) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("select count(p.id) from Project p ")
-					.append("join p.status pStatus ");
+		queryBuilder.append("select count(project.id) as projectsCount")
+					.append(" from Project project ")
+					.append(" join project.status projectStatus ");
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
-		Query<Long> theQuery = currentSession.createQuery(queryString, Long.class);
-		theQuery.setParameter("statusId", search.getStatusId());
-		return theQuery.getSingleResult();
+		
+		Long count = currentSession.createQuery(queryString, Long.class)
+				.setProperties(search)
+				.getSingleResult();
+		return count == null ? 0 : count.intValue();
 	}
 
 }

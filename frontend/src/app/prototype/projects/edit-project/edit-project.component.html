@@ -65,8 +65,7 @@
         <div class="header">
           <div class="count">
             <i class="product"></i>
-            <p *ngIf="!products">Attached products <span>(0)</span></p>
-            <p *ngIf="products">Attached products <span>({{ products.length }})</span></p>
+            <p>Attached products <span>({{ products.length }})</span></p>
           </div>
             <a 
                 routerLink="/prototype/products"
@@ -74,9 +73,9 @@
             >View all</a>
         </div>
         <div class="list">
-            <p *ngIf="!products">NO PRODUCTS</p>
+            <p *ngIf="products.length == 0">NO PRODUCTS</p>
 
-            <div *ngIf="products" class="tableWrp">
+            <div *ngIf="products.length > 0" class="tableWrp">
                 <div class="table inner">
                     <div class="header">
                         <span class="number">#</span>
@@ -88,11 +87,23 @@
                         <div class="settings"><i></i></div>
                     </div>
                     <div class="content">
-                        <app-product-item 
-                            *ngFor="let product of products"
-                            [product]="product"
-                            [inProject]=true
-                        ></app-product-item>
+                        <div class="row" *ngFor="let product of products">
+                            <span class="number">{{ product.id }}</span>
+                            <span class="productName">{{ product.productName }}</span>
+                            <span class="sn">{{ product.serialNumber }}</span>
+                            <span class="quantity">{{ product.quantity }}</span>
+                            <div class="picture">
+                                <a class="picWrp">
+                                <img [src]="'api/product-pictures/' + product.thumbPictureId"/>  
+                                <i>{{ product.picturesCount }}</i>
+                                <var class="zoom" (click)="getProductPictures()"><span></span></var>
+                                </a>
+                            </div>
+                            <div class="status">
+                                <span [ngClass]="project.status.cssClass">{{ project.status.name }}</span>
+                            </div>
+                            <div class="settings"><a class="grayBtn" (click)="onEdit(product.id)"><i></i></a></div>
+                        </div>
                     </div>
                 </div>
             </div>

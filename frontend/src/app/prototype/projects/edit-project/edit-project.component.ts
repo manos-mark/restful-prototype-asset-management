@@ -6,6 +6,10 @@ import { ProjectsService } from '../projects.service';
 import { Project } from '../project.model';
 import { Product } from '../../products/product.model';
 import { Statuses, StatusesMap } from '../../status.enum';
+import { ProductsService } from '../../products/products.service';
+import { PageParams } from '../page-params.model';
+import { FilterParams } from '../filter-params.model';
+import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -18,7 +22,10 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         name: string;
     }[];
     project: Project;
-    products: Product[];
+    products: Product[] = [];
+    pageParams = new PageParams();
+    filterParams = new FilterParams();
+
 
     projectForm = new FormGroup({
         projectName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
@@ -30,7 +37,9 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     constructor(private activityService: ActivityService,
                 private projectService: ProjectsService,
                 private router: Router,
-                private route: ActivatedRoute) { }
+                private route: ActivatedRoute,
+                private productService: ProductsService,
+                private windowPopService: WindowPopService) { }
 
     ngOnInit() {
         // when add new project status always will be new and disabled
@@ -56,7 +65,11 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                             this.projectForm.controls.statusId.setValue(this.project.status.id);
                             this.projectService.getProductsByProjectId(this.project.id)
                                 .subscribe(
-                                    res => this.products = res,
+                                    res => {
+                                        res.map(
+                                            item => { this.products.push(new Product(item)) }
+                                        )
+                                    },
                                     error => console.log(error)
                                 )
                         },
@@ -65,17 +78,13 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 },
                 error => console.log(error)
             )
-            // this.projectService.getProductsByProjectId(this.project.id)
-            //     .subscribe(
-            //         res => this.products = res,
-            //         error => console.log(error)
-            //     )
         }
     }
 
     onAddSave() {
         // on edit mode update
         if (this.projectService.editMode) {
+
             let tempProject = new Object({
                 projectName: this.projectName.value,
                 companyName: this.companyName.value,
@@ -83,17 +92,23 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 status: { id: this.statusId.value },
                 id: this.project.id,
             });
-            console.log(tempProject)
+
             this.projectService.updateProject(tempProject)
                     .subscribe(
                         res => {
-                            this.activityService.addActivity(Statuses.IN_PROGRESS.toString())
-                                .subscribe(
-                                    res => this.router.navigate(['/prototype/projects']),
-                                    error => console.log(error)
-                                )
+                            // this.activityService.addActivity(Statuses.IN_PROGRESS.toString())
+                            //     .subscribe(
+                            //         res => this.router.navigate(['/prototype/projects']),
+                            //         error => console.log(error)
+                            //     )
                         },
-                        error => console.log(error)
+                        error => {
+                            console.log(error)
+                            this.windowPopService.title = "Update project Failed";
+                            this.windowPopService.context = "Your request is not successful!";
+                            this.windowPopService.details = "Try again with different credentials.";
+                            this.windowPopService.activate = true;
+                        }
                     )
         }
         // else add new project
@@ -102,15 +117,28 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 this.companyName.value, this.projectManagerId.value)
                     .subscribe(
                         res => {
-                            this.activityService.addActivity(Statuses.NEW.toString())
-                                .subscribe(
-                                    res => this.router.navigate(['/prototype/projects']),
-                                    error => console.log(error)
-                                )
+                            // this.activityService.addActivity(Statuses.NEW.toString())
+                            //     .subscribe(
+                            //         res => this.router.navigate(['/prototype/projects']),
+                            //         error => console.log(error)
+                            //     )
                         },
-                        error => console.log(error)
+                        error => {
+                            console.log(error)
+                            this.windowPopService.title = "Add new project Failed";
+                            this.windowPopService.context = "Your request is not successful!";
+                            this.windowPopService.details = "Try again with different credentials.";
+                            this.windowPopService.activate = true;
+                        }
                     )
         }
+    }
+
+    onEdit(productId: number) {
+        this.productService.editMode = true;
+        this.router.navigate(['prototype/products/', productId, 'edit'], 
+            {queryParams: { productId: productId }}
+        );
     }
 
     onCancel() {

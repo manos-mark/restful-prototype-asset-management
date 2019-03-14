@@ -33,7 +33,7 @@ public class UserServiceImpl {
 		UserDetailsImpl userDetails = SecurityUtil.getCurrentUserDetails();
 		
 		if (userDetails == null) {
-			throw new EntityNotFoundException("User not found");
+			throw new EntityNotFoundException(User.class);
 		}
 		return userDetails;
 	}
@@ -48,14 +48,10 @@ public class UserServiceImpl {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		if (user.getPassword() == null) {
-			throw new EntityNotFoundException("User password cannot be null");
+			throw new EntityNotFoundException(User.class);
 		}
 		
-		try {
-			userDao.saveUser(user);			
-		} catch (Exception e) {
-			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-		}
+		userDao.saveUser(user);			
 	}
 
 	@Transactional
@@ -66,7 +62,7 @@ public class UserServiceImpl {
 	@Transactional
 	public void updateUser(User user, String oldPassReq, String newPassReq) {
 		if (user == null) {
-			throw new EntityNotFoundException("User not found");
+			throw new EntityNotFoundException(User.class);
 		}
 		
 		String oldPass = SecurityUtil.getCurrentUserDetails().getPassword();
@@ -75,16 +71,12 @@ public class UserServiceImpl {
 			user.setPassword(passwordEncoder.encode(newPassReq));
 			
 			if (user.getPassword() == null) {
-				throw new EntityNotFoundException("User password cannot be null");
+				throw new EntityNotFoundException(User.class);
 			}
 			
-			try {
-				userDao.updateUser(user);
-			} catch (Exception e) {
-				throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-			}
+			userDao.updateUser(user);
 		} else {
-			throw new EntityNotFoundException("User password is not correct!");
+			throw new EntityNotFoundException(User.class);
 		}
 	}
 
@@ -92,18 +84,17 @@ public class UserServiceImpl {
 	public void deleteUser(long userId) {
 		User tempUser = getUser(userId);
 		if (tempUser == null) {
-			throw new EntityNotFoundException("User id not found - " + userId);
+			throw new EntityNotFoundException(User.class, userId);
 		}
 		userDao.deleteUser(userId);
 	}
 
 	@Transactional
 	public String saveNewPassword(String email) {
-		
 		// check first if the mail exist in db
 		User user = this.userDao.getUserByEmail(email);
 		if (user == null) {
-			throw new EntityNotFoundException("User email not found - " + email); // throw
+			throw new EntityNotFoundException(User.class); // throw
 		}
 		
 		// generate new password
@@ -111,11 +102,7 @@ public class UserServiceImpl {
 
 		// save password to db
 		user.setPassword(passwordEncoder.encode(newPassword));
-		try {
-			userDao.saveUser(user);
-		} catch (Exception e) {
-			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-		}
+		userDao.saveUser(user);
 		return newPassword;
 	}
 }

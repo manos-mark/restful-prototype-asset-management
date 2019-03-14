@@ -15,7 +15,7 @@ public class OrderAndPageParams {
 
 	@NotNull
 	@Min(1)
-	private Integer pageSize = 10;
+	private Integer pageSize = 5;
 	
 	@NotNull
 	@Pattern(regexp = "(" + DIRECTION_ASC + "|" + DIRECTION_DESC + ")" )

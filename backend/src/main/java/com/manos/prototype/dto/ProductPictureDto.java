@@ -4,8 +4,6 @@ public class ProductPictureDto {
 
 	private int id;
 	
-	private byte[] picture;
-	
 	private int productId;
 	
 	private String name;
@@ -34,14 +32,6 @@ public class ProductPictureDto {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public byte[] getPicture() {
-		return picture;
-	}
-
-	public void setPicture(byte[] picture) {
-		this.picture = picture;
 	}
 
 	public int getProductId() {

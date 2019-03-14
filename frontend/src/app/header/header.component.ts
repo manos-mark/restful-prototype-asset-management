@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { ProductsService } from '../prototype/products/products.service';
 import { ProjectsService } from '../prototype/projects/projects.service';
+import { WindowPopService } from '../shared/window-pop/window-pop.service';
+import { Statuses } from '../prototype/status.enum';
 
 @Component({
   selector: 'app-header',
@@ -9,18 +11,17 @@ import { ProjectsService } from '../prototype/projects/projects.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  windowPopLogout = false;
-  windowPop = false;
   inProgressProductsCount: number;
   newProjectsCount: number;
 
   constructor(public authService: AuthService,
               private productsService: ProductsService,
-              private projectsService: ProjectsService) { }
+              private projectsService: ProjectsService,
+              private windowPopService: WindowPopService) { }
 
   ngOnInit() {
     // IN_PROGRESS Products
-    this.productsService.getProductsCountByStatusId(1) 
+    this.productsService.getProductsCountByStatusId(Statuses.IN_PROGRESS) 
       .subscribe(
         products => { 
           this.inProgressProductsCount = products;
@@ -29,7 +30,7 @@ export class HeaderComponent implements OnInit {
       );
 
     // NEW Projects
-    this.projectsService.getProjectsCountByStatusId(2) 
+    this.projectsService.getProjectsCountByStatusId(Statuses.NEW) 
     .subscribe(
       projects => { 
         this.newProjectsCount = projects;
@@ -39,8 +40,11 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-    this.windowPopLogout = true;
-    this.windowPop = true;
+    this.windowPopService.title = "Log out";
+    this.windowPopService.context = "Are you sure?"
+    this.windowPopService.details = "You will be logged out!"
+    this.windowPopService.activate = true;
+    this.windowPopService.logout = true;
   }
 
 }

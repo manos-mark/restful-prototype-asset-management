@@ -37,14 +37,10 @@ public class ActivityServiceImpl {
 		Long userId = userService.getCurrentUserDetails().getId();
 		User tempUser = userService.getUser(userId);
 		if (userId == null || tempUser == null) {
-			throw new EntityNotFoundException("User not found - " + userId);
+			throw new EntityNotFoundException(User.class, userId);
 		}
 		activity.setUser(tempUser);
-		try {
-			activityDao.saveActivity(activity);
-		} catch (Exception e) {
-			throw new EntityNotFoundException(e.getCause().getLocalizedMessage());
-		}
+		activityDao.saveActivity(activity);
 	}
 
 }

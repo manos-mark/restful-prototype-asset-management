@@ -1,9 +1,14 @@
 package com.manos.prototype.controller;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
+
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,23 +18,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.manos.prototype.controller.params.ProductFilterParams;
 import com.manos.prototype.controller.params.ProductOrderAndPageParams;
 import com.manos.prototype.dto.PageResultDto;
+import com.manos.prototype.dto.PictureTypeRequestDto;
 import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProductPictureDto;
 import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
-import com.manos.prototype.entity.Project;
-import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.entity.Status;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.service.PictureServiceImpl;
 import com.manos.prototype.service.ProductServiceImpl;
-import com.manos.prototype.service.ProjectServiceImpl;
+import com.manos.prototype.vo.ProductVo;
 import com.pastelstudios.convert.ConversionService;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
@@ -38,11 +45,10 @@ import com.pastelstudios.paging.PageResult;
 @RequestMapping("/products")
 public class ProductController {
 
+	private static final Logger logger = LogManager.getLogger(ProductController.class);
+	
 	@Autowired
 	private ProductServiceImpl productService;
-
-	@Autowired
-	private ProjectServiceImpl projectService;
 
 	@Autowired
 	private PictureServiceImpl pictureService;
@@ -51,23 +57,16 @@ public class ProductController {
 	private ConversionService conversionService;
 
 	@GetMapping
-	public PageResultDto<ProductDto> getProductsPaginated(@Valid ProductOrderAndPageParams pageParams,
+	public PageResultDto<ProductDto> getProductsPaginated(
+			@Valid ProductOrderAndPageParams pageParams,
 			@Valid ProductFilterParams filterParams) {
 
 		PageRequest pageRequest = conversionService.convert(pageParams, PageRequest.class);
 		ProductSearch search = conversionService.convert(filterParams, ProductSearch.class);
 
-		PageResult<Product> pageResult = productService.getProducts(pageRequest, search);
+		PageResult<ProductVo> pageResult = productService.getProducts(pageRequest, search);
 
 		List<ProductDto> productsDto = conversionService.convertList(pageResult.getEntities(), ProductDto.class);
-		
-		for (ProductDto product : productsDto) {
-			Project project = projectService.getProject(product.getProjectId());
-			product.setProjectName(project.getProjectName());
-			
-			Long picturesCount = pictureService.getPicturesCountByProductId(product.getId());
-			product.setPicturesCount(picturesCount);
-		}
 		
 		PageResultDto<ProductDto> pageResultDto = new PageResultDto<>();
 		pageResultDto.setItems(productsDto);
@@ -79,68 +78,48 @@ public class ProductController {
 	public Long getProductsCountByStatus(@RequestBody StatusRequestDto statusId) {
 		return productService.getProductsCountByStatus(statusId.getStatusId());
 	}
-
-	@DeleteMapping("/{id}")
-	public String deleteProduct(@PathVariable("id") int productId) {
-		productService.deleteProduct(productId);
-		return "Deleted user with id - " + productId;
-	}
-
-	@PutMapping("/{id}")
-	public void updateProduct(@PathVariable("id") int productId, @RequestBody ProductRequestDto productRequestDto) {
-//		Product product = conversionService.convert(productRequestDto, Product.class);
-//		product.setId(productId);
-
-//		// check if project exists
-//		int projectId = product.getProject().getId();
-//		Project project = projectService.getProject(projectId);
-//
-//		if (project == null) {
-//			throw new EntityNotFoundException("Project id not found - " + projectId);
-//		}
-
-		productService.saveProduct(product);
-	}
-
-	@PostMapping
-	public int addProduct(@RequestBody ProductRequestDto productRequestDto) {
-		Product product = conversionService.convert(productRequestDto, Product.class);
-		product.setId(0);
-		productService.saveProduct(product);
-		return product.getId();
+	
+	@GetMapping("/{id}")
+	public ProductDto getProductById(@PathVariable("id") int id) {
+		return conversionService.convert(productService.getProduct(id), ProductDto.class);
 	}
 	
-	@GetMapping(value = "/{id}/pictures", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE,
-			MediaType.IMAGE_GIF_VALUE })
+	@DeleteMapping("/{id}")
+	public void deleteProduct(@PathVariable("id") int productId) {
+		productService.deleteProduct(productId);
+	}
+
+	@PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void updateProduct(
+			@PathVariable("id") int productId, 
+			@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
+			@RequestPart("pictures") List<MultipartFile> pictures,
+			@RequestPart("pictureTypeRequestDto") List<PictureTypeRequestDto> pictureTypeRequestDto) {
+		Long start = System.currentTimeMillis();
+		List<ProductPicture> newPictures = conversionService.convertList(pictures, ProductPicture.class);
+		Long end = System.currentTimeMillis();
+		logger.debug("time: " + (end-start));
+		
+		productService.updateProduct(productRequestDto, productId, newPictures, pictureTypeRequestDto);
+	}
+
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void addProduct(
+			@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
+			@RequestPart("pictures") List<MultipartFile> pictures) {
+		
+		Product product = conversionService.convert(productRequestDto, Product.class);
+		product.setStatus(new Status(Status.NEW_ID));
+		product.setCreatedAt(LocalDate.now());
+		
+		List<ProductPicture> productPictures = conversionService.convertList(pictures, ProductPicture.class);
+		
+		productService.saveProduct(product, productPictures, productRequestDto.getThumbPictureIndex(), productRequestDto.getProjectId());
+	}
+	
+	@GetMapping(value = "/{id}/pictures")
 	public List<ProductPictureDto> getPicturesByProductId(@PathVariable("id") int productId) {
 		List<ProductPicture> pictures = pictureService.getPicturesByProductId(productId);
 		return conversionService.convertList(pictures, ProductPictureDto.class);
 	}
-//
-//	@GetMapping(value = "/{id}/thumb-picture", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE,
-//			MediaType.IMAGE_GIF_VALUE })
-//	public byte[] getThumbPictureByProductId(@PathVariable("id") int productId) {
-//		ProductPicture picture = pictureService.getThumbPictureByProductId(productId);
-//		return picture.getPicture()
-//	}
-//
-//	@GetMapping(value = "/{id}/pictures-count")
-//	public Long getPicturesCountByProductId(@PathVariable("id") int productId) {
-//		return pictureService.getPicturesCountByProductId(productId);
-//	}
-//
-//	@PostMapping("/{id}/pictures")
-//	public void addPicture(@PathVariable("id") int productId, @RequestBody ProductPictureRequestDto pictureDto) {
-//		ProductPicture picture = conversionService.convert(pictureDto, ProductPicture.class);
-//		picture.setId(0);
-//		pictureService.savePicture(picture);
-//	}
-//
-//	@PutMapping("/{id}/pictures/{pictureId}")
-//	public void updatePicture(@PathVariable("id") int productId, @PathVariable("pictureId") int pictureId,
-//			@RequestBody ProductPictureRequestDto pictureDto) {
-//		ProductPicture picture = conversionService.convert(pictureDto, ProductPicture.class);
-//		picture.setId(pictureId);
-//		pictureService.savePicture(picture);
-//	}
 }

@@ -6,9 +6,10 @@ import javax.validation.constraints.Pattern;
 public class ProductOrderAndPageParams extends OrderAndPageParams{
 	
 	public static final String DATE_CREATED = "date";
+	public static final String QUANTITY = "quantity";
 
 	@NotNull
-	@Pattern(regexp = DATE_CREATED )
+	@Pattern(regexp = "(" + DATE_CREATED + "|" + QUANTITY + ")")
 	private String field = null;
 	
 	public String getField() {

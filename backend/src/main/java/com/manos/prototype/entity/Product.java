@@ -1,5 +1,9 @@
 package com.manos.prototype.entity;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -22,7 +27,7 @@ public class Product {
 	private int id;
 	
 	@Column(name = "creation_date")
-	private String date;
+	private LocalDate createdAt;
 	
 	@Column(name = "product_name")
 	private String productName;
@@ -51,19 +56,10 @@ public class Product {
 			inverseJoinColumns = @JoinColumn(name = "thumb_picture_id")
 		)
 	private ProductPicture thumbPicture;
-
-	public Product(String date, String productName, String serialNumber, String description, int quantity,
-			Status status, Project project, ProductPicture thumbPicture) {
-		this.date = date;
-		this.productName = productName;
-		this.serialNumber = serialNumber;
-		this.description = description;
-		this.quantity = quantity;
-		this.status = status;
-		this.project = project;
-		this.thumbPicture = thumbPicture;
-	}
 	
+	@OneToMany(mappedBy = "product")
+	private List<ProductPicture> pictures = new ArrayList<>();
+
 	public Product() {}
 
 	public ProductPicture getThumbPicture() {
@@ -86,12 +82,12 @@ public class Product {
 		this.id = id;
 	}
 
-	public String getDate() {
-		return date;
+	public LocalDate getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setCreatedAt(LocalDate date) {
+		this.createdAt = date;
 	}
 
 	public String getProductName() {
@@ -140,5 +136,13 @@ public class Product {
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	public List<ProductPicture> getPictures() {
+		return pictures;
+	}
+
+	public void setPictures(List<ProductPicture> pictures) {
+		this.pictures = pictures;
 	}
 }

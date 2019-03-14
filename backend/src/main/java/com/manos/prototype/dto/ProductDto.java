@@ -1,10 +1,12 @@
 package com.manos.prototype.dto;
 
+import java.time.LocalDate;
+
 public class ProductDto {
 
 	private int id;
 	
-	private String date;
+	private LocalDate createdAt;
 	
 	private String productName;
 	
@@ -20,21 +22,9 @@ public class ProductDto {
 	
 	private String projectName;
 	
-	private Long picturesCount;
+	private int picturesCount;
 	
 	private int thumbPictureId;
-	
-	public ProductDto(String date, String productName, String serialNumber, String description, int quantity,
-			int status, int project, String projectName, Long picturesCount) {
-		this.date = date;
-		this.productName = productName;
-		this.serialNumber = serialNumber;
-		this.description = description;
-		this.quantity = quantity;
-		this.statusId = status;
-		this.projectId = project;
-		this.picturesCount = picturesCount;
-	}
 	
 	public ProductDto() {}
 
@@ -47,12 +37,12 @@ public class ProductDto {
 		this.thumbPictureId = thumbPictureId;
 	}
 
-	public Long getPicturesCount() {
+	public int getPicturesCount() {
 		return picturesCount;
 	}
 
-	public void setPicturesCount(Long picturesCount) {
-		this.picturesCount = picturesCount;
+	public void setPicturesCount(int i) {
+		this.picturesCount = i;
 	}
 
 	public String getProjectName() {
@@ -71,12 +61,12 @@ public class ProductDto {
 		this.id = id;
 	}
 
-	public String getDate() {
-		return date;
+	public LocalDate getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setCreatedAt(LocalDate date) {
+		this.createdAt = date;
 	}
 
 	public String getProductName() {

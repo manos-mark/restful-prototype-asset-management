@@ -1,5 +1,6 @@
 package com.manos.prototype.converter;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import com.manos.prototype.controller.params.ProjectFilterParams;
@@ -12,9 +13,7 @@ public class ProjectFilterParamsToProjectSearch implements Converter<ProjectFilt
 	@Override
 	public ProjectSearch convert(ProjectFilterParams from) {
 		ProjectSearch projectSearch = new ProjectSearch();
-		
-		projectSearch.setStatusId(from.getStatusId());
+		BeanUtils.copyProperties(from, projectSearch);
 		return projectSearch;
 	}
-
 }

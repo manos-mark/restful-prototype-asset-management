@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
+import { WindowPopService } from '../shared/window-pop/window-pop.service';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +22,8 @@ export class ProfileComponent implements OnInit {
     }
   )
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService,
+                private windowPopService: WindowPopService) { }
 
     matchPasswords(control: AbstractControl): { invalid: boolean } {
         if (control.value.newPassword !== control.value.repeatNewPassword) {
@@ -38,13 +40,16 @@ export class ProfileComponent implements OnInit {
         this.newPassword.value, this.repeatNewPassword.value) 
         .subscribe(
             resp => {
-                this.windowPop = true;
-                this.windowPopSuccess = true;
-                console.log(this.windowPopSuccess)
+                this.windowPopService.title = "Authentication Successful";
+                this.windowPopService.context = "Your request was successful.";
+                this.windowPopService.details = "An new password will be sent to your email";
+                this.windowPopService.activate = true;
             },
             error => {
-                this.windowPop = true;
-                this.windowPopFail = true;
+                this.windowPopService.title = "Authentication Failed";
+                this.windowPopService.context = "Your request is not successful!";
+                this.windowPopService.details = "Try again with different credentials.";
+                this.windowPopService.activate = true;
             }
         );
   }

@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Project } from '../project.model';
 import { ProjectsService } from '../projects.service';
 import { Router } from '@angular/router';
 import { Statuses } from '../../status.enum'
 import { Observable, forkJoin } from 'rxjs';
+import { FilterParams } from '../filter-params.model';
+import { PageParams } from '../page-params.model';
 
 
 @Component({
@@ -12,35 +14,30 @@ import { Observable, forkJoin } from 'rxjs';
   styleUrls: ['./list-projects.component.css']
 })
 export class ListProjectsComponent implements OnInit {
-    field = 'date';
-    page = 1;
-    pageSize = 5;
-    direction = 'asc';
+    filterParams = new FilterParams;
+    pageParams = new PageParams;
     sortByDateAsc = true;
     sortByProductsCountAsc = true;
+    isMasterChecked: boolean = false;
     projects: Project[] = [];
     totalCount: number;
-    isMasterChecked: boolean;
     selectedProjectsCount = 0;
-    totalPages = this.projects.length / this.pageSize;
     pagesArray = [];
-    dateFromFilter: string = null;
-    dateToFilter: string = null;
-    statusFilter: number = 0;
+    totalPages = this.projects.length / this.pageParams.pageSize;
 
     constructor(private projectService: ProjectsService,
                 private router: Router) {}
 
     ngOnInit() {
-        this.projectService.getProjects(this.field, this.page, this.pageSize, this.direction,
-            this.dateFromFilter, this.dateToFilter, this.statusFilter)
+        this.isMasterChecked = false;
+        this.projectService.getProjects(this.pageParams, this.filterParams)
                 .subscribe(
                     res => {
                         res['items'].map(
                             item => { this.projects.push(new Project(item)) }
                         )
-                        this.totalCount = res['totalCount']
-                        this.totalPages = Math.ceil(this.totalCount / this.pageSize);
+                        this.totalCount = res['totalCount'];
+                        this.totalPages = Math.ceil(this.totalCount / this.pageParams.pageSize);
                         this.pagesArray =  Array(this.totalPages).fill(1).map((x,i)=>++i);
                     },
                     error => console.log(error)
@@ -92,12 +89,7 @@ export class ListProjectsComponent implements OnInit {
             selectedStatus = Statuses.FINISHED;
         }
         else if (action == "DELETE") {
-            for (let project of this.projects) {
-                if (project.isChecked) {
-                    this.projectService.deleteProject(project.id).subscribe()
-                }
-            }
-            return;
+            selectedStatus = null;
         } 
         else {
             return;
@@ -106,10 +98,9 @@ export class ListProjectsComponent implements OnInit {
         this.changeStatus(selectedStatus)
             .subscribe(
                 dataArray => {
-                    this.router.navigateByUrl('/', {skipLocationChange: true})
-                        .then(()=>
-                            this.router.navigate(['prototype/projects/'])
-                        );
+                    this.projects = new Array();
+                    this.isMasterChecked = false;
+                    this.ngOnInit();
                 },
                 error => console.log(error)
             );
@@ -121,8 +112,15 @@ export class ListProjectsComponent implements OnInit {
         this.projects.forEach(
             (project) => {
                 if ( project.isChecked) {
-                    project.status.id = selectedStatus;
-                    observables.push(this.projectService.updateProject(project));
+                    // delete
+                    if (selectedStatus == null) {
+                        observables.push(this.projectService.deleteProject(project.id));
+                    }
+                    // change status
+                    else {
+                        project.status.id = selectedStatus;
+                        observables.push(this.projectService.updateProject(project));
+                    }
                 }
             }
         )
@@ -133,11 +131,11 @@ export class ListProjectsComponent implements OnInit {
     sortByDate() {
         this.sortByDateAsc = !this.sortByDateAsc;
         this.projects = [];
-        this.field = 'date';
+        this.pageParams.field = 'date';
         if (this.sortByDateAsc) {
-            this.direction = 'asc';
+            this.pageParams.direction = 'asc';
         } else {
-            this.direction = 'desc';
+            this.pageParams.direction = 'desc';
         }
         this.ngOnInit();
     }
@@ -145,60 +143,78 @@ export class ListProjectsComponent implements OnInit {
     sortByProductsCount() {
         this.sortByProductsCountAsc = !this.sortByProductsCountAsc;
         this.projects = [];
-        this.field = 'products';
+        this.pageParams.field = 'products';
         if (this.sortByProductsCountAsc) {
-            this.direction = 'asc';
+            this.pageParams.direction = 'asc';
         } else {
-            this.direction = 'desc';
+            this.pageParams.direction = 'desc';
         }
         this.ngOnInit();
     }
 
     changeResultsPerPage(resultsPerPage: number) {
         this.projects = new Array();
-        this.pageSize = resultsPerPage;
-        this.page = 1;
+        this.pageParams.pageSize = resultsPerPage;
+        this.pageParams.page = 1;
         this.ngOnInit();
     }
 
     changePageUp() {
-        if (this.page < this.totalPages) {
+        if (this.pageParams.page < this.totalPages) {
             this.projects = new Array();
-            this.page ++;
+            this.pageParams.page ++;
             this.ngOnInit();
         }
     }
 
     changePageDown() {
-        if (this.page > 1) {
+        if (this.pageParams.page > 1) {
             this.projects = new Array();
-            this.page --;
+            this.pageParams.page --;
             this.ngOnInit();
         }
     }
 
     changePage(target: number) {
-        if (target >= 1 && target <= this.totalPages && target !== this.page) {
+        if (target >= 1 && target <= this.totalPages && target !== this.pageParams.page) {
             this.projects = new Array();
-            this.page = target;
+            this.pageParams.page = target;
             this.ngOnInit();
         }
     }
 
     applyFilters(statusId: number, dateFrom: Date, dateTo: Date) {
-        console.log(statusId, dateFrom, dateTo)
         
-        // this.dateFromFilter = dateFrom.toLocaleString('en-GB');
-        // this.dateToFilter = dateTo.toLocaleString('en-GB');
+        this.filterParams.fromDate = dateFrom;
+        this.filterParams.toDate = dateTo;
 
         if(statusId >= 1 && statusId <=3) {
             this.projects = new Array();
-            this.statusFilter = statusId;
+            this.filterParams.statusId = statusId;
             this.ngOnInit();
         } else {
             this.projects = new Array();
-            this.statusFilter = 0;
+            this.filterParams.statusId = null;
             this.ngOnInit();
         }
+    }
+
+    clearFilters() {
+        this.router.navigateByUrl('/', {skipLocationChange: true})
+            .then(()=>
+                this.router.navigate(['prototype/projects/'])
+            );
+    }
+
+    onOpenProducts(projectName: string) {
+        this.router.navigate(['prototype/products/'], 
+            {queryParams: { projectName: projectName }}
+        );
+    }
+
+    onAddNewProduct(projectId: number) {
+        this.router.navigate(['prototype/products/new'], 
+            {queryParams: { projectId: projectId }}
+        );
     }
 }

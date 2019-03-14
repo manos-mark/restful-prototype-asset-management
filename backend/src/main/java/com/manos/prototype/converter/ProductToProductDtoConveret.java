@@ -13,10 +13,11 @@ public class ProductToProductDtoConveret implements Converter<Product, ProductDt
 	public ProductDto convert(Product entity) {
 		
 		ProductDto dto = new ProductDto();
-		dto.setDate(entity.getDate());
+		dto.setCreatedAt(entity.getCreatedAt());
 		dto.setDescription(entity.getDescription());
 		dto.setId(entity.getId());
 		dto.setProductName(entity.getProductName());
+		dto.setProjectName(entity.getProject().getProjectName());
 		dto.setProjectId(entity.getProject().getId());
 		dto.setQuantity(entity.getQuantity());
 		dto.setSerialNumber(entity.getSerialNumber());

@@ -18,10 +18,20 @@
     <div class="filters">
       <p>Filters</p>
       <div class="inputWrp date">
-        <input #dateFrom placeholder="Date from" type="date"/>
+        <input #dateFrom 
+            placeholder="Date from" 
+            type="date" 
+            [max]="dateToFilter"
+            (change)="dateFromFilter = dateFrom.value.toLocaleString('en-GB')"
+        />
       </div>
       <div class="inputWrp date">
-        <input #dateTo placeholder="Date to" type="date"/>
+        <input #dateTo 
+            placeholder="Date to" 
+            type="date" 
+            [min]="dateFromFilter"
+            (change)="dateToFilter = dateTo.value.toLocaleString('en-GB')"
+        />
       </div>
       <div class="dropdown status">
         <select #statusDropdown>
@@ -35,21 +45,22 @@
         (click)="applyFilters(statusDropdown.value, dateFrom.value, dateTo.value)"
       >Apply</a>
       <div class="right">
-        <a class="grayBtn"><span>Clear filters</span><i></i></a>
+        <a class="grayBtn" (click)="clearFilters()"><span>Clear filters</span><i></i></a>
         <div class="pagination">
           <a class="arrowLeft"
-            [ngClass]="{'disabled': page == 1}"
+            [ngClass]="{'disabled': pageParams.page == 1}"
             (click)="changePageDown()"
           ><i></i></a>
           <div class="center">
+            <a *ngIf="pagesArray.length == 0" class="disabled">0</a>
             <a 
-            *ngFor="let curPage of pagesArray"
+                *ngFor="let curPage of pagesArray"
                 (click)="changePage(curPage)"
-                [ngClass]="{'active': page == curPage}">{{ curPage }}
+                [ngClass]="{'active': pageParams.page == curPage}">{{ curPage }}
             </a>
           </div>
           <a class="arrowRight"
-            [ngClass]="{'disabled': page == totalPages}"
+            [ngClass]="{'disabled': pageParams.page == totalPages}"
             (click)="changePageUp()"
           ><i></i></a>
         </div>
@@ -85,13 +96,13 @@
                     ><i></i></a>
                 </div>
                 <span class="number">{{ project.id }}</span>
-                <span class="date">{{ project.date }}</span>
+                <span class="date">{{ project.createdAt | date:'mediumDate' }}</span>
                 <span class="projectName">{{ project.projectName }}</span>
                 <span class="companyName">{{ project.companyName }}</span>
                 <span class="projectManager">{{ project.projectManager.name }}</span>
                 <div class="products">
-                    <span><a class="blueBtn">{{ project.productsCount }}</a></span>
-                    <a class="grayBtn"><i></i></a>
+                    <span><a class="blueBtn" (click)="onOpenProducts(project.projectName)">{{ project.productsCount }}</a></span>
+                    <a class="grayBtn" (click)="onAddNewProduct(project.id)"><i></i></a>
                 </div>
                 <div class="status">
                     <span [ngClass]="project.status.cssClass">{{ project.status.name }}</span>

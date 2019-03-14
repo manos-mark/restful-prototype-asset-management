@@ -16,7 +16,7 @@ public class ProjectToProjectDtoConveret implements Converter<Project, ProjectDt
 		ProjectDto dto = new ProjectDto();
 		
 		dto.setCompanyName(entity.getCompanyName());
-		dto.setDate(entity.getDate());
+		dto.setCreatedAt(entity.getCreatedAt());
 		dto.setId(entity.getId());
 		dto.setProjectName(entity.getProjectName());
 		dto.setStatusId(entity.getStatus().getId());
