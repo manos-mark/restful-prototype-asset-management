@@ -11,6 +11,7 @@ import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 import { ProductPicture } from '../../product-picture.model';
 import { Observer, Subscription } from 'rxjs';
 import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
+import { Actions } from 'src/app/general/home/activity/action.enum';
 
 @Component({
   selector: 'app-edit-product',
@@ -227,11 +228,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
         this.productService.updateProduct(product, this.pictures, this.product.id)
             .subscribe(
                 res => {
-                    // this.activityService.addActivity()
-                    //     .subscribe(
-                    //         res => this.router.navigate(['/prototype/projects']),
-                    //         error => console.log(error)
-                    //     )
+                    this.activityService.addActivity(Actions.UPDATED_PRODUCT).subscribe();
                     this.router.navigate(['/prototype/products'])
                 },
                 error => {
@@ -248,11 +245,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
         this.productService.addProduct(product, this.pictures)
             .subscribe(
                 res => {
-                    // this.activityService.addActivity()
-                    //     .subscribe(
-                    //         res => this.router.navigate(['/prototype/projects']),
-                    //         error => console.log(error)
-                    //     )
+                    this.activityService.addActivity(Actions.CREATED_PRODUCT).subscribe();
                     this.router.navigate(['/prototype/products'])
                 },
                 error => {

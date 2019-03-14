@@ -12,6 +12,7 @@ import { FilterParams } from '../filter-params.model';
 import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
 import { ProductPicture } from '../../product-picture.model';
+import { Actions } from 'src/app/general/home/activity/action.enum';
 
 @Component({
   selector: 'app-edit-project',
@@ -115,11 +116,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
             this.projectService.updateProject(tempProject)
                     .subscribe(
                         res => {
-                            // this.activityService.addActivity(Statuses.IN_PROGRESS.toString())
-                            //     .subscribe(
-                            //         res => this.router.navigate(['/prototype/projects']),
-                            //         error => console.log(error)
-                            //     )
+                            this.router.navigate(['/prototype/projects']);
+                            this.activityService.addActivity(Actions.UPDATED_PROJECT).subscribe();
                         },
                         error => {
                             console.log(error)
@@ -136,11 +134,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 this.companyName.value, this.projectManagerId.value)
                     .subscribe(
                         res => {
-                            // this.activityService.addActivity(Statuses.NEW.toString())
-                            //     .subscribe(
-                            //         res => this.router.navigate(['/prototype/projects']),
-                            //         error => console.log(error)
-                            //     )
+                            this.router.navigate(['/prototype/projects']);
+                            this.activityService.addActivity(Actions.CREATED_PROJECT).subscribe();
                         },
                         error => {
                             console.log(error)

@@ -15,7 +15,7 @@ export class ActivityService {
       
     }
         
-    addActivity(actionId: string) {
+    addActivity(actionId: number) {
       let currDate = (new Date).toLocaleString('en-GB');
       return this.httpClient.post<any>('api/activities', {
         date: currDate,

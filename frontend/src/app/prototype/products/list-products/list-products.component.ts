@@ -8,6 +8,8 @@ import { Statuses } from '../../status.enum';
 import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
 import { ProductPicture } from '../../product-picture.model';
+import { ActivityService } from 'src/app/general/home/activity/activity.service';
+import { Actions } from 'src/app/general/home/activity/action.enum';
 
 @Component({
   selector: 'app-list-products',
@@ -31,7 +33,8 @@ export class ListProductsComponent implements OnInit {
     constructor(private productService: ProductsService,
                 private router: Router,
                 private route: ActivatedRoute,
-                private carouselService: ImageCarouselService) { }
+                private carouselService: ImageCarouselService,
+                private activityService: ActivityService) { }
 
     ngOnInit() {
         this.route.queryParams.subscribe(
@@ -127,11 +130,13 @@ export class ListProductsComponent implements OnInit {
                     // delete
                     if (selectedStatus == null) {
                         observables.push(this.productService.deleteProduct(product.id));
+                        observables.push(this.activityService.addActivity(Actions.DELETED_PRODUCT));
                     }
                     // change status
                     else {
                         product.status.id = selectedStatus;
                         observables.push(this.productService.updateProductStatus(product));
+                        observables.push(this.activityService.addActivity(Actions.UPDATED_PRODUCT));
                     }
                 }
             }

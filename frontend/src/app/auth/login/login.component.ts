@@ -6,6 +6,7 @@ import { User } from '../user.model';
 import { Router } from '@angular/router';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
 import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
+import { Actions } from 'src/app/general/home/activity/action.enum';
 
 
 @Component({
@@ -66,7 +67,7 @@ export class LoginComponent implements OnInit {
                     },
                     error => { if (error.status !== 401) console.log(error) }
                 );
-            this.activityService.addActivity('1').subscribe();
+            this.activityService.addActivity(Actions.LOGGED_IN).subscribe();
           } else {
             this.windowPopService.title = "Authentication Failed";
             this.windowPopService.context = "Your request is not successful!";

@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
 import { WindowPopService } from './window-pop.service';
 import { ProductsService } from 'src/app/prototype/products/products.service';
+import { Actions } from 'src/app/general/home/activity/action.enum';
 
 @Component({
   selector: 'app-window-pop',
@@ -21,7 +22,7 @@ export class WindowPopComponent implements OnInit, OnDestroy {
                 private productService: ProductsService) { }
 
   onLogout() {
-    this.activityService.addActivity('8').subscribe(
+    this.activityService.addActivity(Actions.LOGGED_OUT).subscribe(
           resp => { return this.authService.logout()
             .subscribe(
               res => {

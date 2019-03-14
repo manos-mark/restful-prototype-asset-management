@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductsService } from 'src/app/prototype/products/products.service';
 import { ProjectsService } from 'src/app/prototype/projects/projects.service';
+import { Statuses } from 'src/app/prototype/status.enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +21,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     // NEW Products
-    this.productsService.getProductsCountByStatusId(2) 
+    this.productsService.getProductsCountByStatusId(Statuses.NEW) 
       .subscribe(
         products => { 
           this.newProductsCount = products;
@@ -29,7 +30,7 @@ export class DashboardComponent implements OnInit {
       );
 
     // IN_PROGRESS Products
-    this.productsService.getProductsCountByStatusId(1) 
+    this.productsService.getProductsCountByStatusId(Statuses.IN_PROGRESS) 
       .subscribe(
         products => { 
           this.inProgressProductsCount = products;
@@ -38,7 +39,7 @@ export class DashboardComponent implements OnInit {
       );
 
     // FINISHED Products
-    this.productsService.getProductsCountByStatusId(3) 
+    this.productsService.getProductsCountByStatusId(Statuses.FINISHED) 
       .subscribe(
         products => { 
           this.finishedProductsCount = products;
@@ -47,7 +48,7 @@ export class DashboardComponent implements OnInit {
       );
 
     // NEW Products
-    this.productsService.getProductsCountByStatusId(2) 
+    this.productsService.getProductsCountByStatusId(Statuses.NEW) 
       .subscribe(
         products => { 
           this.newProductsCount = products;
@@ -56,7 +57,7 @@ export class DashboardComponent implements OnInit {
       );
 
     // IN_PROGRESS Products
-    this.productsService.getProductsCountByStatusId(1) 
+    this.productsService.getProductsCountByStatusId(Statuses.IN_PROGRESS) 
       .subscribe(
         products => { 
           this.inProgressProductsCount = products;
@@ -65,7 +66,7 @@ export class DashboardComponent implements OnInit {
       );
 
     // FINISHED Products
-    this.productsService.getProductsCountByStatusId(3) 
+    this.productsService.getProductsCountByStatusId(Statuses.FINISHED) 
       .subscribe(
         products => { 
           this.finishedProductsCount = products;
@@ -74,7 +75,7 @@ export class DashboardComponent implements OnInit {
       );
     
     // NEW Projects
-    this.projectsService.getProjectsCountByStatusId(2) 
+    this.projectsService.getProjectsCountByStatusId(Statuses.NEW) 
     .subscribe(
       projects => { 
         this.newProjectsCount = projects;
@@ -83,7 +84,7 @@ export class DashboardComponent implements OnInit {
     );
 
     // IN_PROGRESS Projects
-    this.projectsService.getProjectsCountByStatusId(1) 
+    this.projectsService.getProjectsCountByStatusId(Statuses.IN_PROGRESS) 
       .subscribe(
         projects => { 
           this.inProgressProjectsCount = projects;
@@ -92,7 +93,7 @@ export class DashboardComponent implements OnInit {
     );
 
     // FINISHED Products
-    this.projectsService.getProjectsCountByStatusId(3) 
+    this.projectsService.getProjectsCountByStatusId(Statuses.FINISHED) 
       .subscribe(
         projects => { 
           this.finishedProjectsCount = projects;

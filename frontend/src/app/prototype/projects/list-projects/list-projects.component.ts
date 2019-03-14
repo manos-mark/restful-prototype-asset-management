@@ -6,6 +6,8 @@ import { Statuses } from '../../status.enum'
 import { Observable, forkJoin } from 'rxjs';
 import { FilterParams } from '../filter-params.model';
 import { PageParams } from '../page-params.model';
+import { Actions } from 'src/app/general/home/activity/action.enum';
+import { ActivityService } from 'src/app/general/home/activity/activity.service';
 
 
 @Component({
@@ -26,7 +28,8 @@ export class ListProjectsComponent implements OnInit {
     totalPages = this.projects.length / this.pageParams.pageSize;
 
     constructor(private projectService: ProjectsService,
-                private router: Router) {}
+                private router: Router,
+                private activityService: ActivityService) {}
 
     ngOnInit() {
         this.isMasterChecked = false;
@@ -115,11 +118,13 @@ export class ListProjectsComponent implements OnInit {
                     // delete
                     if (selectedStatus == null) {
                         observables.push(this.projectService.deleteProject(project.id));
+                        observables.push(this.activityService.addActivity(Actions.DELETED_PROJECT));
                     }
                     // change status
                     else {
                         project.status.id = selectedStatus;
                         observables.push(this.projectService.updateProject(project));
+                        observables.push(this.activityService.addActivity(Actions.UPDATED_PROJECT));
                     }
                 }
             }
