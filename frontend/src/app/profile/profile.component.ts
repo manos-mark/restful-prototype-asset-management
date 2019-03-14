@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { WindowPopService } from '../shared/window-pop/window-pop.service';
+import { BreadcrumbsService } from '../shared/breadcrumbs.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,17 +14,24 @@ export class ProfileComponent implements OnInit {
     windowPop = false;
     windowPopFail = false;
 
-  changePasswordForm = new FormGroup({
-      oldPassword: new FormControl(null, [Validators.required, Validators.minLength(6)]),
-      passwords: new FormGroup({
-        newPassword: new FormControl(null, [Validators.required, Validators.minLength(6)]),
-        repeatNewPassword: new FormControl(null, [Validators.required, Validators.minLength(6)])
-      }, { validators: this.matchPasswords })
-    }
-  )
+    changePasswordForm = new FormGroup({
+        oldPassword: new FormControl(null, [Validators.required, Validators.minLength(6)]),
+        passwords: new FormGroup({
+            newPassword: new FormControl(null, [Validators.required, Validators.minLength(6)]),
+            repeatNewPassword: new FormControl(null, [Validators.required, Validators.minLength(6)])
+        }, { validators: this.matchPasswords })
+        }
+    )
 
-  constructor(public authService: AuthService,
-                private windowPopService: WindowPopService) { }
+    constructor(public authService: AuthService,
+                private windowPopService: WindowPopService,
+                private breadcrumbsService: BreadcrumbsService) {
+        this.breadcrumbsService.breadcrumbs = [];
+        this.breadcrumbsService.breadcrumbs.push({
+            name: "Settings",
+            src: "profile"
+        });
+    }
 
     matchPasswords(control: AbstractControl): { invalid: boolean } {
         if (control.value.newPassword !== control.value.repeatNewPassword) {
@@ -32,31 +40,31 @@ export class ProfileComponent implements OnInit {
         return null;
     }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  onSave() {
-    this.authService.updateUser(this.oldPassword.value, 
-        this.newPassword.value, this.repeatNewPassword.value) 
-        .subscribe(
-            resp => {
-                this.windowPopService.title = "Authentication Successful";
-                this.windowPopService.context = "Your request was successful.";
-                this.windowPopService.details = "An new password will be sent to your email";
-                this.windowPopService.activate = true;
-            },
-            error => {
-                this.windowPopService.title = "Authentication Failed";
-                this.windowPopService.context = "Your request is not successful!";
-                this.windowPopService.details = "Try again with different credentials.";
-                this.windowPopService.activate = true;
-            }
-        );
-  }
+    onSave() {
+        this.authService.updateUser(this.oldPassword.value, 
+            this.newPassword.value, this.repeatNewPassword.value) 
+            .subscribe(
+                resp => {
+                    this.windowPopService.title = "Authentication Successful";
+                    this.windowPopService.context = "Your request was successful.";
+                    this.windowPopService.details = "An new password will be sent to your email";
+                    this.windowPopService.activate = true;
+                },
+                error => {
+                    this.windowPopService.title = "Authentication Failed";
+                    this.windowPopService.context = "Your request is not successful!";
+                    this.windowPopService.details = "Try again with different credentials.";
+                    this.windowPopService.activate = true;
+                }
+            );
+    }
 
-  onCancel() {
-      this.changePasswordForm.reset();
-  }
+    onCancel() {
+        this.changePasswordForm.reset();
+    }
 
   get oldPassword() { return this.changePasswordForm.get('oldPassword'); }
   get newPassword() { return this.changePasswordForm.controls.passwords.get('newPassword'); }

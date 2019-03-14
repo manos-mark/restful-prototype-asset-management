@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './auth/auth.service';
-import { Router } from '@angular/router';
 import { WindowPopService } from './shared/window-pop/window-pop.service';
 import { ImageCarouselService } from './shared/image-carousel/image-carousel.service';
+import { BreadcrumbsService } from './shared/breadcrumbs.service';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +12,15 @@ import { ImageCarouselService } from './shared/image-carousel/image-carousel.ser
 export class AppComponent implements OnInit {
 
   constructor(public authService: AuthService,
-    public router: Router,
-    public windowPopService: WindowPopService,
-    public carouselService: ImageCarouselService) {}
+    private windowPopService: WindowPopService,
+    private carouselService: ImageCarouselService,
+    private breadcrumbsService: BreadcrumbsService) {}
 
   ngOnInit() {
   }
+
+  get carouselAvtivate() { return this.carouselService.activate }
+  get windowPopAvtivate() { return this.windowPopService.activate }
+  get isAuthenticated() { return this.authService.isAuthenticated() }
+  get breadcrumbs() { return this.breadcrumbsService.breadcrumbs }
 }

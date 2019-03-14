@@ -12,13 +12,14 @@ import { ProductPicture } from '../../product-picture.model';
 import { Observer, Subscription } from 'rxjs';
 import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
 import { Actions } from 'src/app/general/home/activity/action.enum';
+import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 
 @Component({
   selector: 'app-edit-product',
   templateUrl: './edit-product.component.html',
   styleUrls: ['./edit-product.component.css']
 })
-export class EditProductComponent implements OnInit, OnDestroy {
+export class EditProductComponent implements  OnDestroy {
     public static readonly MAX_UPLOAD_FILES_SIZE = 12582912;
     public static readonly MAX_UPLOAD_FILES_LENGTH = 10;
     product: Product;
@@ -43,14 +44,13 @@ export class EditProductComponent implements OnInit, OnDestroy {
     })
 
     constructor(private activityService: ActivityService,
-        private projectService: ProjectsService,
-        private productService: ProductsService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private windowPopService: WindowPopService,
-        private carouselService: ImageCarouselService) { }
-
-    ngOnInit() {
+                private projectService: ProjectsService,
+                private productService: ProductsService,
+                private router: Router,
+                private route: ActivatedRoute,
+                private windowPopService: WindowPopService,
+                private carouselService: ImageCarouselService,
+                private breadcrumbsService: BreadcrumbsService) {
         // when add new project status always will be new and disabled
         this.productForm.controls.statusId.setValue(Statuses.NEW);
         this.productForm.controls.statusId.disable();
@@ -65,6 +65,15 @@ export class EditProductComponent implements OnInit, OnDestroy {
         )
         // on edit mode init the fields        
         if (this.editMode) {
+            this.breadcrumbsService.breadcrumbs = [];
+            this.breadcrumbsService.breadcrumbs.push({
+                name: "Prototype > Products",
+                src: "prototype/products"
+            });
+            this.breadcrumbsService.breadcrumbs.push({
+                name: "> Edit Product",
+                src: null
+            });
             this.productForm.controls.statusId.enable();
             this.route.queryParams.subscribe(
                 res => {
@@ -105,6 +114,17 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 },
                 error => console.log(error)
             )
+        } 
+        else {
+            this.breadcrumbsService.breadcrumbs = [];
+            this.breadcrumbsService.breadcrumbs.push({
+                name: "Prototype > Products",
+                src: "prototype/products"
+            });
+            this.breadcrumbsService.breadcrumbs.push({
+                name: "> New Product",
+                src: null
+            });
         }
     }
 

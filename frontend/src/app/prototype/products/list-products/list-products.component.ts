@@ -10,6 +10,7 @@ import { ProductsService } from '../products.service';
 import { ProductPicture } from '../../product-picture.model';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
 import { Actions } from 'src/app/general/home/activity/action.enum';
+import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 
 @Component({
   selector: 'app-list-products',
@@ -34,9 +35,15 @@ export class ListProductsComponent implements OnInit {
                 private router: Router,
                 private route: ActivatedRoute,
                 private carouselService: ImageCarouselService,
-                private activityService: ActivityService) { }
+                private activityService: ActivityService,
+                private breadcrumbsService: BreadcrumbsService) { }
 
     ngOnInit() {
+        this.breadcrumbsService.breadcrumbs = [];
+        this.breadcrumbsService.breadcrumbs.push({
+            name: "Prototype > Products",
+            src: "prototype/products"
+        });
         this.route.queryParams.subscribe(
             res => { this.filterParams.projectName = res.projectName }
         )
