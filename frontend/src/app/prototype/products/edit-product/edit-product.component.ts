@@ -24,6 +24,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     pictures: ProductPicture[] = [];
     imageSrc: string[] = [];
     computedPicturesListSize: number = 0;
+    computedPicturesLength: number = 0;
     deleteImageSubscription: Subscription = null;
     isThumbSelected: Boolean = false;
     i = 0;
@@ -90,6 +91,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
                                             }
                                         })
                                         this.computePicturesListSize();
+                                        this.computePicturesLength();
                                     },
                                     error => console.log(error)
                                 );
@@ -121,17 +123,16 @@ export class EditProductComponent implements OnInit, OnDestroy {
     }
 
     onUploadPicture(eventFileList: FileList): void {
-        if (this.pictures.length <= EditProductComponent.MAX_UPLOAD_FILES_LENGTH 
-            && this.computedPicturesListSize <= EditProductComponent.MAX_UPLOAD_FILES_SIZE) {
-            this.pictures.push(new ProductPicture({
-                id: undefined,
-                productId: undefined,
-                name: eventFileList.item(0).name,
-                size: eventFileList.item(0).size,
-                file: eventFileList.item(0)
-            }))
-            this.thumbArray.push(new FormControl(null))
-        }
+        this.pictures.push(new ProductPicture({
+            id: undefined,
+            productId: undefined,
+            name: eventFileList.item(0).name,
+            size: eventFileList.item(0).size,
+            file: eventFileList.item(0)
+        }))
+        this.computedPicturesLength++;
+        this.computedPicturesListSize += eventFileList.item(0).size;
+        this.thumbArray.push(new FormControl(null))
     }
 
     onAddSave() {
@@ -179,6 +180,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
                     if (this.pictures[pictureIndex].isThumb) {
                         this.isThumbSelected = false;
                     }
+                    this.computedPicturesListSize -= this.pictures[pictureIndex].size;
                     this.pictures.splice(pictureIndex,1);
                     this.thumbArray.removeAt(pictureIndex);
                 }
@@ -192,10 +194,12 @@ export class EditProductComponent implements OnInit, OnDestroy {
                     this.pictures.forEach(item => {
                         if (picture.id == item.id) {
                             picture.type = "deleted";
+                            this.computedPicturesListSize -= picture.size;
                         }
                     })
                 }
                 
+                this.computedPicturesLength--;
                 this.deleteImageSubscription.unsubscribe();
             })
         }
@@ -272,6 +276,18 @@ export class EditProductComponent implements OnInit, OnDestroy {
         });
         
         this.computedPicturesListSize = totalSize;
+    }
+
+    computePicturesLength() {
+        let length = 0;
+
+        this.pictures.forEach(element => {
+            if (!element.type.match("deleted")) {
+                length++;
+            }
+        });
+
+        this.computedPicturesLength = length;
     }
 
     get productName() { return this.productForm.get('productName') }

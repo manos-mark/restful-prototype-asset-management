@@ -79,15 +79,17 @@
         <textarea rows="8" cols="110" formControlName="description"></textarea>
         <span class="error" *ngIf="description.invalid && (description.dirty || description.touched)">Incorrect value</span>
       </div>
-      <div class="attachedProducts" [ngClass]="{'error': uploadPicture.invalid && (uploadPicture.dirty || uploadPicture.touched)}">
+      <div class="attachedProducts" 
+        [ngClass]="{'error': (!isThumbSelected || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE) 
+            && (uploadPicture.dirty || uploadPicture.touched)}">
         <div class="header">
           <div class="picture">
             <i class="picture"></i>
-            <p>Picture</p>
+            <p>Pictures</p>
           </div>
           <div class="uploadWrp">
             <a class="grayDarkBtn" 
-                [ngClass]="{'disabled': pictures.length >= MAX_UPLOAD_FILES_LENGTH
+                [ngClass]="{'disabled': computedPicturesLength >= MAX_UPLOAD_FILES_LENGTH
                  || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE}"
             >Upload</a>
             <input 
@@ -95,17 +97,20 @@
                 formControlName="uploadPicture" 
                 accept="image/gif, .jpg, image/png" 
                 (change)="onUploadPicture($event.target.files);"
-                [ngClass]="{'disabled': pictures.length >= MAX_UPLOAD_FILES_LENGTH
+                [ngClass]="{'disabled': computedPicturesLength >= MAX_UPLOAD_FILES_LENGTH
                  || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE}"
             />
           </div>
-          <span class="error" *ngIf="uploadPicture.invalid && (uploadPicture.dirty || uploadPicture.touched)">Max upload file size: 12 MB.</span>
-          <span class="error" *ngIf="uploadPicture.valid && thumbArray.invalid">Select one picture as thumb.</span>
+          <span 
+            class="error" 
+            *ngIf="(computedPicturesListSize > MAX_UPLOAD_FILES_LENGTH) && (uploadPicture.dirty || uploadPicture.touched) && isThumbSelected"
+          >Max upload file size: 12 MB.</span>
+          <span class="error" *ngIf="!isThumbSelected">Select one picture as thumb.</span>
         </div>
-        <div class="list" *ngIf="pictures.length == 0">
+        <div class="list" *ngIf="computedPicturesLength == 0">
           <p>NO PICTURES</p>
         </div>
-        <div class="list" *ngIf="pictures.length != 0">
+        <div class="list" *ngIf="computedPicturesLength != 0">
             <div class="tableWrp">
                 <div class="table inner">
                     <div class="header">
