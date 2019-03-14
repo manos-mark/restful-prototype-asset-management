@@ -14,7 +14,8 @@ export class ProductPicture {
         this.name = dto.name,
         this.size = dto.size,
         this.productId = dto.productId,
-        this.file = dto.file;
+        this.file = dto.file,
+        this.isThumb = dto.isThumb
         
 
         if (this.id) {

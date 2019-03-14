@@ -25,6 +25,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     imageSrc: string[] = [];
     computedPicturesListSize: number = 0;
     deleteImageSubscription: Subscription = null;
+    isThumbSelected: Boolean = false;
     i = 0;
 
     productForm = new FormGroup({
@@ -80,11 +81,12 @@ export class EditProductComponent implements OnInit, OnDestroy {
                                             let tempPicture = new ProductPicture(picture);
                                             this.pictures.push(tempPicture);
 
-                                            this.thumbArray.push(new FormControl(null,Validators.required))
-                                            console.log(this.productForm.controls.thumbArray)
+                                            this.thumbArray.push(new FormControl(null))
                                             
                                             if (picture.id == this.product.thumbPictureId) {
-                                                // this.productForm.controls.thumbFormGroup.get('thumb').setValue(index);
+                                                tempPicture.isThumb = true;
+                                                this.thumbArray.controls[index].setValue(index);
+                                                this.isThumbSelected = true;
                                             }
                                         })
                                         this.computePicturesListSize();
@@ -101,8 +103,21 @@ export class EditProductComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSelectThumb(index) {
-        console.log(index)
+    onSelectThumb(index: number) {
+        this.thumbArray.controls.forEach(control => {
+            control.setValue(null);
+        });
+        this.thumbArray.controls[index].setValue(index);
+        this.isThumbSelected = true;
+
+        this.pictures.forEach((picture, i) => {
+            if (index == i) {
+                picture.isThumb = true;
+            }
+            else {
+                picture.isThumb = false;
+            }
+        })
     }
 
     onUploadPicture(eventFileList: FileList): void {
@@ -115,8 +130,8 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 size: eventFileList.item(0).size,
                 file: eventFileList.item(0)
             }))
+            this.thumbArray.push(new FormControl(null))
         }
-        console.log(this.pictures)
     }
 
     onAddSave() {
@@ -127,17 +142,74 @@ export class EditProductComponent implements OnInit, OnDestroy {
             statusId: this.statusId.value,
             projectId: this.project.value,
             description: this.description.value,
-            thumbPictureIndex: this.thumb.value
+            thumbPictureIndex: null
         });
-        console.log(tempProduct['thumbPictureIndex'])
-        // // on edit mode update
-        // if (this.editMode) {
-        //     this.updateProduct(tempProduct);
-        // }
-        // // else add new product
-        // else {
-        //     this.saveProduct(tempProduct);
-        // }
+
+        this.pictures.forEach((picture, index) => {
+            if (picture.isThumb) {
+                tempProduct['thumbPictureIndex'] = index;
+            }
+        });
+        // console.log(tempProduct['thumbPictureIndex'])
+        // console.log(tempProduct)
+        // console.log(this.pictures)
+        // on edit mode update
+        if (this.editMode) {
+            this.updateProduct(tempProduct);
+        }
+        // else add new product
+        else {
+            this.saveProduct(tempProduct);
+        }
+    }
+
+    onDeletePicture(pictureIndex: number, picture: ProductPicture) {
+        this.windowPopService.title = "Delete Image";
+        this.windowPopService.context = "Are you sure?";
+        this.windowPopService.details = "This image will be deleted permanently.";
+        this.windowPopService.deleteImage = true;
+        this.windowPopService.activate = true;
+        
+        this.deleteImageSubscription = this.productService.deleteImageConfirmed
+            .subscribe( res => {
+
+                // if this image is new, just delete from list 
+                if (this.pictures[pictureIndex].type.match("new")) {
+                    // check if the picture is thumb, to disable the form
+                    if (this.pictures[pictureIndex].isThumb) {
+                        this.isThumbSelected = false;
+                    }
+                    this.pictures.splice(pictureIndex,1);
+                    this.thumbArray.removeAt(pictureIndex);
+                }
+                // else set the type to deleted, dont remove from the array
+                else if (this.pictures[pictureIndex].type.match("existing")) {
+                    // check if the picture is thumb, to disable the form
+                    if (picture.isThumb) {
+                        this.isThumbSelected = false;
+                        console.log('thumb id: '+picture.id)
+                    }
+                    this.pictures.forEach(item => {
+                        if (picture.id == item.id) {
+                            picture.type = "deleted";
+                        }
+                    })
+                }
+                
+                this.deleteImageSubscription.unsubscribe();
+            })
+        }
+
+    onCancel() {
+        this.productForm.reset();
+        this.router.navigate(['prototype','products']);
+    }
+
+    ngOnDestroy() {
+        this.productService.editMode = false;
+        if (this.deleteImageSubscription) {
+            this.deleteImageSubscription.unsubscribe();
+        }
     }
 
     updateProduct(product) {
@@ -180,63 +252,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
                     this.windowPopService.activate = true;
                 }
             )
-    }
-
-    onDeletePicture(pictureIndex: number) {
-        this.windowPopService.title = "Delete Image";
-        this.windowPopService.context = "Are you sure?";
-        this.windowPopService.details = "This image will be deleted permanently.";
-        this.windowPopService.deleteImage = true;
-        this.windowPopService.activate = true;
-
-        // this.deleteImageSubscription = this.productService.deleteImageConfirmed
-        //     .subscribe( res => {
-                // destroy the pop up
-                this.windowPopService.activate = false;
-                this.windowPopService.deleteImage = false;
-
-                // if this image is new, just delete from list 
-                // (no need to sent request to the backend)
-                if (this.pictures[pictureIndex].type.match("new")) {
-                    // if
-                    this.pictures.splice(pictureIndex,1);
-                    this.thumbArray.removeAt(pictureIndex);
-                    console.log(this.thumbArray)
-                }
-                // else the id and the file is null, deleted type on the service
-                else {
-                    this.pictures[pictureIndex].type = "deleted";
-                }
-
-                // check if the pictures list is empty, to disable the update button
-                let picturesIsEmpty = true;
-                this.pictures.forEach(
-                    picture => { 
-                        if (picture.type.match("new") || picture.type.match("existing")) {
-                            picturesIsEmpty = false;
-                        } 
-                    }
-                )
-                // if (picturesIsEmpty) { this.thumb.setValue(null); }
-
-                // // check if the picture is thumb, to disable the thumb
-                // if (pictureIndex == this.thumb.value) {
-                //     this.thumb.setValue(null);
-                // }
-                console.log(this.pictures)
-            // })
-        }
-
-    onCancel() {
-        this.productForm.reset();
-        this.router.navigate(['prototype','products']);
-    }
-
-    ngOnDestroy() {
-        this.productService.editMode = false;
-        if (this.deleteImageSubscription) {
-            this.deleteImageSubscription.unsubscribe();
-        }
     }
 
     convertBytesToMegabytes(bytes,decimals) {

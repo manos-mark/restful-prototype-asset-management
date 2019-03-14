@@ -6,7 +6,7 @@
     <div class="action">
       <a class="blueBtn" 
         (click)="onAddSave()" 
-        [ngClass]="{ 'disabled': productForm.invalid }"
+        [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected}"
         >Add & Save</a>
       <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>
@@ -121,7 +121,10 @@
                             <div *ngFor="let control of thumbArray.controls, let i=index">
                                 <div class="row" *ngIf="!pictures[i].type.match('deleted')">
                                     <span class="thumb">
-                                        <input type="radio" [value]="i" formControlName={{i}} (click)="onSelectThumb(i)">
+                                        <input type="radio" 
+                                            [value]="i" 
+                                            formControlName={{i}} 
+                                            (click)="onSelectThumb(i)">
                                     </span>
                                     <div class="picture">
                                         <a class="picWrp">
@@ -137,7 +140,7 @@
                                     <div class="delete">
                                         <a 
                                             class="grayDarkBtn" 
-                                            (click)="onDeletePicture(i)"
+                                            (click)="onDeletePicture(i, pictures[i])"
                                         ><i></i></a>
                                     </div>
                                 </div>

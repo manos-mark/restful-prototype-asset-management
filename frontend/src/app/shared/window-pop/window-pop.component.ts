@@ -43,6 +43,7 @@ export class WindowPopComponent implements OnInit, OnDestroy {
 
   onDeleteImage() {
     this.productService.deleteImageConfirmed.next(true);
+    this.activeChange.emit();
   }
 
   onCancel() {
