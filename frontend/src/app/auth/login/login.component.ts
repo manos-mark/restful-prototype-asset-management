@@ -32,19 +32,19 @@ export class LoginComponent implements OnInit {
     this.authService.getCsrf()
         .subscribe(
             resp => { 
-                this.authService.currentUser = resp.body;
-                if (this.authService.currentUser) {
+                this.authService.setCurrentUser(resp.body);
+                if (this.authService.getCurrentUser()) {
                     this.router.navigate(['/']);
                 } 
             },
             error => { if (error.status !== 401) console.log(error) }
         );  
     if (!document.cookie.match('acceptedCookies')) {
-        this.windowPopService.title = "Cookies";
-        this.windowPopService.context = "This site uses cookies";
-        this.windowPopService.details = "Do you accept?";
-        this.windowPopService.cookies = true;
-        this.windowPopService.activate = true;
+        this.windowPopService.setTitle("Cookies");
+        this.windowPopService.setContext("This site uses cookies");
+        this.windowPopService.setDetails("Do you accept?");
+        this.windowPopService.setCookies(true);
+        this.windowPopService.activate();
     } 
   }
 
@@ -57,11 +57,11 @@ export class LoginComponent implements OnInit {
         },
         error => {
           if (error.status === 200) {
-            this.authService.getCurrentUser()
+            this.authService.retrieveCurrentUser()
                 .subscribe(
                     resp => { 
-                        this.authService.currentUser = resp.body;
-                        if (this.authService.currentUser) {
+                        this.authService.setCurrentUser(resp.body);
+                        if (this.authService.getCurrentUser()) {
                             this.router.navigate(['/']);
                         } 
                     },
@@ -69,10 +69,10 @@ export class LoginComponent implements OnInit {
                 );
             this.activityService.addActivity(Actions.LOGGED_IN).subscribe();
           } else {
-            this.windowPopService.title = "Authentication Failed";
-            this.windowPopService.context = "Your request is not successful!";
-            this.windowPopService.details = "Try again with different credentials.";
-            this.windowPopService.activate = true;
+            this.windowPopService.setTitle("Authentication Failed");
+            this.windowPopService.setContext("Your request is not successful!");
+            this.windowPopService.setDetails("Try again with different credentials.");
+            this.windowPopService.activate();
           }
         }
     );

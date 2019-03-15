@@ -13,13 +13,15 @@ import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
 import { ProductPicture } from '../../product-picture.model';
 import { Actions } from 'src/app/general/home/activity/action.enum';
+import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
+import { NotificationService } from 'src/app/shared/notification/notification.service';
 
 @Component({
   selector: 'app-edit-project',
   templateUrl: './edit-project.component.html',
   styleUrls: ['./edit-project.component.css']
 })
-export class EditProjectComponent implements OnInit, OnDestroy {
+export class EditProjectComponent implements OnDestroy {
     projectManagers: {
         id: number;
         name: string;
@@ -44,18 +46,24 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private productService: ProductsService,
                 private windowPopService: WindowPopService,
-                private carouselService: ImageCarouselService) { }
-
-    ngOnInit() {
+                private carouselService: ImageCarouselService,
+                private breadcrumbsService: BreadcrumbsService,
+                private notificationService: NotificationService) { 
+        if (this.projectService.editMode) {
+            this.breadcrumbsService.setBreadcrumbsProjectEdit();
+        } 
+        else {
+            this.breadcrumbsService.setBreadcrumbsProjectNew();
+        }
         // when add new project status always will be new and disabled
         this.projectForm.controls.statusId.setValue(Statuses.NEW);
         this.projectForm.controls.statusId.disable();
         // get project managers for the dropdown
         this.projectService.getProjectManagers()
-                .subscribe(
-                    res => this.projectManagers = res,
-                    error => console.log(error)
-                )
+            .subscribe(
+                res => this.projectManagers = res,
+                error => console.log(error)
+            )
         // on edit mode init the fields        
         if (this.projectService.editMode) {
             this.route.queryParams.subscribe(
@@ -117,14 +125,15 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                     .subscribe(
                         res => {
                             this.router.navigate(['/prototype/projects']);
+                            this.notificationService.showNotification();
                             this.activityService.addActivity(Actions.UPDATED_PROJECT).subscribe();
                         },
                         error => {
                             console.log(error)
-                            this.windowPopService.title = "Update project Failed";
-                            this.windowPopService.context = "Your request is not successful!";
-                            this.windowPopService.details = "Try again with different credentials.";
-                            this.windowPopService.activate = true;
+                            this.windowPopService.setTitle("Update project Failed");
+                            this.windowPopService.setContext("Your request is not successful!");
+                            this.windowPopService.setDetails("Try again with different credentials.");
+                            this.windowPopService.activate();
                         }
                     )
         }
@@ -136,13 +145,14 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                         res => {
                             this.router.navigate(['/prototype/projects']);
                             this.activityService.addActivity(Actions.CREATED_PROJECT).subscribe();
+                            this.notificationService.showNotification();
                         },
                         error => {
                             console.log(error)
-                            this.windowPopService.title = "Add new project Failed";
-                            this.windowPopService.context = "Your request is not successful!";
-                            this.windowPopService.details = "Try again with different credentials.";
-                            this.windowPopService.activate = true;
+                            this.windowPopService.setTitle("Add new project Failed");
+                            this.windowPopService.setContext("Your request is not successful!");
+                            this.windowPopService.setDetails("Try again with different credentials.");
+                            this.windowPopService.activate();
                         }
                     )
         }

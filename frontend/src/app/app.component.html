@@ -1,22 +1,33 @@
 <div class="wrapper">
     <app-window-pop 
-        [(active)]="this.windowPopService.activate" 
+        [(active)]="windowPopAvtivate" 
     ></app-window-pop>
-    <app-image-carousel
-        [(active)]="this.carouselService.activate"
-    ></app-image-carousel>
-    <div *ngIf="this.authService.isAuthenticated()">
+    <div *ngIf="isAuthenticated">
         <app-header></app-header>
         <div class="contentWrapper">
             <div class="content">
+                <app-image-carousel
+                    [(active)]="carouselAvtivate"
+                ></app-image-carousel>
+                <app-notification
+                    [(active)]="notificationAvtivate" 
+                ></app-notification>
                 <div class="breadcrumbs">
-                    <a [routerLink]="this.router.routerState.snapshot.url">{{ this.router.routerState.snapshot.url | titlecase | slice:1 }}</a>
+                    <div *ngFor="let breadcrumb of breadcrumbs" >
+                        <a 
+                            *ngIf="breadcrumb.src"
+                            [routerLink]="breadcrumb.src"
+                        >{{ breadcrumb.name }}</a>
+                        <a 
+                            *ngIf="!breadcrumb.src"
+                        >{{ breadcrumb.name }}</a>
+                    </div>
                 </div>
                 <ng-container *ngTemplateOutlet="template"></ng-container>
             </div>
         </div>
     </div>
-    <div *ngIf="!this.authService.isAuthenticated()">
+    <div *ngIf="!isAuthenticated">
         <ng-container *ngTemplateOutlet="template"></ng-container>
     </div>
 </div>

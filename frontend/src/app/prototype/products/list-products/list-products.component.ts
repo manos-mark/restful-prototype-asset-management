@@ -10,6 +10,8 @@ import { ProductsService } from '../products.service';
 import { ProductPicture } from '../../product-picture.model';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
 import { Actions } from 'src/app/general/home/activity/action.enum';
+import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
+import { NotificationService } from 'src/app/shared/notification/notification.service';
 
 @Component({
   selector: 'app-list-products',
@@ -34,7 +36,11 @@ export class ListProductsComponent implements OnInit {
                 private router: Router,
                 private route: ActivatedRoute,
                 private carouselService: ImageCarouselService,
-                private activityService: ActivityService) { }
+                private activityService: ActivityService,
+                private breadcrumbsService: BreadcrumbsService,
+                private notificationService: NotificationService) { 
+        this.breadcrumbsService.setBreadcrumbsProducts();
+    }
 
     ngOnInit() {
         this.route.queryParams.subscribe(
@@ -131,12 +137,14 @@ export class ListProductsComponent implements OnInit {
                     if (selectedStatus == null) {
                         observables.push(this.productService.deleteProduct(product.id));
                         observables.push(this.activityService.addActivity(Actions.DELETED_PRODUCT));
+                        this.notificationService.showNotification();
                     }
                     // change status
                     else {
                         product.status.id = selectedStatus;
                         observables.push(this.productService.updateProductStatus(product));
                         observables.push(this.activityService.addActivity(Actions.UPDATED_PRODUCT));
+                        this.notificationService.showNotification();
                     }
                 }
             }

@@ -20,6 +20,8 @@ import { SharedModule } from './shared/shared.module';
 import { WindowPopService } from './shared/window-pop/window-pop.service';
 import { ImageCarouselService } from './shared/image-carousel/image-carousel.service';
 import { LightboxModule } from 'ngx-lightbox';
+import { BreadcrumbsService } from './shared/breadcrumbs.service';
+import { NotificationService } from './shared/notification/notification.service';
 
 @NgModule({
   declarations: [
@@ -42,12 +44,14 @@ import { LightboxModule } from 'ngx-lightbox';
   providers: [
     AuthService, 
     ActivityService, 
+    BreadcrumbsService,
     AuthGuard, 
     TitleCasePipe, 
     ProjectsService,
     ProductsService,
     WindowPopService,
-    ImageCarouselService
+    ImageCarouselService,
+    NotificationService
   ],
   bootstrap: [AppComponent]
 })

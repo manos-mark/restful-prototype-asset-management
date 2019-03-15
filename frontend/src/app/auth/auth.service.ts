@@ -6,8 +6,8 @@ import { ActivityService } from '../general/home/activity/activity.service';
 
 @Injectable()
 export class AuthService {
-  currentUser: User;
-  rememberMe = false;
+  private currentUser: User;
+  private rememberMe = false;
   
   constructor(private httpClient: HttpClient,
               private router: Router,
@@ -20,11 +20,19 @@ export class AuthService {
     })
   }
 
-  getCurrentUser() {
+  retrieveCurrentUser() {
     return this.httpClient.get<User>('api/users/current', {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
       observe: 'response'
     })
+  }
+
+  getCurrentUser() {
+      return this.currentUser;
+  }
+
+  setCurrentUser(user: User) {
+      this.currentUser = user;
   }
   
   loginUser(email: string, password: string) {

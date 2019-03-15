@@ -10,8 +10,16 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
-    editMode = false;
-    deleteImageConfirmed = new Subject<boolean>();
+    
+    private _editMode : boolean;
+    public get editMode() : boolean {
+        return this._editMode;
+    }
+    public set editMode(v : boolean) {
+        this._editMode = v;
+    }
+    
+    public deleteImageConfirmed = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient) {}
 
