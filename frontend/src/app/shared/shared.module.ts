@@ -4,12 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ImageCarouselComponent } from './image-carousel/image-carousel.component';
 import { LightboxModule } from 'ngx-lightbox';
+import { NotificationComponent } from './notification/notification.component';
 
 
 @NgModule({
     declarations: [
         WindowPopComponent,
-        ImageCarouselComponent
+        ImageCarouselComponent,
+        NotificationComponent
     ],
     imports: [
         FormsModule,
@@ -19,7 +21,8 @@ import { LightboxModule } from 'ngx-lightbox';
     ],
     exports: [
         WindowPopComponent,
-        ImageCarouselComponent
+        ImageCarouselComponent,
+        NotificationComponent
     ]
 })
 export class SharedModule {}

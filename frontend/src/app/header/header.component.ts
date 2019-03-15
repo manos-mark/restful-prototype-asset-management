@@ -40,11 +40,11 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-    this.windowPopService.title = "Log out";
-    this.windowPopService.context = "Are you sure?"
-    this.windowPopService.details = "You will be logged out!"
-    this.windowPopService.activate = true;
-    this.windowPopService.logout = true;
+    this.windowPopService.setTitle("Log out");
+    this.windowPopService.setContext("Are you sure?");
+    this.windowPopService.setDetails("You will be logged out!");
+    this.windowPopService.activate();
+    this.windowPopService.setLogout(true);
   }
 
 }

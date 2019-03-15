@@ -13,6 +13,7 @@ import { Observer, Subscription } from 'rxjs';
 import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
 import { Actions } from 'src/app/general/home/activity/action.enum';
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
+import { NotificationService } from 'src/app/shared/notification/notification.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -50,28 +51,13 @@ export class EditProductComponent implements OnDestroy {
                 private route: ActivatedRoute,
                 private windowPopService: WindowPopService,
                 private carouselService: ImageCarouselService,
-                private breadcrumbsService: BreadcrumbsService) { 
+                private breadcrumbsService: BreadcrumbsService,
+                private notificationService: NotificationService) { 
         if (this.editMode) {
-            this.breadcrumbsService.breadcrumbs = [];
-            this.breadcrumbsService.breadcrumbs.push({
-                name: "Prototype > Products ",
-                src: "prototype/products"
-            });
-            this.breadcrumbsService.breadcrumbs.push({
-                name: " > Edit Product",
-                src: null
-            });
+            this.breadcrumbsService.setBreadcrumbsProductEdit();
         }
         else {
-            this.breadcrumbsService.breadcrumbs = [];
-            this.breadcrumbsService.breadcrumbs.push({
-                name: "Prototype > Products ",
-                src: "prototype/products"
-            });
-            this.breadcrumbsService.breadcrumbs.push({
-                name: " > New Product",
-                src: null
-            });
+            this.breadcrumbsService.setBreadcrumbsProductNew();
         }
         // when add new project status always will be new and disabled
         this.productForm.controls.statusId.setValue(Statuses.NEW);
@@ -195,11 +181,11 @@ export class EditProductComponent implements OnDestroy {
     }
 
     onDeletePicture(pictureIndex: number, picture: ProductPicture) {
-        this.windowPopService.title = "Delete Image";
-        this.windowPopService.context = "Are you sure?";
-        this.windowPopService.details = "This image will be deleted permanently.";
-        this.windowPopService.deleteImage = true;
-        this.windowPopService.activate = true;
+        this.windowPopService.setTitle("Delete Image");
+        this.windowPopService.setContext("Are you sure?");
+        this.windowPopService.setDetails("This image will be deleted permanently.");
+        this.windowPopService.setDeleteImage(true);
+        this.windowPopService.activate();
         
         this.deleteImageSubscription = this.productService.deleteImageConfirmed
             .subscribe( res => {
@@ -231,6 +217,7 @@ export class EditProductComponent implements OnDestroy {
                 
                 this.computedPicturesLength--;
                 this.deleteImageSubscription.unsubscribe();
+                this.notificationService.showNotification();
             })
         }
 
@@ -251,14 +238,15 @@ export class EditProductComponent implements OnDestroy {
             .subscribe(
                 res => {
                     this.activityService.addActivity(Actions.UPDATED_PRODUCT).subscribe();
-                    this.router.navigate(['/prototype/products'])
+                    this.router.navigate(['/prototype/products']);
+                    this.notificationService.showNotification();
                 },
                 error => {
                     console.log(error)
-                    this.windowPopService.title = "Update product Failed";
-                    this.windowPopService.context = "Your request is not successful!";
-                    this.windowPopService.details = "Try again with different credentials.";
-                    this.windowPopService.activate = true;
+                    this.windowPopService.setTitle("Update product Failed");
+                    this.windowPopService.setContext("Your request is not successful!");
+                    this.windowPopService.setDetails("Try again with different credentials.");
+                    this.windowPopService.activate();
                 }
             )
     }
@@ -268,14 +256,15 @@ export class EditProductComponent implements OnDestroy {
             .subscribe(
                 res => {
                     this.activityService.addActivity(Actions.CREATED_PRODUCT).subscribe();
-                    this.router.navigate(['/prototype/products'])
+                    this.router.navigate(['/prototype/products']);
+                    this.notificationService.showNotification();
                 },
                 error => {
                     console.log(error)
-                    this.windowPopService.title = "Add new product Failed";
-                    this.windowPopService.context = "Your request is not successful!";
-                    this.windowPopService.details = "Try again with different credentials.";
-                    this.windowPopService.activate = true;
+                    this.windowPopService.setTitle("Add new product Failed");
+                    this.windowPopService.setContext("Your request is not successful!");
+                    this.windowPopService.setDetails("Try again with different credentials.");
+                    this.windowPopService.activate();
                 }
             )
     }

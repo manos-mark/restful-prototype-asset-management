@@ -13,21 +13,16 @@ export class HomeComponent implements OnInit {
   constructor(private authService: AuthService,
             private windowPopService: WindowPopService,
             private breadcrumbsService: BreadcrumbsService) {
-
-        this.breadcrumbsService.breadcrumbs = [];
-        this.breadcrumbsService.breadcrumbs.push({
-            name: "General",
-            src: "general"
-        });
+        this.breadcrumbsService.setBreadcrumbsGeneral();
     }
 
   ngOnInit() {
-    if (!this.authService.currentUser.acceptedCookies) {
-        this.windowPopService.title = "Cookies";
-        this.windowPopService.context = "This site uses cookies";
-        this.windowPopService.details = "Do you accept?";
-        this.windowPopService.cookiesToDB = true;
-        this.windowPopService.activate = true;
+    if (!this.authService.getCurrentUser().acceptedCookies) {
+        this.windowPopService.setTitle("Cookies");
+        this.windowPopService.setContext("This site uses cookies");
+        this.windowPopService.setDetails("Do you accept?");
+        this.windowPopService.setCookiesToDB(true);
+        this.windowPopService.activate();
     }
   }
 

@@ -9,8 +9,15 @@ import { Statuses } from '../status.enum';
 
 @Injectable()
 export class ProjectsService {
-    editMode = false;
-
+    
+    private _editMode : boolean;
+    public get editMode() : boolean {
+        return this._editMode;
+    }
+    public set editMode(v : boolean) {
+        this._editMode = v;
+    }
+    
     constructor(private httpClient: HttpClient) {}
 
     getProjectById(id: number) {

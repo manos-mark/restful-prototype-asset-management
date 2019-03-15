@@ -9,6 +9,7 @@ import { PageParams } from '../page-params.model';
 import { Actions } from 'src/app/general/home/activity/action.enum';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
+import { NotificationService } from 'src/app/shared/notification/notification.service';
 
 
 @Component({
@@ -31,13 +32,9 @@ export class ListProjectsComponent implements OnInit {
     constructor(private projectService: ProjectsService,
                 private router: Router,
                 private activityService: ActivityService,
-                private breadcrumbsService: BreadcrumbsService) { 
-
-        this.breadcrumbsService.breadcrumbs = [];
-        this.breadcrumbsService.breadcrumbs.push({
-            name: "Prototype > Projects",
-            src: "prototype/projects"
-        });
+                private breadcrumbsService: BreadcrumbsService,
+                private notificationService: NotificationService) { 
+        this.breadcrumbsService.setBreadcrumbsProjects();
     }
 
     ngOnInit() {
@@ -128,12 +125,14 @@ export class ListProjectsComponent implements OnInit {
                     if (selectedStatus == null) {
                         observables.push(this.projectService.deleteProject(project.id));
                         observables.push(this.activityService.addActivity(Actions.DELETED_PROJECT));
+                        this.notificationService.showNotification();
                     }
                     // change status
                     else {
                         project.status.id = selectedStatus;
                         observables.push(this.projectService.updateProject(project));
                         observables.push(this.activityService.addActivity(Actions.UPDATED_PROJECT));
+                        this.notificationService.showNotification();
                     }
                 }
             }

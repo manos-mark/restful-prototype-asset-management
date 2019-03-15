@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { AuthService } from '../auth/auth.service';
 import { WindowPopService } from '../shared/window-pop/window-pop.service';
 import { BreadcrumbsService } from '../shared/breadcrumbs.service';
+import { NotificationService } from '../shared/notification/notification.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,12 +26,9 @@ export class ProfileComponent implements OnInit {
 
     constructor(public authService: AuthService,
                 private windowPopService: WindowPopService,
-                private breadcrumbsService: BreadcrumbsService) {
-        this.breadcrumbsService.breadcrumbs = [];
-        this.breadcrumbsService.breadcrumbs.push({
-            name: "Settings",
-            src: "profile"
-        });
+                private breadcrumbsService: BreadcrumbsService,
+                private notificationService: NotificationService) {
+        this.breadcrumbsService.setBreadcrumbsProfile();
     }
 
     matchPasswords(control: AbstractControl): { invalid: boolean } {
@@ -48,16 +46,17 @@ export class ProfileComponent implements OnInit {
             this.newPassword.value, this.repeatNewPassword.value) 
             .subscribe(
                 resp => {
-                    this.windowPopService.title = "Authentication Successful";
-                    this.windowPopService.context = "Your request was successful.";
-                    this.windowPopService.details = "An new password will be sent to your email";
-                    this.windowPopService.activate = true;
+                    this.windowPopService.setTitle("Authentication Successful");
+                    this.windowPopService.setContext("Your request was successful.");
+                    this.windowPopService.setDetails("An new password will be sent to your email");
+                    this.windowPopService.activate();
+                    this.notificationService.showNotification();
                 },
                 error => {
-                    this.windowPopService.title = "Authentication Failed";
-                    this.windowPopService.context = "Your request is not successful!";
-                    this.windowPopService.details = "Try again with different credentials.";
-                    this.windowPopService.activate = true;
+                    this.windowPopService.setTitle("Authentication Failed");
+                    this.windowPopService.setContext("Your request is not successful!");
+                    this.windowPopService.setDetails("Try again with different credentials.");
+                    this.windowPopService.activate();
                 }
             );
     }

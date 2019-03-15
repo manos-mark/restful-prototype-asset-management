@@ -2,13 +2,16 @@
     <app-window-pop 
         [(active)]="windowPopAvtivate" 
     ></app-window-pop>
-    <app-image-carousel
-        [(active)]="carouselAvtivate"
-    ></app-image-carousel>
     <div *ngIf="isAuthenticated">
         <app-header></app-header>
         <div class="contentWrapper">
             <div class="content">
+                <app-image-carousel
+                    [(active)]="carouselAvtivate"
+                ></app-image-carousel>
+                <app-notification
+                    [(active)]="notificationAvtivate" 
+                ></app-notification>
                 <div class="breadcrumbs">
                     <div *ngFor="let breadcrumb of breadcrumbs" >
                         <a 
