@@ -4,19 +4,10 @@ public class ActivityDto {
 
 	private Long id;
 
-//	private String action;
-	
 	private int actionId;
 	
 	private String date;
 	
-	public ActivityDto(Long id, String date, int actionId) {
-		this.id = id;
-		this.date = date;
-		this.actionId = actionId;
-	}
-
-
 	public ActivityDto() {
 	}
 

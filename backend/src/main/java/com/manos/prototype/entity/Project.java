@@ -15,8 +15,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 @Entity
 @Table(name = "project")
+@Indexed
 public class Project {
 
 	@Id
@@ -25,9 +30,11 @@ public class Project {
 	private int id;
 
 	@Column(name = "project_name")
+	@Field
 	private String projectName;
 
 	@Column(name = "company_name")
+	@Field
 	private String companyName;
 
 	@Column(name = "creation_date")
@@ -39,6 +46,7 @@ public class Project {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_manager_id")
+	@IndexedEmbedded
 	private ProjectManager projectManager;
 
 	@OneToMany(mappedBy = "project")

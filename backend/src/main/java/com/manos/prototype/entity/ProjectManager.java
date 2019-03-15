@@ -7,8 +7,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 @Entity
 @Table(name = "project_manager")
+@Indexed
 public class ProjectManager {
 
 	@Id
@@ -17,6 +21,7 @@ public class ProjectManager {
 	private int id;
 
 	@Column(name = "name")
+	@Field
 	private String name;
 
 	public ProjectManager(int id) {

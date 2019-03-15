@@ -17,8 +17,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 @Entity
 @Table(name = "product")
+@Indexed
 public class Product {
 	
 	@Id
@@ -30,9 +34,11 @@ public class Product {
 	private LocalDate createdAt;
 	
 	@Column(name = "product_name")
+	@Field
 	private String productName;
 	
 	@Column(name = "serial_number")
+	@Field
 	private String serialNumber;
 	
 	@Column(name = "description")
