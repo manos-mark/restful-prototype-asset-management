@@ -17,12 +17,31 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.AnalyzerDef;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Parameter;
+import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.TokenFilterDef;
+import org.hibernate.search.annotations.TokenizerDef;
 
 @Entity
 @Table(name = "product")
 @Indexed
+@AnalyzerDef(name = "customanalyzer",
+	tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+	filters = {
+	  @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+	  @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
+	    @Parameter(name = "language", value = "English")
+	  })
+})
 public class Product {
 	
 	@Id
@@ -33,12 +52,14 @@ public class Product {
 	@Column(name = "creation_date")
 	private LocalDate createdAt;
 	
+	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "product_name")
-	@Field
+	@Analyzer(definition = "customanalyzer")
 	private String productName;
 	
+	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "serial_number")
-	@Field
+	@Analyzer(definition = "customanalyzer")
 	private String serialNumber;
 	
 	@Column(name = "description")

@@ -7,12 +7,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 @Entity
 @Table(name = "project_manager")
 @Indexed
+@Analyzer(definition = "customanalyzer")
 public class ProjectManager {
 
 	@Id
@@ -20,8 +25,9 @@ public class ProjectManager {
 	@Column(name="id")
 	private int id;
 
+	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "name")
-	@Field
+	@Analyzer(definition = "customanalyzer")
 	private String name;
 
 	public ProjectManager(int id) {
