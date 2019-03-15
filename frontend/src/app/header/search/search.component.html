@@ -1,36 +1,60 @@
 <div class="searchWrp">
-  <div class="search">
-    <i class="searchIcon"></i>
-    <input value="Search"/>
-    <a class="clear"></a>
-  </div>
-  <!-- <div class="searchDropdown">
-    <div class="items">
-      <a class="result">
-        <i class="project"></i>
-        <span class="type">Project name</span>
-        <span class="item">Offset printing DE122</span>
-      </a>
-      <a class="result">
-        <i class="company"></i>
-        <span class="type">Company</span>
-        <span class="item">Company SE123</span>
-      </a>
-      <a class="result">
-        <i class="manager"></i>
-        <span class="type">Project manager</span>
-        <span class="item">John  Doe12</span>
-      </a>
-      <a class="result">
-        <i class="product"></i>
-        <span class="type">Product name</span>
-        <span class="item">Wooden arm ze123</span>
-      </a>
-      <a class="result">
-        <i class="serialNum"></i>
-        <span class="type">Serial number</span>
-        <span class="item">e123456</span>
-      </a>
+    <div class="search">
+        <i class="searchIcon"></i>
+        <input #input placeholder="Search" (input)="onInput(input)"/>
+        <a class="clear" (click)="input.value = ''"></a>
     </div>
-  </div> -->
+    <div class="searchDropdown" *ngIf="products.length != 0 || projects.length != 0">
+        <div class="items">
+            <div *ngFor="let product of products">
+                <a 
+                    class="result" 
+                    *ngIf="input.value.match(product.productName)"
+                    (click)="onEditProduct(product.id, input)"
+                    >
+                    <i class="product"></i>
+                    <span class="type">Product name</span>
+                    <span class="item">{{ product.productName }}</span>
+                </a>
+                <a 
+                    class="result" 
+                    *ngIf="input.value.match(product.serialNumber)"
+                    (click)="onEditProduct(product.id, input)"
+                    >
+                    <i class="serialNum"></i>
+                    <span class="type">Serial number</span>
+                    <span class="item">{{ product.serialNumber }}</span>
+                </a>
+            </div>
+            <div *ngFor="let project of projects">
+                <a 
+                    class="result" 
+                    *ngIf="input.value.match(project.projectName)"
+                    (click)="onEditProject(project.id, input)"
+                    >
+                    <i class="project"></i>
+                    <span class="type">Project name</span>
+                    <span class="item">{{ project.projectName }}</span>
+                </a>
+                <a 
+                    class="result" 
+                    *ngIf="input.value.match(project.companyName)"
+                    (click)="onEditProject(project.id, input)"
+                    >
+                    <i class="company"></i>
+                    <span class="type">Company</span>
+                    <span class="item">{{ project.companyName }}</span>
+                </a>
+                <a 
+                    class="result" 
+                    *ngIf="input.value.match(project.projectManager.name)"
+                    (click)="onEditProject(project.id, input)"
+                    >
+                    <i class="manager"></i>
+                    <span class="type">Project Manager</span>
+                    <span class="item">{{ project.projectManager.name }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
