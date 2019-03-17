@@ -44,7 +44,7 @@ filters = {
 		}),
 		@TokenFilterDef(factory = NGramFilterFactory.class, params = {
 				@Parameter(name = "minGramSize", value = "3"),
-				@Parameter(name = "maxGramSize", value = "10")
+				@Parameter(name = "maxGramSize", value = "20")
 		})
 })
 @AnalyzerDef(name = "my_analyzer_without_ngrams",
