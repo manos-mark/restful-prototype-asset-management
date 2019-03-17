@@ -155,6 +155,7 @@ public class ProductDaoImpl {
 							.getSearchFactory()
 							.buildQueryBuilder()
 							.forEntity(Product.class)
+							.overridesForField(field, "my_analyzer_without_ngrams")
 							.get();
 		
 		org.apache.lucene.search.Query lucenceQuery 

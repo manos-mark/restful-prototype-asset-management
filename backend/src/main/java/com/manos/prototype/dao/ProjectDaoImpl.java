@@ -136,6 +136,7 @@ public class ProjectDaoImpl {
 								.getSearchFactory()
 								.buildQueryBuilder()
 								.forEntity(Project.class)
+								.overridesForField(field, "my_analyzer_without_ngrams")
 								.get();
 		
 		org.apache.lucene.search.Query lucenceQuery 
