@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from './search.service';
-import { Project } from 'src/app/prototype/projects/project.model';
-import { Product } from 'src/app/prototype/products/product.model';
 import { ProductsService } from 'src/app/prototype/products/products.service';
 import { ProjectsService } from 'src/app/prototype/projects/projects.service';
 import { Router } from '@angular/router';
+import { SearchProduct } from './search-product.model';
+import { SearchProject } from './search-project.model';
 
 @Component({
   selector: 'app-search',
@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-    products: Product[] = [];
-    projects: Project[] = [];
+    products: SearchProduct[] = [];
+    projects: SearchProject[] = [];
 
     constructor(private searchService: SearchService,
                 private productService: ProductsService,
@@ -25,20 +25,22 @@ export class SearchComponent implements OnInit {
 
     onInput(input) {
         if (!input.value.match('').index){
-            this.searchService.search(input.value)
-                .subscribe (
-                    res => {
-                        console.log(res)
-                        this.products = res.products;
-                        this.projects = res.projects;
-                    },
-                    error => console.log(error)
-                )
-        }
-        else {
+            if (input.value.length >= 3) {
+                this.searchService.search(input.value)
+                    .subscribe (
+                        res => {
+                            console.log(res)
+                            this.products = res.products;
+                            this.projects = res.projects;
+                        },
+                        error => console.log(error)
+                    )
+            }
             this.products = [];
             this.projects = [];
-            input.value = "";
+        }
+        else {
+            this.onClear(input);
         }
     }
 
@@ -47,7 +49,7 @@ export class SearchComponent implements OnInit {
         this.router.navigate(['prototype/products/', productId, 'edit'], 
             {queryParams: { productId: productId }}
         );
-        input.value = '';
+        this.onClear(input);
     }
 
     onEditProject(projectId: number, input) {
@@ -55,6 +57,12 @@ export class SearchComponent implements OnInit {
         this.router.navigate(['prototype/projects/', projectId, 'edit'], 
             {queryParams: { projectId: projectId }}
         );
+        this.onClear(input);
+    }
+
+    onClear(input) {
+        this.products = [];
+        this.projects = [];
         input.value = '';
     }
 

@@ -141,7 +141,7 @@ public class ProductDaoImpl {
 		return count == null ? 0 : count.intValue();
 	}
 
-	public List<Product> search(String text) {
+	public List<Product> search(String text, String field) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		FullTextSession fullTextSession = Search.getFullTextSession(currentSession);
 		// Using an Hibernate Session to rebuild an index
@@ -152,17 +152,18 @@ public class ProductDaoImpl {
 //		}
 		
 		QueryBuilder qb = fullTextSession
-								.getSearchFactory()
-								.buildQueryBuilder()
-								.forEntity(Product.class)
-								.get();
+							.getSearchFactory()
+							.buildQueryBuilder()
+							.forEntity(Product.class)
+							.get();
 		
 		org.apache.lucene.search.Query lucenceQuery 
 			= qb.keyword()
-				.onFields("productName", "serialNumber")
+				.onFields(field)
 				.matching(text)
 				.createQuery();
 		
-		return fullTextSession.createFullTextQuery(lucenceQuery, Product.class).getResultList();
+		return fullTextSession.createFullTextQuery(lucenceQuery, Product.class)
+					.getResultList();
 	}
 }
