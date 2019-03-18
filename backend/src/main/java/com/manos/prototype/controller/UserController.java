@@ -1,6 +1,7 @@
 package com.manos.prototype.controller;
 
 import javax.mail.MessagingException;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,21 +44,21 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public void addUser(@RequestBody UserRequestDto userRequestDto) {
+	public void addUser(@Valid @RequestBody UserRequestDto userRequestDto) {
 		User user = conversionService.convert(userRequestDto, User.class);
 		user.setId(0L);
 		userService.saveUser(user);
 	}
 	
 	@PostMapping("/new-password")
-	public void newPassword(@RequestParam EmailRequestDto email) throws MessagingException {
+	public void newPassword(@Valid @RequestParam EmailRequestDto email) throws MessagingException {
 		String newPassword;
 		newPassword = userService.saveNewPassword(email.getEmail());		// change pass
 		emailService.sendNewPassword(email.getEmail(), newPassword); 	// send email
 	}
 
 	@PutMapping("/{id}/new-password")
-	public void updateUser(@RequestBody NewUserPassRequestDto requestDto,
+	public void updateUser(@Valid @RequestBody NewUserPassRequestDto requestDto,
 			@PathVariable("id") long userId) {
 		String oldPass = requestDto.getOldPassword();
 		String newPass = requestDto.getPassword();
@@ -68,7 +69,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}")
-	public void updateUser(@RequestBody UserRequestDto requestDto,
+	public void updateUser(@Valid @RequestBody UserRequestDto requestDto,
 			@PathVariable("id") long userId) {
 		userService.updateUser(requestDto, userId);
 	}
