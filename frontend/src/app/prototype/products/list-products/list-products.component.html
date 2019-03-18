@@ -22,7 +22,7 @@
                 placeholder="Date from" 
                 type="date" 
                 [max]="dateToFilter"
-                (change)="dateFromFilter = dateFrom.value.toLocaleString('en-GB')"
+                (change)="dateFromFilter = dateFrom.value.toLocaleString()"
             />
         </div>
         <div class="inputWrp date">
@@ -30,7 +30,7 @@
                 placeholder="Date to" 
                 type="date" 
                 [min]="dateFromFilter"
-                (change)="dateToFilter = dateTo.value.toLocaleString('en-GB')"
+                (change)="dateToFilter = dateTo.value.toLocaleString()"
             />
         </div>
         <div class="dropdown status">
@@ -53,7 +53,9 @@
             (click)="applyFilters(statusDropdown.value, projectDropdown.value, dateFrom.value, dateTo.value)"
         >Apply</a>
         <div class="right">
-            <a class="grayBtn" (click)="clearFilters()"><span>Clear filters</span><i></i></a>
+            <a *ngIf="!filterParams.isUndefined()"  class="grayBtn" (click)="clearFilters()">
+                <span>Clear filters</span><i></i>
+            </a>
             <div class="pagination">
                 <a class="arrowLeft"
                     [ngClass]="{'disabled': pageParams.page == 1}"

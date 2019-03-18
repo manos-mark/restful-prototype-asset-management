@@ -17,7 +17,7 @@ export class Product {
 
     constructor(dto:any) {
         this.id = dto.id;
-        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue, dto.createdAt.dayOfMonth);
+        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue-1, dto.createdAt.dayOfMonth);
         this.productName = dto.productName;
         this.serialNumber = dto.serialNumber;
         this.description = dto.description;

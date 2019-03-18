@@ -10,6 +10,7 @@ import { Actions } from 'src/app/general/home/activity/action.enum';
 import { ActivityService } from 'src/app/general/home/activity/activity.service';
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
+import { SearchService } from 'src/app/header/search/search.service';
 
 
 @Component({
@@ -18,11 +19,11 @@ import { NotificationService } from 'src/app/shared/notification/notification.se
   styleUrls: ['./list-projects.component.css']
 })
 export class ListProjectsComponent implements OnInit {
-    filterParams = new FilterParams;
-    pageParams = new PageParams;
+    filterParams = new FilterParams();
+    pageParams = new PageParams();
     sortByDateAsc = true;
     sortByProductsCountAsc = true;
-    isMasterChecked: boolean = false;
+    isMasterChecked = false;
     projects: Project[] = [];
     totalCount: number;
     selectedProjectsCount = 0;
@@ -33,11 +34,14 @@ export class ListProjectsComponent implements OnInit {
                 private router: Router,
                 private activityService: ActivityService,
                 private breadcrumbsService: BreadcrumbsService,
-                private notificationService: NotificationService) { 
+                private notificationService: NotificationService,
+                private searchService: SearchService) {
         this.breadcrumbsService.setBreadcrumbsProjects();
     }
 
     ngOnInit() {
+        this.selectedProjectsCount = 0;
+        this.searchService.clear();
         this.isMasterChecked = false;
         this.projectService.getProjects(this.pageParams, this.filterParams)
             .subscribe(
@@ -109,6 +113,15 @@ export class ListProjectsComponent implements OnInit {
                 dataArray => {
                     this.projects = new Array();
                     this.isMasterChecked = false;
+                    if (selectedStatus == null) {
+                        this.activityService.addActivity(Actions.DELETED_PROJECT);
+                        this.notificationService.showNotification();
+                    }
+                    // change status
+                    else {
+                        this.activityService.addActivity(Actions.UPDATED_PROJECT);
+                        this.notificationService.showNotification();
+                    }
                     this.ngOnInit();
                 },
                 error => console.log(error)
@@ -124,15 +137,11 @@ export class ListProjectsComponent implements OnInit {
                     // delete
                     if (selectedStatus == null) {
                         observables.push(this.projectService.deleteProject(project.id));
-                        observables.push(this.activityService.addActivity(Actions.DELETED_PROJECT));
-                        this.notificationService.showNotification();
                     }
                     // change status
                     else {
                         project.status.id = selectedStatus;
                         observables.push(this.projectService.updateProject(project));
-                        observables.push(this.activityService.addActivity(Actions.UPDATED_PROJECT));
-                        this.notificationService.showNotification();
                     }
                 }
             }

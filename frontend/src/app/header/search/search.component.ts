@@ -12,9 +12,6 @@ import { SearchProject } from './search-project.model';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-    products: SearchProduct[] = [];
-    projects: SearchProject[] = [];
-
     constructor(private searchService: SearchService,
                 private productService: ProductsService,
                 private projectService: ProjectsService,
@@ -24,29 +21,26 @@ export class SearchComponent implements OnInit {
     }
 
     onInput(input) {
-        if (!input.value.match('').index){
+        if (!input.value.match('').index) {
             if (input.value.length >= 3) {
                 this.searchService.search(input.value)
                     .subscribe (
                         res => {
-                            console.log(res)
-                            this.products = res.products;
-                            this.projects = res.projects;
+                            this.searchService.products = res.products;
+                            this.searchService.projects = res.projects;
                         },
                         error => console.log(error)
-                    )
+                    );
             }
-            this.products = [];
-            this.projects = [];
-        }
-        else {
+            this.searchService.clear();
+        } else {
             this.onClear(input);
         }
     }
 
     onEditProduct(productId: number, input) {
         this.productService.editMode = true;
-        this.router.navigate(['prototype/products/', productId, 'edit'], 
+        this.router.navigate(['prototype/products/', productId, 'edit'],
             {queryParams: { productId: productId }}
         );
         this.onClear(input);
@@ -54,16 +48,17 @@ export class SearchComponent implements OnInit {
 
     onEditProject(projectId: number, input) {
         this.projectService.editMode = true;
-        this.router.navigate(['prototype/projects/', projectId, 'edit'], 
+        this.router.navigate(['prototype/projects/', projectId, 'edit'],
             {queryParams: { projectId: projectId }}
         );
         this.onClear(input);
     }
 
     onClear(input) {
-        this.products = [];
-        this.projects = [];
+        this.searchService.clear();
         input.value = '';
     }
 
+    get products() { return this.searchService.products; }
+    get projects() { return this.searchService.projects; }
 }

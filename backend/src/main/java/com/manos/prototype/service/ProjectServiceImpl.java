@@ -69,6 +69,9 @@ public class ProjectServiceImpl {
 	@Transactional
 	public void deleteProject(int id) {
 		List<Product> products = productDao.getProductsByProjectId(id);
+		if (products == null) {
+			throw new EntityNotFoundException(Product.class);
+		}
 				
 		Project project  = projectDao.getProject(id);
 		if (project == null) {

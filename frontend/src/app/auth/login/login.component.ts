@@ -14,12 +14,13 @@ import { Actions } from 'src/app/general/home/activity/action.enum';
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
+    EMAIL_PATTERN = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     windowPopFail = false;
     windowPop = false;
     forgottenPass = false;
 
   loginForm = new FormGroup({
-    email: new FormControl(null, [Validators.required, Validators.email]),
+    email: new FormControl(null, [Validators.required, Validators.pattern(this.EMAIL_PATTERN)]),
     password: new FormControl(null, [Validators.required, Validators.minLength(6)])
   })
 
