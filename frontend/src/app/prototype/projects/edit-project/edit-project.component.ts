@@ -15,6 +15,7 @@ import { ProductPicture } from '../../product-picture.model';
 import { Actions } from 'src/app/general/home/activity/action.enum';
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
+import { SearchService } from 'src/app/header/search/search.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -48,7 +49,9 @@ export class EditProjectComponent implements OnDestroy {
                 private windowPopService: WindowPopService,
                 private carouselService: ImageCarouselService,
                 private breadcrumbsService: BreadcrumbsService,
-                private notificationService: NotificationService) { 
+                private notificationService: NotificationService,
+                private searchService: SearchService) {
+        this.searchService.clear();
         if (this.projectService.editMode) {
             this.breadcrumbsService.setBreadcrumbsProjectEdit();
         } 

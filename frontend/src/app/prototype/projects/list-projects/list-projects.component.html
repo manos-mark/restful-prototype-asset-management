@@ -45,7 +45,9 @@
         (click)="applyFilters(statusDropdown.value, dateFrom.value, dateTo.value)"
       >Apply</a>
       <div class="right">
-        <a class="grayBtn" (click)="clearFilters()"><span>Clear filters</span><i></i></a>
+        <a *ngIf="!filterParams.isUndefined()"  class="grayBtn" (click)="clearFilters()">
+            <span>Clear filters</span><i></i>
+        </a>
         <div class="pagination">
           <a class="arrowLeft"
             [ngClass]="{'disabled': pageParams.page == 1}"
