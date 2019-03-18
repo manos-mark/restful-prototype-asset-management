@@ -37,7 +37,7 @@ export class EditProductComponent implements OnDestroy {
     productForm = new FormGroup({
         productName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
         serialNumber: new FormControl(null, [Validators.required, Validators.minLength(2)]),
-        quantity: new FormControl(null, [Validators.required, Validators.minLength(2)]),
+        quantity: new FormControl(null, [Validators.required, Validators.min(1)]),
         statusId: new FormControl(null, [Validators.required, Validators.pattern("^[0-9]+$")]),
         project: new FormControl("Choose project", [Validators.required, Validators.pattern("^[0-9]+$")]),
         description: new FormControl(null, [Validators.required, Validators.minLength(1)]),

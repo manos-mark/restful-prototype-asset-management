@@ -87,10 +87,10 @@ public class ProductController {
 
 	@PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void updateProduct(
-			@PathVariable("id") int productId, 
-			@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
-			@RequestPart("pictures") List<MultipartFile> pictures,
-			@RequestPart("pictureTypeRequestDto") List<PictureTypeRequestDto> pictureTypeRequestDto) {
+			@Valid @PathVariable("id") int productId, 
+			@Valid @RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
+			@Valid @RequestPart("pictures") List<MultipartFile> pictures,
+			@Valid @RequestPart("pictureTypeRequestDto") List<PictureTypeRequestDto> pictureTypeRequestDto) {
 		List<ProductPicture> newPictures = conversionService.convertList(pictures, ProductPicture.class);
 		
 		productService.updateProduct(productRequestDto, productId, newPictures, pictureTypeRequestDto);
@@ -98,8 +98,8 @@ public class ProductController {
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void addProduct(
-			@RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
-			@RequestPart("pictures") List<MultipartFile> pictures) {
+			@Valid @RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
+			@Valid @RequestPart("pictures") List<MultipartFile> pictures) {
 		
 		Product product = conversionService.convert(productRequestDto, Product.class);
 		product.setStatus(new Status(Status.NEW_ID));
