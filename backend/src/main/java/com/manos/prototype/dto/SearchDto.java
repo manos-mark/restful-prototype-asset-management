@@ -4,23 +4,24 @@ import java.util.List;
 
 public class SearchDto {
 
-	private List<ProductDto> products;
+	private List<SearchProductDto> products;
 	
-	private List<ProjectDto> projects;
+	private List<SearchProjectDto> projects;
 
-	public List<ProductDto> getProducts() {
+	public List<SearchProductDto> getProducts() {
 		return products;
 	}
 
-	public void setProducts(List<ProductDto> products) {
+	public void setProducts(List<SearchProductDto> products) {
 		this.products = products;
 	}
 
-	public List<ProjectDto> getProjects() {
+	public List<SearchProjectDto> getProjects() {
 		return projects;
 	}
 
-	public void setProjects(List<ProjectDto> projects) {
+	public void setProjects(List<SearchProjectDto> projects) {
 		this.projects = projects;
 	}
+
 }

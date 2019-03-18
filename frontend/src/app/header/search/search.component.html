@@ -1,15 +1,15 @@
 <div class="searchWrp">
     <div class="search">
         <i class="searchIcon"></i>
-        <input #input placeholder="Search" (input)="onInput(input)"/>
-        <a class="clear" (click)="input.value = ''"></a>
+        <input #input placeholder="Search" (keyup)="onInput(input)"/>
+        <a class="clear" (click)="onClear(input)"></a>
     </div>
     <div class="searchDropdown" *ngIf="products.length != 0 || projects.length != 0">
         <div class="items">
             <div *ngFor="let product of products">
                 <a 
                     class="result" 
-                    *ngIf="input.value.match(product.productName)"
+                    *ngIf="product.field.match('productName')"
                     (click)="onEditProduct(product.id, input)"
                     >
                     <i class="product"></i>
@@ -18,7 +18,7 @@
                 </a>
                 <a 
                     class="result" 
-                    *ngIf="input.value.match(product.serialNumber)"
+                    *ngIf="product.field.match('serialNumber')"
                     (click)="onEditProduct(product.id, input)"
                     >
                     <i class="serialNum"></i>
@@ -29,7 +29,7 @@
             <div *ngFor="let project of projects">
                 <a 
                     class="result" 
-                    *ngIf="input.value.match(project.projectName)"
+                    *ngIf="project.field.match('projectName')"
                     (click)="onEditProject(project.id, input)"
                     >
                     <i class="project"></i>
@@ -38,7 +38,7 @@
                 </a>
                 <a 
                     class="result" 
-                    *ngIf="input.value.match(project.companyName)"
+                    *ngIf="project.field.match('companyName')"
                     (click)="onEditProject(project.id, input)"
                     >
                     <i class="company"></i>
@@ -47,12 +47,12 @@
                 </a>
                 <a 
                     class="result" 
-                    *ngIf="input.value.match(project.projectManager.name)"
+                    *ngIf="project.field.match('projectManager.name')"
                     (click)="onEditProject(project.id, input)"
                     >
                     <i class="manager"></i>
                     <span class="type">Project Manager</span>
-                    <span class="item">{{ project.projectManager.name }}</span>
+                    <span class="item">{{ project.projectManagerName }}</span>
                 </a>
             </div>
         </div>

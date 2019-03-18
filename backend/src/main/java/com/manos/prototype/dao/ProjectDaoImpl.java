@@ -122,7 +122,7 @@ public class ProjectDaoImpl {
 		return count == null ? 0 : count.intValue();
 	}
 	
-	public List<Project> search(String text) {
+	public List<Project> search(String text, String field) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		FullTextSession fullTextSession = Search.getFullTextSession(currentSession);
 		// Using an Hibernate Session to rebuild an index
@@ -136,11 +136,12 @@ public class ProjectDaoImpl {
 								.getSearchFactory()
 								.buildQueryBuilder()
 								.forEntity(Project.class)
+								.overridesForField(field, "my_analyzer_without_ngrams")
 								.get();
 		
 		org.apache.lucene.search.Query lucenceQuery 
 			= qb.keyword()
-				.onFields("projectName", "companyName", "projectManager.name")
+				.onFields(field)
 				.matching(text)
 				.createQuery();
 		

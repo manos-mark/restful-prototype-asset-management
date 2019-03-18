@@ -18,8 +18,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.core.WhitespaceTokenizerFactory;
+import org.apache.lucene.analysis.ngram.NGramFilterFactory;
 import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
-import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.AnalyzerDef;
@@ -35,12 +36,24 @@ import org.hibernate.search.annotations.TokenizerDef;
 @Table(name = "product")
 @Indexed
 @AnalyzerDef(name = "customanalyzer",
-	tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+tokenizer = @TokenizerDef(factory = WhitespaceTokenizerFactory.class),
+filters = {
+		@TokenFilterDef(factory = LowerCaseFilterFactory.class),
+		@TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
+				@Parameter(name = "language", value = "English")
+		}),
+		@TokenFilterDef(factory = NGramFilterFactory.class, params = {
+				@Parameter(name = "minGramSize", value = "3"),
+				@Parameter(name = "maxGramSize", value = "20")
+		})
+})
+@AnalyzerDef(name = "my_analyzer_without_ngrams",
+	tokenizer = @TokenizerDef(factory = WhitespaceTokenizerFactory.class),
 	filters = {
-	  @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-	  @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
-	    @Parameter(name = "language", value = "English")
-	  })
+		@TokenFilterDef(factory = LowerCaseFilterFactory.class),
+		@TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
+			@Parameter(name = "language", value = "English")
+		})
 })
 public class Product {
 	

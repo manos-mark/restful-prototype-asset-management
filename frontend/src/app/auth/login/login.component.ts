@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
               private windowPopService: WindowPopService) { }
 
   ngOnInit() {
-    this.authService.getCsrf()
+    // to get the csrf cookie
+    this.authService.retrieveCurrentUser()
         .subscribe(
             resp => { 
                 this.authService.setCurrentUser(resp.body);
