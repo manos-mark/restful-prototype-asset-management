@@ -113,6 +113,15 @@ export class ListProjectsComponent implements OnInit {
                 dataArray => {
                     this.projects = new Array();
                     this.isMasterChecked = false;
+                    if (selectedStatus == null) {
+                        this.activityService.addActivity(Actions.DELETED_PROJECT);
+                        this.notificationService.showNotification();
+                    }
+                    // change status
+                    else {
+                        this.activityService.addActivity(Actions.UPDATED_PROJECT);
+                        this.notificationService.showNotification();
+                    }
                     this.ngOnInit();
                 },
                 error => console.log(error)
@@ -128,15 +137,11 @@ export class ListProjectsComponent implements OnInit {
                     // delete
                     if (selectedStatus == null) {
                         observables.push(this.projectService.deleteProject(project.id));
-                        observables.push(this.activityService.addActivity(Actions.DELETED_PROJECT));
-                        this.notificationService.showNotification();
                     }
                     // change status
                     else {
                         project.status.id = selectedStatus;
                         observables.push(this.projectService.updateProject(project));
-                        observables.push(this.activityService.addActivity(Actions.UPDATED_PROJECT));
-                        this.notificationService.showNotification();
                     }
                 }
             }

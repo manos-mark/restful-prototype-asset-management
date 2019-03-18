@@ -124,6 +124,13 @@ export class ListProductsComponent implements OnInit {
                 dataArray => {
                     this.products = new Array();
                     this.isMasterChecked = false;
+                    if (selectedStatus == null) {
+                        this.activityService.addActivity(Actions.DELETED_PRODUCT);
+                        this.notificationService.showNotification();
+                    } else { // change status
+                        this.activityService.addActivity(Actions.UPDATED_PRODUCT);
+                        this.notificationService.showNotification();
+                    }
                     this.ngOnInit();
                 },
                 error => console.log(error)
@@ -139,13 +146,9 @@ export class ListProductsComponent implements OnInit {
                     // delete
                     if (selectedStatus == null) {
                         observables.push(this.productService.deleteProduct(product.id));
-                        observables.push(this.activityService.addActivity(Actions.DELETED_PRODUCT));
-                        this.notificationService.showNotification();
                     } else { // change status
                         product.status.id = selectedStatus;
                         observables.push(this.productService.updateProductStatus(product));
-                        observables.push(this.activityService.addActivity(Actions.UPDATED_PRODUCT));
-                        this.notificationService.showNotification();
                     }
                 }
             }

@@ -22,7 +22,7 @@
                 placeholder="Date from" 
                 type="date" 
                 [max]="dateToFilter"
-                (change)="dateFromFilter = dateFrom.value.toLocaleString('en-GB')"
+                (change)="dateFromFilter = dateFrom.value.toLocaleString()"
             />
         </div>
         <div class="inputWrp date">
@@ -30,7 +30,7 @@
                 placeholder="Date to" 
                 type="date" 
                 [min]="dateFromFilter"
-                (change)="dateToFilter = dateTo.value.toLocaleString('en-GB')"
+                (change)="dateToFilter = dateTo.value.toLocaleString()"
             />
         </div>
         <div class="dropdown status">
