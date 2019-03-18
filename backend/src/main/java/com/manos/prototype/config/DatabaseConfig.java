@@ -61,6 +61,8 @@ public class DatabaseConfig {
 			Properties props = new Properties();
 			props.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
 			props.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
+//			props.setProperty("hibernate.search.default.directory_provider", env.getProperty("hibernate.directory_provider"));
+//			props.setProperty("hibernate.search.default.indexBase", env.getProperty("hibernate.indexBase"));
 			return props;
 		}
 

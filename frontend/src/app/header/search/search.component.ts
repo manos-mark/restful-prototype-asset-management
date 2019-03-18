@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { SearchService } from './search.service';
+import { ProductsService } from 'src/app/prototype/products/products.service';
+import { ProjectsService } from 'src/app/prototype/projects/projects.service';
+import { Router } from '@angular/router';
+import { SearchProduct } from './search-product.model';
+import { SearchProject } from './search-project.model';
 
 @Component({
   selector: 'app-search',
@@ -6,10 +12,58 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+    products: SearchProduct[] = [];
+    projects: SearchProject[] = [];
 
-  constructor() { }
+    constructor(private searchService: SearchService,
+                private productService: ProductsService,
+                private projectService: ProjectsService,
+                private router: Router) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
+
+    onInput(input) {
+        if (!input.value.match('').index){
+            if (input.value.length >= 3) {
+                this.searchService.search(input.value)
+                    .subscribe (
+                        res => {
+                            console.log(res)
+                            this.products = res.products;
+                            this.projects = res.projects;
+                        },
+                        error => console.log(error)
+                    )
+            }
+            this.products = [];
+            this.projects = [];
+        }
+        else {
+            this.onClear(input);
+        }
+    }
+
+    onEditProduct(productId: number, input) {
+        this.productService.editMode = true;
+        this.router.navigate(['prototype/products/', productId, 'edit'], 
+            {queryParams: { productId: productId }}
+        );
+        this.onClear(input);
+    }
+
+    onEditProject(projectId: number, input) {
+        this.projectService.editMode = true;
+        this.router.navigate(['prototype/projects/', projectId, 'edit'], 
+            {queryParams: { projectId: projectId }}
+        );
+        this.onClear(input);
+    }
+
+    onClear(input) {
+        this.products = [];
+        this.projects = [];
+        input.value = '';
+    }
 
 }

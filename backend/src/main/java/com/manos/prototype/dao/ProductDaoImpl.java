@@ -5,6 +5,9 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -138,4 +141,30 @@ public class ProductDaoImpl {
 		return count == null ? 0 : count.intValue();
 	}
 
+	public List<Product> search(String text, String field) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		FullTextSession fullTextSession = Search.getFullTextSession(currentSession);
+		// Using an Hibernate Session to rebuild an index
+//		try {
+//			fullTextSession.createIndexer().startAndWait();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+		
+		QueryBuilder qb = fullTextSession
+							.getSearchFactory()
+							.buildQueryBuilder()
+							.forEntity(Product.class)
+							.overridesForField(field, "my_analyzer_without_ngrams")
+							.get();
+		
+		org.apache.lucene.search.Query lucenceQuery 
+			= qb.keyword()
+				.onFields(field)
+				.matching(text)
+				.createQuery();
+		
+		return fullTextSession.createFullTextQuery(lucenceQuery, Product.class)
+					.getResultList();
+	}
 }

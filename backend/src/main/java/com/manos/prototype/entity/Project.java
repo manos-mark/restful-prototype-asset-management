@@ -15,8 +15,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Store;
+
 @Entity
 @Table(name = "project")
+@Indexed
+@Analyzer(definition = "customanalyzer")
 public class Project {
 
 	@Id
@@ -24,10 +34,14 @@ public class Project {
 	@Column(name = "id")
 	private int id;
 
+	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "project_name")
+	@Analyzer(definition = "customanalyzer")
 	private String projectName;
 
+	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "company_name")
+	@Analyzer(definition = "customanalyzer")
 	private String companyName;
 
 	@Column(name = "creation_date")
@@ -39,6 +53,7 @@ public class Project {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_manager_id")
+	@IndexedEmbedded
 	private ProjectManager projectManager;
 
 	@OneToMany(mappedBy = "project")

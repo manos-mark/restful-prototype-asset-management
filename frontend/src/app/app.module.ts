@@ -22,6 +22,7 @@ import { ImageCarouselService } from './shared/image-carousel/image-carousel.ser
 import { LightboxModule } from 'ngx-lightbox';
 import { BreadcrumbsService } from './shared/breadcrumbs.service';
 import { NotificationService } from './shared/notification/notification.service';
+import { SearchService } from './header/search/search.service';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { NotificationService } from './shared/notification/notification.service'
     ProductsService,
     WindowPopService,
     ImageCarouselService,
-    NotificationService
+    NotificationService,
+    SearchService
   ],
   bootstrap: [AppComponent]
 })

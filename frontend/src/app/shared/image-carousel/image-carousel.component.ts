@@ -22,9 +22,9 @@ export class ImageCarouselComponent {
         // remember to unsubscribe the event when lightbox is closed
         if (event.id === LIGHTBOX_EVENT.CLOSE) {
             // event CLOSED is fired
+            // this.lightbox.close();
             this._subscription.unsubscribe();
-            this.lightbox.close();
-            this.activeChange.emit(false);
+            this.carouselService.activate = false;
         }
 
         if (event.id === LIGHTBOX_EVENT.OPEN) {

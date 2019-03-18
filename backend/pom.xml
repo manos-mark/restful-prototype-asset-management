@@ -14,7 +14,8 @@
 	<properties>
 		<springframework.version>5.0.5.RELEASE</springframework.version>
 		<springsecurity.version>5.0.4.RELEASE</springsecurity.version>
-		<hibernate.version>5.2.16.Final</hibernate.version>
+		<hibernate.version>5.4.1.Final</hibernate.version>
+		<hibernate.search.version>5.11.1.Final</hibernate.search.version>
 		<mysql.connector.version>5.1.45</mysql.connector.version>
 		<c3po.version>0.9.5.2</c3po.version>
 		<org.apache.logging.log4j.version>2.5</org.apache.logging.log4j.version>
@@ -170,6 +171,13 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
+		</dependency>
+		
+		<!-- Hibernate Search -->
+		<dependency>
+		   <groupId>org.hibernate</groupId>
+		   <artifactId>hibernate-search-orm</artifactId>
+		   <version>${hibernate.search.version}</version>
 		</dependency>
 
 		<!-- Add MySQL and C3P0 support -->

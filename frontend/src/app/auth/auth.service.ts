@@ -13,15 +13,8 @@ export class AuthService {
               private router: Router,
               private activityService: ActivityService) {}
 
-  getCsrf() {
-    return this.httpClient.get<User>('api/users/current', {
-      headers: new HttpHeaders().set('Content-Type', 'application/json'),
-      observe: 'response'
-    })
-  }
-
   retrieveCurrentUser() {
-    return this.httpClient.get<User>('api/users/current', {
+    return this.httpClient.get<any>('api/users/current', {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
       observe: 'response'
     })

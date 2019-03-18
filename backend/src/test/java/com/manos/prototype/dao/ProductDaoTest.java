@@ -69,6 +69,14 @@ public class ProductDaoTest {
 	
 	@Test
 	@Transactional
+	void search() {
+		List<Product> products = productDao.search("productName");
+		assertThat(products).isNotNull();
+		System.out.println(products);
+	}
+	
+	@Test
+	@Transactional
 	void getProductsByProjectId_success() {
 		List<Product> products = productDao.getProductsByProjectId(1);
 		Product product = products.get(0);
