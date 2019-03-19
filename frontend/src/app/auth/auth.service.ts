@@ -27,7 +27,7 @@ export class AuthService {
   setCurrentUser(user: User) {
       this.currentUser = user;
   }
-  
+
   loginUser(email: string, password: string) {
     return this.httpClient.post<any>('api/login', {},
       {

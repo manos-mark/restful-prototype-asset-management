@@ -38,6 +38,11 @@ public class UserServiceImpl {
 		if (userDetails == null) {
 			throw new EntityNotFoundException(User.class);
 		}
+		
+		User tempUser = userDao.getUserById(userDetails.getId());
+		if (tempUser.getAcceptedCookiesDatetime() != null) {
+			userDetails.setAcceptedCookies(true);
+		}
 		return userDetails;
 	}
 	

@@ -33,13 +33,13 @@ export class LoginComponent implements OnInit {
     // to get the csrf cookie
     this.authService.retrieveCurrentUser()
         .subscribe(
-            resp => { 
+            resp => { console.log(resp)
                 this.authService.setCurrentUser(resp.body);
                 if (this.authService.getCurrentUser()) {
                     this.router.navigate(['/']);
                 } 
             },
-            error => { if (error.status !== 401) console.log(error) }
+            error => { if (error.status !== 401) console.log(error); }
         );  
     if (!document.cookie.match('acceptedCookies')) {
         this.windowPopService.setTitle("Cookies");
