@@ -21,28 +21,28 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     // IN_PROGRESS Products
-    this.productsService.getProductsCountByStatusId(Statuses.IN_PROGRESS) 
+    this.productsService.getProductsCountByStatusId(Statuses.IN_PROGRESS)
       .subscribe(
-        products => { 
+        products => {
           this.inProgressProductsCount = products;
         },
-        error => { console.log(error) }
+        error => { console.log(error); }
       );
 
     // NEW Projects
-    this.projectsService.getProjectsCountByStatusId(Statuses.NEW) 
+    this.projectsService.getProjectsCountByStatusId(Statuses.NEW)
     .subscribe(
-      projects => { 
+      projects => {
         this.newProjectsCount = projects;
       },
-      error => { console.log(error) }
+      error => { console.log(error); }
     );
   }
 
   onLogout() {
-    this.windowPopService.setTitle("Log out");
-    this.windowPopService.setContext("Are you sure?");
-    this.windowPopService.setDetails("You will be logged out!");
+    this.windowPopService.setTitle('Log out');
+    this.windowPopService.setContext('Are you sure?');
+    this.windowPopService.setDetails('You will be logged out!');
     this.windowPopService.activate();
     this.windowPopService.setLogout(true);
   }

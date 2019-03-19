@@ -6,8 +6,10 @@ import { SearchProject } from './search-project.model';
 
 @Injectable()
 export class SearchService {
+    itemsArray = [];
     products: SearchProduct[] = [];
     projects: SearchProject[] = [];
+    input: HTMLInputElement;
 
     constructor(private httpClient: HttpClient) {}
 
@@ -22,5 +24,9 @@ export class SearchService {
     clear() {
         this.products = [];
         this.projects = [];
+        this.itemsArray = [];
+        if (this.input) {
+            this.input['value'] = '';
+        }
     }
 }

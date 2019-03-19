@@ -26,17 +26,13 @@ export class WindowPopComponent implements OnInit, OnDestroy {
             resp => { return this.authService.logout()
             .subscribe(
                 res => {
-                this.router.navigate(['/login']);
-                this.windowPopService.deactivate();
-                this.activeChange.emit(false);
-                },
-                error => {
-                if (error.status === 404) {
                     this.authService.setCurrentUser(undefined);
                     this.router.navigate(['/login']);
                     this.windowPopService.deactivate();
                     this.activeChange.emit(false);
-                }
+                },
+                error => {
+                    console.log(error);
                 }
             );
         }

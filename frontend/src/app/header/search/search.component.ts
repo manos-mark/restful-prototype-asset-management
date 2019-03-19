@@ -12,6 +12,7 @@ import { SearchProject } from './search-project.model';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+    private index = -1;
     constructor(private searchService: SearchService,
                 private productService: ProductsService,
                 private projectService: ProjectsService,
@@ -20,21 +21,37 @@ export class SearchComponent implements OnInit {
     ngOnInit() {
     }
 
-    onInput(input) {
-        if (!input.value.match('').index) {
-            if (input.value.length >= 3) {
-                this.searchService.search(input.value)
-                    .subscribe (
-                        res => {
-                            this.searchService.products = res.products;
-                            this.searchService.projects = res.projects;
-                        },
-                        error => console.log(error)
-                    );
-            }
-            this.searchService.clear();
+    onKeyup(input, $event) {
+        if (event['key'].match('ArrowDown')) {
+            this.moveDown();
+        } else if (event['key'].match('ArrowUp')) {
+            this.moveUp();
+        } else if (event['key'].match('Enter')) {
+            this.select(input);
         } else {
-            this.onClear(input);
+            this.searchService.input = input;
+            if (!input.value.match('').index) {
+                if (input.value.length >= 3) {
+                    this.searchService.search(input.value)
+                        .subscribe (
+                            res => {
+                                this.index = -1;
+                                this.searchService.itemsArray = [];
+                                res.products.forEach(item => {
+                                    this.searchService.itemsArray.push(item);
+                                });
+                                res.projects.forEach(item => {
+                                    this.searchService.itemsArray.push(item);
+                                });
+                            },
+                            error => console.log(error)
+                        );
+                } else {
+                    this.searchService.itemsArray = [];
+                }
+            } else {
+                this.onClear(input);
+            }
         }
     }
 
@@ -56,9 +73,48 @@ export class SearchComponent implements OnInit {
 
     onClear(input) {
         this.searchService.clear();
-        input.value = '';
     }
 
-    get products() { return this.searchService.products; }
-    get projects() { return this.searchService.projects; }
+    moveDown() {
+        if (this.itemsArray[this.index + 1]) {
+            if (this.itemsArray[this.index]) {
+                this.itemsArray[this.index].isHovered = false;
+            }
+            this.itemsArray[++this.index].isHovered = true;
+        } else if (this.itemsArray[this.itemsArray.length - 1]) {
+            this.itemsArray[this.itemsArray.length - 1].isHovered = false;
+            this.itemsArray[0].isHovered = true;
+            this.index = 0;
+        }
+    }
+
+    moveUp() {
+        if (this.itemsArray[this.index - 1]) {
+            if (this.itemsArray[this.index]) {
+                this.itemsArray[this.index].isHovered = false;
+            }
+            this.itemsArray[--this.index].isHovered = true;
+        } else if (this.itemsArray[this.itemsArray.length - 1]) {
+            this.itemsArray[0].isHovered = false;
+            this.itemsArray[this.itemsArray.length - 1].isHovered = true;
+            this.index = this.itemsArray.length - 1;
+        }
+    }
+
+    select(input) {
+        if (this.itemsArray[this.index]) {
+            const item = this.itemsArray[this.index];
+            if (item.productName) {
+                this.itemsArray[this.index].isHovered = false;
+                this.itemsArray[this.index].isSelected = true;
+                this.onEditProduct(item.id, input);
+            } else if (item.projectName) {
+                this.itemsArray[this.index].isHovered = false;
+                this.itemsArray[this.index].isSelected = true;
+                this.onEditProject(item.id, input);
+            }
+        }
+    }
+
+    get itemsArray() { return this.searchService.itemsArray; }
 }

@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.searchService.clear();
-    console.log(this.authService.getCurrentUser())
     if (!this.authService.getCurrentUser().acceptedCookies) {
         this.windowPopService.setTitle("Cookies");
         this.windowPopService.setContext("This site uses cookies");
