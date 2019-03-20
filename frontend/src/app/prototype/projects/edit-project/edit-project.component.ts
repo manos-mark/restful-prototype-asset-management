@@ -170,7 +170,17 @@ export class EditProjectComponent implements OnDestroy {
 
     onCancel() {
         this.projectForm.reset();
-        this.router.navigate(['prototype','projects']);
+        this.router.navigate(['prototype', 'projects']);
+    }
+
+    onKeydown(e) {
+        const input = e.target;
+        const val = input.value;
+        const end = input.selectionEnd;
+        if (e.keyCode === 32 && (val[end - 1] === ' ' || val[end] === ' ')) {
+            e.preventDefault();
+            return false;
+        }
     }
 
     ngOnDestroy() {

@@ -22,14 +22,14 @@
           <div class="title">
             <i class="project"></i><span>Project name</span>
           </div>
-          <input type="text" formControlName="projectName"/>
+          <input type="text" formControlName="projectName" (keydown)="onKeydown($event)"/>
           <span class="error" *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)">Incorrect value</span>
         </div>
         <div class="inputWrp" [ngClass]="{'error': companyName.invalid && (companyName.dirty || companyName.touched)}">
           <div class="title">
             <i class="company"></i><span>Company name</span>
           </div>
-          <input type="text" formControlName="companyName"/>
+          <input type="text" formControlName="companyName" (keydown)="onKeydown($event)"/>
           <span class="error" *ngIf="companyName.invalid && (companyName.dirty || companyName.touched)">Incorrect value</span>
         </div>
         <div class="inputWrp" [ngClass]="{'error': projectManagerId.invalid && (projectManagerId.dirty || projectManagerId.touched)}">
