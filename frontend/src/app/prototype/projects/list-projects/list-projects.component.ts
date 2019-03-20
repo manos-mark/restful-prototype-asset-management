@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Project } from '../project.model';
 import { ProjectsService } from '../projects.service';
 import { Router } from '@angular/router';
-import { Statuses } from '../../status.enum'
+import { Statuses } from '../../status.enum';
 import { Observable, forkJoin } from 'rxjs';
 import { FilterParams } from '../filter-params.model';
 import { PageParams } from '../page-params.model';
@@ -47,16 +47,15 @@ export class ListProjectsComponent implements OnInit {
             .subscribe(
                 res => {
                     res['items'].map(
-                        item => { this.projects.push(new Project(item)) }
-                    )
+                        item => { this.projects.push(new Project(item)); }
+                    );
                     this.totalCount = res['totalCount'];
                     this.totalPages = Math.ceil(this.totalCount / this.pageParams.pageSize);
-                    this.pagesArray =  Array(this.totalPages).fill(1).map((x,i)=>++i);
+                    this.pagesArray =  Array(this.totalPages).fill(1).map((x, i) => ++i);
                 },
                 error => console.log(error)
-            )
+            );
     }
-
 
     onEdit(projectId: number) {
         this.projectService.editMode = true;
@@ -206,7 +205,6 @@ export class ListProjectsComponent implements OnInit {
     }
 
     applyFilters(statusId: number, dateFrom: Date, dateTo: Date) {
-        
         this.filterParams.fromDate = dateFrom;
         this.filterParams.toDate = dateTo;
 

@@ -18,20 +18,37 @@
     <div class="filters">
       <p>Filters</p>
       <div class="inputWrp date">
-        <input #dateFrom 
+        <!-- <input #dateFrom 
             placeholder="Date from" 
-            type="date" 
-            [max]="dateToFilter"
+            type="text" 
             (change)="dateFromFilter = dateFrom.value.toLocaleString()"
-        />
+            readonly
+        /> -->
+        <input 
+            #dateFrom 
+            [(ngModel)]="filterParams.fromDate"
+            placeholder="Date from" 
+            [max]="dateToFilter"
+            (ngModelChange)="dateFromFilter = filterParams.fromDate"
+            [owlDateTime]="dt1" 
+            [owlDateTimeTrigger]="dt1" 
+        >
+        <owl-date-time #dt1
+            pickerType="calendar"
+        ></owl-date-time>
       </div>
       <div class="inputWrp date">
         <input #dateTo 
+            [(ngModel)]="filterParams.toDate"
             placeholder="Date to" 
-            type="date" 
             [min]="dateFromFilter"
-            (change)="dateToFilter = dateTo.value.toLocaleString()"
+            (ngModelChange)="dateToFilter = filterParams.toDate"
+            [owlDateTime]="dt2" 
+            [owlDateTimeTrigger]="dt2" 
         />
+        <owl-date-time #dt2
+            pickerType="calendar"
+        ></owl-date-time>
       </div>
       <div class="dropdown status">
         <select #statusDropdown>
@@ -90,14 +107,14 @@
             <div class="settings"><i></i></div>
         </div>
         <div class="content">
-            <div class="row" *ngFor="let project of projects; let i index">
+            <div class="row" *ngFor="let project of projects; let i = index">
                 <div class="checkbox">
                     <a class="checkbox" 
                         [ngClass]="{'active': project.isChecked}"
                         (click)="onSelect(project)"
                     ><i></i></a>
                 </div>
-                <span class="number">{{ project.id }}</span>
+                <span class="number">{{ i+1 }}</span>
                 <span class="date">{{ project.createdAt | date:'mediumDate' }}</span>
                 <span class="projectName">{{ project.projectName }}</span>
                 <span class="companyName">{{ project.companyName }}</span>
