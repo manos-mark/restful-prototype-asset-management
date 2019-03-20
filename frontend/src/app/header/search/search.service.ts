@@ -3,10 +3,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Search } from './search.model';
 import { SearchProduct } from './search-product.model';
 import { SearchProject } from './search-project.model';
+import { SearchItem } from './search-item.model';
 
 @Injectable()
 export class SearchService {
-    itemsArray = [];
+    itemsArray: SearchItem[] = [];
     products: SearchProduct[] = [];
     projects: SearchProject[] = [];
     input: HTMLInputElement;

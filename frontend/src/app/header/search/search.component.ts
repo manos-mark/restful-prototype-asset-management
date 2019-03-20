@@ -5,6 +5,7 @@ import { ProjectsService } from 'src/app/prototype/projects/projects.service';
 import { Router } from '@angular/router';
 import { SearchProduct } from './search-product.model';
 import { SearchProject } from './search-project.model';
+import { SearchItem } from './search-item.model';
 
 @Component({
   selector: 'app-search',
@@ -38,10 +39,10 @@ export class SearchComponent implements OnInit {
                                 this.index = -1;
                                 this.searchService.itemsArray = [];
                                 res.products.forEach(item => {
-                                    this.searchService.itemsArray.push(item);
+                                    this.searchService.itemsArray.push(new SearchItem(item));
                                 });
                                 res.projects.forEach(item => {
-                                    this.searchService.itemsArray.push(item);
+                                    this.searchService.itemsArray.push(new SearchItem(item));
                                 });
                             },
                             error => console.log(error)
@@ -55,19 +56,18 @@ export class SearchComponent implements OnInit {
         }
     }
 
-    onEditProduct(productId: number, input) {
+    onEdit(productId: number, projectId: number, input) {
         this.productService.editMode = true;
-        this.router.navigate(['prototype/products/', productId, 'edit'],
-            {queryParams: { productId: productId }}
-        );
-        this.onClear(input);
-    }
 
-    onEditProject(projectId: number, input) {
-        this.projectService.editMode = true;
-        this.router.navigate(['prototype/projects/', projectId, 'edit'],
-            {queryParams: { projectId: projectId }}
-        );
+        if (productId) {
+            this.router.navigate(['prototype/products/', productId, 'edit'],
+                {queryParams: { productId: productId }}
+            );
+        } else if (projectId) {
+            this.router.navigate(['prototype/projects/', projectId, 'edit'],
+                {queryParams: { projectId: projectId }}
+            );
+        }
         this.onClear(input);
     }
 
@@ -104,14 +104,14 @@ export class SearchComponent implements OnInit {
     select(input) {
         if (this.itemsArray[this.index]) {
             const item = this.itemsArray[this.index];
-            if (item.productName) {
+            if (item.product) {
                 this.itemsArray[this.index].isHovered = false;
                 this.itemsArray[this.index].isSelected = true;
-                this.onEditProduct(item.id, input);
-            } else if (item.projectName) {
+                this.onEdit(item.product.id, 0, input);
+            } else if (item.project) {
                 this.itemsArray[this.index].isHovered = false;
                 this.itemsArray[this.index].isSelected = true;
-                this.onEditProject(item.id, input);
+                this.onEdit(0, item.project.id, input);
             }
         }
     }
