@@ -29,6 +29,8 @@ export class ListProjectsComponent implements OnInit {
     selectedProjectsCount = 0;
     pagesArray = [];
     totalPages = this.projects.length / this.pageParams.pageSize;
+    dateFromFilter;
+    fromDate;
 
     constructor(private projectService: ProjectsService,
                 private router: Router,
@@ -59,7 +61,7 @@ export class ListProjectsComponent implements OnInit {
 
     onEdit(projectId: number) {
         this.projectService.editMode = true;
-        this.router.navigate(['prototype/projects/', projectId, 'edit'], 
+        this.router.navigate(['prototype/projects/', projectId, 'edit'],
             {queryParams: { projectId: projectId }}
         );
     }
@@ -70,7 +72,7 @@ export class ListProjectsComponent implements OnInit {
         } else {
             ++this.selectedProjectsCount;
         }
-        project.isChecked = !project.isChecked; 
+        project.isChecked = !project.isChecked;
         this.isMasterChecked = false;
     }
 
@@ -81,7 +83,7 @@ export class ListProjectsComponent implements OnInit {
             projectsCount++;
         }
         this.isMasterChecked = !this.isMasterChecked;
-        
+
         if (this.isMasterChecked) {
             this.selectedProjectsCount = projectsCount;
         } else {
@@ -91,19 +93,16 @@ export class ListProjectsComponent implements OnInit {
 
     applyChanges(action) {
         let selectedStatus: number;
-        if (action == "NEW") {
+        if (action === "NEW") {
             selectedStatus = Statuses.NEW;
         } 
-        else if (action == "IN_PROGRESS") {
+        else if (action === "IN_PROGRESS") {
             selectedStatus = Statuses.IN_PROGRESS;
-        }
-        else if (action == "FINISHED") {
+        } else if (action === "FINISHED") {
             selectedStatus = Statuses.FINISHED;
-        }
-        else if (action == "DELETE") {
+        } else if (action === "DELETE") {
             selectedStatus = null;
-        } 
-        else {
+        } else {
             return;
         }
 
@@ -115,9 +114,7 @@ export class ListProjectsComponent implements OnInit {
                     if (selectedStatus == null) {
                         this.activityService.addActivity(Actions.DELETED_PROJECT);
                         this.notificationService.showNotification();
-                    }
-                    // change status
-                    else {
+                    } else { // change status
                         this.activityService.addActivity(Actions.UPDATED_PROJECT);
                         this.notificationService.showNotification();
                     }
@@ -129,16 +126,14 @@ export class ListProjectsComponent implements OnInit {
 
     changeStatus(selectedStatus: number) {
         let observables: Observable<any>[] = new Array();
-        
+
         this.projects.forEach(
             (project) => {
                 if ( project.isChecked) {
                     // delete
                     if (selectedStatus == null) {
                         observables.push(this.projectService.deleteProject(project.id));
-                    }
-                    // change status
-                    else {
+                    } else { // change status
                         project.status.id = selectedStatus;
                         observables.push(this.projectService.updateProject(project));
                     }
@@ -203,39 +198,37 @@ export class ListProjectsComponent implements OnInit {
             this.ngOnInit();
         }
     }
-    test() {console.log('test')}
+
     applyFilters(statusId: number, dateFrom: Date, dateTo: Date) {
-        // this.filterParams.fromDate = dateFrom;
-        // this.filterParams.toDate = dateTo;
+        this.filterParams.fromDate = dateFrom;
+        this.filterParams.toDate = dateTo;
 
-        console.log(new Intl.DateTimeFormat('en-GB').format(this.filterParams.fromDate));
-
-        // if(statusId >= 1 && statusId <=3) {
-        //     this.projects = new Array();
-        //     this.filterParams.statusId = statusId;
-        //     this.ngOnInit();
-        // } else {
-        //     this.projects = new Array();
-        //     this.filterParams.statusId = null;
-        //     this.ngOnInit();
-        // }
+        if (statusId >= 1 && statusId <= 3) {
+            this.projects = new Array();
+            this.filterParams.statusId = statusId;
+            this.ngOnInit();
+        } else {
+            this.projects = new Array();
+            this.filterParams.statusId = null;
+            this.ngOnInit();
+        }
     }
 
     clearFilters() {
         this.router.navigateByUrl('/', {skipLocationChange: true})
-            .then(()=>
+            .then(() =>
                 this.router.navigate(['prototype/projects/'])
             );
     }
 
     onOpenProducts(projectName: string) {
-        this.router.navigate(['prototype/products/'], 
+        this.router.navigate(['prototype/products/'],
             {queryParams: { projectName: projectName }}
         );
     }
 
     onAddNewProduct(projectId: number) {
-        this.router.navigate(['prototype/products/new'], 
+        this.router.navigate(['prototype/products/new'],
             {queryParams: { projectId: projectId }}
         );
     }

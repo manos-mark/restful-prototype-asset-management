@@ -36,7 +36,7 @@ export const MY_NATIVE_FORMATS = {
         BrowserAnimationsModule,
     ],
     providers: [
-        {provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS},
+        {provide: OWL_DATE_TIME_LOCALE, useValue: 'en-GB'}
     ]
 })
 export class PrototypeModule {}
