@@ -203,20 +203,22 @@ export class ListProjectsComponent implements OnInit {
             this.ngOnInit();
         }
     }
-
+    test() {console.log('test')}
     applyFilters(statusId: number, dateFrom: Date, dateTo: Date) {
-        this.filterParams.fromDate = dateFrom;
-        this.filterParams.toDate = dateTo;
+        // this.filterParams.fromDate = dateFrom;
+        // this.filterParams.toDate = dateTo;
 
-        if(statusId >= 1 && statusId <=3) {
-            this.projects = new Array();
-            this.filterParams.statusId = statusId;
-            this.ngOnInit();
-        } else {
-            this.projects = new Array();
-            this.filterParams.statusId = null;
-            this.ngOnInit();
-        }
+        console.log(new Intl.DateTimeFormat('en-GB').format(this.filterParams.fromDate));
+
+        // if(statusId >= 1 && statusId <=3) {
+        //     this.projects = new Array();
+        //     this.filterParams.statusId = statusId;
+        //     this.ngOnInit();
+        // } else {
+        //     this.projects = new Array();
+        //     this.filterParams.statusId = null;
+        //     this.ngOnInit();
+        // }
     }
 
     clearFilters() {
