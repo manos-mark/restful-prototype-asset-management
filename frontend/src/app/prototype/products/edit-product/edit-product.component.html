@@ -29,14 +29,14 @@
           <div class="title">
             <i class="product"></i><span>Product name</span>
           </div>
-          <input type="text" formControlName="productName"/>
+          <input type="text" formControlName="productName" (keydown)="onKeydown($event)"/>
           <span class="error" *ngIf="productName.invalid && (productName.dirty || productName.touched)">Incorrect value</span>
         </div>
         <div class="inputWrp" [ngClass]="{'error': serialNumber.invalid && (serialNumber.dirty || serialNumber.touched)}">
           <div class="title">
             <i class="serialNum"></i><span>Serial number</span>
           </div>
-          <input type="text" formControlName="serialNumber"/>
+          <input type="text" formControlName="serialNumber" (keydown)="onKeydown($event)"/>
           <span class="error" *ngIf="serialNumber.invalid && (serialNumber.dirty || serialNumber.touched)">Incorrect value</span>
         </div>
         <div class="inputWrp" [ngClass]="{'error': quantity.invalid && (quantity.dirty || quantity.touched)}">
@@ -83,7 +83,7 @@
           <i class="description"></i>
           <p>Description</p>
         </div>
-        <textarea rows="8" cols="110" formControlName="description"></textarea>
+        <textarea rows="8" cols="110" formControlName="description" (keydown)="onKeydown($event)"></textarea>
         <span class="error" *ngIf="description.invalid && (description.dirty || description.touched)">Incorrect value</span>
       </div>
       <div class="attachedProducts" 
@@ -100,10 +100,11 @@
                  || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE}"
             >Upload</a>
             <input 
+                #picInput
                 type="file" 
                 formControlName="uploadPicture" 
                 accept="image/gif, .jpg, image/png" 
-                (change)="onUploadPicture($event.target.files);"
+                (change)="onUploadPicture($event, picInput);"
                 [ngClass]="{'disabled': computedPicturesLength >= MAX_UPLOAD_FILES_LENGTH
                  || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE}"
             />

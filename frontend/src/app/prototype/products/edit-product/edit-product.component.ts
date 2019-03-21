@@ -159,7 +159,8 @@ export class EditProductComponent implements OnDestroy {
         })
     }
 
-    onUploadPicture(eventFileList: FileList): void {
+    onUploadPicture(event, picInput): void {
+        const eventFileList = event.target.files;
         this.pictures.push(new ProductPicture({
             id: undefined,
             productId: undefined,
@@ -169,7 +170,8 @@ export class EditProductComponent implements OnDestroy {
         }))
         this.computedPicturesLength++;
         this.computedPicturesListSize += eventFileList.item(0).size;
-        this.thumbArray.push(new FormControl(null))
+        this.thumbArray.push(new FormControl(null));
+        picInput.value = null;
     }
 
     onAddSave() {
@@ -223,7 +225,6 @@ export class EditProductComponent implements OnDestroy {
                     // check if the picture is thumb, to disable the form
                     if (picture.isThumb) {
                         this.isThumbSelected = false;
-                        console.log('thumb id: '+picture.id)
                     }
                     this.pictures.forEach(item => {
                         if (picture.id == item.id) {
@@ -278,6 +279,16 @@ export class EditProductComponent implements OnDestroy {
                     this.windowPopService.activate();
                 }
             )
+    }
+
+    onKeydown(e) {
+        const input = e.target;
+        const val = input.value;
+        const end = input.selectionEnd;
+        if (e.keyCode === 32 && (val[end - 1] === ' ' || val[end] === ' ')) {
+            e.preventDefault();
+            return false;
+        }
     }
 
     convertBytesToMegabytes(bytes,decimals) {
