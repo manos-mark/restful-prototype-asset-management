@@ -7,9 +7,9 @@
       <a class="greenBtn" routerLink="new">Add project</a>
       <div class="dropdown">
         <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
-          <option value=5>Results per page:5</option>
-          <option value=20>Results per page:20</option>
-          <option value=50>Results per page:50</option>
+          <option [selected]="pageParams.pageSize == 5" value=5>Results per page:5</option>
+          <option [selected]="pageParams.pageSize == 20" value=20>Results per page:20</option>
+          <option [selected]="pageParams.pageSize == 50" value=50>Results per page:50</option>
         </select>
       </div>
     </div>

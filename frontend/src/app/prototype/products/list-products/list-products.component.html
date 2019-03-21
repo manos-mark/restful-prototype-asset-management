@@ -1,18 +1,18 @@
 <div class="heading">
-  <div class="pageTtl">
-    <i class="products"></i>
-    <p>Products({{ totalCount }})</p>
-  </div>
-  <div class="action">
-    <a class="blueBtn" routerLink="new">Add product</a>
-    <div class="dropdown">
-      <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
-        <option value=5>Results per page:5</option>
-        <option value=20>Results per page:20</option>
-        <option value=50>Results per page:50</option>
-      </select>
+    <div class="pageTtl">
+        <i class="products"></i>
+        <p>Products({{ totalCount }})</p>
     </div>
-  </div>
+    <div class="action">
+        <a class="blueBtn" routerLink="new">Add product</a>
+        <div class="dropdown">
+        <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
+            <option [selected]="pageParams.pageSize == 5" value=5>Results per page:5</option>
+            <option [selected]="pageParams.pageSize == 20" value=20>Results per page:20</option>
+            <option [selected]="pageParams.pageSize == 50" value=50>Results per page:50</option>
+        </select>
+        </div>
+    </div>
 </div>
 <div class="tableWrp">
     <div class="filters">
@@ -54,10 +54,13 @@
         </div>
         <div class="dropdown status">
             <select #projectDropdown>
-                <option value="null" selected>Project: All</option>
+                <option [selected]="!filterParams.projectName" value="null">Project: All</option>
                 <option 
-                    *ngFor="let project of projectsNames"
-                    [value]="project">Project: {{ project }}</option>
+                    *ngFor="let projectName of projectsNames"
+                    [value]="projectName"
+                    [selected]="filterParams.projectName.match(projectName)"
+                    >Project: {{ projectName }}
+                </option>
             </select>
         </div>
         <a class="blueDarkBtn" 

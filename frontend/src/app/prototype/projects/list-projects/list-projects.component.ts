@@ -20,8 +20,6 @@ import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
   styleUrls: ['./list-projects.component.css']
 })
 export class ListProjectsComponent implements OnInit {
-    filterParams = new FilterParams();
-    pageParams = new PageParams();
     sortByDateAsc = true;
     sortByProductsCountAsc = true;
     isMasterChecked = false;
@@ -275,4 +273,7 @@ export class ListProjectsComponent implements OnInit {
             this.deleteProjectsSubscription.unsubscribe();
         }
     }
+
+    get pageParams() { return this.projectService.pageParams; }
+    get filterParams() { return this.projectService.filterParams; }
 }

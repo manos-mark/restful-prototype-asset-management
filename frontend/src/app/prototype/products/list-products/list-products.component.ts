@@ -24,8 +24,6 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     products: Product[] = [];
     pictures: ProductPicture[] = [];
     projectsNames: string[] = [];
-    filterParams = new FilterParams;
-    pageParams = new PageParams;
     sortByDateAsc = true;
     sortByQuantityAsc = true;
     isMasterChecked = false;
@@ -64,11 +62,9 @@ export class ListProductsComponent implements OnInit, OnDestroy {
                         res['items'].map(
                             item => {
                                 this.products.push(new Product(item));
-                                if (!this.projectsNames.includes(item.projectName)) {
-                                    this.projectsNames.push(item.projectName);
-                                }
                             }
                         );
+                        this.projectsNames = res['projectNames'];
                         this.totalCount = res['totalCount'];
                         this.totalPages = Math.ceil(this.totalCount / this.pageParams.pageSize);
                         this.pagesArray =  Array(this.totalPages).fill(1).map((x, i) => ++i);
@@ -300,4 +296,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
             this.deleteProductsSubscription.unsubscribe();
         }
     }
+
+    get pageParams() { return this.productService.pageParams; }
+    get filterParams() { return this.productService.filterParams; }
 }

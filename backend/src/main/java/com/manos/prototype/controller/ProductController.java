@@ -1,6 +1,7 @@
 package com.manos.prototype.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -28,12 +29,15 @@ import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
+import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.service.PictureServiceImpl;
 import com.manos.prototype.service.ProductServiceImpl;
+import com.manos.prototype.service.ProjectServiceImpl;
 import com.manos.prototype.vo.ProductVo;
 import com.pastelstudios.convert.ConversionService;
+import com.pastelstudios.db.GenericFinder;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
 
@@ -48,6 +52,9 @@ public class ProductController {
 
 	@Autowired
 	private PictureServiceImpl pictureService;
+	
+	@Autowired
+	private ProjectServiceImpl projectService;
 
 	@Autowired
 	private ConversionService conversionService;
@@ -67,6 +74,8 @@ public class ProductController {
 		PageResultDto<ProductDto> pageResultDto = new PageResultDto<>();
 		pageResultDto.setItems(productsDto);
 		pageResultDto.setTotalCount(pageResult.getTotalCount());
+		pageResultDto.setProjectNames(projectService.getProjectNames());
+		
 		return pageResultDto;
 	}
 

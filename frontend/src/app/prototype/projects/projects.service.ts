@@ -12,6 +12,8 @@ import { Subject } from 'rxjs';
 export class ProjectsService {
     public newProjectsCount = new Subject<number>();
     public deleteProjectConfirmed = new Subject<boolean>();
+    pageParams = new PageParams();
+    filterParams = new FilterParams();
 
     private _editMode : boolean;
     public get editMode() : boolean {

@@ -10,6 +10,8 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
+    filterParams = new FilterParams;
+    pageParams = new PageParams;
     
     private _editMode : boolean;
     public get editMode() : boolean {

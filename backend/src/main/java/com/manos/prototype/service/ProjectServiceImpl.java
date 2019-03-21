@@ -21,6 +21,7 @@ import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.vo.ProjectVo;
+import com.pastelstudios.db.GenericFinder;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
 
@@ -31,6 +32,9 @@ public class ProjectServiceImpl {
 		private static final long serialVersionUID = 1L;
 		{add(1);add(2);add(3);}
 	};
+
+	@Autowired
+	private GenericFinder finder;
 	
 	@Autowired
 	private ProjectDaoImpl projectDao;
@@ -135,6 +139,15 @@ public class ProjectServiceImpl {
 	@Transactional
 	public List<ProjectManager> getProjectManagers() {
 		return projectManagerDao.getProjectManagers();
+	}
+	
+	@Transactional
+	public List<String> getProjectNames() {
+		List<String> projectNames = new ArrayList<>();
+		finder.findAll(Project.class).forEach(project -> {
+			projectNames.add(project.getProjectName());
+		});
+		return projectNames;
 	}
 
 }
