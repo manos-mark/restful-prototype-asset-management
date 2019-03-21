@@ -107,33 +107,58 @@ export class ListProjectsComponent implements OnInit {
             return;
         }
 
-        this.windowPopService.setTitle('Delete Project');
-        this.windowPopService.setContext('Are you sure?');
-        this.windowPopService.setDetails('These projects will be deleted permanently.');
-        this.windowPopService.setDeleteProject(true);
-        this.windowPopService.activate();
-        this.deleteProjectsSubscription = this.projectService.deleteProjectConfirmed
-            .subscribe( res => {
-                this.deleteProjectsSubscription.unsubscribe();
+        if (selectedStatus == null) {
+            this.windowPopService.setTitle('Delete Project');
+            this.windowPopService.setContext('Are you sure?');
+            this.windowPopService.setDetails('These projects will be deleted permanently.');
+            this.windowPopService.setDeleteProject(true);
+            this.windowPopService.activate();
+            this.deleteProjectsSubscription = this.projectService.deleteProjectConfirmed
+                .subscribe( res => {
+                    this.deleteProjectsSubscription.unsubscribe();
+                    this.changeStatus(selectedStatus)
+                        .subscribe(
+                            dataArray => {
+                                this.projects = new Array();
+                                this.isMasterChecked = false;
+                                this.activityService.addActivity(Actions.DELETED_PROJECT).subscribe();
+                                this.notificationService.showNotification();
+                                this.ngOnInit();
+                                // NEW Projects
+                                this.projectService.getProjectsCountByStatusId(Statuses.NEW)
+                                .subscribe(
+                                projects => {
+                                    this.projectService.newProjectsCount.next(projects);
+                                },
+                                error => { console.log(error); }
+                                );
+                            },
+                            error => console.log(error)
+                        );
+                },
+                    error => console.log(error)
+                );
+            } else { // change status
                 this.changeStatus(selectedStatus)
                     .subscribe(
                         dataArray => {
                             this.projects = new Array();
                             this.isMasterChecked = false;
-                            if (selectedStatus == null) {
-                                this.activityService.addActivity(Actions.DELETED_PROJECT).subscribe();
-                                this.notificationService.showNotification();
-                            } else { // change status
-                                this.activityService.addActivity(Actions.UPDATED_PROJECT).subscribe();
-                                this.notificationService.showNotification();
-                            }
+                            this.activityService.addActivity(Actions.UPDATED_PROJECT).subscribe();
+                            this.notificationService.showNotification();
                             this.ngOnInit();
+                            // NEW Projects
+                            this.projectService.getProjectsCountByStatusId(Statuses.NEW)
+                            .subscribe(
+                            projects => {
+                                this.projectService.newProjectsCount.next(projects);
+                            },
+                            error => { console.log(error); }
+                            );
                         },
                         error => console.log(error)
                     );
-            },
-                error => console.log(error)
-            );
+            }
     }
 
     changeStatus(selectedStatus: number) {

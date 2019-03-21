@@ -10,7 +10,9 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProjectsService {
-    
+    public newProjectsCount = new Subject<number>();
+    public deleteProjectConfirmed = new Subject<boolean>();
+
     private _editMode : boolean;
     public get editMode() : boolean {
         return this._editMode;
@@ -19,8 +21,6 @@ export class ProjectsService {
         this._editMode = v;
     }
 
-    public deleteProjectConfirmed = new Subject<boolean>();
-    
     constructor(private httpClient: HttpClient) {}
 
     getProjectById(id: number) {

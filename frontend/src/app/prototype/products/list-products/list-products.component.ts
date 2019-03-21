@@ -122,33 +122,58 @@ export class ListProductsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.windowPopService.setTitle('Delete Product');
-        this.windowPopService.setContext('Are you sure?');
-        this.windowPopService.setDetails('These products will be deleted permanently.');
-        this.windowPopService.setDeleteProduct(true);
-        this.windowPopService.activate();
-        this.deleteProductsSubscription = this.productService.deleteProductConfirmed
-            .subscribe( res => {
-                this.deleteProductsSubscription.unsubscribe();
-                this.changeStatus(selectedStatus)
-                    .subscribe(
-                        dataArray => {
-                            this.products = new Array();
-                            this.isMasterChecked = false;
-                            if (selectedStatus == null) {
+        if (selectedStatus == null) {
+            this.windowPopService.setTitle('Delete Product');
+            this.windowPopService.setContext('Are you sure?');
+            this.windowPopService.setDetails('These products will be deleted permanently.');
+            this.windowPopService.setDeleteProduct(true);
+            this.windowPopService.activate();
+            this.deleteProductsSubscription = this.productService.deleteProductConfirmed
+                .subscribe( res => {
+                    this.deleteProductsSubscription.unsubscribe();
+                    this.changeStatus(selectedStatus)
+                        .subscribe(
+                            dataArray => {
+                                this.products = new Array();
+                                this.isMasterChecked = false;
                                 this.activityService.addActivity(Actions.DELETED_PRODUCT).subscribe();
                                 this.notificationService.showNotification();
-                            } else { // change status
-                                this.activityService.addActivity(Actions.UPDATED_PRODUCT).subscribe();
-                                this.notificationService.showNotification();
-                            }
-                            this.ngOnInit();
-                        },
-                        error => console.log(error)
-                    );
-            },
-            error => console.log(error)
-        );
+                                this.ngOnInit();
+                                // IN_PROGRESS Products
+                                this.productService.getProductsCountByStatusId(Statuses.IN_PROGRESS)
+                                .subscribe(
+                                    products => {
+                                        this.productService.inProgressProductsCount.next(products);
+                                    },
+                                    error => { console.log(error); }
+                                );
+                            },
+                            error => console.log(error)
+                        );
+                },
+                error => console.log(error)
+            );
+        } else { // change status
+            this.changeStatus(selectedStatus)
+                .subscribe(
+                    dataArray => {
+                        this.products = new Array();
+                        this.isMasterChecked = false;
+                        this.activityService.addActivity(Actions.UPDATED_PRODUCT).subscribe();
+                        this.notificationService.showNotification();
+                        this.ngOnInit();
+                        // IN_PROGRESS Products
+                        this.productService.getProductsCountByStatusId(Statuses.IN_PROGRESS)
+                        .subscribe(
+                            products => {
+                                this.productService.inProgressProductsCount.next(products);
+                            },
+                            error => { console.log(error); }
+                        );
+                    },
+                    error => console.log(error)
+                );
+        }
     }
 
     changeStatus(selectedStatus: number) {
