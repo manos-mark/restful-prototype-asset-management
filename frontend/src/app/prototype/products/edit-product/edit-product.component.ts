@@ -32,6 +32,7 @@ export class EditProductComponent implements OnDestroy {
     computedPicturesLength: number = 0;
     deleteImageSubscription: Subscription = null;
     isThumbSelected: Boolean = false;
+    formChangesSubscription: Subscription;
     i = 0;
 
     productForm = new FormGroup({
@@ -75,7 +76,20 @@ export class EditProductComponent implements OnDestroy {
         this.route.queryParams.subscribe(
             res => { this.productForm.controls.project.setValue(res.projectId) }
         )
-        // on edit mode init the fields        
+        // on edit mode init the fields
+        this.formChangesSubscription = this.productForm.valueChanges.subscribe(x => {
+            // if (this.projectForm.valid) {
+            //     if (this.projectName.value === this.project.projectName
+            //         && this.companyName.value === this.project.companyName
+            //         && (this.projectManagerId.value === this.project.projectManager.id)
+            //         && (this.statusId.value === this.project.status.id)
+            //     ) {
+            //         this.projectForm.setErrors({'invalid': true});
+            //     } else {
+            //         this.projectForm.setErrors(null);
+            //     }
+            // }
+        });
         if (this.editMode) {
             this.productForm.controls.statusId.enable();
             this.route.queryParams.subscribe(
@@ -171,9 +185,6 @@ export class EditProductComponent implements OnDestroy {
                 tempProduct['thumbPictureIndex'] = index;
             }
         });
-        // console.log(tempProduct['thumbPictureIndex'])
-        // console.log(tempProduct)
-        // console.log(this.pictures)
         // on edit mode update
         if (this.editMode) {
             this.updateProduct(tempProduct);
@@ -228,13 +239,6 @@ export class EditProductComponent implements OnDestroy {
     onCancel() {
         this.productForm.reset();
         this.router.navigate(['prototype','products']);
-    }
-
-    ngOnDestroy() {
-        this.productService.editMode = false;
-        if (this.deleteImageSubscription) {
-            this.deleteImageSubscription.unsubscribe();
-        }
     }
 
     updateProduct(product) {
@@ -303,6 +307,16 @@ export class EditProductComponent implements OnDestroy {
         });
 
         this.computedPicturesLength = length;
+    }
+
+    ngOnDestroy() {
+        if (this.formChangesSubscription) {
+            this.formChangesSubscription.unsubscribe();
+        }
+        this.productService.editMode = false;
+        if (this.deleteImageSubscription) {
+            this.deleteImageSubscription.unsubscribe();
+        }
     }
 
     get productName() { return this.productForm.get('productName') }

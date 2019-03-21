@@ -16,6 +16,7 @@ import { Actions } from 'src/app/general/home/activity/action.enum';
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
 import { SearchService } from 'src/app/header/search/search.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-project',
@@ -32,6 +33,7 @@ export class EditProjectComponent implements OnDestroy {
     pictures: ProductPicture[] = [];
     pageParams = new PageParams();
     filterParams = new FilterParams();
+    formChangesSubscription: Subscription;
 
 
     projectForm = new FormGroup({
@@ -51,6 +53,7 @@ export class EditProjectComponent implements OnDestroy {
                 private breadcrumbsService: BreadcrumbsService,
                 private notificationService: NotificationService,
                 private searchService: SearchService) {
+
         this.searchService.clear();
         if (this.projectService.editMode) {
             this.breadcrumbsService.setBreadcrumbsProjectEdit();
@@ -67,8 +70,21 @@ export class EditProjectComponent implements OnDestroy {
                 res => this.projectManagers = res,
                 error => console.log(error)
             )
-        // on edit mode init the fields        
+        // on edit mode init the fields
         if (this.projectService.editMode) {
+            this.formChangesSubscription = this.projectForm.valueChanges.subscribe(x => {
+                if (this.projectForm.valid) {
+                    if (this.projectName.value === this.project.projectName
+                        && this.companyName.value === this.project.companyName
+                        && (this.projectManagerId.value === this.project.projectManager.id)
+                        && (this.statusId.value === this.project.status.id)
+                    ) {
+                        this.projectForm.setErrors({'invalid': true});
+                    } else {
+                        this.projectForm.setErrors(null);
+                    }
+                }
+            });
             this.route.queryParams.subscribe(
                 res => {
                     this.projectService.getProjectById(res.projectId).subscribe(
@@ -173,6 +189,12 @@ export class EditProjectComponent implements OnDestroy {
         this.router.navigate(['prototype', 'projects']);
     }
 
+    onOpenProducts(projectName: string) {
+        this.router.navigate(['prototype/products/'],
+            {queryParams: { projectName: projectName }}
+        );
+    }
+
     onKeydown(e) {
         const input = e.target;
         const val = input.value;
@@ -185,6 +207,9 @@ export class EditProjectComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.projectService.editMode = false;
+        if (this.formChangesSubscription) {
+            this.formChangesSubscription.unsubscribe();
+        }
     }
 
     get projectName() {return this.projectForm.get('projectName')}

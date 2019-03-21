@@ -248,7 +248,6 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     }
 
     applyFilters(statusId: number, projectName: string, dateFrom: Date, dateTo: Date) {
-
         this.filterParams.fromDate = dateFrom;
         this.filterParams.toDate = dateTo;
 
@@ -256,6 +255,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
             this.filterParams.projectName = '';
         } else {
             this.filterParams.projectName = projectName;
+            console.log(this.filterParams.projectName)
         }
 
         if (statusId >= 1 && statusId <= 3) {

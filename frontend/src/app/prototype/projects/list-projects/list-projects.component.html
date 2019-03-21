@@ -108,7 +108,7 @@
                         (click)="onSelect(project)"
                     ><i></i></a>
                 </div>
-                <span class="number">{{ i+1 }}</span>
+                <span class="number">{{ (((this.pageParams.page-1) * this.pageParams.pageSize) + i + 1) }}</span>
                 <span class="date">{{ project.createdAt | date:'mediumDate' }}</span>
                 <span class="projectName">{{ project.projectName }}</span>
                 <span class="companyName">{{ project.companyName }}</span>

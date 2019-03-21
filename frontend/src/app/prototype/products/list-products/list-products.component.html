@@ -122,7 +122,7 @@
                     (click)="onSelect(product)"
                 ><i></i></a>
             </div>
-            <span class="number">{{ i+1 }}</span>
+            <span class="number">{{ (((this.pageParams.page-1) * this.pageParams.pageSize) + i + 1) }}</span>
             <span class="date">{{ product.createdAt | date: 'mediumDate' }}</span>
             <span class="productName">{{ product.productName }}</span>
             <span class="sn">{{ product.serialNumber }}</span>

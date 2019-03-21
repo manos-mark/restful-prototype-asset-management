@@ -7,16 +7,20 @@
       <a class="blueBtn" 
         (click)="onAddSave()" 
         [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected}"
-        >Add & Save</a>
+        >{{ editMode ? "Edit & Save" : "Add & Save" }}</a>
       <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>
   </div>
   <div class="formCont">
     <div class="headerInfo product">
       <i></i>
-      <div class="text">
+      <div class="text" *ngIf="!editMode">
         <h3>New product</h3>
         <h4>Please type product details</h4>
+      </div>
+      <div class="text" *ngIf="editMode">
+        <h3 *ngIf="product">{{product.productName}}</h3>
+        <h4>Please review or edit the product details</h4>
       </div>
     </div>
     <div class="formGroup" [formGroup]="productForm">
@@ -57,7 +61,10 @@
           </div>
           <span class="error" *ngIf="project.invalid && (project.dirty || project.touched)">Incorrect value</span>
         </div>
-        <div class="inputWrp" [ngClass]="{'error': statusId.invalid && (statusId.dirty || statusId.touched)}">
+        <div 
+            *ngIf="editMode"
+            class="inputWrp" 
+            [ngClass]="{'error': statusId.invalid && (statusId.dirty || statusId.touched)}">
             <div class="title">
                 <i class="status"></i><span>Status</span>
             </div>
