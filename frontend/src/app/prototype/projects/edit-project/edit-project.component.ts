@@ -34,6 +34,7 @@ export class EditProjectComponent implements OnDestroy {
     pageParams = new PageParams();
     filterParams = new FilterParams();
     formChangesSubscription: Subscription;
+    isFormEdited = false;
 
 
     projectForm = new FormGroup({
@@ -61,9 +62,6 @@ export class EditProjectComponent implements OnDestroy {
         else {
             this.breadcrumbsService.setBreadcrumbsProjectNew();
         }
-        // when add new project status always will be new and disabled
-        this.projectForm.controls.statusId.setValue(Statuses.NEW);
-        this.projectForm.controls.statusId.disable();
         // get project managers for the dropdown
         this.projectService.getProjectManagers()
             .subscribe(
@@ -79,9 +77,9 @@ export class EditProjectComponent implements OnDestroy {
                         && (this.projectManagerId.value === this.project.projectManager.id)
                         && (this.statusId.value === this.project.status.id)
                     ) {
-                        this.projectForm.setErrors({'invalid': true});
+                        this.isFormEdited = false;
                     } else {
-                        this.projectForm.setErrors(null);
+                        this.isFormEdited = true;
                     }
                 }
             });

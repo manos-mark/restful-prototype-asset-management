@@ -28,19 +28,21 @@ export class EditProductComponent implements OnDestroy {
     projects: Project[];
     pictures: ProductPicture[] = [];
     imageSrc: string[] = [];
-    computedPicturesListSize: number = 0;
-    computedPicturesLength: number = 0;
+    computedPicturesListSize = 0;
+    computedPicturesLength = 0;
     deleteImageSubscription: Subscription = null;
     isThumbSelected: Boolean = false;
     formChangesSubscription: Subscription;
     i = 0;
+    isFormEdited = false;
+    thumbPictureIndex: number;
 
     productForm = new FormGroup({
         productName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
         serialNumber: new FormControl(null, [Validators.required, Validators.minLength(2)]),
         quantity: new FormControl(null, [Validators.required, Validators.min(1)]),
         statusId: new FormControl(null, [Validators.required, Validators.pattern("^[0-9]+$")]),
-        project: new FormControl("Choose project", [Validators.required, Validators.pattern("^[0-9]+$")]),
+        project: new FormControl('Choose project', [Validators.required, Validators.pattern("^[0-9]+$")]),
         description: new FormControl(null, [Validators.required, Validators.minLength(1)]),
         uploadPicture: new FormControl(null),
         thumbArray: new FormArray([],Validators.required)
@@ -64,9 +66,6 @@ export class EditProductComponent implements OnDestroy {
         else {
             this.breadcrumbsService.setBreadcrumbsProductNew();
         }
-        // when add new project status always will be new and disabled
-        this.productForm.controls.statusId.setValue(Statuses.NEW);
-        this.productForm.controls.statusId.disable();
         // get projects for the dropdown
         this.projectService.getAllProjects()
             .subscribe(
@@ -74,24 +73,27 @@ export class EditProductComponent implements OnDestroy {
                 error => console.log(error)
             )
         this.route.queryParams.subscribe(
-            res => { this.productForm.controls.project.setValue(res.projectId) }
+            res => { this.productForm.controls.project.setValue(res.projectId); }
         )
         // on edit mode init the fields
-        this.formChangesSubscription = this.productForm.valueChanges.subscribe(x => {
-            // if (this.projectForm.valid) {
-            //     if (this.projectName.value === this.project.projectName
-            //         && this.companyName.value === this.project.companyName
-            //         && (this.projectManagerId.value === this.project.projectManager.id)
-            //         && (this.statusId.value === this.project.status.id)
-            //     ) {
-            //         this.projectForm.setErrors({'invalid': true});
-            //     } else {
-            //         this.projectForm.setErrors(null);
-            //     }
-            // }
-        });
         if (this.editMode) {
-            this.productForm.controls.statusId.enable();
+            this.formChangesSubscription = this.productForm.valueChanges.subscribe(x => {
+                if (this.productForm.valid) {
+                    if (this.productName.value === this.product.productName
+                        && this.serialNumber.value === this.product.serialNumber
+                        && (this.quantity.value === this.product.quantity)
+                        && (this.statusId.value === this.product.status.id)
+                        && (this.project.value === this.product.projectId)
+                        && (this.description.value === this.product.description)
+                        && this.uploadPicture.value === null
+                        && this.thumbArray.value[this.thumbPictureIndex]
+                        ) {
+                            this.isFormEdited = false;
+                    } else {
+                        this.isFormEdited = true;
+                    }
+                }
+            });
             this.route.queryParams.subscribe(
                 res => {
                     this.productService.getProductById(res.productId).subscribe(
@@ -103,7 +105,7 @@ export class EditProductComponent implements OnDestroy {
                             this.productForm.controls.statusId.setValue(this.product.status.id);
                             this.productForm.controls.project.setValue(this.product.projectId);
                             this.productForm.controls.description.setValue(this.product.description);
-                            
+
                             this.productService.getPicturesByProductId(this.product.id)
                                 .subscribe(
                                     res => {
@@ -113,10 +115,11 @@ export class EditProductComponent implements OnDestroy {
 
                                             this.thumbArray.push(new FormControl(null))
                                             
-                                            if (picture.id == this.product.thumbPictureId) {
+                                            if (picture.id === this.product.thumbPictureId) {
                                                 tempPicture.isThumb = true;
                                                 this.thumbArray.controls[index].setValue(index);
                                                 this.isThumbSelected = true;
+                                                this.thumbPictureIndex = index;
                                             }
                                         })
                                         this.computePicturesListSize();

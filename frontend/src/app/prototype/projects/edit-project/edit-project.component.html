@@ -6,7 +6,7 @@
     <div class="action">
         <a class="greenBtn" 
             (click)="onAddSave()" 
-            [ngClass]="{ 'disabled': projectForm.invalid }"
+            [ngClass]="{ 'disabled': projectForm.invalid || !isFormEdited }"
         >{{ editMode ? "Edit & Save" : "Add & Save" }}</a>
         <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>

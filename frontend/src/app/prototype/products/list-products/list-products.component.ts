@@ -24,8 +24,8 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     products: Product[] = [];
     pictures: ProductPicture[] = [];
     projectsNames: string[] = [];
-    sortByDateAsc = true;
-    sortByQuantityAsc = true;
+    sortByDateDesc = true;
+    sortByQuantityDesc = false;
     isMasterChecked = false;
     totalCount: number;
     selectedProductsCount = 0;
@@ -193,25 +193,25 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     }
 
     sortByDate() {
-        this.sortByDateAsc = !this.sortByDateAsc;
+        this.sortByDateDesc = !this.sortByDateDesc;
         this.products = [];
         this.pageParams.field = 'date';
-        if (this.sortByDateAsc) {
-            this.pageParams.direction = 'asc';
-        } else {
+        if (this.sortByDateDesc) {
             this.pageParams.direction = 'desc';
+        } else {
+            this.pageParams.direction = 'asc';
         }
         this.ngOnInit();
     }
 
     sortByQuantity() {
-        this.sortByQuantityAsc = !this.sortByQuantityAsc;
+        this.sortByQuantityDesc = !this.sortByQuantityDesc;
         this.products = [];
         this.pageParams.field = 'quantity';
-        if (this.sortByQuantityAsc) {
-            this.pageParams.direction = 'asc';
-        } else {
+        if (this.sortByQuantityDesc) {
             this.pageParams.direction = 'desc';
+        } else {
+            this.pageParams.direction = 'asc';
         }
         this.ngOnInit();
     }

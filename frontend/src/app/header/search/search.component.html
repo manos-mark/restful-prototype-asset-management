@@ -3,7 +3,8 @@
         <i class="searchIcon"></i>
         <input #input 
             placeholder="Search" 
-            (keyup)="onKeyup(input)" 
+            (keyup)="onKeyup(input)"
+            autocomplete="off" 
         />
         <a class="clear" (click)="onClear(input, $event)"></a>
     </div>

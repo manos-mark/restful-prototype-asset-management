@@ -6,7 +6,7 @@
     <div class="action">
       <a class="blueBtn" 
         (click)="onAddSave()" 
-        [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected}"
+        [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected || !isFormEdited}"
         >{{ editMode ? "Edit & Save" : "Add & Save" }}</a>
       <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>

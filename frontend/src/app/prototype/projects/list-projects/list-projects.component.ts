@@ -20,8 +20,8 @@ import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
   styleUrls: ['./list-projects.component.css']
 })
 export class ListProjectsComponent implements OnInit {
-    sortByDateAsc = true;
-    sortByProductsCountAsc = true;
+    sortByDateDesc = true;
+    sortByProductsCountDesc = false;
     isMasterChecked = false;
     projects: Project[] = [];
     totalCount: number;
@@ -180,25 +180,25 @@ export class ListProjectsComponent implements OnInit {
     }
 
     sortByDate() {
-        this.sortByDateAsc = !this.sortByDateAsc;
+        this.sortByDateDesc = !this.sortByDateDesc;
         this.projects = [];
         this.pageParams.field = 'date';
-        if (this.sortByDateAsc) {
-            this.pageParams.direction = 'asc';
-        } else {
+        if (this.sortByDateDesc) {
             this.pageParams.direction = 'desc';
+        } else {
+            this.pageParams.direction = 'asc';
         }
         this.ngOnInit();
     }
 
     sortByProductsCount() {
-        this.sortByProductsCountAsc = !this.sortByProductsCountAsc;
+        this.sortByProductsCountDesc = !this.sortByProductsCountDesc;
         this.projects = [];
         this.pageParams.field = 'products';
-        if (this.sortByProductsCountAsc) {
-            this.pageParams.direction = 'asc';
-        } else {
+        if (this.sortByProductsCountDesc) {
             this.pageParams.direction = 'desc';
+        } else {
+            this.pageParams.direction = 'asc';
         }
         this.ngOnInit();
     }

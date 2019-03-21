@@ -100,12 +100,12 @@
         </div>
         <span class="number">#</span>
         <a class="date" (click)="sortByDate()">
-            <i [ngClass]="sortByDateAsc ? 'sort up': 'sort down'"></i>
+            <i [ngClass]="sortByDateDesc ? 'sort down' : 'sort up'"></i>
         Created</a>
         <span class="productName">Product name</span>
         <span class="sn">SN</span>
         <a class="quantity" (click)="sortByQuantity()">
-            <i [ngClass]="sortByQuantityAsc ? 'sort up': 'sort down'"></i>
+            <i [ngClass]="sortByQuantityDesc ? 'sort down' : 'sort up'"></i>
         Qty</a>
         <span class="description">Description</span>
         <span class="project">Project</span>
