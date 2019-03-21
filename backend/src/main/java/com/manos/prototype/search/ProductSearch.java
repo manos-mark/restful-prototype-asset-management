@@ -51,11 +51,11 @@ public class ProductSearch {
 	@GeneratedSearchConstraint
 	public String getDateRangeSearchConstraint() {
 		if (fromDate != null && toDate != null) {
-			return "project.createdAt BETWEEN :fromDate AND :toDate";// emit the first AND
+			return "product.createdAt BETWEEN :fromDate AND :toDate";// emit the first AND
 		} else if (fromDate != null) {
-			return "project.createdAt >= :fromDate";
+			return "product.createdAt >= :fromDate";
 		} else if (toDate != null) {
-			return "project.createdAt <= :toDate";
+			return "product.createdAt <= :toDate";
 		}
 		return null;
 	}

@@ -31,8 +31,6 @@ export class ListProjectsComponent implements OnInit {
     pagesArray = [];
     totalPages = this.projects.length / this.pageParams.pageSize;
     deleteProjectsSubscription: Subscription = null;
-    dateFromFilter;
-    fromDate;
 
     constructor(private projectService: ProjectsService,
                 private router: Router,

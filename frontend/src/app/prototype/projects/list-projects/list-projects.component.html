@@ -18,12 +18,6 @@
     <div class="filters">
       <p>Filters</p>
       <div class="inputWrp date">
-        <!-- <input #dateFrom 
-            placeholder="Date from" 
-            type="text" 
-            (change)="dateFromFilter = dateFrom.value.toLocaleString()"
-            readonly
-        /> -->
         <input 
             #dateFrom 
             [(ngModel)]="fromDate"

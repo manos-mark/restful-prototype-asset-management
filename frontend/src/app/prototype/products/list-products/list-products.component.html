@@ -18,20 +18,31 @@
     <div class="filters">
         <p>Filters</p>
         <div class="inputWrp date">
-            <input #dateFrom 
+            <input 
+                #dateFrom 
+                [(ngModel)]="fromDate"
                 placeholder="Date from" 
-                type="date" 
                 [max]="dateToFilter"
-                (change)="dateFromFilter = dateFrom.value.toLocaleString()"
-            />
+                (ngModelChange)="dateFromFilter = fromDate"
+                [owlDateTime]="dt1" 
+                [owlDateTimeTrigger]="dt1" 
+            >
+            <owl-date-time #dt1
+                pickerType="calendar"
+            ></owl-date-time>
         </div>
         <div class="inputWrp date">
             <input #dateTo 
+                [(ngModel)]="toDate"
                 placeholder="Date to" 
-                type="date" 
                 [min]="dateFromFilter"
-                (change)="dateToFilter = dateTo.value.toLocaleString()"
+                (ngModelChange)="dateToFilter = toDate"
+                [owlDateTime]="dt2" 
+                [owlDateTimeTrigger]="dt2" 
             />
+            <owl-date-time #dt2
+                pickerType="calendar"
+            ></owl-date-time>
         </div>
         <div class="dropdown status">
             <select #statusDropdown>
