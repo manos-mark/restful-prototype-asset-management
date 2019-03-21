@@ -101,14 +101,14 @@
     </div>
     
     <div class="content">
-        <div class="row" *ngFor="let product of products">
+        <div class="row" *ngFor="let product of products,let i = index">
             <div class="checkbox">
                 <a class="checkbox" 
                     [ngClass]="{'active': product.isChecked}"
                     (click)="onSelect(product)"
                 ><i></i></a>
             </div>
-            <span class="number">{{ product.id }}</span>
+            <span class="number">{{ i+1 }}</span>
             <span class="date">{{ product.createdAt | date: 'mediumDate' }}</span>
             <span class="productName">{{ product.productName }}</span>
             <span class="sn">{{ product.serialNumber }}</span>

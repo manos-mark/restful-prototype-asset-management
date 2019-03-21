@@ -6,6 +6,7 @@ import { FilterParams } from './filter-params.model';
 import { PageParams } from './page-params.model';
 import { toHttpParams } from 'src/app/shared/http-params-converter';
 import { Statuses } from '../status.enum';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProjectsService {
@@ -17,6 +18,8 @@ export class ProjectsService {
     public set editMode(v : boolean) {
         this._editMode = v;
     }
+
+    public deleteProjectConfirmed = new Subject<boolean>();
     
     constructor(private httpClient: HttpClient) {}
 

@@ -20,6 +20,7 @@ export class ProductsService {
     }
     
     public deleteImageConfirmed = new Subject<boolean>();
+    public deleteProductConfirmed = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient) {}
 

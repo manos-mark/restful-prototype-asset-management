@@ -5,6 +5,7 @@ import { ActivityService } from 'src/app/general/home/activity/activity.service'
 import { WindowPopService } from './window-pop.service';
 import { ProductsService } from 'src/app/prototype/products/products.service';
 import { Actions } from 'src/app/general/home/activity/action.enum';
+import { ProjectsService } from 'src/app/prototype/projects/projects.service';
 
 @Component({
 selector: 'app-window-pop',
@@ -19,7 +20,8 @@ export class WindowPopComponent implements OnInit, OnDestroy {
                 private activityService: ActivityService,
                 private router: Router,
                 private windowPopService: WindowPopService,
-                private productService: ProductsService) { }
+                private productService: ProductsService,
+                private projectService: ProjectsService) { }
 
     onLogout() {
     this.activityService.addActivity(Actions.LOGGED_OUT).subscribe(
@@ -41,6 +43,18 @@ export class WindowPopComponent implements OnInit, OnDestroy {
 
     onDeleteImage() {
         this.productService.deleteImageConfirmed.next(true);
+        this.windowPopService.deactivate();
+        this.activeChange.emit(false);
+    }
+
+    onDeleteProduct() {
+        this.productService.deleteProductConfirmed.next(true);
+        this.windowPopService.deactivate();
+        this.activeChange.emit(false);
+    }
+
+    onDeleteProject() {
+        this.projectService.deleteProjectConfirmed.next(true);
         this.windowPopService.deactivate();
         this.activeChange.emit(false);
     }
@@ -79,6 +93,8 @@ export class WindowPopComponent implements OnInit, OnDestroy {
 
     get logout() { return this.windowPopService.isLogout(); }
     get deleteImage() { return this.windowPopService.isDeleteImage(); }
+    get deleteProject() { return this.windowPopService.isDeleteProject(); }
+    get deleteProduct() { return this.windowPopService.isDeleteProduct(); }
     get cookies() { return this.windowPopService.isCookies(); }
     get cookiesToDB() { return this.windowPopService.isCookiesToDB(); }
     get title() { return this.windowPopService.getTitle(); }

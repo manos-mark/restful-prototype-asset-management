@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ImageCarouselService } from 'src/app/shared/image-carousel/image-carousel.service';
 import { FilterParams } from '../../projects/filter-params.model';
 import { PageParams } from '../../projects/page-params.model';
@@ -13,13 +13,14 @@ import { Actions } from 'src/app/general/home/activity/action.enum';
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
 import { SearchService } from 'src/app/header/search/search.service';
+import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 
 @Component({
   selector: 'app-list-products',
   templateUrl: './list-products.component.html',
   styleUrls: ['./list-products.component.css']
 })
-export class ListProductsComponent implements OnInit {
+export class ListProductsComponent implements OnInit, OnDestroy {
     products: Product[] = [];
     pictures: ProductPicture[] = [];
     projectsNames: string[] = [];
@@ -32,6 +33,7 @@ export class ListProductsComponent implements OnInit {
     selectedProductsCount = 0;
     pagesArray = [];
     totalPages = this.products.length / this.pageParams.pageSize;
+    deleteProductsSubscription: Subscription = null;
 
     constructor(private productService: ProductsService,
                 private router: Router,
@@ -40,7 +42,8 @@ export class ListProductsComponent implements OnInit {
                 private activityService: ActivityService,
                 private breadcrumbsService: BreadcrumbsService,
                 private notificationService: NotificationService,
-                private searchService: SearchService) {
+                private searchService: SearchService,
+                private windowPopService: WindowPopService) {
         this.breadcrumbsService.setBreadcrumbsProducts();
     }
 
@@ -119,22 +122,33 @@ export class ListProductsComponent implements OnInit {
             return;
         }
 
-        this.changeStatus(selectedStatus)
-            .subscribe(
-                dataArray => {
-                    this.products = new Array();
-                    this.isMasterChecked = false;
-                    if (selectedStatus == null) {
-                        this.activityService.addActivity(Actions.DELETED_PRODUCT);
-                        this.notificationService.showNotification();
-                    } else { // change status
-                        this.activityService.addActivity(Actions.UPDATED_PRODUCT);
-                        this.notificationService.showNotification();
-                    }
-                    this.ngOnInit();
-                },
-                error => console.log(error)
-            );
+        this.windowPopService.setTitle('Delete Product');
+        this.windowPopService.setContext('Are you sure?');
+        this.windowPopService.setDetails('These products will be deleted permanently.');
+        this.windowPopService.setDeleteProduct(true);
+        this.windowPopService.activate();
+        this.deleteProductsSubscription = this.productService.deleteProductConfirmed
+            .subscribe( res => {
+                this.deleteProductsSubscription.unsubscribe();
+                this.changeStatus(selectedStatus)
+                    .subscribe(
+                        dataArray => {
+                            this.products = new Array();
+                            this.isMasterChecked = false;
+                            if (selectedStatus == null) {
+                                this.activityService.addActivity(Actions.DELETED_PRODUCT).subscribe();
+                                this.notificationService.showNotification();
+                            } else { // change status
+                                this.activityService.addActivity(Actions.UPDATED_PRODUCT).subscribe();
+                                this.notificationService.showNotification();
+                            }
+                            this.ngOnInit();
+                        },
+                        error => console.log(error)
+                    );
+            },
+            error => console.log(error)
+        );
     }
 
     changeStatus(selectedStatus: number) {
@@ -256,4 +270,9 @@ export class ListProductsComponent implements OnInit {
             );
     }
 
+    ngOnDestroy() {
+        if (this.deleteProductsSubscription) {
+            this.deleteProductsSubscription.unsubscribe();
+        }
+    }
 }

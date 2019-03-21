@@ -3,7 +3,7 @@ import { Project } from '../project.model';
 import { ProjectsService } from '../projects.service';
 import { Router } from '@angular/router';
 import { Statuses } from '../../status.enum';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, Subscription } from 'rxjs';
 import { FilterParams } from '../filter-params.model';
 import { PageParams } from '../page-params.model';
 import { Actions } from 'src/app/general/home/activity/action.enum';
@@ -11,6 +11,7 @@ import { ActivityService } from 'src/app/general/home/activity/activity.service'
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
 import { SearchService } from 'src/app/header/search/search.service';
+import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class ListProjectsComponent implements OnInit {
     selectedProjectsCount = 0;
     pagesArray = [];
     totalPages = this.projects.length / this.pageParams.pageSize;
+    deleteProjectsSubscription: Subscription = null;
     dateFromFilter;
     fromDate;
 
@@ -37,7 +39,8 @@ export class ListProjectsComponent implements OnInit {
                 private activityService: ActivityService,
                 private breadcrumbsService: BreadcrumbsService,
                 private notificationService: NotificationService,
-                private searchService: SearchService) {
+                private searchService: SearchService,
+                private windowPopService: WindowPopService) {
         this.breadcrumbsService.setBreadcrumbsProjects();
     }
 
@@ -106,20 +109,31 @@ export class ListProjectsComponent implements OnInit {
             return;
         }
 
-        this.changeStatus(selectedStatus)
-            .subscribe(
-                dataArray => {
-                    this.projects = new Array();
-                    this.isMasterChecked = false;
-                    if (selectedStatus == null) {
-                        this.activityService.addActivity(Actions.DELETED_PROJECT);
-                        this.notificationService.showNotification();
-                    } else { // change status
-                        this.activityService.addActivity(Actions.UPDATED_PROJECT);
-                        this.notificationService.showNotification();
-                    }
-                    this.ngOnInit();
-                },
+        this.windowPopService.setTitle('Delete Project');
+        this.windowPopService.setContext('Are you sure?');
+        this.windowPopService.setDetails('These projects will be deleted permanently.');
+        this.windowPopService.setDeleteProject(true);
+        this.windowPopService.activate();
+        this.deleteProjectsSubscription = this.projectService.deleteProjectConfirmed
+            .subscribe( res => {
+                this.deleteProjectsSubscription.unsubscribe();
+                this.changeStatus(selectedStatus)
+                    .subscribe(
+                        dataArray => {
+                            this.projects = new Array();
+                            this.isMasterChecked = false;
+                            if (selectedStatus == null) {
+                                this.activityService.addActivity(Actions.DELETED_PROJECT).subscribe();
+                                this.notificationService.showNotification();
+                            } else { // change status
+                                this.activityService.addActivity(Actions.UPDATED_PROJECT).subscribe();
+                                this.notificationService.showNotification();
+                            }
+                            this.ngOnInit();
+                        },
+                        error => console.log(error)
+                    );
+            },
                 error => console.log(error)
             );
     }
@@ -231,5 +245,11 @@ export class ListProjectsComponent implements OnInit {
         this.router.navigate(['prototype/products/new'],
             {queryParams: { projectId: projectId }}
         );
+    }
+
+    ngOnDestroy() {
+        if (this.deleteProjectsSubscription) {
+            this.deleteProjectsSubscription.unsubscribe();
+        }
     }
 }
