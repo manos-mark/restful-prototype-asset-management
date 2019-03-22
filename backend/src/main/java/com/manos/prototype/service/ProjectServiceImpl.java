@@ -1,9 +1,11 @@
 package com.manos.prototype.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.manos.prototype.dao.PictureDaoImpl;
 import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
-import com.manos.prototype.dao.ProjectManagerDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
+import com.manos.prototype.exception.EntityAlreadyExistException;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.vo.ProjectVo;
@@ -34,6 +36,9 @@ public class ProjectServiceImpl {
 	};
 
 	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Autowired
 	private GenericFinder finder;
 	
 	@Autowired
@@ -44,9 +49,6 @@ public class ProjectServiceImpl {
 	
 	@Autowired
 	private PictureDaoImpl pictureDao;
-	
-	@Autowired
-	private ProjectManagerDaoImpl projectManagerDao;
 	
 	@Transactional
 	public PageResult<ProjectVo> getProjects(PageRequest pageRequest, ProjectSearch search) {
@@ -63,10 +65,12 @@ public class ProjectServiceImpl {
 	
 	@Transactional
 	public Project getProject(int id) {
-		Project project = projectDao.getProject(id);
+		Project project = finder.findById(Project.class, id);
 		if (project == null) {
 			throw new EntityNotFoundException(Project.class, id);
 		}
+		Hibernate.initialize(project.getProjectManager());
+		Hibernate.initialize(project.getStatus());
 		return project;
 	}
 
@@ -77,42 +81,54 @@ public class ProjectServiceImpl {
 			throw new EntityNotFoundException(Product.class);
 		}
 				
-		Project project  = projectDao.getProject(id);
+		Project project  = finder.findById(Project.class, id);
 		if (project == null) {
 			throw new EntityNotFoundException(Project.class, id);
 		}
+		Hibernate.initialize(project.getProjectManager());
+		Hibernate.initialize(project.getStatus());
 		// should delete first all the products of this project
 		for (Product product : products) {
 			List<ProductPicture> pictures = pictureDao.getPicturesByProductId(product.getId());
 			for (ProductPicture picture: pictures) {
-				pictureDao.deletePicture(picture.getId());
+				sessionFactory.getCurrentSession().delete(picture);
 			}
-			productDao.deleteProduct(product.getId());
+			sessionFactory.getCurrentSession().delete(product);
 		}
-		projectDao.deleteProject(id);
+		sessionFactory.getCurrentSession().delete(project);
 	}
 
 	@Transactional
 	public void saveProject(Project project, int projectManagerId) {
-		ProjectManager projectManager = projectManagerDao.getProjectManager(projectManagerId);
+		
+		Project tempProject = projectDao.getProjectByName(project.getProjectName());
+		if (tempProject != null) {
+			throw new EntityAlreadyExistException(Project.class, project.getProjectName());
+		}
+		
+		ProjectManager projectManager = finder.findById(ProjectManager.class, projectManagerId);
 		if (projectManager == null) {
 			throw new EntityNotFoundException(ProjectManager.class, projectManagerId);
 		}
 		project.setProjectManager(projectManager);
+		project.setStatus(new Status(Status.NEW_ID));
+		project.setCreatedAt(LocalDate.now());
 		
-		projectDao.saveProject(project);
+		sessionFactory.getCurrentSession().save(project);
 	}
 	
 	@Transactional
 	public void updateProject(ProjectRequestDto projectDto, int projectId) {
 		
 		
-		Project project = projectDao.getProject(projectId);
+		Project project = finder.findById(Project.class, projectId);
 		if (project == null) {
 			throw new EntityNotFoundException(Project.class, projectId);
 		}
+		Hibernate.initialize(project.getProjectManager());
+		Hibernate.initialize(project.getStatus());
 		
-		ProjectManager projectManager = projectManagerDao.getProjectManager(projectDto.getProjectManagerId());
+		ProjectManager projectManager = finder.findById(ProjectManager.class, projectDto.getProjectManagerId());
 		if (projectManager != null) {
 			project.setProjectManager(projectManager);
 		}
@@ -133,12 +149,12 @@ public class ProjectServiceImpl {
 
 	@Transactional
 	public List<Project> getProjects() {
-		return projectDao.getProjects();
+		return finder.findAll(Project.class);
 	}
 	
 	@Transactional
 	public List<ProjectManager> getProjectManagers() {
-		return projectManagerDao.getProjectManagers();
+		return finder.findAll(ProjectManager.class);
 	}
 	
 	@Transactional

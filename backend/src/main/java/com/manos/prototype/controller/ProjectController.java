@@ -117,11 +117,7 @@ public class ProjectController {
 
 	@PostMapping
 	public void addProject(@Valid @RequestBody ProjectRequestDto projectDto) {
-		
 		Project project = conversionService.convert(projectDto, Project.class);
-		project.setStatus(new Status(Status.NEW_ID));
-		project.setCreatedAt(LocalDate.now());
-		
 		projectService.saveProject(project, projectDto.getProjectManagerId());
 	}
 

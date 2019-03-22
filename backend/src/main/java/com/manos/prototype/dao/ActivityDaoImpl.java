@@ -32,8 +32,4 @@ public class ActivityDaoImpl {
         return theQuery.getResultList();
     }
  
-    public void saveActivity(Activity activity) {
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.save(activity);
-    }
 }

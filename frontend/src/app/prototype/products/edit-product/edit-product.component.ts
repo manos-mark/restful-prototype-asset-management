@@ -64,6 +64,7 @@ export class EditProductComponent implements OnDestroy {
             this.breadcrumbsService.setBreadcrumbsProductEdit();
         }
         else {
+            this.statusId.setValue(Statuses.NEW);
             this.breadcrumbsService.setBreadcrumbsProductNew();
         }
         // get projects for the dropdown
@@ -72,8 +73,12 @@ export class EditProductComponent implements OnDestroy {
                 res => this.projects = res,
                 error => console.log(error)
             )
-        this.route.queryParams.subscribe(
-            res => { this.productForm.controls.project.setValue(res.projectId); }
+            this.route.queryParams.subscribe(
+                res => {
+                    if (res.projectId) {
+                        this.productForm.controls.project.setValue(res.projectId);
+                    }
+                }
         )
         // on edit mode init the fields
         if (this.editMode) {
@@ -81,12 +86,13 @@ export class EditProductComponent implements OnDestroy {
                 if (this.productForm.valid) {
                     if (this.productName.value === this.product.productName
                         && this.serialNumber.value === this.product.serialNumber
-                        && (this.quantity.value === this.product.quantity)
-                        && (this.statusId.value === this.product.status.id)
-                        && (this.project.value === this.product.projectId)
+                        && (this.quantity.value == this.product.quantity)
+                        && (this.statusId.value == this.product.status.id)
+                        && (this.project.value == this.product.projectId)
                         && (this.description.value === this.product.description)
                         && this.uploadPicture.value === null
-                        && this.thumbArray.value[this.thumbPictureIndex]
+                        && (this.thumbArray.value[this.thumbPictureIndex] === undefined
+                            || this.thumbArray.value[this.thumbPictureIndex])
                         ) {
                             this.isFormEdited = false;
                     } else {
@@ -172,6 +178,9 @@ export class EditProductComponent implements OnDestroy {
         this.computedPicturesListSize += eventFileList.item(0).size;
         this.thumbArray.push(new FormControl(null));
         picInput.value = null;
+        if (!this.isThumbSelected) {
+            this.onSelectThumb(0);
+        }
     }
 
     onAddSave() {

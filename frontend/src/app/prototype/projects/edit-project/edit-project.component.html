@@ -4,10 +4,18 @@
         <p>Project</p>
     </div>
     <div class="action">
-        <a class="greenBtn" 
+        <a 
+            *ngIf="editMode"
+            class="greenBtn" 
             (click)="onAddSave()" 
             [ngClass]="{ 'disabled': projectForm.invalid || !isFormEdited }"
-        >{{ editMode ? "Edit & Save" : "Add & Save" }}</a>
+            >Edit & Save</a>
+        <a 
+            *ngIf="!editMode"
+            class="greenBtn" 
+            (click)="onAddSave()" 
+            [ngClass]="{ 'disabled': projectForm.invalid }"
+        >Add & Save</a>
         <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>
 </div>
@@ -45,7 +53,7 @@
             </div>
             <div class="dropdown">
                 <select formControlName="projectManagerId">
-                <option disabled selected>Choose project manager</option>
+                    <option disabled selected>Choose project manager</option>
                     <option 
                         *ngFor="let manager of projectManagers"
                         [value]="manager.id"

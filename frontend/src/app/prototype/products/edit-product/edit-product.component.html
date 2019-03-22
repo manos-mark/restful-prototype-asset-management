@@ -4,11 +4,19 @@
       <p>Product</p>
     </div>
     <div class="action">
-      <a class="blueBtn" 
-        (click)="onAddSave()" 
-        [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected || !isFormEdited}"
-        >{{ editMode ? "Edit & Save" : "Add & Save" }}</a>
-      <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
+        <a
+            *ngIf="editMode"
+            class="blueBtn" 
+            (click)="onAddSave()" 
+            [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected || !isFormEdited}"
+        >Edit & Save</a>
+        <a
+            *ngIf="!editMode"
+            class="blueBtn" 
+            (click)="onAddSave()" 
+            [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected}"
+        >Add & Save</a>
+        <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>
   </div>
   <div class="formCont">
@@ -52,7 +60,7 @@
           </div>
           <div class="dropdown">
             <select formControlName="project">
-              <option disabled selected>Choose project</option>
+                <option disabled selected>Choose project</option>
                 <option 
                     *ngFor="let project of projects"
                     [value]="project.id"

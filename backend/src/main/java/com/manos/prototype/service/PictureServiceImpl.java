@@ -2,15 +2,16 @@ package com.manos.prototype.service;
 
 import java.util.List;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.dao.PictureDaoImpl;
-import com.manos.prototype.dao.ProductDaoImpl;
-import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.pastelstudios.db.GenericFinder;
 
 @Service
 public class PictureServiceImpl {
@@ -19,11 +20,14 @@ public class PictureServiceImpl {
 	private PictureDaoImpl pictureDao;
 	
 	@Autowired
-	private ProductDaoImpl productDao;
+	private GenericFinder finder;
+	
+	@Autowired
+	private SessionFactory sessionFactory;
 	
 	@Transactional
 	public List<ProductPicture> getPicturesByProductId(int productId) {
-		Product product = productDao.getProduct(productId);
+		Product product = finder.findById(Product.class, productId);
 		if (product == null) {
 			throw new EntityNotFoundException(Product.class, productId);
 		}
@@ -32,7 +36,7 @@ public class PictureServiceImpl {
 	
 	@Transactional
 	public ProductPicture getPicture(int id) {
-		ProductPicture picture = pictureDao.getPicture(id);
+		ProductPicture picture = finder.findById(ProductPicture.class, id);
 		if (picture == null) {
 			throw new EntityNotFoundException(ProductPicture.class, id);
 		}
@@ -48,7 +52,7 @@ public class PictureServiceImpl {
 			throw new EntityNotFoundException(ProductPicture.class);
 		}
 		else {
-			pictureDao.savePicture(pic);			
+			sessionFactory.getCurrentSession().save(ProductPicture.class);			
 		}
 	}
 }

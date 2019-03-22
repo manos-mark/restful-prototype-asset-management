@@ -60,6 +60,7 @@ export class EditProjectComponent implements OnDestroy {
             this.breadcrumbsService.setBreadcrumbsProjectEdit();
         } 
         else {
+            this.statusId.setValue(Statuses.NEW);
             this.breadcrumbsService.setBreadcrumbsProjectNew();
         }
         // get project managers for the dropdown
@@ -74,8 +75,8 @@ export class EditProjectComponent implements OnDestroy {
                 if (this.projectForm.valid) {
                     if (this.projectName.value === this.project.projectName
                         && this.companyName.value === this.project.companyName
-                        && (this.projectManagerId.value === this.project.projectManager.id)
-                        && (this.statusId.value === this.project.status.id)
+                        && (this.projectManagerId.value == this.project.projectManager.id)
+                        && (this.statusId.value == this.project.status.id)
                     ) {
                         this.isFormEdited = false;
                     } else {
@@ -165,7 +166,7 @@ export class EditProjectComponent implements OnDestroy {
                             this.notificationService.showNotification();
                         },
                         error => {
-                            console.log(error)
+                            // console.log(error)
                             this.windowPopService.setTitle("Add new project Failed");
                             this.windowPopService.setContext("Your request is not successful!");
                             this.windowPopService.setDetails("Try again with different credentials.");
