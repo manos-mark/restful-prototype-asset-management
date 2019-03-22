@@ -21,6 +21,7 @@ import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
 })
 export class ListProjectsComponent implements OnInit {
     sortByDateDesc = true;
+    sortedByDate = true;
     sortByProductsCountDesc = false;
     isMasterChecked = false;
     projects: Project[] = [];
@@ -180,6 +181,7 @@ export class ListProjectsComponent implements OnInit {
     }
 
     sortByDate() {
+        this.sortedByDate = true;
         this.sortByDateDesc = !this.sortByDateDesc;
         this.projects = [];
         this.pageParams.field = 'date';
@@ -192,6 +194,7 @@ export class ListProjectsComponent implements OnInit {
     }
 
     sortByProductsCount() {
+        this.sortedByDate = false;
         this.sortByProductsCountDesc = !this.sortByProductsCountDesc;
         this.projects = [];
         this.pageParams.field = 'products';

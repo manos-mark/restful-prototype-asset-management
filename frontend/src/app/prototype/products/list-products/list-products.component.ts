@@ -24,6 +24,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     products: Product[] = [];
     pictures: ProductPicture[] = [];
     projectsNames: string[] = [];
+    sortedByDate = true;
     sortByDateDesc = true;
     sortByQuantityDesc = false;
     isMasterChecked = false;
@@ -193,6 +194,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     }
 
     sortByDate() {
+        this.sortedByDate = true;
         this.sortByDateDesc = !this.sortByDateDesc;
         this.products = [];
         this.pageParams.field = 'date';
@@ -205,6 +207,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     }
 
     sortByQuantity() {
+        this.sortedByDate = false;
         this.sortByQuantityDesc = !this.sortByQuantityDesc;
         this.products = [];
         this.pageParams.field = 'quantity';
