@@ -3,6 +3,7 @@ package com.manos.prototype.service;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.util.PasswordGenerationUtil;
 import com.manos.prototype.util.SecurityUtil;
+import com.pastelstudios.db.GenericFinder;
 
 @Service
 public class UserServiceImpl {
@@ -25,9 +27,12 @@ public class UserServiceImpl {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
-//	@Autowired
-//	private GenericFinder finder;
-//	
+	@Autowired
+	private GenericFinder finder;
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 //	@Autowired
 //	private GenericGateway gateway;
 	
@@ -37,6 +42,11 @@ public class UserServiceImpl {
 		
 		if (userDetails == null) {
 			throw new EntityNotFoundException(User.class);
+		}
+		
+		User tempUser = finder.findById(User.class, userDetails.getId());
+		if (tempUser.getAcceptedCookiesDatetime() != null) {
+			userDetails.setAcceptedCookies(true);
 		}
 		return userDetails;
 	}
@@ -54,12 +64,12 @@ public class UserServiceImpl {
 			throw new EntityNotFoundException(User.class);
 		}
 		
-		userDao.saveUser(user);			
+		sessionFactory.getCurrentSession().save(user);			
 	}
 
 	@Transactional
 	public User getUser(long userId) {
-		return userDao.getUserById(userId);
+		return finder.findById(User.class, userId);
 	}
 
 	@Transactional
@@ -76,8 +86,6 @@ public class UserServiceImpl {
 			if (user.getPassword() == null) {
 				throw new EntityNotFoundException(User.class);
 			}
-			
-			userDao.updateUser(user);
 		} else {
 			throw new EntityNotFoundException(User.class);
 		}
@@ -89,7 +97,7 @@ public class UserServiceImpl {
 		if (tempUser == null) {
 			throw new EntityNotFoundException(User.class, userId);
 		}
-		userDao.deleteUser(userId);
+		sessionFactory.getCurrentSession().delete(tempUser);
 	}
 
 	@Transactional
@@ -105,14 +113,14 @@ public class UserServiceImpl {
 
 		// save password to db
 		user.setPassword(passwordEncoder.encode(newPassword));
-		userDao.saveUser(user);
+		sessionFactory.getCurrentSession().save(user);
 		return newPassword;
 	}
 	
 	@Transactional
 	public void updateUser(UserRequestDto user, Long userId) {
 		
-		User oldUser = userDao.getUserById(userId);
+		User oldUser = finder.findById(User.class, userId);
 		if (oldUser == null) {
 			throw new EntityNotFoundException(User.class); // throw
 		}
@@ -125,7 +133,5 @@ public class UserServiceImpl {
 		if (user.isAcceptedCookies()) {
 			oldUser.setAcceptedCookiesDatetime(LocalDateTime.now());
 		}
-		
-		userDao.updateUser(oldUser);
 	}
 }

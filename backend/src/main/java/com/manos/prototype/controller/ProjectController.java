@@ -106,7 +106,7 @@ public class ProjectController {
 	}
 
 	@PostMapping("/count")
-	public Long getProjectsCountByStatus(@RequestBody StatusRequestDto statusId) {
+	public Long getProjectsCountByStatus(@Valid @RequestBody StatusRequestDto statusId) {
 		return projectService.getProjectsCountByStatus(statusId.getStatusId());
 	}
 
@@ -116,12 +116,8 @@ public class ProjectController {
 	}
 
 	@PostMapping
-	public void addProject(@RequestBody ProjectRequestDto projectDto) {
-		
+	public void addProject(@Valid @RequestBody ProjectRequestDto projectDto) {
 		Project project = conversionService.convert(projectDto, Project.class);
-		project.setStatus(new Status(Status.NEW_ID));
-		project.setCreatedAt(LocalDate.now());
-		
 		projectService.saveProject(project, projectDto.getProjectManagerId());
 	}
 

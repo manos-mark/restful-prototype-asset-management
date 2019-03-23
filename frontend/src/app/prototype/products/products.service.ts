@@ -10,6 +10,8 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
+    filterParams = new FilterParams;
+    pageParams = new PageParams;
     
     private _editMode : boolean;
     public get editMode() : boolean {
@@ -19,17 +21,18 @@ export class ProductsService {
         this._editMode = v;
     }
     
+    public inProgressProductsCount = new Subject<number>();
     public deleteImageConfirmed = new Subject<boolean>();
+    public deleteProductConfirmed = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient) {}
 
     getProductsCountByStatusId(id: number) {
-        return this.httpClient.post<number>('api/products/count', {
-            statusId: id
-        }, 
+        return this.httpClient.get<number>('api/products/count', 
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
-            observe: 'body'
+            observe: 'body',
+            params: {statusId: id.toString()}
         })
         
     }
@@ -81,7 +84,6 @@ export class ProductsService {
     updateProductStatus(product) {
         let formData = new FormData();
         let tempTypeArray = [];
-        console.log(product)
         for (let i = 0; i < product.picturesCount; i++) {
             let tempTypeObj = { 
                 pictureId: 0,

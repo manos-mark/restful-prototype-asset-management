@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class ProductFilterParams {
 
-	private static final String DATE_FORMAT = "yyyy-MM-dd";
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
 	
 	@Min(0)
 	@Max(3)

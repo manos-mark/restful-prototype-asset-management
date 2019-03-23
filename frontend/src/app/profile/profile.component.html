@@ -41,33 +41,34 @@
               >Incorrect value</span>
             </div>
             <div formGroupName="passwords">
-                <div class="inputWrp" [ngClass]="{'error': passwords.invalid && (newPassword.dirty || newPassword.touched)}">
-                <div class="title">
-                    <span>New password</span>
-                </div>
-                <input 
-                    type="password"
-                    id="newPassword"
-                    formControlName="newPassword"
-                >
-                <span 
-                    class="error"
-                    *ngIf="passwords.invalid && (newPassword.dirty || newPassword.touched)"
-                >Incorrect value</span>
+                <div class="inputWrp" [ngClass]="{'error': newPassword.invalid && (newPassword.dirty || newPassword.touched)}">
+                    <div class="title">
+                        <span>New password</span>
+                    </div>
+                    <input 
+                        type="password"
+                        id="newPassword"
+                        formControlName="newPassword"
+                    >
+                    <span 
+                        class="error"
+                        *ngIf="newPassword.invalid && (newPassword.dirty || newPassword.touched)"
+                    >Incorrect value</span>
                 </div>
                 <div class="inputWrp" [ngClass]="{'error': passwords.invalid && (repeatNewPassword.dirty || repeatNewPassword.touched)}">
-                <div class="title">
-                    <span>Repeat new password</span>
-                </div>
-                <input 
-                    type="password"
-                    id="repeatNewPassword"
-                    formControlName="repeatNewPassword"
-                >
-                <span 
-                    class="error"
-                    *ngIf="passwords.invalid && (repeatNewPassword.dirty || repeatNewPassword.touched)"
-                >Incorrect value</span>
+                    <div class="title">
+                        <span>Repeat new password</span>
+                    </div>
+                    <input 
+                        type="password"
+                        id="repeatNewPassword"
+                        formControlName="repeatNewPassword"
+                    >
+                    <span 
+                        class="error"
+                        *ngIf="passwords.invalid && (repeatNewPassword.dirty || repeatNewPassword.touched)"
+                    >Incorrect value
+                    </span>
                 </div>
             </div>
             <!-- <span 

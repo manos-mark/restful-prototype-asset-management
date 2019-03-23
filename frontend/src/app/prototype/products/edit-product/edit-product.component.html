@@ -4,19 +4,31 @@
       <p>Product</p>
     </div>
     <div class="action">
-      <a class="blueBtn" 
-        (click)="onAddSave()" 
-        [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected}"
+        <a
+            *ngIf="editMode"
+            class="blueBtn" 
+            (click)="onAddSave()" 
+            [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected || !isFormEdited}"
+        >Edit & Save</a>
+        <a
+            *ngIf="!editMode"
+            class="blueBtn" 
+            (click)="onAddSave()" 
+            [ngClass]="{ 'disabled': productForm.invalid || !isThumbSelected}"
         >Add & Save</a>
-      <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
+        <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>
   </div>
   <div class="formCont">
     <div class="headerInfo product">
       <i></i>
-      <div class="text">
+      <div class="text" *ngIf="!editMode">
         <h3>New product</h3>
         <h4>Please type product details</h4>
+      </div>
+      <div class="text" *ngIf="editMode">
+        <h3 *ngIf="product">{{product.productName}}</h3>
+        <h4>Please review or edit the product details</h4>
       </div>
     </div>
     <div class="formGroup" [formGroup]="productForm">
@@ -25,14 +37,14 @@
           <div class="title">
             <i class="product"></i><span>Product name</span>
           </div>
-          <input type="text" formControlName="productName"/>
+          <input type="text" formControlName="productName" (keydown)="onKeydown($event)"/>
           <span class="error" *ngIf="productName.invalid && (productName.dirty || productName.touched)">Incorrect value</span>
         </div>
         <div class="inputWrp" [ngClass]="{'error': serialNumber.invalid && (serialNumber.dirty || serialNumber.touched)}">
           <div class="title">
             <i class="serialNum"></i><span>Serial number</span>
           </div>
-          <input type="text" formControlName="serialNumber"/>
+          <input type="text" formControlName="serialNumber" (keydown)="onKeydown($event)"/>
           <span class="error" *ngIf="serialNumber.invalid && (serialNumber.dirty || serialNumber.touched)">Incorrect value</span>
         </div>
         <div class="inputWrp" [ngClass]="{'error': quantity.invalid && (quantity.dirty || quantity.touched)}">
@@ -48,7 +60,7 @@
           </div>
           <div class="dropdown">
             <select formControlName="project">
-              <option disabled selected>Choose project</option>
+                <option disabled selected>Choose project</option>
                 <option 
                     *ngFor="let project of projects"
                     [value]="project.id"
@@ -57,7 +69,10 @@
           </div>
           <span class="error" *ngIf="project.invalid && (project.dirty || project.touched)">Incorrect value</span>
         </div>
-        <div class="inputWrp" [ngClass]="{'error': statusId.invalid && (statusId.dirty || statusId.touched)}">
+        <div 
+            *ngIf="editMode"
+            class="inputWrp" 
+            [ngClass]="{'error': statusId.invalid && (statusId.dirty || statusId.touched)}">
             <div class="title">
                 <i class="status"></i><span>Status</span>
             </div>
@@ -76,7 +91,7 @@
           <i class="description"></i>
           <p>Description</p>
         </div>
-        <textarea rows="8" cols="110" formControlName="description"></textarea>
+        <textarea rows="8" cols="110" formControlName="description" (keydown)="onKeydown($event)"></textarea>
         <span class="error" *ngIf="description.invalid && (description.dirty || description.touched)">Incorrect value</span>
       </div>
       <div class="attachedProducts" 
@@ -93,10 +108,11 @@
                  || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE}"
             >Upload</a>
             <input 
+                #picInput
                 type="file" 
                 formControlName="uploadPicture" 
                 accept="image/gif, .jpg, image/png" 
-                (change)="onUploadPicture($event.target.files);"
+                (change)="onUploadPicture($event, picInput);"
                 [ngClass]="{'disabled': computedPicturesLength >= MAX_UPLOAD_FILES_LENGTH
                  || computedPicturesListSize > MAX_UPLOAD_FILES_SIZE}"
             />

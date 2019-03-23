@@ -29,35 +29,6 @@ public class PictureDaoImpl {
         return theQuery.getResultList();
 	}
 	
-	public ProductPicture getPicture(int id) {
-		Session currentSession = sessionFactory.getCurrentSession();
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("from ProductPicture pic ")
-                	.append("join fetch pic.product ")
-                	.append("where pic.id = :id ");
-        Query<ProductPicture> theQuery = currentSession
-                .createQuery(queryBuilder.toString(), ProductPicture.class);
-        theQuery.setParameter("id", id);
-        
-        return theQuery.getSingleResult();
-	}
-	
-	public void savePicture(ProductPicture picture) {
-		Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.save(picture);
-	}
-	
-	public void deletePicture(int id) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		Query<ProductPicture> theQuery = currentSession
-				.createQuery("from ProductPicture p where p.id = :id", ProductPicture.class);
-		theQuery.setParameter("id", id);
-		
-		ProductPicture project = theQuery.getSingleResult();
-		currentSession.delete(project);	
-	}
-	
 	public int getPicturesCountByProductId(int productId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
@@ -70,11 +41,6 @@ public class PictureDaoImpl {
 		
 		Long count = theQuery.getSingleResult();
 		return count == null ? 0 : count.intValue();
-	}
-
-	public void updatePicture(ProductPicture pic) {
-		Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.update(pic);
 	}
 }
 

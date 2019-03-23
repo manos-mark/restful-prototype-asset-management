@@ -49,50 +49,6 @@ public class ProjectDaoImpl {
 				.getResultList();
 	}
 	
-	public List<Project> getProjects() {
-		Session currentSession = sessionFactory.getCurrentSession();
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Project project ");
-		
-		return currentSession.createQuery(queryBuilder.toString(), Project.class).getResultList();
-	}
-
-	public Project getProject(int id) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Project project ")
-					.append("join fetch project.projectManager ")
-					.append("join fetch project.status ")
-					.append("where project.id = :id");
-		Query<Project> theQuery = currentSession
-				.createQuery(queryBuilder.toString(), Project.class);
-		theQuery.setParameter("id", id);
-		
-		return theQuery.getSingleResult();
-	}
-
-	public void deleteProject(int id) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		Query<Project> theQuery = currentSession
-				.createQuery("from Project p where p.id = :id", Project.class);
-		theQuery.setParameter("id", id);
-		
-		Project project = theQuery.getSingleResult();
-		currentSession.delete(project);	
-	}
-
-	public void saveProject(Project project) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.save(project);
-	}
-	
-	public void updateProject(Project project) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.update(project);
-	}
-
 	public Long getProjectsCountByStatus(int statusId) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -146,5 +102,17 @@ public class ProjectDaoImpl {
 				.createQuery();
 		
 		return fullTextSession.createFullTextQuery(lucenceQuery, Project.class).getResultList();
+	}
+
+	public Project getProjectByName(String projectName) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Project project ")
+					.append("where project.projectName = :projectName");
+		
+		Query<Project> query = currentSession.createQuery(queryBuilder.toString(), Project.class);
+		query.setParameter("projectName", projectName);
+		
+		return query.uniqueResult();
 	}
 }

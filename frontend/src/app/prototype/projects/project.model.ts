@@ -15,7 +15,7 @@ export class Project {
 
     constructor(dto: any) {
         this.id = dto.id;
-        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue, dto.createdAt.dayOfMonth);
+        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue-1, dto.createdAt.dayOfMonth);
         this.projectName = dto.projectName;
         this.companyName = dto.companyName;
         this.projectManager = dto.projectManager;

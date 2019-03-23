@@ -14,14 +14,15 @@ import { Actions } from 'src/app/general/home/activity/action.enum';
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
+    EMAIL_PATTERN = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     windowPopFail = false;
     windowPop = false;
     forgottenPass = false;
 
   loginForm = new FormGroup({
-    email: new FormControl(null, [Validators.required, Validators.email]),
+    email: new FormControl(null, [Validators.required, Validators.pattern(this.EMAIL_PATTERN)]),
     password: new FormControl(null, [Validators.required, Validators.minLength(6)])
-  })
+  });
 
   constructor(public authService: AuthService,
               private router: Router,
@@ -32,49 +33,45 @@ export class LoginComponent implements OnInit {
     // to get the csrf cookie
     this.authService.retrieveCurrentUser()
         .subscribe(
-            resp => { 
+            resp => {
                 this.authService.setCurrentUser(resp.body);
                 if (this.authService.getCurrentUser()) {
                     this.router.navigate(['/']);
-                } 
+                }
             },
-            error => { if (error.status !== 401) console.log(error) }
-        );  
-    if (!document.cookie.match('acceptedCookies')) {
-        this.windowPopService.setTitle("Cookies");
-        this.windowPopService.setContext("This site uses cookies");
-        this.windowPopService.setDetails("Do you accept?");
-        this.windowPopService.setCookies(true);
-        this.windowPopService.activate();
-    } 
+            error => { console.log(error); }
+        );
   }
 
 
   onSubmit() {
     this.authService.loginUser(this.loginForm.value.email, this.loginForm.value.password)
       .subscribe(
-        res => { 
-          this.router.navigate(['/']);
+        res => {
+            if (res.body) {
+                this.authService.setCurrentUser(res.body);
+                this.router.navigate(['/']);
+            } else {
+                this.windowPopService.setTitle('Authentication Failed');
+                this.windowPopService.setContext('Your request is not successful!');
+                this.windowPopService.setDetails('Try again with different credentials.');
+                this.windowPopService.activate();
+            }
         },
         error => {
-          if (error.status === 200) {
-            this.authService.retrieveCurrentUser()
-                .subscribe(
-                    resp => { 
-                        this.authService.setCurrentUser(resp.body);
-                        if (this.authService.getCurrentUser()) {
-                            this.router.navigate(['/']);
-                        } 
-                    },
-                    error => { if (error.status !== 401) console.log(error) }
-                );
-            this.activityService.addActivity(Actions.LOGGED_IN).subscribe();
-          } else {
-            this.windowPopService.setTitle("Authentication Failed");
-            this.windowPopService.setContext("Your request is not successful!");
-            this.windowPopService.setDetails("Try again with different credentials.");
-            this.windowPopService.activate();
-          }
+            if (error.status === 200) {
+                this.authService.retrieveCurrentUser()
+                    .subscribe(
+                        resp => {
+                            this.authService.setCurrentUser(resp.body);
+                            if (this.authService.getCurrentUser()) {
+                                this.router.navigate(['/']);
+                            }
+                        },
+                        err => { if (err.status !== 401) { console.log(err); } }
+                    );
+                this.activityService.addActivity(Actions.LOGGED_IN).subscribe();
+            }
         }
     );
   }

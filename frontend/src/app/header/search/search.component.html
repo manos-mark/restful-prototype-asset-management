@@ -1,58 +1,24 @@
 <div class="searchWrp">
     <div class="search">
         <i class="searchIcon"></i>
-        <input #input placeholder="Search" (keyup)="onInput(input)"/>
-        <a class="clear" (click)="onClear(input)"></a>
+        <input #input 
+            placeholder="Search" 
+            (keyup)="onKeyup(input)"
+            autocomplete="off" 
+        />
+        <a class="clear" (click)="onClear(input, $event)"></a>
     </div>
-    <div class="searchDropdown" *ngIf="products.length != 0 || projects.length != 0">
+    <div class="searchDropdown" *ngIf="itemsArray.length != 0">
         <div class="items">
-            <div *ngFor="let product of products">
+            <div *ngFor="let obj of itemsArray">
                 <a 
-                    class="result" 
-                    *ngIf="product.field.match('productName')"
-                    (click)="onEditProduct(product.id, input)"
+                    class="result"
+                    [ngStyle]="{ 'background': obj.isHovered ? '#e4f1ff' : null }"
+                    (click)="obj.product ? onEdit(obj.product.id, 0, input) : onEdit(0, obj.project.id, input)"
                     >
-                    <i class="product"></i>
-                    <span class="type">Product name</span>
-                    <span class="item">{{ product.productName }}</span>
-                </a>
-                <a 
-                    class="result" 
-                    *ngIf="product.field.match('serialNumber')"
-                    (click)="onEditProduct(product.id, input)"
-                    >
-                    <i class="serialNum"></i>
-                    <span class="type">Serial number</span>
-                    <span class="item">{{ product.serialNumber }}</span>
-                </a>
-            </div>
-            <div *ngFor="let project of projects">
-                <a 
-                    class="result" 
-                    *ngIf="project.field.match('projectName')"
-                    (click)="onEditProject(project.id, input)"
-                    >
-                    <i class="project"></i>
-                    <span class="type">Project name</span>
-                    <span class="item">{{ project.projectName }}</span>
-                </a>
-                <a 
-                    class="result" 
-                    *ngIf="project.field.match('companyName')"
-                    (click)="onEditProject(project.id, input)"
-                    >
-                    <i class="company"></i>
-                    <span class="type">Company</span>
-                    <span class="item">{{ project.companyName }}</span>
-                </a>
-                <a 
-                    class="result" 
-                    *ngIf="project.field.match('projectManager.name')"
-                    (click)="onEditProject(project.id, input)"
-                    >
-                    <i class="manager"></i>
-                    <span class="type">Project Manager</span>
-                    <span class="item">{{ project.projectManagerName }}</span>
+                    <i [ngClass]="obj.cssClass"></i>
+                    <span class="type">{{ obj.type }}</span>
+                    <span class="item">{{ obj.item }}</span>
                 </a>
             </div>
         </div>

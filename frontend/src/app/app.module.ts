@@ -24,6 +24,7 @@ import { BreadcrumbsService } from './shared/breadcrumbs.service';
 import { NotificationService } from './shared/notification/notification.service';
 import { SearchService } from './header/search/search.service';
 
+
 @NgModule({
   declarations: [
     AppComponent
@@ -43,11 +44,11 @@ import { SearchService } from './header/search/search.service';
     LightboxModule
   ],
   providers: [
-    AuthService, 
-    ActivityService, 
+    AuthService,
+    ActivityService,
     BreadcrumbsService,
-    AuthGuard, 
-    TitleCasePipe, 
+    AuthGuard,
+    TitleCasePipe,
     ProjectsService,
     ProductsService,
     WindowPopService,
