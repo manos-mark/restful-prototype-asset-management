@@ -1,53 +1,71 @@
 <div class="heading">
     <div class="pageTtl">
-      <i class="projects"></i>
-      <p>Project</p>
+        <i class="projects"></i>
+        <p>Project</p>
     </div>
     <div class="action">
-      <a class="greenBtn" (click)="onAddSave()" [ngClass]="{ 'disabled': projectForm.invalid }">Add & Save</a>
-      <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
+        <a 
+            *ngIf="editMode"
+            class="greenBtn" 
+            (click)="onAddSave()" 
+            [ngClass]="{ 'disabled': projectForm.invalid || !isFormEdited }"
+            >Edit & Save</a>
+        <a 
+            *ngIf="!editMode"
+            class="greenBtn" 
+            (click)="onAddSave()" 
+            [ngClass]="{ 'disabled': projectForm.invalid }"
+        >Add & Save</a>
+        <a class="grayDarkBtn m-r-5" (click)="onCancel()">Cancel & Close</a>
     </div>
-  </div>
-  <div class="formCont">
+</div>
+<div class="formCont">
     <div class="headerInfo project">
-      <i></i>
-      <div class="text">
-        <h3>New project</h3>
-        <h4>Please type project details</h4>
-      </div>
+        <i></i>
+        <div class="text" *ngIf="!editMode">
+            <h3>New project</h3>
+            <h4>Please type project details</h4>
+        </div>
+        <div class="text" *ngIf="editMode">
+            <h3 *ngIf="project">{{project.projectName}}</h3>
+            <h4>Please review or edit the project details</h4>
+        </div>
     </div>
     <div class="formGroup" [formGroup]="projectForm">
-      <div class="generalInfo">
-        <div class="inputWrp" [ngClass]="{'error': projectName.invalid && (projectName.dirty || projectName.touched)}">
-          <div class="title">
-            <i class="project"></i><span>Project name</span>
-          </div>
-          <input type="text" formControlName="projectName"/>
-          <span class="error" *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)">Incorrect value</span>
-        </div>
+        <div class="generalInfo">
+            <div class="inputWrp" [ngClass]="{'error': projectName.invalid && (projectName.dirty || projectName.touched)}">
+                <div class="title">
+                    <i class="project"></i><span>Project name</span>
+                </div>
+                <input type="text" formControlName="projectName" (keydown)="onKeydown($event)"/>
+                <span class="error" *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)">Incorrect value</span>
+            </div>
         <div class="inputWrp" [ngClass]="{'error': companyName.invalid && (companyName.dirty || companyName.touched)}">
-          <div class="title">
-            <i class="company"></i><span>Company name</span>
-          </div>
-          <input type="text" formControlName="companyName"/>
-          <span class="error" *ngIf="companyName.invalid && (companyName.dirty || companyName.touched)">Incorrect value</span>
+            <div class="title">
+                <i class="company"></i><span>Company name</span>
+            </div>
+            <input type="text" formControlName="companyName" (keydown)="onKeydown($event)"/>
+            <span class="error" *ngIf="companyName.invalid && (companyName.dirty || companyName.touched)">Incorrect value</span>
         </div>
         <div class="inputWrp" [ngClass]="{'error': projectManagerId.invalid && (projectManagerId.dirty || projectManagerId.touched)}">
-          <div class="title">
-            <i class="manager"></i><span>Project manager</span>
-          </div>
-          <div class="dropdown">
-            <select formControlName="projectManagerId">
-              <option disabled selected>Choose project manager</option>
-                <option 
-                    *ngFor="let manager of projectManagers"
-                    [value]="manager.id"
-                >{{ manager.name }}</option>
-            </select>
-          </div>
-          <span class="error" *ngIf="projectManagerId.invalid && (projectManagerId.dirty || projectManagerId.touched)">Incorrect value</span>
+            <div class="title">
+                <i class="manager"></i><span>Project manager</span>
+            </div>
+            <div class="dropdown">
+                <select formControlName="projectManagerId">
+                    <option disabled selected>Choose project manager</option>
+                    <option 
+                        *ngFor="let manager of projectManagers"
+                        [value]="manager.id"
+                    >{{ manager.name }}</option>
+                </select>
+            </div>
+            <span class="error" *ngIf="projectManagerId.invalid && (projectManagerId.dirty || projectManagerId.touched)">Incorrect value</span>
         </div>
-        <div class="inputWrp" [ngClass]="{'error': statusId.invalid && (statusId.dirty || statusId.touched)}">
+        <div 
+            *ngIf="editMode"
+            class="inputWrp" 
+            [ngClass]="{'error': statusId.invalid && (statusId.dirty || statusId.touched)}">
             <div class="title">
                 <i class="status"></i><span>Status</span>
             </div>
@@ -60,15 +78,15 @@
             </div>
             <span class="error" *ngIf="statusId.invalid && (statusId.dirty || statusId.touched)">Incorrect value</span>
         </div>
-      </div>
-      <div class="attachedProducts">
+    </div>
+    <div class="attachedProducts">
         <div class="header">
           <div class="count">
             <i class="product"></i>
             <p>Attached products <span>({{ products.length }})</span></p>
           </div>
             <a 
-                routerLink="/prototype/products"
+                (click)="onOpenProducts(project.projectName)"
                 class="grayDarkBtn" [ngClass]="{'disabled': !editMode}"
             >View all</a>
         </div>
@@ -110,4 +128,4 @@
 
         </div>
     </div>
-  </div>
+</div>

@@ -1,37 +1,48 @@
 <div class="heading">
-  <div class="pageTtl">
-    <i class="products"></i>
-    <p>Products({{ totalCount }})</p>
-  </div>
-  <div class="action">
-    <a class="blueBtn" routerLink="new">Add product</a>
-    <div class="dropdown">
-      <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
-        <option value=5>Results per page:5</option>
-        <option value=20>Results per page:20</option>
-        <option value=50>Results per page:50</option>
-      </select>
+    <div class="pageTtl">
+        <i class="products"></i>
+        <p>Products({{ totalCount }})</p>
     </div>
-  </div>
+    <div class="action">
+        <a class="blueBtn" routerLink="new">Add product</a>
+        <div class="dropdown">
+        <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
+            <option [selected]="pageParams.pageSize == 5" value=5>Results per page:5</option>
+            <option [selected]="pageParams.pageSize == 20" value=20>Results per page:20</option>
+            <option [selected]="pageParams.pageSize == 50" value=50>Results per page:50</option>
+        </select>
+        </div>
+    </div>
 </div>
 <div class="tableWrp">
     <div class="filters">
         <p>Filters</p>
         <div class="inputWrp date">
-            <input #dateFrom 
+            <input 
+                #dateFrom 
+                [(ngModel)]="fromDate"
                 placeholder="Date from" 
-                type="date" 
                 [max]="dateToFilter"
-                (change)="dateFromFilter = dateFrom.value.toLocaleString()"
-            />
+                (ngModelChange)="dateFromFilter = fromDate"
+                [owlDateTime]="dt1" 
+                [owlDateTimeTrigger]="dt1" 
+            >
+            <owl-date-time #dt1
+                pickerType="calendar"
+            ></owl-date-time>
         </div>
         <div class="inputWrp date">
             <input #dateTo 
+                [(ngModel)]="toDate"
                 placeholder="Date to" 
-                type="date" 
                 [min]="dateFromFilter"
-                (change)="dateToFilter = dateTo.value.toLocaleString()"
+                (ngModelChange)="dateToFilter = toDate"
+                [owlDateTime]="dt2" 
+                [owlDateTimeTrigger]="dt2" 
             />
+            <owl-date-time #dt2
+                pickerType="calendar"
+            ></owl-date-time>
         </div>
         <div class="dropdown status">
             <select #statusDropdown>
@@ -43,10 +54,13 @@
         </div>
         <div class="dropdown status">
             <select #projectDropdown>
-                <option value="null" selected>Project: All</option>
+                <option [selected]="!filterParams.projectName" value="null">Project: All</option>
                 <option 
-                    *ngFor="let project of projectsNames"
-                    [value]="project">Project: {{ project }}</option>
+                    *ngFor="let projectName of projectsNames"
+                    [value]="projectName"
+                    [selected]="filterParams.projectName.match(projectName)"
+                    >Project: {{ projectName }}
+                </option>
             </select>
         </div>
         <a class="blueDarkBtn" 
@@ -86,12 +100,12 @@
         </div>
         <span class="number">#</span>
         <a class="date" (click)="sortByDate()">
-            <i [ngClass]="sortByDateAsc ? 'sort up': 'sort down'"></i>
+            <i [ngClass]="sortedByDate ? (sortByDateDesc ? 'sort down' : 'sort up') : ('disabled')"></i>
         Created</a>
         <span class="productName">Product name</span>
         <span class="sn">SN</span>
         <a class="quantity" (click)="sortByQuantity()">
-            <i [ngClass]="sortByQuantityAsc ? 'sort up': 'sort down'"></i>
+            <i [ngClass]="sortedByDate ? ('disabled') : (sortByQuantityDesc ? 'sort down' : 'sort up')"></i>
         Qty</a>
         <span class="description">Description</span>
         <span class="project">Project</span>
@@ -101,14 +115,14 @@
     </div>
     
     <div class="content">
-        <div class="row" *ngFor="let product of products">
+        <div class="row" *ngFor="let product of products,let i = index">
             <div class="checkbox">
                 <a class="checkbox" 
                     [ngClass]="{'active': product.isChecked}"
                     (click)="onSelect(product)"
                 ><i></i></a>
             </div>
-            <span class="number">{{ product.id }}</span>
+            <span class="number">{{ (((this.pageParams.page-1) * this.pageParams.pageSize) + i + 1) }}</span>
             <span class="date">{{ product.createdAt | date: 'mediumDate' }}</span>
             <span class="productName">{{ product.productName }}</span>
             <span class="sn">{{ product.serialNumber }}</span>

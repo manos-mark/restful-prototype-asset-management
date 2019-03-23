@@ -35,7 +35,9 @@ export class FilterParams {
     public set projectName(v : string) {
         this._projectName = v;
     }
-    constructor() {}
+    constructor() {
+        this.projectName = '';
+    }
 
     isUndefined(): boolean {
         return this.fromDate === undefined && this.toDate === undefined && this.statusId === undefined && this.projectName === undefined;

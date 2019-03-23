@@ -47,6 +47,9 @@ export class ForgottenPasswordComponent implements OnInit {
             error => {
                 console.log(error);
                 this.forgotPassFormError = true;
+                setTimeout(() => {
+                    this.forgotPassFormError = false;
+                }, 1200);
             }
         );
     this.forgotPassForm.reset();

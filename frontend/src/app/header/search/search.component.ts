@@ -5,6 +5,7 @@ import { ProjectsService } from 'src/app/prototype/projects/projects.service';
 import { Router } from '@angular/router';
 import { SearchProduct } from './search-product.model';
 import { SearchProject } from './search-project.model';
+import { SearchItem } from './search-item.model';
 
 @Component({
   selector: 'app-search',
@@ -12,6 +13,7 @@ import { SearchProject } from './search-project.model';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+    private index = -1;
     constructor(private searchService: SearchService,
                 private productService: ProductsService,
                 private projectService: ProjectsService,
@@ -20,45 +22,99 @@ export class SearchComponent implements OnInit {
     ngOnInit() {
     }
 
-    onInput(input) {
-        if (!input.value.match('').index) {
-            if (input.value.length >= 3) {
-                this.searchService.search(input.value)
-                    .subscribe (
-                        res => {
-                            this.searchService.products = res.products;
-                            this.searchService.projects = res.projects;
-                        },
-                        error => console.log(error)
-                    );
-            }
-            this.searchService.clear();
+    onKeyup(input, $event) {
+        if (event['key'].match('ArrowDown')) {
+            this.moveDown();
+        } else if (event['key'].match('ArrowUp')) {
+            this.moveUp();
+        } else if (event['key'].match('Enter')) {
+            this.select(input);
         } else {
-            this.onClear(input);
+            this.searchService.input = input;
+            if (!input.value.match('').index) {
+                if (input.value.length >= 3) {
+                    this.searchService.search(input.value)
+                        .subscribe (
+                            res => {
+                                this.index = -1;
+                                this.searchService.itemsArray = [];
+                                res.products.forEach(item => {
+                                    this.searchService.itemsArray.push(new SearchItem(item));
+                                });
+                                res.projects.forEach(item => {
+                                    this.searchService.itemsArray.push(new SearchItem(item));
+                                });
+                            },
+                            error => console.log(error)
+                        );
+                } else {
+                    this.searchService.itemsArray = [];
+                }
+            } else {
+                this.onClear(input);
+            }
         }
     }
 
-    onEditProduct(productId: number, input) {
+    onEdit(productId: number, projectId: number, input) {
         this.productService.editMode = true;
-        this.router.navigate(['prototype/products/', productId, 'edit'],
-            {queryParams: { productId: productId }}
-        );
-        this.onClear(input);
-    }
 
-    onEditProject(projectId: number, input) {
-        this.projectService.editMode = true;
-        this.router.navigate(['prototype/projects/', projectId, 'edit'],
-            {queryParams: { projectId: projectId }}
-        );
+        if (productId) {
+            this.router.navigate(['prototype/products/', productId, 'edit'],
+                {queryParams: { productId: productId }}
+            );
+        } else if (projectId) {
+            this.router.navigate(['prototype/projects/', projectId, 'edit'],
+                {queryParams: { projectId: projectId }}
+            );
+        }
         this.onClear(input);
     }
 
     onClear(input) {
         this.searchService.clear();
-        input.value = '';
     }
 
-    get products() { return this.searchService.products; }
-    get projects() { return this.searchService.projects; }
+    moveDown() {
+        if (this.itemsArray[this.index + 1]) {
+            if (this.itemsArray[this.index]) {
+                this.itemsArray[this.index].isHovered = false;
+            }
+            this.itemsArray[++this.index].isHovered = true;
+        } else if (this.itemsArray[this.itemsArray.length - 1]) {
+            this.itemsArray[this.itemsArray.length - 1].isHovered = false;
+            this.itemsArray[0].isHovered = true;
+            this.index = 0;
+        }
+    }
+
+    moveUp() {
+        if (this.itemsArray[this.index - 1]) {
+            if (this.itemsArray[this.index]) {
+                this.itemsArray[this.index].isHovered = false;
+            }
+            this.itemsArray[--this.index].isHovered = true;
+        } else if (this.itemsArray[this.itemsArray.length - 1]) {
+            this.itemsArray[0].isHovered = false;
+            this.itemsArray[this.itemsArray.length - 1].isHovered = true;
+            this.index = this.itemsArray.length - 1;
+        }
+    }
+
+    select(input) {
+        if (this.itemsArray[this.index]) {
+            const item = this.itemsArray[this.index];
+            if (item.product) {
+                this.itemsArray[this.index].isHovered = false;
+                this.itemsArray[this.index].isSelected = true;
+                this.onEdit(item.product.id, 0, input);
+            } else if (item.project) {
+                this.itemsArray[this.index].isHovered = false;
+                this.itemsArray[this.index].isSelected = true;
+                this.onEdit(0, item.project.id, input);
+            }
+        }
+    }
+
+    get itemsArray() { return this.searchService.itemsArray; }
 }

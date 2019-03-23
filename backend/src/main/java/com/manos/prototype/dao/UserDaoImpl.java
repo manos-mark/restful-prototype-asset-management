@@ -26,39 +26,4 @@ public class UserDaoImpl {
 		theQuery.setParameter("mail", theEmail);
 		return theQuery.getSingleResult();
 	}
-	
-	public void saveUser(User theUser) {
-		// get current hibernate session
-		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.save(theUser);
-	}
-	
-	public void updateUser(User theUser) {
-		// get current hibernate session
-		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.update(theUser);
-	}
-	
-	public User getUserById(long userId) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from User u where u.id=:userId");
-		Query<User> theQuery = currentSession.createQuery(queryBuilder.toString(), User.class);
-		theQuery.setParameter("userId", userId);
-		
-		return theQuery.getSingleResult();
-	}
-
-	public void deleteUser(long userId) {
-		Session currentSession = sessionFactory.getCurrentSession();
-
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from User u where u.id=:userId");
-		
-		Query<?> theQuery = currentSession.createQuery(queryBuilder.toString());
-		theQuery.setParameter("userId", userId);
-		currentSession.delete(theQuery.getSingleResult());
-	}
-
 }

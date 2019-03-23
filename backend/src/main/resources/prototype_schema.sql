@@ -57,6 +57,8 @@ CREATE TABLE `product` (
 	`quantity` INT(11) NOT NULL,
 	`status_id` INT(11) NOT NULL,
 	`project_id` INT(11) NOT NULL,
+    UNIQUE (product_name),
+    UNIQUE (serial_number),
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`status_id`)
 		REFERENCES e_status (`id`),
@@ -66,9 +68,9 @@ CREATE TABLE `product` (
 INSERT INTO `product` (creation_date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
 	('2011-11-17','productName','serialNumber','description',12,2,1);
 INSERT INTO `product` (creation_date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
-    ('2011-10-17','second','serialNumber','description',10,2,1);
+    ('2011-10-17','second','serialNumber2','description',10,2,1);
 INSERT INTO `product` (creation_date,product_name,serial_number,description,quantity,status_id,project_id) VALUES
-    ('2011-12-17','third','serialNumber','description',1,2,2);
+    ('2011-12-17','third','serialNumber3','description',1,2,2);
     
 --
 -- Table structure for `product_pictures`

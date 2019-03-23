@@ -9,6 +9,6 @@ export class PageParams {
         this.field = 'date';
         this.page = 1;
         this.pageSize = 5;
-        this.direction = 'asc';
+        this.direction = 'desc';
     }
 }

@@ -7,9 +7,9 @@
       <a class="greenBtn" routerLink="new">Add project</a>
       <div class="dropdown">
         <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
-          <option value=5>Results per page:5</option>
-          <option value=20>Results per page:20</option>
-          <option value=50>Results per page:50</option>
+          <option [selected]="pageParams.pageSize == 5" value=5>Results per page:5</option>
+          <option [selected]="pageParams.pageSize == 20" value=20>Results per page:20</option>
+          <option [selected]="pageParams.pageSize == 50" value=50>Results per page:50</option>
         </select>
       </div>
     </div>
@@ -18,20 +18,31 @@
     <div class="filters">
       <p>Filters</p>
       <div class="inputWrp date">
-        <input #dateFrom 
+        <input 
+            #dateFrom 
+            [(ngModel)]="fromDate"
             placeholder="Date from" 
-            type="date" 
             [max]="dateToFilter"
-            (change)="dateFromFilter = dateFrom.value.toLocaleString()"
-        />
+            (ngModelChange)="dateFromFilter = fromDate"
+            [owlDateTime]="dt1" 
+            [owlDateTimeTrigger]="dt1" 
+        >
+        <owl-date-time #dt1
+            pickerType="calendar"
+        ></owl-date-time>
       </div>
       <div class="inputWrp date">
         <input #dateTo 
+            [(ngModel)]="toDate"
             placeholder="Date to" 
-            type="date" 
             [min]="dateFromFilter"
-            (change)="dateToFilter = dateTo.value.toLocaleString()"
+            (ngModelChange)="dateToFilter = toDate"
+            [owlDateTime]="dt2" 
+            [owlDateTimeTrigger]="dt2" 
         />
+        <owl-date-time #dt2
+            pickerType="calendar"
+        ></owl-date-time>
       </div>
       <div class="dropdown status">
         <select #statusDropdown>
@@ -78,26 +89,26 @@
             </div>
             <span class="number">#</span>
             <a class="date" (click)="sortByDate()">
-                <i [ngClass]="sortByDateAsc ? 'sort up': 'sort down'"></i>
+                <i [ngClass]="sortedByDate ? (sortByDateDesc ? 'sort down' : 'sort up') : ('disabled')"></i>
             Created</a>
             <span class="projectName">Project name</span>
             <span class="companyName">Company name</span>
             <span class="projectManager">Project manager</span>
             <a class="products" (click)="sortByProductsCount()">
-                <i [ngClass]="sortByProductsCountAsc ? 'sort up': 'sort down'"></i>
+                <i [ngClass]="sortedByDate ? ('disabled') : (sortByProductsCountDesc ? 'sort down' : 'sort up')"></i>
             Products</a>
             <div class="status">Status</div>
             <div class="settings"><i></i></div>
         </div>
         <div class="content">
-            <div class="row" *ngFor="let project of projects; let i index">
+            <div class="row" *ngFor="let project of projects; let i = index">
                 <div class="checkbox">
                     <a class="checkbox" 
                         [ngClass]="{'active': project.isChecked}"
                         (click)="onSelect(project)"
                     ><i></i></a>
                 </div>
-                <span class="number">{{ project.id }}</span>
+                <span class="number">{{ (((this.pageParams.page-1) * this.pageParams.pageSize) + i + 1) }}</span>
                 <span class="date">{{ project.createdAt | date:'mediumDate' }}</span>
                 <span class="projectName">{{ project.projectName }}</span>
                 <span class="companyName">{{ project.companyName }}</span>

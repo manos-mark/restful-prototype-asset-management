@@ -28,18 +28,21 @@ export class EditProductComponent implements OnDestroy {
     projects: Project[];
     pictures: ProductPicture[] = [];
     imageSrc: string[] = [];
-    computedPicturesListSize: number = 0;
-    computedPicturesLength: number = 0;
+    computedPicturesListSize = 0;
+    computedPicturesLength = 0;
     deleteImageSubscription: Subscription = null;
     isThumbSelected: Boolean = false;
+    formChangesSubscription: Subscription;
     i = 0;
+    isFormEdited = false;
+    thumbPictureIndex: number;
 
     productForm = new FormGroup({
         productName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
         serialNumber: new FormControl(null, [Validators.required, Validators.minLength(2)]),
         quantity: new FormControl(null, [Validators.required, Validators.min(1)]),
         statusId: new FormControl(null, [Validators.required, Validators.pattern("^[0-9]+$")]),
-        project: new FormControl("Choose project", [Validators.required, Validators.pattern("^[0-9]+$")]),
+        project: new FormControl('Choose project', [Validators.required, Validators.pattern("^[0-9]+$")]),
         description: new FormControl(null, [Validators.required, Validators.minLength(1)]),
         uploadPicture: new FormControl(null),
         thumbArray: new FormArray([],Validators.required)
@@ -61,23 +64,42 @@ export class EditProductComponent implements OnDestroy {
             this.breadcrumbsService.setBreadcrumbsProductEdit();
         }
         else {
+            this.statusId.setValue(Statuses.NEW);
             this.breadcrumbsService.setBreadcrumbsProductNew();
         }
-        // when add new project status always will be new and disabled
-        this.productForm.controls.statusId.setValue(Statuses.NEW);
-        this.productForm.controls.statusId.disable();
         // get projects for the dropdown
         this.projectService.getAllProjects()
             .subscribe(
                 res => this.projects = res,
                 error => console.log(error)
             )
-        this.route.queryParams.subscribe(
-            res => { this.productForm.controls.project.setValue(res.projectId) }
+            this.route.queryParams.subscribe(
+                res => {
+                    if (res.projectId) {
+                        this.productForm.controls.project.setValue(res.projectId);
+                    }
+                }
         )
-        // on edit mode init the fields        
+        // on edit mode init the fields
         if (this.editMode) {
-            this.productForm.controls.statusId.enable();
+            this.formChangesSubscription = this.productForm.valueChanges.subscribe(x => {
+                if (this.productForm.valid) {
+                    if (this.productName.value === this.product.productName
+                        && this.serialNumber.value === this.product.serialNumber
+                        && (this.quantity.value == this.product.quantity)
+                        && (this.statusId.value == this.product.status.id)
+                        && (this.project.value == this.product.projectId)
+                        && (this.description.value === this.product.description)
+                        && this.uploadPicture.value === null
+                        && (this.thumbArray.value[this.thumbPictureIndex] === undefined
+                            || this.thumbArray.value[this.thumbPictureIndex])
+                        ) {
+                            this.isFormEdited = false;
+                    } else {
+                        this.isFormEdited = true;
+                    }
+                }
+            });
             this.route.queryParams.subscribe(
                 res => {
                     this.productService.getProductById(res.productId).subscribe(
@@ -89,7 +111,7 @@ export class EditProductComponent implements OnDestroy {
                             this.productForm.controls.statusId.setValue(this.product.status.id);
                             this.productForm.controls.project.setValue(this.product.projectId);
                             this.productForm.controls.description.setValue(this.product.description);
-                            
+
                             this.productService.getPicturesByProductId(this.product.id)
                                 .subscribe(
                                     res => {
@@ -99,10 +121,11 @@ export class EditProductComponent implements OnDestroy {
 
                                             this.thumbArray.push(new FormControl(null))
                                             
-                                            if (picture.id == this.product.thumbPictureId) {
+                                            if (picture.id === this.product.thumbPictureId) {
                                                 tempPicture.isThumb = true;
                                                 this.thumbArray.controls[index].setValue(index);
                                                 this.isThumbSelected = true;
+                                                this.thumbPictureIndex = index;
                                             }
                                         })
                                         this.computePicturesListSize();
@@ -142,7 +165,8 @@ export class EditProductComponent implements OnDestroy {
         })
     }
 
-    onUploadPicture(eventFileList: FileList): void {
+    onUploadPicture(event, picInput): void {
+        const eventFileList = event.target.files;
         this.pictures.push(new ProductPicture({
             id: undefined,
             productId: undefined,
@@ -152,7 +176,11 @@ export class EditProductComponent implements OnDestroy {
         }))
         this.computedPicturesLength++;
         this.computedPicturesListSize += eventFileList.item(0).size;
-        this.thumbArray.push(new FormControl(null))
+        this.thumbArray.push(new FormControl(null));
+        picInput.value = null;
+        if (!this.isThumbSelected) {
+            this.onSelectThumb(0);
+        }
     }
 
     onAddSave() {
@@ -171,9 +199,6 @@ export class EditProductComponent implements OnDestroy {
                 tempProduct['thumbPictureIndex'] = index;
             }
         });
-        // console.log(tempProduct['thumbPictureIndex'])
-        // console.log(tempProduct)
-        // console.log(this.pictures)
         // on edit mode update
         if (this.editMode) {
             this.updateProduct(tempProduct);
@@ -209,7 +234,6 @@ export class EditProductComponent implements OnDestroy {
                     // check if the picture is thumb, to disable the form
                     if (picture.isThumb) {
                         this.isThumbSelected = false;
-                        console.log('thumb id: '+picture.id)
                     }
                     this.pictures.forEach(item => {
                         if (picture.id == item.id) {
@@ -228,13 +252,6 @@ export class EditProductComponent implements OnDestroy {
     onCancel() {
         this.productForm.reset();
         this.router.navigate(['prototype','products']);
-    }
-
-    ngOnDestroy() {
-        this.productService.editMode = false;
-        if (this.deleteImageSubscription) {
-            this.deleteImageSubscription.unsubscribe();
-        }
     }
 
     updateProduct(product) {
@@ -273,6 +290,16 @@ export class EditProductComponent implements OnDestroy {
             )
     }
 
+    onKeydown(e) {
+        const input = e.target;
+        const val = input.value;
+        const end = input.selectionEnd;
+        if (e.keyCode === 32 && (val[end - 1] === ' ' || val[end] === ' ')) {
+            e.preventDefault();
+            return false;
+        }
+    }
+
     convertBytesToMegabytes(bytes,decimals) {
         if(bytes == 0) return '0 Bytes';
         var k = 1024, dm = decimals <= 0 ? 0 : decimals || 2,
@@ -303,6 +330,16 @@ export class EditProductComponent implements OnDestroy {
         });
 
         this.computedPicturesLength = length;
+    }
+
+    ngOnDestroy() {
+        if (this.formChangesSubscription) {
+            this.formChangesSubscription.unsubscribe();
+        }
+        this.productService.editMode = false;
+        if (this.deleteImageSubscription) {
+            this.deleteImageSubscription.unsubscribe();
+        }
     }
 
     get productName() { return this.productForm.get('productName') }

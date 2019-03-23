@@ -10,6 +10,8 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
+    filterParams = new FilterParams;
+    pageParams = new PageParams;
     
     private _editMode : boolean;
     public get editMode() : boolean {
@@ -19,7 +21,9 @@ export class ProductsService {
         this._editMode = v;
     }
     
+    public inProgressProductsCount = new Subject<number>();
     public deleteImageConfirmed = new Subject<boolean>();
+    public deleteProductConfirmed = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient) {}
 
@@ -81,7 +85,6 @@ export class ProductsService {
     updateProductStatus(product) {
         let formData = new FormData();
         let tempTypeArray = [];
-        console.log(product)
         for (let i = 0; i < product.picturesCount; i++) {
             let tempTypeObj = { 
                 pictureId: 0,

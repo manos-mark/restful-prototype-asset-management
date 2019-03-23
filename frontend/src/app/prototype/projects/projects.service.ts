@@ -6,10 +6,15 @@ import { FilterParams } from './filter-params.model';
 import { PageParams } from './page-params.model';
 import { toHttpParams } from 'src/app/shared/http-params-converter';
 import { Statuses } from '../status.enum';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProjectsService {
-    
+    public newProjectsCount = new Subject<number>();
+    public deleteProjectConfirmed = new Subject<boolean>();
+    pageParams = new PageParams();
+    filterParams = new FilterParams();
+
     private _editMode : boolean;
     public get editMode() : boolean {
         return this._editMode;
@@ -17,7 +22,7 @@ export class ProjectsService {
     public set editMode(v : boolean) {
         this._editMode = v;
     }
-    
+
     constructor(private httpClient: HttpClient) {}
 
     getProjectById(id: number) {

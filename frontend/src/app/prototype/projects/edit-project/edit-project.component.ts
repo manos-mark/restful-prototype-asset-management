@@ -16,6 +16,7 @@ import { Actions } from 'src/app/general/home/activity/action.enum';
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
 import { SearchService } from 'src/app/header/search/search.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-project',
@@ -32,6 +33,8 @@ export class EditProjectComponent implements OnDestroy {
     pictures: ProductPicture[] = [];
     pageParams = new PageParams();
     filterParams = new FilterParams();
+    formChangesSubscription: Subscription;
+    isFormEdited = false;
 
 
     projectForm = new FormGroup({
@@ -51,24 +54,36 @@ export class EditProjectComponent implements OnDestroy {
                 private breadcrumbsService: BreadcrumbsService,
                 private notificationService: NotificationService,
                 private searchService: SearchService) {
+
         this.searchService.clear();
         if (this.projectService.editMode) {
             this.breadcrumbsService.setBreadcrumbsProjectEdit();
         } 
         else {
+            this.statusId.setValue(Statuses.NEW);
             this.breadcrumbsService.setBreadcrumbsProjectNew();
         }
-        // when add new project status always will be new and disabled
-        this.projectForm.controls.statusId.setValue(Statuses.NEW);
-        this.projectForm.controls.statusId.disable();
         // get project managers for the dropdown
         this.projectService.getProjectManagers()
             .subscribe(
                 res => this.projectManagers = res,
                 error => console.log(error)
             )
-        // on edit mode init the fields        
+        // on edit mode init the fields
         if (this.projectService.editMode) {
+            this.formChangesSubscription = this.projectForm.valueChanges.subscribe(x => {
+                if (this.projectForm.valid) {
+                    if (this.projectName.value === this.project.projectName
+                        && this.companyName.value === this.project.companyName
+                        && (this.projectManagerId.value == this.project.projectManager.id)
+                        && (this.statusId.value == this.project.status.id)
+                    ) {
+                        this.isFormEdited = false;
+                    } else {
+                        this.isFormEdited = true;
+                    }
+                }
+            });
             this.route.queryParams.subscribe(
                 res => {
                     this.projectService.getProjectById(res.projectId).subscribe(
@@ -151,7 +166,7 @@ export class EditProjectComponent implements OnDestroy {
                             this.notificationService.showNotification();
                         },
                         error => {
-                            console.log(error)
+                            // console.log(error)
                             this.windowPopService.setTitle("Add new project Failed");
                             this.windowPopService.setContext("Your request is not successful!");
                             this.windowPopService.setDetails("Try again with different credentials.");
@@ -170,11 +185,30 @@ export class EditProjectComponent implements OnDestroy {
 
     onCancel() {
         this.projectForm.reset();
-        this.router.navigate(['prototype','projects']);
+        this.router.navigate(['prototype', 'projects']);
+    }
+
+    onOpenProducts(projectName: string) {
+        this.router.navigate(['prototype/products/'],
+            {queryParams: { projectName: projectName }}
+        );
+    }
+
+    onKeydown(e) {
+        const input = e.target;
+        const val = input.value;
+        const end = input.selectionEnd;
+        if (e.keyCode === 32 && (val[end - 1] === ' ' || val[end] === ' ')) {
+            e.preventDefault();
+            return false;
+        }
     }
 
     ngOnDestroy() {
         this.projectService.editMode = false;
+        if (this.formChangesSubscription) {
+            this.formChangesSubscription.unsubscribe();
+        }
     }
 
     get projectName() {return this.projectForm.get('projectName')}

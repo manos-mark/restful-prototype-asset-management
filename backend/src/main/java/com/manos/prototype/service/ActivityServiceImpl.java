@@ -2,6 +2,7 @@ package com.manos.prototype.service;
 
 import java.util.List;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,9 @@ public class ActivityServiceImpl {
 	
 	@Autowired
 	private UserServiceImpl userService;
+	
+	@Autowired
+    private SessionFactory sessionFactory;
 	
 	@Transactional
 	public List<Activity> getActivities() {
@@ -40,7 +44,7 @@ public class ActivityServiceImpl {
 			throw new EntityNotFoundException(User.class, userId);
 		}
 		activity.setUser(tempUser);
-		activityDao.saveActivity(activity);
+		sessionFactory.getCurrentSession().save(activity);
 	}
 
 }

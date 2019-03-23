@@ -8,7 +8,7 @@ import { ActivityService } from '../general/home/activity/activity.service';
 export class AuthService {
   private currentUser: User;
   private rememberMe = false;
-  
+
   constructor(private httpClient: HttpClient,
               private router: Router,
               private activityService: ActivityService) {}
@@ -17,7 +17,7 @@ export class AuthService {
     return this.httpClient.get<any>('api/users/current', {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
       observe: 'response'
-    })
+    });
   }
 
   getCurrentUser() {
@@ -27,17 +27,17 @@ export class AuthService {
   setCurrentUser(user: User) {
       this.currentUser = user;
   }
-  
+
   loginUser(email: string, password: string) {
     return this.httpClient.post<any>('api/login', {},
       {
         headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
         params: new HttpParams()
                     .set('email', email)
-                    .set('password', password) 
+                    .set('password', password)
                     .set('remember-me', String(this.rememberMe)),
         observe: 'response'
-      })
+      });
   }
 
   sentNewUserPassword(email: string) {
@@ -46,11 +46,11 @@ export class AuthService {
         headers: new HttpHeaders().set('Content-Type', 'application/json'),
         params: new HttpParams().set('email', email),
         observe: 'response'
-      })
+      });
   }
 
-  updateUser(oldPassword:number, newPassword: number, repeatNewPassword: number) {
-    return this.httpClient.put<any>('api/users/' + this.currentUser.id.toString() + "/new-password", 
+  updateUser(oldPassword: number, newPassword: number, repeatNewPassword: number) {
+    return this.httpClient.put<any>('api/users/' + this.currentUser.id.toString() + '/new-password',
       {
         oldPassword: oldPassword,
         password: newPassword,
@@ -73,12 +73,12 @@ export class AuthService {
   }
 
   isAuthenticated() {
-    return this.currentUser !== undefined && this.currentUser !== null
+    return this.currentUser !== undefined && this.currentUser !== null;
   }
 
   logout() {
-    return this.httpClient.post<any>('api/logout',{}, 
-      {observe: 'response'})
+    return this.httpClient.post<any>('api/logout', {},
+      {observe: 'response'});
   }
 
 }

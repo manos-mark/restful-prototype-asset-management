@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.Project;
 import com.manos.prototype.search.ProductSearch;
 import com.pastelstudios.db.PagingAndSortingSupport;
 import com.pastelstudios.db.SearchSupport;
@@ -45,21 +46,6 @@ public class ProductDaoImpl {
 				.getResultList();
 	}
 	
-	public Product getProduct(int id) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("from Product p "
-				+ "join fetch p.status "
-				+ "join fetch p.project "
-				+ "where p.id = :id");
-		Query<Product> theQuery = currentSession
-				.createQuery(queryBuilder.toString(), Product.class);
-		theQuery.setParameter("id", id);
-		
-		return theQuery.getSingleResult();
-	}
-	
 	public List<Product> getProductsByProjectId(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		
@@ -73,27 +59,6 @@ public class ProductDaoImpl {
 		theQuery.setParameter("id", id);
 		
 		return theQuery.getResultList();
-	}
-
-	public void deleteProduct(int id) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
-		Query<Product> theQuery = currentSession
-				.createQuery("from Product p where p.id = :id", Product.class);
-		theQuery.setParameter("id", id);
-		
-		Product project = theQuery.getSingleResult();
-		currentSession.delete(project);	
-	}
-
-	public void saveProduct(Product product) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.save(product);
-	}
-	
-	public void updateProduct(Product product) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.update(product);
 	}
 
 	public Long getProductsCountByStatus(int statusId) {
@@ -166,5 +131,29 @@ public class ProductDaoImpl {
 		
 		return fullTextSession.createFullTextQuery(lucenceQuery, Product.class)
 					.getResultList();
+	}
+
+	public Product getProductByName(String productName) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Product product ")
+					.append("where product.productName = :productName");
+		
+		Query<Product> query = currentSession.createQuery(queryBuilder.toString(), Product.class);
+		query.setParameter("productName", productName);
+		
+		return query.uniqueResult();
+	}
+
+	public Product getProductBySerialNumber(String serialNumber) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("from Product product ")
+					.append("where product.serialNumber = :serialNumber");
+		
+		Query<Product> query = currentSession.createQuery(queryBuilder.toString(), Product.class);
+		query.setParameter("serialNumber", serialNumber);
+		
+		return query.uniqueResult();
 	}
 }
