@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -41,7 +41,7 @@ public class ActivityServiceTest {
 		List<Activity> mockActivities = createMockActivities();
 		UserDetailsImpl mockUser = createMockUserDetails();
 
-		when(userService.getCurrentUserDetails())
+		when(userService.getCurrentUserDetails());
 			.thenReturn(mockUser);
 		when(activityService.getActivities())
 			.thenReturn(mockActivities);
@@ -99,7 +99,7 @@ public class ActivityServiceTest {
 		activity.setAction(new ActivityAction(2, "NEW"));
 		activity.setDate("2011-12-17 13:17:17");
 		activity.setId(1L);
-		activity.setUser(new User("test","test", "test", "test"));
+		activity.setUser(createMockUser());
 		return activity;
 	}
 	
