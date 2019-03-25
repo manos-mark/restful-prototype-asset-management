@@ -1,6 +1,5 @@
 package com.manos.prototype.controller;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,6 @@ import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
-import com.manos.prototype.entity.Status;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.service.ProductServiceImpl;
 import com.manos.prototype.service.ProjectServiceImpl;

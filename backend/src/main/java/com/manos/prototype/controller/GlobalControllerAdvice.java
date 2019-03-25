@@ -1,16 +1,16 @@
 package com.manos.prototype.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.manos.prototype.dto.ApplicationExceptionDto;
 import com.manos.prototype.exception.ApplicationException;
 import com.manos.prototype.exception.EntityAlreadyExistException;
 import com.manos.prototype.exception.EntityNotFoundException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalControllerAdvice {
 
 	@ExceptionHandler(ApplicationException.class)

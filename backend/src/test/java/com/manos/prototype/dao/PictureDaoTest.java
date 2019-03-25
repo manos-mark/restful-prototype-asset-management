@@ -1,14 +1,8 @@
 package com.manos.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.ProductPicture;
-import com.manos.prototype.entity.Product;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigUnitTest.class })
@@ -51,65 +44,8 @@ public class PictureDaoTest {
 	
 	@Test
 	@Transactional
-	public void getPicture() {
-		ProductPicture picture = pictureDao.getPicture(2);
-		assertThat(picture.getId()).isEqualTo(2);
-		assertThat(picture.getProduct().getId()).isEqualTo(1);
-		assertThat(picture.getPicture()).isNotNull();
-	}
-	
-	@Test
-	@Transactional
-	public void savePicture() throws IOException {
-		BufferedImage img = new BufferedImage(600, 400, BufferedImage.TYPE_INT_RGB);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(img, "jpg", baos);
-		
-		Product product = new Product();
-		product.setId(1);
-		
-		ProductPicture picture = new ProductPicture();
-		picture.setPicture(baos.toByteArray());
-		picture.setProduct(product);
-		picture.setId(2);
-		
-		assertThatCode(() -> { 
-			pictureDao.savePicture(picture);
-		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	@Transactional
-	public void updatePicture() throws IOException {
-		BufferedImage img = new BufferedImage(600, 400, BufferedImage.TYPE_INT_RGB);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(img, "jpg", baos);
-		
-		Product product = new Product();
-		product.setId(1);
-		
-		ProductPicture picture = new ProductPicture();
-		picture.setPicture(baos.toByteArray());
-		picture.setProduct(product);
-		picture.setId(2);
-		
-		assertThatCode(() -> { 
-			pictureDao.updatePicture(picture);
-		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	@Transactional
-	public void deletePicture() {
-		assertThatCode(() -> { 
-			pictureDao.deletePicture(1);
-		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	@Transactional
 	public void getPicturesCountByProductId() {
-		Long count = pictureDao.getPicturesCountByProductId(1);
+		int count = pictureDao.getPicturesCountByProductId(1);
 		assertThat(count).isEqualTo(2);
 	}
 	
