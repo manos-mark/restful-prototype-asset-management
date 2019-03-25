@@ -1,8 +1,6 @@
 package com.manos.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.List;
 
@@ -16,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.Activity;
-import com.manos.prototype.entity.ActivityAction;
-import com.manos.prototype.entity.User;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigUnitTest.class })
@@ -56,40 +52,6 @@ public class ActivityDaoTest {
 		assertThat(activities).isEmpty();
 	}
 	
-	@Test
-	@Transactional
-	public void saveActivity_success() {
-		User user = userDao.getUserById(1); 
-		
-		ActivityAction action = new ActivityAction();
-		action.setId(1);
-		
-		Activity activity = new Activity();
-		activity.setDate("2019-12-17 14:14:14");
-		activity.setAction(action);
-		activity.setUser(user);
-		
-		assertThatCode(() -> { 
-			activityDao.saveActivity(activity);
-		}).doesNotThrowAnyException();
-		
-		Activity savedActivity = activityDao.getActivitiesByUserId(1).get(0);
-		assertThat(savedActivity).isNotNull();
-		assertThat(savedActivity.getAction()
-				.getId()).isEqualTo(1);
-		assertThat(savedActivity.getDate()).isEqualTo("2019-12-17 14:14:14");
-		assertThat(savedActivity.getId()).isEqualTo(4);
-		assertThat(savedActivity.getUser().getFirstName()).isEqualTo("John");
-	}
-	
-	@Test
-	@Transactional
-	public void saveActivity_fail() {
-		assertThatExceptionOfType(IllegalArgumentException.class)
-		.isThrownBy(() -> { 
-			activityDao.saveActivity(null); 
-		});
-	}
 }
 
 

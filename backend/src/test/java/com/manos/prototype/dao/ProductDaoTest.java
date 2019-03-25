@@ -1,12 +1,9 @@
 package com.manos.prototype.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.NoResultException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,9 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.Product;
-import com.manos.prototype.entity.ProductPicture;
-import com.manos.prototype.entity.Project;
-import com.manos.prototype.entity.Status;
+import com.manos.prototype.search.ProductSearch;
+import com.pastelstudios.paging.OrderClause;
+import com.pastelstudios.paging.OrderDirection;
+import com.pastelstudios.paging.PageRequest;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigUnitTest.class })
@@ -33,9 +31,6 @@ public class ProductDaoTest {
 	@Autowired 
 	private ProductDaoImpl productDao;
 	
-	@Autowired
-	private ProjectDaoImpl projectDao;
-	
 	@Test
 	@Transactional
 	void autowiredDao_success() {
@@ -44,46 +39,26 @@ public class ProductDaoTest {
 	
 	@Test
 	@Transactional
-	void getProduct_success() {
-		Product product = productDao.getProduct(1);
-		assertThat(product).isNotNull();
-		assertThat(product).hasNoNullFieldsOrProperties();
-		assertThat(product.getProductName()).isEqualTo("productName");
-		assertThat(product.getDate()).isEqualTo("2011-12-17");
-		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
-		assertThat(product.getDescription()).isEqualTo("description");
-		assertThat(product.getQuantity()).isEqualTo(12);
-		assertThat(product.getStatus().getId()).isEqualTo(2);
-		assertThat(product.getProject().getId()).isEqualTo(1);
-		assertThat(product.getThumbPicture().getId()).isEqualTo(2);
-	}
-	
-	@Test
-	@Transactional
-	void getProduct_fail() {
-		assertThatExceptionOfType(NoResultException.class)
-			.isThrownBy(() -> { 
-				productDao.getProduct(100); 
-			});
-	}
-	
-	@Test
-	@Transactional
-	void search() {
-		List<Product> products = productDao.search("productName");
-		assertThat(products).isNotNull();
-		System.out.println(products);
-	}
-	
-	@Test
-	@Transactional
-	void getProductsByProjectId_success() {
-		List<Product> products = productDao.getProductsByProjectId(1);
+	void getProducts_success() {
+		List<OrderClause> orderClauses = new ArrayList<>();
+		OrderClause clause1 = new OrderClause();
+		clause1.setDirection(OrderDirection.DESCENDING);
+		clause1.setField(null);
+		orderClauses.add(clause1);
+		
+		PageRequest pageRequest = new PageRequest();
+		pageRequest.setPage(1);
+		pageRequest.setPageSize(10);
+		pageRequest.setOrderClauses(orderClauses);
+		
+		ProductSearch search = new ProductSearch();
+		
+		List<Product> products = productDao.getProducts(pageRequest, search);
 		Product product = products.get(0);
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
 		assertThat(product.getProductName()).isEqualTo("productName");
-		assertThat(product.getDate()).isEqualTo("2011-12-17");
+		assertThat(product.getCreatedAt()).isEqualTo("2011-12-17");
 		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
 		assertThat(product.getDescription()).isEqualTo("description");
 		assertThat(product.getQuantity()).isEqualTo(12);
@@ -96,6 +71,64 @@ public class ProductDaoTest {
 	
 	@Test
 	@Transactional
+	void search() {
+		List<Product> products = productDao.search("productName", "productName");
+		assertThat(products).isNotNull();
+	}
+	
+	@Test
+	@Transactional
+	void getProductsByProjectId_success() {
+		List<Product> products = productDao.getProductsByProjectId(1);
+		Product product = products.get(0);
+		assertThat(product).isNotNull();
+		assertThat(product).hasNoNullFieldsOrProperties();
+		assertThat(product.getProductName()).isEqualTo("productName");
+		assertThat(product.getCreatedAt()).isEqualTo("2011-12-17");
+		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
+		assertThat(product.getDescription()).isEqualTo("description");
+		assertThat(product.getQuantity()).isEqualTo(12);
+		assertThat(product.getStatus().getId()).isEqualTo(2);
+		assertThat(product.getProject().getId()).isEqualTo(1);
+		assertThat(products).size().isEqualTo(1);
+		assertThat(products).doesNotContainNull();
+		assertThat(product.getThumbPicture().getId()).isEqualTo(2);
+	}
+	
+	@Test
+	@Transactional
+	void getProductByName() {
+		Product product = productDao.getProductByName("productName");
+		assertThat(product).isNotNull();
+		assertThat(product).hasNoNullFieldsOrProperties();
+		assertThat(product.getProductName()).isEqualTo("productName");
+		assertThat(product.getCreatedAt()).isEqualTo("2011-12-17");
+		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
+		assertThat(product.getDescription()).isEqualTo("description");
+		assertThat(product.getQuantity()).isEqualTo(12);
+		assertThat(product.getStatus().getId()).isEqualTo(2);
+		assertThat(product.getProject().getId()).isEqualTo(1);
+		assertThat(product.getThumbPicture().getId()).isEqualTo(2);
+	}
+	
+	@Test
+	@Transactional
+	void getProductBySerialNumber() {
+		Product product = productDao.getProductBySerialNumber("serialNumber");
+		assertThat(product).isNotNull();
+		assertThat(product).hasNoNullFieldsOrProperties();
+		assertThat(product.getProductName()).isEqualTo("productName");
+		assertThat(product.getCreatedAt()).isEqualTo("2011-12-17");
+		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
+		assertThat(product.getDescription()).isEqualTo("description");
+		assertThat(product.getQuantity()).isEqualTo(12);
+		assertThat(product.getStatus().getId()).isEqualTo(2);
+		assertThat(product.getProject().getId()).isEqualTo(1);
+		assertThat(product.getThumbPicture().getId()).isEqualTo(2);
+	}
+	
+	@Test
+	@Transactional
 	void getProductsByProjectId_fail() {
 		List<Product> products = productDao.getProductsByProjectId(100);
 		assertThat(products).isEmpty();
@@ -103,103 +136,20 @@ public class ProductDaoTest {
 	
 	@Test
 	@Transactional
-	void deleteProduct_success() {
-		assertThatCode(() -> { 
-			productDao.deleteProduct(1);
-		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	@Transactional
-	void deleteProduct_fail() {
-		assertThatExceptionOfType(NoResultException.class)
-			.isThrownBy(() -> { 
-				productDao.deleteProduct(1000);
-			});
-	}
-	
-	@Test
-	@Transactional
-	void saveProduct_success() {
-		Project project = projectDao.getProject(1);
-		assertThat(project).isNotNull();
-		assertThat(project).hasNoNullFieldsOrProperties();
-		
-		Product product = new Product();
-		product.setProductName("test");
-		product.setDate("2019-12-17 14:14:14");
-		product.setDescription("test");
-		product.setProject(project);
-		product.setQuantity(122);
-		product.setSerialNumber("test");
-		product.setStatus(new Status(2));
-		product.setThumbPicture(new ProductPicture(1));
-		
-		assertThatCode(() -> {
-			productDao.saveProduct(product);
-		}).doesNotThrowAnyException();
-		
-		Product savedProduct = productDao.getProduct(2);
-		assertThat(savedProduct).isNotNull();
-		assertThat(savedProduct).hasNoNullFieldsOrProperties();
-		assertThat(savedProduct.getProductName()).isEqualTo("test");
-		assertThat(savedProduct.getDate()).isEqualTo("2019-12-17 14:14:14");
-		assertThat(savedProduct.getDescription()).isEqualTo("test");
-		assertThat(savedProduct.getProject().getId()).isEqualTo(1);
-		assertThat(savedProduct.getQuantity()).isEqualTo(122);
-		assertThat(savedProduct.getSerialNumber()).isEqualTo("test");
-		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
-		assertThat(product.getThumbPicture().getId()).isEqualTo(1);
-	}
-	
-	@Test
-	@Transactional
-	void updateProduct_success() {
-		Project project = projectDao.getProject(1);
-		assertThat(project).isNotNull();
-		assertThat(project).hasNoNullFieldsOrProperties();
-		
-		Product product = new Product();
-		product.setProductName("test");
-		product.setDate("2019-12-17 14:14:14");
-		product.setDescription("test");
-		product.setProject(project);
-		product.setQuantity(122);
-		product.setSerialNumber("test");
-		product.setStatus(new Status(2));
-		product.setId(1);
-		product.setThumbPicture(new ProductPicture(1));
-		
-		assertThatCode(() -> {
-			productDao.updateProduct(product);
-		}).doesNotThrowAnyException();
-		
-		Product savedProduct = productDao.getProduct(1);
-		assertThat(savedProduct).isNotNull();
-		assertThat(savedProduct).hasNoNullFieldsOrProperties();
-		assertThat(savedProduct.getProductName()).isEqualTo("test");
-		assertThat(savedProduct.getDate()).isEqualTo("2019-12-17 14:14:14");
-		assertThat(savedProduct.getDescription()).isEqualTo("test");
-		assertThat(savedProduct.getProject().getId()).isEqualTo(1);
-		assertThat(savedProduct.getQuantity()).isEqualTo(122);
-		assertThat(savedProduct.getSerialNumber()).isEqualTo("test");
-		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
-		assertThat(product.getThumbPicture().getId()).isEqualTo(1);
-	}
-	
-	@Test
-	@Transactional
-	void saveProduct_fail() {
-		assertThatExceptionOfType(IllegalArgumentException.class)
-		.isThrownBy(() -> { 
-			productDao.saveProduct(null); 
-		});
-	}
-	
-	@Test
-	@Transactional
 	void getProductsCount() {
 		assertThat(productDao.getProductsCountByStatus(2)).isEqualTo(1);
+	}
+	
+	@Test
+	@Transactional
+	void getProductsCountByProjectId() {
+		assertThat(productDao.getProductsCountByProjectId(1)).isEqualTo(1);
+	}
+	
+	@Test
+	@Transactional
+	void count() {
+		assertThat(productDao.count(new ProductSearch())).isEqualTo(1);
 	}
 }
 

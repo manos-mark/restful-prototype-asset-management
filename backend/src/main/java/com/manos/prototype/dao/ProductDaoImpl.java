@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.manos.prototype.entity.Product;
-import com.manos.prototype.entity.Project;
 import com.manos.prototype.search.ProductSearch;
 import com.pastelstudios.db.PagingAndSortingSupport;
 import com.pastelstudios.db.SearchSupport;
