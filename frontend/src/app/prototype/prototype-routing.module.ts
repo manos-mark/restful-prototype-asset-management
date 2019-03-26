@@ -13,8 +13,9 @@ const prototypeRoutes: Routes = [
         { path: 'projects/new', component: EditProjectComponent},
         { path: 'products', component: ListProductsComponent},
         { path: 'products/new', component: EditProductComponent},
-        { path: 'products/:id/edit', component: EditProductComponent},
-    ] }
+        { path: 'products/:id/edit', component: EditProductComponent}
+    ] },
+    { path: '**', redirectTo: 'general', pathMatch: 'full' }
 ]
 
 @NgModule({
