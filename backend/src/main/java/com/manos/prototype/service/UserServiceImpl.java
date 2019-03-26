@@ -51,21 +51,22 @@ public class UserServiceImpl {
 		return userDetails;
 	}
 	
-	@Transactional
-	public void saveUser(User user) {
-//		if (userDao.getUserByEmail(user.getEmail()) != null) {
-//			throw new EntityNotFoundException("Email already exists - " + user.getEmail(), new Exception());
+//	@Transactional
+//	public void saveUser(User user) {
+//		if (user == null) {
+//			throw new EntityNotFoundException(User.class);
 //		}
-		
-		user.setId(Long.parseLong("0"));
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		
-		if (user.getPassword() == null) {
-			throw new EntityNotFoundException(User.class);
-		}
-		
-		sessionFactory.getCurrentSession().save(user);			
-	}
+//		if (userDao.getUserByEmail(user.getEmail()) != null) {
+//			throw new ApplicationException("Email already exists");
+//		}
+//		user.setId(Long.parseLong("0"));
+//		user.setPassword(passwordEncoder.encode(user.getPassword()));
+//		
+//		if (user.getPassword() == null) {
+//			throw new ApplicationException("Cannot save user password.");
+//		}
+//		sessionFactory.getCurrentSession().save(user);			
+//	}
 
 	@Transactional
 	public User getUser(long userId) {
@@ -73,7 +74,7 @@ public class UserServiceImpl {
 	}
 
 	@Transactional
-	public void updateUser(User user, String oldPassReq, String newPassReq) {
+	public void updateUserPassword(User user, String oldPassReq, String newPassReq) {
 		if (user == null) {
 			throw new EntityNotFoundException(User.class);
 		}
@@ -93,7 +94,7 @@ public class UserServiceImpl {
 
 	@Transactional
 	public void deleteUser(long userId) {
-		User tempUser = getUser(userId);
+		User tempUser = this.getUser(userId);
 		if (tempUser == null) {
 			throw new EntityNotFoundException(User.class, userId);
 		}
@@ -103,7 +104,7 @@ public class UserServiceImpl {
 	@Transactional
 	public String saveNewPassword(String email) {
 		// check first if the mail exist in db
-		User user = this.userDao.getUserByEmail(email);
+		User user = userDao.getUserByEmail(email);
 		if (user == null) {
 			throw new EntityNotFoundException(User.class); // throw
 		}

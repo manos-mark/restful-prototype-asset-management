@@ -39,8 +39,11 @@ public class ActivityServiceImpl {
 	public void saveActivity(Activity activity) {
 		// get current user id, then get user
 		Long userId = userService.getCurrentUserDetails().getId();
+		if (userId == null) {
+			throw new EntityNotFoundException(User.class, userId);
+		}
 		User tempUser = userService.getUser(userId);
-		if (userId == null || tempUser == null) {
+		if (tempUser == null) {
 			throw new EntityNotFoundException(User.class, userId);
 		}
 		activity.setUser(tempUser);

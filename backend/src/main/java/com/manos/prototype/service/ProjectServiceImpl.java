@@ -143,11 +143,6 @@ public class ProjectServiceImpl {
 	}
 
 	@Transactional
-	public Long getProjectsCountByStatus(int statusId) {
-		return projectDao.getProjectsCountByStatus(statusId);
-	}
-
-	@Transactional
 	public List<Project> getProjects() {
 		return finder.findAll(Project.class);
 	}
@@ -166,4 +161,8 @@ public class ProjectServiceImpl {
 		return projectNames;
 	}
 
+	@Transactional
+	public Long getProjectsCountByStatus(int statusId) {
+		return projectDao.getProjectsCountByStatus(statusId);
+	}
 }

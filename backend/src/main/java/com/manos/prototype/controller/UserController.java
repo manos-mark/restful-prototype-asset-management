@@ -43,13 +43,13 @@ public class UserController {
 		return conversionService.convert(user, UserDto.class);
 	}
 	
-	@PostMapping
-	public void addUser(@Valid @RequestBody UserRequestDto userRequestDto) {
-		User user = conversionService.convert(userRequestDto, User.class);
-		user.setId(0L);
-		userService.saveUser(user);
-	}
-	
+//	@PostMapping
+//	public void addUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+//		User user = conversionService.convert(userRequestDto, User.class);
+//		user.setId(0L);
+//		userService.saveUser(user);
+//	}
+//	
 	@PostMapping("/new-password")
 	public void newPassword(@Valid @RequestParam EmailRequestDto email) throws MessagingException {
 		String newPassword;
@@ -65,7 +65,7 @@ public class UserController {
 		
 		User user = userService.getUser(userId);
 		
-		userService.updateUser(user, oldPass, newPass);
+		userService.updateUserPassword(user, oldPass, newPass);
 	}
 	
 	@PutMapping("/{id}")

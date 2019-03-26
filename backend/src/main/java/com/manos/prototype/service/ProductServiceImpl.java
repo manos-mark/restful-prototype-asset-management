@@ -172,7 +172,7 @@ public class ProductServiceImpl {
 		
 		existingPictures = existingProduct.getPictures();
 		// Set the thumb picture for the product
-		if (productDto.getThumbPictureIndex() >= 0) {
+		if (productDto.getThumbPictureIndex() >= 0 && existingPictures.size() > 0) {
 			ProductPicture thumbPicture = existingPictures.get(productDto.getThumbPictureIndex());
 			thumbPicture.setProduct(existingProduct);
 			existingProduct.setThumbPicture(thumbPicture);
