@@ -2,6 +2,7 @@ package com.manos.prototype.controller;
 
 import java.util.Set;
 
+import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -44,6 +45,18 @@ public class GlobalControllerAdvice {
 	@ExceptionHandler(EntityNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ApplicationExceptionDto handleException(EntityNotFoundException e) {
+		ApplicationExceptionDto dto = new ApplicationExceptionDto();
+		
+		dto.setError(e.getClass().getSimpleName());
+		dto.setMessage(e.getMessage());
+		dto.setTimeStamp(System.currentTimeMillis());
+		
+		return dto;
+	}
+	
+	@ExceptionHandler(NoResultException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ApplicationExceptionDto handleException(NoResultException e) {
 		ApplicationExceptionDto dto = new ApplicationExceptionDto();
 		
 		dto.setError(e.getClass().getSimpleName());

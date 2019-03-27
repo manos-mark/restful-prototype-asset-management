@@ -14,16 +14,16 @@ export class ActivityComponent implements OnInit {
 
   constructor(public authService: AuthService,
               public actService: ActivityService) { }
-  
+
   ngOnInit() {
     this.actService.getActivities()
       .subscribe(
-        activities => { 
+        activities => {
           activities.map(
-            activity => { this.activities.push(new Activity(activity)) }
-          )
+            activity => { this.activities.push(new Activity(activity)); }
+          );
         },
-        error => { console.log(error) }
+        error => { console.log(error); }
       );
   }
 

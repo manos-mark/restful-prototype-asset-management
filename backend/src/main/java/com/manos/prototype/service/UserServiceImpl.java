@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.manos.prototype.dao.UserDaoImpl;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
+import com.manos.prototype.exception.ApplicationException;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.util.PasswordGenerationUtil;
@@ -41,7 +42,7 @@ public class UserServiceImpl {
 		UserDetailsImpl userDetails = SecurityUtil.getCurrentUserDetails();
 		
 		if (userDetails == null) {
-			throw new EntityNotFoundException(User.class);
+			return null;
 		}
 		
 		User tempUser = finder.findById(User.class, userDetails.getId());
@@ -85,14 +86,14 @@ public class UserServiceImpl {
 			throw new EntityNotFoundException(User.class);
 		}
 		
-		if (passwordEncoder.matches(oldPassReq, userDetails.getPassword())) {
+		if (passwordEncoder.matches(oldPassReq, user.getPassword())) {
 			user.setPassword(passwordEncoder.encode(newPassReq));
 			
 			if (user.getPassword() == null) {
 				throw new EntityNotFoundException(User.class);
 			}
 		} else {
-			throw new EntityNotFoundException(User.class);
+			throw new ApplicationException("Could not save the new password.");
 		}
 	}
 

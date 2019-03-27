@@ -1,21 +1,14 @@
 import { Action, ActionsMap } from './action.enum';
 
 export class Activity {
-    
+
     public id: number;
     public action: Action;
-    public date: string;
+    public date: Date;
 
-    constructor(dto:any) {
+    constructor(dto: any) {
         this.id = dto.id;
         this.action = ActionsMap.get(dto.actionId);
-        this.date = dto.date;
+        this.date = new Date(dto.date.year, dto.date.monthValue - 1, dto.date.dayOfMonth, dto.date.hour, dto.date.minute, dto.date.second);
     }
 }
-
-// export class Activity {
-//     constructor(public id: number,
-//         public actionId: number,
-//         public date: string
-//     ) {}
-// }

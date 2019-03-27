@@ -34,9 +34,10 @@ export class ForgottenPasswordComponent implements OnInit {
 
   onForgotPassSubmit() {
     this.forgotPassFormError = false;
-    this.authService.sentNewUserPassword(this.forgotPassForm.value.email)
+    this.authService.resetPassword(this.forgotPassForm.value.email)
         .subscribe(
             res => {
+                console.log(res)
                 this.forgotPassFormSubmited = true;
                 setTimeout(() => {
                     this.forgottenPass = false;

@@ -40,7 +40,7 @@ export class AuthService {
       });
   }
 
-  sentNewUserPassword(email: string) {
+  resetPassword(email: string) {
     return this.httpClient.post<any>('api/users/reset-password', {
         email: email
     },
