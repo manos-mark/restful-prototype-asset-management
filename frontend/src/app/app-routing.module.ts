@@ -7,9 +7,11 @@ import { HomeComponent } from './general/home/home.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'general', pathMatch: 'full' },
+  { path: 'login', loadChildren: './auth/auth.module#AuthModule' },
+  { path: 'prototype', loadChildren: './prototype/prototype.module#PrototypeModule', canActivate: [AuthGuard] },
   { path: 'general', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  // { path: '**', redirectTo: 'general', pathMatch: 'full' }
+  { path: '**', redirectTo: 'general', pathMatch: 'full' }
 ];
 
 @NgModule({

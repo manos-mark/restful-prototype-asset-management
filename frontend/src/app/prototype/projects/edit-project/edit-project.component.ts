@@ -147,10 +147,9 @@ export class EditProjectComponent implements OnDestroy {
                             this.activityService.addActivity(Actions.UPDATED_PROJECT).subscribe();
                         },
                         error => {
-                            console.log(error)
                             this.windowPopService.setTitle("Update project Failed");
                             this.windowPopService.setContext("Your request is not successful!");
-                            this.windowPopService.setDetails("Try again with different credentials.");
+                            this.windowPopService.setDetails(error.error.message);
                             this.windowPopService.activate();
                         }
                     )
@@ -166,10 +165,9 @@ export class EditProjectComponent implements OnDestroy {
                             this.notificationService.showNotification();
                         },
                         error => {
-                            // console.log(error)
                             this.windowPopService.setTitle("Add new project Failed");
                             this.windowPopService.setContext("Your request is not successful!");
-                            this.windowPopService.setDetails("Try again with different credentials.");
+                            this.windowPopService.setDetails(error.error.message);
                             this.windowPopService.activate();
                         }
                     )

@@ -34,14 +34,11 @@ import { SearchService } from './header/search/search.service';
     BrowserModule,
     HttpClientModule,
     HttpClientXsrfModule,
-    AuthModule,
     HeaderModule,
     GeneralModule,
-    PrototypeModule,
     ProfileModule,
     SharedModule,
-    AppRoutingModule,
-    LightboxModule
+    AppRoutingModule
   ],
   providers: [
     AuthService,

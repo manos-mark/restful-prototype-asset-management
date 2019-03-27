@@ -26,7 +26,7 @@ import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
-import com.manos.prototype.exception.EntityAlreadyExistException;
+import com.manos.prototype.exception.EntityAlreadyExistsException;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.vo.ProjectVo;
@@ -223,7 +223,7 @@ public class ProjectServiceTest {
 		when(projectDao.getProjectByName("test"))
 			.thenReturn(mockProject);
 		
-		assertThatExceptionOfType(EntityAlreadyExistException.class)
+		assertThatExceptionOfType(EntityAlreadyExistsException.class)
 			.isThrownBy(() -> {
 				projectService.saveProject(mockProject, 1);
 			});

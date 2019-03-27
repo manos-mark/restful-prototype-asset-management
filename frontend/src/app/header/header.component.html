@@ -31,7 +31,7 @@
 			</div>
 			<div class="logoutGroup">
 				<div class="user">
-					<p>{{this.authService.currentUser.firstName}} {{this.authService.currentUser.lastName}}</p>
+					<p *ngIf="currentUser">{{currentUser.firstName}} {{currentUser.lastName}}</p>
 					<a class="logout" (click)="onLogout()">
 						<i></i>
 						<p>logout</p>

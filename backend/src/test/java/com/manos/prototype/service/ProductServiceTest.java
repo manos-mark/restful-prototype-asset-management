@@ -29,7 +29,7 @@ import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
-import com.manos.prototype.exception.EntityAlreadyExistException;
+import com.manos.prototype.exception.EntityAlreadyExistsException;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.vo.ProductVo;
@@ -164,7 +164,7 @@ public class ProductServiceTest {
 		when(productDao.getProductByName("test"))
 			.thenReturn(mockProduct);
 		
-		assertThatExceptionOfType(EntityAlreadyExistException.class)
+		assertThatExceptionOfType(EntityAlreadyExistsException.class)
 			.isThrownBy(() -> {
 				productService.saveProduct(mockProduct, mockPictures, 0, 0);
 			});
@@ -181,7 +181,7 @@ public class ProductServiceTest {
 		when(productDao.getProductBySerialNumber("test"))
 			.thenReturn(mockProduct);
 		
-		assertThatExceptionOfType(EntityAlreadyExistException.class)
+		assertThatExceptionOfType(EntityAlreadyExistsException.class)
 			.isThrownBy(() -> {
 				productService.saveProduct(mockProduct, mockPictures, 0, 0);
 			});

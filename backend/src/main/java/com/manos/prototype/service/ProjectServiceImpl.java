@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +18,12 @@ import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
-import com.manos.prototype.exception.EntityAlreadyExistException;
+import com.manos.prototype.exception.EntityAlreadyExistsException;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
 
@@ -36,7 +36,7 @@ public class ProjectServiceImpl {
 	};
 
 	@Autowired
-	private SessionFactory sessionFactory;
+	private GenericGateway gateway;
 	
 	@Autowired
 	private GenericFinder finder;
@@ -91,11 +91,11 @@ public class ProjectServiceImpl {
 		for (Product product : products) {
 			List<ProductPicture> pictures = pictureDao.getPicturesByProductId(product.getId());
 			for (ProductPicture picture: pictures) {
-				sessionFactory.getCurrentSession().delete(picture);
+				gateway.delete(picture);
 			}
-			sessionFactory.getCurrentSession().delete(product);
+			gateway.delete(product);
 		}
-		sessionFactory.getCurrentSession().delete(project);
+		gateway.delete(project);
 	}
 
 	@Transactional
@@ -103,7 +103,7 @@ public class ProjectServiceImpl {
 		
 		Project tempProject = projectDao.getProjectByName(project.getProjectName());
 		if (tempProject != null) {
-			throw new EntityAlreadyExistException(Project.class, project.getProjectName());
+			throw new EntityAlreadyExistsException(Project.class, project.getProjectName());
 		}
 		
 		ProjectManager projectManager = finder.findById(ProjectManager.class, projectManagerId);
@@ -114,7 +114,7 @@ public class ProjectServiceImpl {
 		project.setStatus(new Status(Status.NEW_ID));
 		project.setCreatedAt(LocalDate.now());
 		
-		sessionFactory.getCurrentSession().save(project);
+		gateway.save(project);
 	}
 	
 	@Transactional

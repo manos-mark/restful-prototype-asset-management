@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.and()
 			.authorizeRequests()
 				.antMatchers("login").permitAll()
-				.antMatchers("/users/new-password").permitAll()
+				.antMatchers("/users/current").permitAll()
+				.antMatchers("/users/reset-password").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
@@ -106,7 +107,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
  	static class UnauthenticatedRequestHandler implements AuthenticationEntryPoint {
  	    @Override
  	    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-//            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
  	    }
  	}
 }

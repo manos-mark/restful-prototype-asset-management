@@ -2,7 +2,6 @@ package com.manos.prototype.service;
 
 import java.util.List;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +11,7 @@ import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 
 @Service
 public class PictureServiceImpl {
@@ -23,7 +23,7 @@ public class PictureServiceImpl {
 	private GenericFinder finder;
 	
 	@Autowired
-	private SessionFactory sessionFactory;
+	private GenericGateway gateway;
 	
 	@Transactional
 	public List<ProductPicture> getPicturesByProductId(int productId) {
@@ -52,7 +52,7 @@ public class PictureServiceImpl {
 			throw new EntityNotFoundException(ProductPicture.class);
 		}
 		else {
-			sessionFactory.getCurrentSession().save(ProductPicture.class);			
+			gateway.save(ProductPicture.class);			
 		}
 	}
 }
