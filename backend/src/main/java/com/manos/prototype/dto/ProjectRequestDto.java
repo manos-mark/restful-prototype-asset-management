@@ -2,17 +2,16 @@ package com.manos.prototype.dto;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ProjectRequestDto {
-	
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+
+	@NotBlank
 	private String projectName;
 	
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String companyName;
 	
 	@NotNull(message = "is required")

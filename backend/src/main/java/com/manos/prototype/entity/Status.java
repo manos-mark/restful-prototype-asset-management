@@ -12,9 +12,9 @@ import org.hibernate.annotations.Immutable;
 @Table(name = "e_status")
 public class Status {
 
+	public static final int IN_PROGRESS = 1;
 	public static final int NEW_ID = 2;
-//	public static final int NEW_ID = 2;
-//	public static final int NEW_ID = 2;
+	public static final int FINISHED = 3;
 	
 	@Id
 	@Column(name="id")

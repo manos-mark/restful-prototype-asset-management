@@ -15,11 +15,11 @@ export class ProjectsService {
     pageParams = new PageParams();
     filterParams = new FilterParams();
 
-    private _editMode : boolean;
-    public get editMode() : boolean {
+    private _editMode: boolean;
+    public get editMode(): boolean {
         return this._editMode;
     }
-    public set editMode(v : boolean) {
+    public set editMode(v: boolean) {
         this._editMode = v;
     }
 
@@ -30,7 +30,7 @@ export class ProjectsService {
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
             observe: 'body'
-        })
+        });
     }
 
     getProjectManagers() {
@@ -42,14 +42,12 @@ export class ProjectsService {
     }
 
     getProjectsCountByStatusId(id: number) {
-        return this.httpClient.post<number>('api/projects/count', {
-            statusId: id
-        }, 
+        return this.httpClient.get<number>('api/projects/count/' + id,
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
             observe: 'body'
-        })
-        
+        });
+
     }
 
     getProjects(pageParams: PageParams,filterParams: FilterParams) {
@@ -64,7 +62,7 @@ export class ProjectsService {
             statusId: filterParams.statusId
         }
 
-        return this.httpClient.get<Project>('api/projects/',  
+        return this.httpClient.get<Project>('api/projects/',
         {
             headers: new HttpHeaders().set('Content-Type', 'application/json'),
             observe: 'body',

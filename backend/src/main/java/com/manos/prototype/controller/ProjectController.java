@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +26,6 @@ import com.manos.prototype.dto.ProductDto;
 import com.manos.prototype.dto.ProjectDto;
 import com.manos.prototype.dto.ProjectManagerDto;
 import com.manos.prototype.dto.ProjectRequestDto;
-import com.manos.prototype.dto.StatusRequestDto;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.search.ProjectSearch;
@@ -37,6 +39,7 @@ import com.pastelstudios.paging.PageResult;
 
 @RestController
 @RequestMapping("/projects")
+@Validated
 public class ProjectController {
 
 	@Autowired
@@ -49,7 +52,8 @@ public class ProjectController {
 	private ConversionService conversionService;
 
 	@GetMapping
-	public PageResultDto<ProjectDto> getProjectsPaginated(@Valid ProjectOrderAndPageParams pageParams,
+	public PageResultDto<ProjectDto> getProjectsPaginated(
+			@Valid ProjectOrderAndPageParams pageParams,
 			@Valid ProjectFilterParams filterParams) {
 		
 		PageRequest pageRequest = conversionService.convert(pageParams, PageRequest.class);
@@ -66,17 +70,32 @@ public class ProjectController {
 		return pageResultDto;
 	}
 	
-	@GetMapping("/all")
-	public List<ProjectDto> getProjects() {
-		List<Project> entityList = projectService.getProjects();
-		List<ProjectDto> dtoList = new ArrayList<>();
-		for (Project entity : entityList) {
-			ProjectDto temp = new ProjectDto();
-			temp.setId(entity.getId());
-			temp.setProjectName(entity.getProjectName());
-			dtoList.add(temp);
-		}
-		return dtoList;
+	@GetMapping("/count/{id}")
+	public Long getProjectsCountByStatus(@PathVariable("id") @Min(1) @Max(3) Integer statusId) {
+		return projectService.getProjectsCountByStatus(statusId);
+	}
+	
+	@GetMapping("/{id}")
+	public ProjectDto getProject(@PathVariable("id") @Min(0) Integer projectId) {
+		Project project = projectService.getProject(projectId);
+		return conversionService.convert(project, ProjectDto.class);
+	}
+	
+	@DeleteMapping("/{id}")
+	public void deleteProject(@PathVariable("id") @Min(0) Integer projectId) {
+		projectService.deleteProject(projectId);
+	}
+	
+	@PutMapping("/{id}")
+	public void updateProject(@Valid @RequestBody ProjectRequestDto projectDto, 
+			@PathVariable("id") @Min(0) Integer projectId) {
+		projectService.updateProject(projectDto, projectId);
+	}
+
+	@PostMapping
+	public void addProject(@Valid @RequestBody ProjectRequestDto projectDto) {
+		Project project = conversionService.convert(projectDto, Project.class);
+		projectService.saveProject(project, projectDto.getProjectManagerId());
 	}
 	
 	@GetMapping("/project-managers")
@@ -90,37 +109,23 @@ public class ProjectController {
 		}
 		return dtoList;
 	}
-
-	@GetMapping("/{id}/products")
-	public List<ProductDto> getProducts(@PathVariable("id") int projectId) {
-		List<ProductVo> products = productService.getProductsByProjectId(projectId);
-		return conversionService.convertList(products, ProductDto.class);
+	
+	@GetMapping("/all")
+	public List<ProjectDto> getProjects() {
+		List<Project> entityList = projectService.getProjects();
+		List<ProjectDto> dtoList = new ArrayList<>();
+		for (Project entity : entityList) {
+			ProjectDto temp = new ProjectDto();
+			temp.setId(entity.getId());
+			temp.setProjectName(entity.getProjectName());
+			dtoList.add(temp);
+		}
+		return dtoList;
 	}
 	
-	@GetMapping("/{id}")
-	public ProjectDto getProject(@PathVariable("id") int projectId) {
-		Project project = projectService.getProject(projectId);
-		return conversionService.convert(project, ProjectDto.class);
-	}
-
-	@PostMapping("/count")
-	public Long getProjectsCountByStatus(@Valid @RequestBody StatusRequestDto statusId) {
-		return projectService.getProjectsCountByStatus(statusId.getStatusId());
-	}
-
-	@DeleteMapping("/{id}")
-	public void deleteProject(@PathVariable("id") int projectId) {
-		projectService.deleteProject(projectId);
-	}
-
-	@PostMapping
-	public void addProject(@Valid @RequestBody ProjectRequestDto projectDto) {
-		Project project = conversionService.convert(projectDto, Project.class);
-		projectService.saveProject(project, projectDto.getProjectManagerId());
-	}
-
-	@PutMapping("/{id}")
-	public void updateProject(@RequestBody ProjectRequestDto projectDto, @PathVariable("id") int projectId) {
-		projectService.updateProject(projectDto, projectId);
+	@GetMapping("/{id}/products")
+	public List<ProductDto> getProducts(@PathVariable("id") @Min(0) Integer projectId) {
+		List<ProductVo> products = productService.getProductsByProjectId(projectId);
+		return conversionService.convertList(products, ProductDto.class);
 	}
 }

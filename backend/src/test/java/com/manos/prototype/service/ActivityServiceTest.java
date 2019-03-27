@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class ActivityServiceTest {
 	public Activity createMockActivity() {
 		Activity activity = new Activity();
 		activity.setAction(new ActivityAction(2, "NEW"));
-		activity.setDate("2011-12-17 13:17:17");
+		activity.setDate(LocalDateTime.now());
 		activity.setId(1L);
 		activity.setUser(createMockUser());
 		return activity;

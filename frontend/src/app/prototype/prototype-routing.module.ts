@@ -16,7 +16,7 @@ const prototypeRoutes: Routes = [
         { path: 'products/:id/edit', component: EditProductComponent}
     ] },
     { path: '**', redirectTo: 'general', pathMatch: 'full' }
-]
+];
 
 @NgModule({
     imports: [

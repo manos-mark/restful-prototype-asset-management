@@ -1,5 +1,10 @@
 package com.manos.prototype.controller;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,6 +17,17 @@ import com.manos.prototype.exception.EntityNotFoundException;
 
 @RestControllerAdvice
 public class GlobalControllerAdvice {
+	
+	@ExceptionHandler(value = { ConstraintViolationException.class })
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public String handleResourceNotFoundException(ConstraintViolationException e) {
+         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+         StringBuilder strBuilder = new StringBuilder();
+         for (ConstraintViolation<?> violation : violations ) {
+              strBuilder.append(violation.getMessage() + "\n");
+         }
+         return strBuilder.toString();
+    }
 
 	@ExceptionHandler(ApplicationException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)

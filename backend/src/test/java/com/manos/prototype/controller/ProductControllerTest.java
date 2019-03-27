@@ -5,10 +5,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import javax.servlet.ServletContext;
@@ -17,12 +13,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import com.manos.prototype.entity.Product;
 import com.manos.prototype.testservice.ProductTestService;
 
+@Sql(scripts = "classpath:/sql/status.sql")
+@Sql(scripts = "classpath:/sql/projects.sql")
+@Sql(scripts = "classpath:/sql/products.sql")
+@Sql(scripts = "classpath:/sql/pictures.sql")
 public class ProductControllerTest extends AbstractMvcTest{
 	
 	@Autowired
@@ -39,100 +38,152 @@ public class ProductControllerTest extends AbstractMvcTest{
 	}
 	
 	@Test
-	public void getProductsCountByStatus_success() throws Exception {
-		MockHttpServletRequestBuilder request = post("/products/count")
+	public void getProductsPaginated_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
 			.contentType(MediaType.APPLICATION_JSON)
-	        .content("{"
-	        		+ "\"statusId\": \"1\""
-	        		+ "}");
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "date");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getProductsPaginated_withStatusFilter_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "date")
+			.param("statusId", "1");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getProductsPaginated_wrongStatusFilter_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "date")
+			.param("statusId", "4");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProductsPaginated_withProjectNameFilter_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "date")
+			.param("projectName", "firstProject");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getProductsPaginated_withDateFilter_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "date")
+			.param("fromDate", "10/12/1995");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getProductsPaginated_wrongDateFilter_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "date")
+			.param("fromDate", "10-12-1995");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProductsPaginated_emptyField_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc")
+			.param("field", "");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProductsPaginated_nullField_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("page", "1")
+			.param("pageSize", "5")
+			.param("direction", "asc");
+
+		mockMvc.perform(request.with(user(user)).with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getProductsCountByStatus_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/count/{id}",2)
+			.contentType(MediaType.APPLICATION_JSON);
+		
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isOk());
 	}
 	
 	@Test
 	public void getProductsCountByStatus_fail() throws Exception {
-		MockHttpServletRequestBuilder request = post("/products/count")
-			.contentType(MediaType.APPLICATION_JSON);
-
-		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	public void addProduct_success() throws Exception {
-		MockHttpServletRequestBuilder request = post("/products")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content("{"
-					+ "\"date\": \"2018-12-17\","
-					+ "\"productName\": \"productName\","
-					+ "\"serialNumber\": \"serialNumber\","
-					+ "\"description\": \"description\","
-					+ "\"quantity\": \"12\","
-					+ "\"statusId\": \"2\","
-	        		+ "\"projectId\": \"1\""
-	        		+ "}");
-
-		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isOk());
-		
-		Product savedProduct = productTestService.getLastProduct();
-		assertThat(savedProduct.getDate()).isEqualTo("2018-12-17");
-		assertThat(savedProduct.getDescription()).isEqualTo("description");
-		assertThat(savedProduct.getProductName()).isEqualTo("productName");
-		assertThat(savedProduct.getProject().getId()).isEqualTo(1);
-		assertThat(savedProduct.getQuantity()).isEqualTo(12);
-		assertThat(savedProduct.getSerialNumber()).isEqualTo("serialNumber");
-		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
-	}
-	
-	@Test
-	public void addProduct_fail() throws Exception {
-		MockHttpServletRequestBuilder request = post("/products")
-			.contentType(MediaType.APPLICATION_JSON);
+		MockHttpServletRequestBuilder request = get("/products/count/{id}",5)
+				.contentType(MediaType.APPLICATION_JSON);
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isBadRequest());
 	}
 	
 	@Test
-	public void updateProduct_success() throws Exception {
-		MockHttpServletRequestBuilder request = put("/products/{id}", 16)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("{"
-						+ "\"date\": \"2018-12-17\","
-						+ "\"productName\": \"changed\","
-						+ "\"serialNumber\": \"serialNumber\","
-						+ "\"description\": \"description\","
-						+ "\"quantity\": \"12\","
-						+ "\"statusId\": \"2\","
-		        		+ "\"projectId\": \"1\""
-		        		+ "}");
-		
+	public void getProductById_success() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/{id}",1)
+				.contentType(MediaType.APPLICATION_JSON);
+
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isOk());
-		
-		Product savedProduct = productTestService.getProduct(16);
-		assertThat(savedProduct.getDate()).isEqualTo("2018-12-17");
-		assertThat(savedProduct.getDescription()).isEqualTo("description");
-		assertThat(savedProduct.getProductName()).isEqualTo("changed");
-		assertThat(savedProduct.getProject().getId()).isEqualTo(1);
-		assertThat(savedProduct.getQuantity()).isEqualTo(12);
-		assertThat(savedProduct.getSerialNumber()).isEqualTo("serialNumber");
-		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
 	}
 	
 	@Test
-	public void updateProduct_fail() throws Exception {
-		MockHttpServletRequestBuilder request = put("/products/{id}", 12)
-			.contentType(MediaType.APPLICATION_JSON);
-		
+	public void getProductById_fail() throws Exception {
+		MockHttpServletRequestBuilder request = get("/products/{id}",-5)
+				.contentType(MediaType.APPLICATION_JSON);
+
 		mockMvc.perform(request.with(user(user)).with(csrf()))
 			.andExpect(status().isBadRequest());
 	}
 	
 	@Test
 	public void deleteProduct_success() throws Exception {
-		MockHttpServletRequestBuilder request = delete("/products/{id}", 13)
+		MockHttpServletRequestBuilder request = delete("/products/{id}", 1)
 			.contentType(MediaType.APPLICATION_JSON);
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
@@ -145,63 +196,82 @@ public class ProductControllerTest extends AbstractMvcTest{
 			.contentType(MediaType.APPLICATION_JSON);
 
 		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isNotFound());
 	}
 	
-	@Test
-	public void getProductsPaginated_success() throws Exception {
-		MockHttpServletRequestBuilder request = get("/products/")
-			.contentType(MediaType.APPLICATION_JSON)
-			.param("page", "1")
-			.param("pageSize", "5")
-			.param("direction", "asc")
-			.param("field", "created")
-			.param("statusId", "2");
 
-		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isOk());
-	}
-	
 //	@Test
-//	public void getProductsPaginated_wrongField_fail() throws Exception {
-//		MockHttpServletRequestBuilder request = get("/products/")
-//			.contentType(MediaType.APPLICATION_JSON)
-//			.param("page", "1")
-//			.param("pageSize", "5")
-//			.param("direction", "asc")
-//			.param("field", "wrong")
-//			.param("statusId", "2");
+//	public void updateProduct_success() throws Exception {
+//		MockMultipartFile pic = new MockMultipartFile("pic", "pic.jpg", "multipart/form-data", "some xml".getBytes());
 //
+//		MockHttpServletRequestBuilder request = put("/products/{id}", 1)
+//				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+//				.accept(MediaType.MULTIPART_FORM_DATA_VALUE)
+//				.content("{"
+//						+ "\"productName\": \"changed\","
+//						+ "\"serialNumber\": \"serialNumber\","
+//						+ "\"description\": \"description\","
+//						+ "\"quantity\": \"12\","
+//						+ "\"statusId\": \"2\","
+//						+ "\"thumbPictureIndex\": \"0\","
+//		        		+ "\"projectId\": \"1\""
+//		        		+ "}");
+//		
+//		mockMvc.perform(request.with(user(user)).with(csrf()))
+//			.andExpect(status().isOk());
+//		
+//		Product savedProduct = productTestService.getProduct(16);
+//		assertThat(savedProduct.getDescription()).isEqualTo("description");
+//		assertThat(savedProduct.getProductName()).isEqualTo("changed");
+//		assertThat(savedProduct.getProject().getId()).isEqualTo(1);
+//		assertThat(savedProduct.getQuantity()).isEqualTo(12);
+//		assertThat(savedProduct.getSerialNumber()).isEqualTo("serialNumber");
+//		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
+//	}
+//	
+//	@Test
+//	public void updateProduct_fail() throws Exception {
+//		MockHttpServletRequestBuilder request = put("/products/{id}", 12)
+//			.contentType(MediaType.APPLICATION_JSON);
+//		
 //		mockMvc.perform(request.with(user(user)).with(csrf()))
 //			.andExpect(status().isBadRequest());
 //	}
 	
-	@Test
-	public void getProductsPaginated_field_fail() throws Exception {
-		MockHttpServletRequestBuilder request = get("/products/")
-			.contentType(MediaType.APPLICATION_JSON)
-			.param("page", "1")
-			.param("pageSize", "5")
-			.param("direction", "asc")
-			.param("statusId", "2");
-
-		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isBadRequest());
-	}
-	
-	@Test
-	public void getProductsPaginated_statusId_fail() throws Exception {
-		MockHttpServletRequestBuilder request = get("/products/")
-			.contentType(MediaType.APPLICATION_JSON)
-			.param("page", "1")
-			.param("pageSize", "5")
-			.param("field", "created")
-			.param("direction", "asc");
-
-		mockMvc.perform(request.with(user(user)).with(csrf()))
-			.andExpect(status().isBadRequest());
-	}
-	
+//	@Test
+//	public void addProduct_success() throws Exception {
+//		MockHttpServletRequestBuilder request = post("/products")
+//			.contentType(MediaType.APPLICATION_JSON)
+//			.content("{"
+//					+ "\"productName\": \"productName\","
+//					+ "\"serialNumber\": \"serialNumber\","
+//					+ "\"description\": \"description\","
+//					+ "\"quantity\": \"12\","
+//					+ "\"statusId\": \"2\","
+//	        		+ "\"projectId\": \"1\""
+//	        		+ "}");
+//
+//		mockMvc.perform(request.with(user(user)).with(csrf()))
+//			.andExpect(status().isOk());
+//		
+//		Product savedProduct = productTestService.getLastProduct();
+//		assertThat(savedProduct.getDescription()).isEqualTo("description");
+//		assertThat(savedProduct.getProductName()).isEqualTo("productName");
+//		assertThat(savedProduct.getProject().getId()).isEqualTo(1);
+//		assertThat(savedProduct.getQuantity()).isEqualTo(12);
+//		assertThat(savedProduct.getSerialNumber()).isEqualTo("serialNumber");
+//		assertThat(savedProduct.getStatus().getId()).isEqualTo(2);
+//	}
+//	
+//	@Test
+//	public void addProduct_fail() throws Exception {
+//		MockHttpServletRequestBuilder request = post("/products")
+//			.contentType(MediaType.APPLICATION_JSON);
+//
+//		mockMvc.perform(request.with(user(user)).with(csrf()))
+//			.andExpect(status().isBadRequest());
+//	}
+//	
 	@Test
 	public void getPicturesByProductId_success() throws Exception {
 		MockHttpServletRequestBuilder request = get("/products/{id}/pictures", 1)
@@ -213,60 +283,11 @@ public class ProductControllerTest extends AbstractMvcTest{
 	
 	@Test
 	public void getPicturesByProductId_fail() throws Exception {
-		MockHttpServletRequestBuilder request = get("/products/{id}/pictures", 0)
+		MockHttpServletRequestBuilder request = get("/products/{id}/pictures", -1)
 				.contentType(MediaType.APPLICATION_JSON);
 
 			mockMvc.perform(request.with(user(user)).with(csrf()))
 				.andExpect(status().isBadRequest());
-	}
-	
-	@Test
-	public void getThumbPictureByProductId_success() throws Exception {
-		MockHttpServletRequestBuilder request = get("/products/{id}/thumb-picture", 1)
-				.contentType(MediaType.APPLICATION_JSON);
-
-			mockMvc.perform(request.with(user(user)).with(csrf()))
-				.andExpect(status().isOk());
-	}
-	
-	@Test
-	public void getThumbPictureByProductId_fail() throws Exception {
-		MockHttpServletRequestBuilder request = get("/products/{id}/thumb-picture", 0)
-				.contentType(MediaType.APPLICATION_JSON);
-
-			mockMvc.perform(request.with(user(user)).with(csrf()))
-				.andExpect(status().isBadRequest());
-	}
-	
-	@Test
-	public void getPicturesCountByProductId_success() throws Exception {
-		MockHttpServletRequestBuilder request = get("/products/{id}/pictures-count", 1)
-				.contentType(MediaType.APPLICATION_JSON);
-
-			mockMvc.perform(request.with(user(user)).with(csrf()))
-				.andExpect(status().isOk());
-	}
-	
-	@Test
-	public void addPicture_success() throws Exception{
-		MockHttpServletRequestBuilder request = post("/products/{id}/pictures", 1)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("{"
-						+ "\"picture\": \"x89504E470D0A1A0A0000000D494844520000001000000010080200000090916836000000017352474200AECE1CE90000000467414D410000B18F0BFC6105000000097048597300000EC300000EC301C76FA8640000001E49444154384F6350DAE843126220493550F1A80662426C349406472801006AC91F1040F796BD0000000049454E44AE426082\","
-						+ "\"productId\": \"1\","
-						+ "\"name\": \"name\","
-						+ "\"size\": \"1000\","
-						+ "\"thumb\": \"false\""
-		        		+ "}");
-
-			mockMvc.perform(request.with(user(user)).with(csrf()))
-				.andDo(print())
-				.andExpect(status().isOk());
-	}
-	
-	@Test
-	public void updatePicture_success() throws Exception{
-	
 	}
 }
 

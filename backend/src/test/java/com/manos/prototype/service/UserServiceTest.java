@@ -115,9 +115,25 @@ public class UserServiceTest {
 	
 	@Test
 	public void updateUserPassword_nullUser_fail() {
+		UserDetailsImpl mockUserDetails = createMockUserDetails();
+		PowerMockito.mockStatic(SecurityUtil.class);
+		
+		when(SecurityUtil.getCurrentUserDetails())
+			.thenReturn(mockUserDetails);
+		when(finder.findById(User.class, 1L))
+			.thenReturn(null);
+		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 		.isThrownBy(() -> {
-			userService.updateUserPassword(null, null, null);;
+			userService.updateUserPassword(null, null);;
+		});
+	}
+	
+	@Test
+	public void updateUserPassword_nullUserDetails_fail() {
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			userService.updateUserPassword(null, null);;
 		});
 	}
 	
@@ -129,12 +145,14 @@ public class UserServiceTest {
 		
 		when(SecurityUtil.getCurrentUserDetails())
 			.thenReturn(mockUserDetails);
+		when(finder.findById(User.class, 1L))
+			.thenReturn(mockUser);
 		when(passwordEncoder.matches("000", "789"))
 			.thenReturn(false);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 			.isThrownBy(() -> {
-				userService.updateUserPassword(mockUser, "000", "789");
+				userService.updateUserPassword("000", "789");
 			});
 	}
 	
@@ -144,6 +162,8 @@ public class UserServiceTest {
 		UserDetailsImpl mockUserDetails = createMockUserDetails();
 		PowerMockito.mockStatic(SecurityUtil.class);
 		
+		when(finder.findById(User.class, 1L))
+			.thenReturn(mockUser);
 		when(SecurityUtil.getCurrentUserDetails())
 			.thenReturn(mockUserDetails);
 		when(passwordEncoder.matches("000", "123"))
@@ -153,7 +173,7 @@ public class UserServiceTest {
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 			.isThrownBy(() -> {
-				userService.updateUserPassword(mockUser, "000", "789");
+				userService.updateUserPassword("000", "789");
 			});
 	}
 	
@@ -163,6 +183,8 @@ public class UserServiceTest {
 		UserDetailsImpl mockUserDetails = createMockUserDetails();
 		PowerMockito.mockStatic(SecurityUtil.class);
 		
+		when(finder.findById(User.class, 1L))
+			.thenReturn(mockUser);
 		when(SecurityUtil.getCurrentUserDetails())
 			.thenReturn(mockUserDetails);
 		when(passwordEncoder.matches("123", "123"))
@@ -171,7 +193,7 @@ public class UserServiceTest {
 			.thenReturn("$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K");
 			
 		assertThatCode(() -> { 
-			userService.updateUserPassword(mockUser, "123", "789");
+			userService.updateUserPassword("123", "789");
 		}).doesNotThrowAnyException();
 	}
 	
@@ -229,18 +251,36 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void updateUser_fail() {
+	public void updateUser_nullUserDetails_fail() {
 		when(finder.findById(User.class, 1))
 			.thenReturn(null);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 			.isThrownBy(() -> {
-				userService.updateUser(null, 1L);
+				userService.updateUser(null);
+			});
+	}
+	
+	@Test
+	public void updateUser_nullUser_fail() {
+		UserDetailsImpl mockUserDetails = createMockUserDetails();
+		PowerMockito.mockStatic(SecurityUtil.class);
+		
+		when(SecurityUtil.getCurrentUserDetails())
+			.thenReturn(mockUserDetails);
+		when(finder.findById(User.class, 1L))
+			.thenReturn(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+			.isThrownBy(() -> {
+				userService.updateUser(null);
 			});
 	}
 	
 	@Test
 	public void updateUser_success() {
+		PowerMockito.mockStatic(SecurityUtil.class);
+		UserDetailsImpl mockUserDetails = createMockUserDetails();
 		PowerMockito.mockStatic(PasswordGenerationUtil.class);
 		User mockUser = createMockUser();
 		UserRequestDto mockDto = new UserRequestDto();
@@ -251,16 +291,21 @@ public class UserServiceTest {
 		mockDto.setMatchingPassword("123");
 		mockDto.setPassword("123");
 		
+		
+		when(SecurityUtil.getCurrentUserDetails())
+			.thenReturn(mockUserDetails);
 		when(finder.findById(User.class, 1L))
 			.thenReturn(mockUser);
-		
+			
 		assertThatCode(() -> { 
-			userService.updateUser(mockDto, 1L);
+			userService.updateUser(mockDto);
 		}).doesNotThrowAnyException();
 	}
 	
 	@Test
 	public void updateUser_acceptCookies_success() {
+		PowerMockito.mockStatic(SecurityUtil.class);
+		UserDetailsImpl mockUserDetails = createMockUserDetails();
 		PowerMockito.mockStatic(PasswordGenerationUtil.class);
 		User mockUser = createMockUser();
 		UserRequestDto mockDto = new UserRequestDto();
@@ -274,11 +319,22 @@ public class UserServiceTest {
 		
 		when(finder.findById(User.class, 1L))
 			.thenReturn(mockUser);
+		when(SecurityUtil.getCurrentUserDetails())
+			.thenReturn(mockUserDetails);
 		
 		assertThatCode(() -> { 
-			userService.updateUser(mockDto, 1L);
+			userService.updateUser(mockDto);
 		}).doesNotThrowAnyException();
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public UserDetailsImpl createMockUserDetails() {
 		User user = new User();

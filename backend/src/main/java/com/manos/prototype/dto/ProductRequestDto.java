@@ -2,21 +2,18 @@ package com.manos.prototype.dto;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 public class ProductRequestDto {
 	
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String productName;
 	
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String serialNumber;
 	
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String description;
 	
 	@NotNull
@@ -33,6 +30,7 @@ public class ProductRequestDto {
 	private int projectId;
 	
 	@NotNull
+	@Min(0)
 	private int thumbPictureIndex;
 	
 	public ProductRequestDto() {}

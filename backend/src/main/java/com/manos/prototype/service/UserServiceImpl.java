@@ -74,14 +74,18 @@ public class UserServiceImpl {
 	}
 
 	@Transactional
-	public void updateUserPassword(User user, String oldPassReq, String newPassReq) {
+	public void updateUserPassword(String oldPassReq, String newPassReq) {
+		UserDetailsImpl userDetails = SecurityUtil.getCurrentUserDetails();
+		if (userDetails == null) {
+			throw new EntityNotFoundException(UserDetailsImpl.class);
+		}
+		
+		User user = finder.findById(User.class, userDetails.getId());
 		if (user == null) {
 			throw new EntityNotFoundException(User.class);
 		}
 		
-		String oldPass = SecurityUtil.getCurrentUserDetails().getPassword();
-		
-		if (passwordEncoder.matches(oldPassReq, oldPass)) {
+		if (passwordEncoder.matches(oldPassReq, userDetails.getPassword())) {
 			user.setPassword(passwordEncoder.encode(newPassReq));
 			
 			if (user.getPassword() == null) {
@@ -119,14 +123,16 @@ public class UserServiceImpl {
 	}
 	
 	@Transactional
-	public void updateUser(UserRequestDto user, Long userId) {
+	public void updateUser(UserRequestDto user) {
+		UserDetailsImpl userDetails = SecurityUtil.getCurrentUserDetails();
+		if (userDetails == null) {
+			throw new EntityNotFoundException(UserDetailsImpl.class);
+		}
 		
-		User oldUser = finder.findById(User.class, userId);
+		User oldUser = finder.findById(User.class, userDetails.getId());
 		if (oldUser == null) {
 			throw new EntityNotFoundException(User.class); // throw
 		}
-		oldUser.setId(userId);
-		
 		oldUser.setEmail(user.getEmail());
 		oldUser.setFirstName(user.getFirstName());
 		oldUser.setLastName(user.getLastName());

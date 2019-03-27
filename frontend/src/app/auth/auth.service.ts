@@ -41,16 +41,17 @@ export class AuthService {
   }
 
   sentNewUserPassword(email: string) {
-    return this.httpClient.post<any>('api/users/new-password', {},
+    return this.httpClient.post<any>('api/users/reset-password', {
+        email: email
+    },
       {
         headers: new HttpHeaders().set('Content-Type', 'application/json'),
-        params: new HttpParams().set('email', email),
         observe: 'response'
       });
   }
 
   updateUser(oldPassword: number, newPassword: number, repeatNewPassword: number) {
-    return this.httpClient.put<any>('api/users/' + this.currentUser.id.toString() + '/new-password',
+    return this.httpClient.put<any>('api/users/new-password',
       {
         oldPassword: oldPassword,
         password: newPassword,
@@ -64,7 +65,7 @@ export class AuthService {
   }
 
   acceptCookies() {
-    return this.httpClient.put<any>('api/users/' + this.currentUser.id.toString(),  this.currentUser,
+    return this.httpClient.put<any>('api/users/',  this.currentUser,
         {
         headers: new HttpHeaders().set('Content-Type', 'application/json'),
         observe: 'response'
