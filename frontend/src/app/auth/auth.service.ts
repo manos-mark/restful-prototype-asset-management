@@ -28,6 +28,7 @@ export class AuthService {
         this.currentUser = user;
     }
 
+<<<<<<< HEAD
     loginUser(email: string, password: string) {
         return this.httpClient.post<any>('api/login', {},
         {
@@ -39,6 +40,17 @@ export class AuthService {
             observe: 'response'
         });
     }
+=======
+  resetPassword(email: string) {
+    return this.httpClient.post<any>('api/users/reset-password', {
+        email: email
+    },
+      {
+        headers: new HttpHeaders().set('Content-Type', 'application/json'),
+        observe: 'response'
+      });
+  }
+>>>>>>> backend_test
 
     resetPassword(email: string) {
         return this.httpClient.post<any>('api/users/reset-password', {
