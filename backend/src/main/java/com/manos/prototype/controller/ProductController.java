@@ -3,16 +3,18 @@ package com.manos.prototype.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +39,7 @@ import com.pastelstudios.paging.PageResult;
 
 @RestController
 @RequestMapping("/products")
+@Validated
 public class ProductController {
 
 //	private static final Logger logger = LogManager.getLogger(ProductController.class);
@@ -73,29 +76,29 @@ public class ProductController {
 		return pageResultDto;
 	}
 
-	@GetMapping("/count")
-	public Long getProductsCountByStatus(@RequestParam int statusId) {
+	@GetMapping("/count/{id}")
+	public Long getProductsCountByStatus(@PathVariable("id") @Min(1) @Max(3) Integer statusId) {
 		return productService.getProductsCountByStatus(statusId);
 	}
 	
 	@GetMapping("/{id}")
-	public ProductDto getProductById(@PathVariable("id") int id) {
-		return conversionService.convert(productService.getProduct(id), ProductDto.class);
+	public ProductDto getProductById(@PathVariable("id") @Min(0) Integer productId) {
+		Product product = productService.getProduct(productId);
+		return conversionService.convert(product, ProductDto.class);
 	}
 	
 	@DeleteMapping("/{id}")
-	public void deleteProduct(@PathVariable("id") int productId) {
+	public void deleteProduct(@PathVariable("id") @Min(0) Integer productId) {
 		productService.deleteProduct(productId);
 	}
 
 	@PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void updateProduct(
-			@Valid @PathVariable("id") int productId, 
+			@PathVariable("id") @Min(0) Integer productId, 
 			@Valid @RequestPart("productRequestDto") ProductRequestDto productRequestDto, 
 			@Valid @RequestPart("pictures") List<MultipartFile> pictures,
 			@Valid @RequestPart("pictureTypeRequestDto") List<PictureTypeRequestDto> pictureTypeRequestDto) {
 		List<ProductPicture> newPictures = conversionService.convertList(pictures, ProductPicture.class);
-		
 		productService.updateProduct(productRequestDto, productId, newPictures, pictureTypeRequestDto);
 	}
 
@@ -111,7 +114,7 @@ public class ProductController {
 	}
 	
 	@GetMapping(value = "/{id}/pictures")
-	public List<ProductPictureDto> getPicturesByProductId(@PathVariable("id") int productId) {
+	public List<ProductPictureDto> getPicturesByProductId(@PathVariable("id") @Min(0) Integer productId) {
 		List<ProductPicture> pictures = pictureService.getPicturesByProductId(productId);
 		return conversionService.convertList(pictures, ProductPictureDto.class);
 	}

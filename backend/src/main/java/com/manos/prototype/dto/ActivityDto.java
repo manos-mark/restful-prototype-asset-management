@@ -1,12 +1,14 @@
 package com.manos.prototype.dto;
 
+import java.time.LocalDateTime;
+
 public class ActivityDto {
 
 	private Long id;
 
 	private int actionId;
 	
-	private String date;
+	private LocalDateTime date;
 	
 	public ActivityDto() {
 	}
@@ -27,11 +29,11 @@ public class ActivityDto {
 		this.id = id;
 	}
 
-	public String getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 }

@@ -258,7 +258,6 @@ export class ListProductsComponent implements OnInit, OnDestroy {
             this.filterParams.projectName = '';
         } else {
             this.filterParams.projectName = projectName;
-            console.log(this.filterParams.projectName)
         }
 
         if (statusId >= 1 && statusId <= 3) {

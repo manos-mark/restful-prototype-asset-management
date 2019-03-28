@@ -1,7 +1,6 @@
 package com.manos.prototype.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 import com.manos.prototype.validation.FieldMatch;
 import com.manos.prototype.validation.ValidEmail;
@@ -11,23 +10,20 @@ import com.manos.prototype.validation.ValidEmail;
 })
 public class UserRequestDto {
 
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String password;
 	
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String matchingPassword;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String firstName;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String lastName;
 
 	@ValidEmail
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotBlank
 	private String email;
 	
 	private boolean acceptedCookies;

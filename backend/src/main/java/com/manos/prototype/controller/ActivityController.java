@@ -2,6 +2,8 @@ package com.manos.prototype.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +34,7 @@ public class ActivityController {
 	}
 	
 	@PostMapping
-	public void addActivity(@RequestBody ActivityRequestDto activityRequestDto) {
+	public void addActivity(@Valid @RequestBody ActivityRequestDto activityRequestDto) {
 		Activity activity = conversionService.convert(activityRequestDto, Activity.class);
 		activityService.saveActivity(activity);
 	}

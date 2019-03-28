@@ -5,31 +5,39 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.manos.prototype.dao.PictureDaoImpl;
 import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.dao.ProjectDaoImpl;
-import com.manos.prototype.dao.ProjectManagerDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
+import com.manos.prototype.exception.EntityAlreadyExistsException;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
+import com.manos.prototype.vo.ProjectVo;
+import com.pastelstudios.db.GenericFinder;
 import com.pastelstudios.paging.OrderClause;
 import com.pastelstudios.paging.OrderDirection;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(GenericFinder.class)
 public class ProjectServiceTest {
 
 	@Mock
@@ -38,36 +46,23 @@ public class ProjectServiceTest {
 	@InjectMocks
 	private ProjectServiceImpl projectService;
 	
-	@Mock 
-	private ProjectManagerDaoImpl projectManagerDao;
-	
 	@Mock
 	private ProductDaoImpl productDao;
 	
-	@Test 
-	public void getProjectsCount() {
-		assertThatCode(() -> {
-			projectService.getProjectsCountByStatus(2);
-		}).doesNotThrowAnyException();
-	}
+	@Mock
+	private GenericFinder finder;
+	
+	@Mock
+	private SessionFactory sessionFactory;
+	
+	@Mock
+	private Session session;
+	
+	@Mock
+	private PictureDaoImpl pictureDao;
 	
 	@Test
-	public void getProjects_noParams_success() {
-		List<Project> mockProjects = createMockProjects();
-		
-		when(projectDao.getProjects())
-			.thenReturn(mockProjects);
-		
-		List<Project> projects = projectService.getProjects();
-		
-		assertThat(projects.get(0))
-			.isEqualTo(mockProjects.get(0));
-		assertThat(projects.get(0))
-			.isEqualToComparingFieldByFieldRecursively(mockProjects.get(0));
-	}
-	
-	@Test
-	public void getProjects_withParams_withStatus_success() {
+	public void getProjects_withStatus_success() {
 		OrderDirection orderDirection = OrderDirection.ASCENDING;
 		String dateCreatedField = "date";
 		OrderClause clause1 = new OrderClause(dateCreatedField, orderDirection);
@@ -83,17 +78,17 @@ public class ProjectServiceTest {
 		
 		ProjectSearch search = new ProjectSearch();
 		search.setStatusId(2);
-		List<Project> mockProjects = createMockProjects();
+		List<ProjectVo> mockProjectsVos = createMockProjectsVos();
 		
 		when(projectDao.getProjects(pageRequest, search))
-			.thenReturn(mockProjects);
+			.thenReturn(mockProjectsVos);
 		
-		PageResult<Project> projects = projectService.getProjects(pageRequest, search);
+		PageResult<ProjectVo> projects = projectService.getProjects(pageRequest, search);
 		
 		assertThat(projects.getEntities().get(0))
-			.isEqualTo(mockProjects.get(0));
+			.isEqualTo(mockProjectsVos.get(0));
 		assertThat(projects.getEntities().get(0))
-			.isEqualToComparingFieldByFieldRecursively(mockProjects.get(0));
+			.isEqualToComparingFieldByFieldRecursively(mockProjectsVos.get(0));
 	}
 	
 	@Test
@@ -112,24 +107,36 @@ public class ProjectServiceTest {
 		
 		ProjectSearch search = new ProjectSearch();
 		search.setStatusId(null);
-		List<Project> mockProjects = createMockProjects();
+		List<ProjectVo> mockProjectsVos = createMockProjectsVos();
 		
 		when(projectDao.getProjects(pageRequest, search))
-			.thenReturn(mockProjects);
+			.thenReturn(mockProjectsVos);
 		
-		PageResult<Project> projects = projectService.getProjects(pageRequest, search);
+		PageResult<ProjectVo> projectsVos = projectService.getProjects(pageRequest, search);
 		
-		assertThat(projects.getEntities().get(0))
-			.isEqualTo(mockProjects.get(0));
-		assertThat(projects.getEntities().get(0))
-			.isEqualToComparingFieldByFieldRecursively(mockProjects.get(0));
+		assertThat(projectsVos.getEntities().get(0))
+			.isEqualTo(mockProjectsVos.get(0));
+		assertThat(projectsVos.getEntities().get(0))
+			.isEqualToComparingFieldByFieldRecursively(mockProjectsVos.get(0));
 	}
 	
 	@Test
-	public void getProject() {
+	public void getProject_fail() {
+		when(finder.findById(Project.class, 1))
+			.thenReturn(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+		.isThrownBy(() -> {
+			projectService.getProject(1);
+		});
+	}
+	
+	
+	@Test
+	public void getProject_success() {
 		Project mockProject = createMockProject();
 		
-		when(projectDao.getProject(1))
+		when(finder.findById(Project.class, 1))
 			.thenReturn(mockProject);
 		
 		Project project = projectService.getProject(1);
@@ -141,132 +148,14 @@ public class ProjectServiceTest {
 	}
 	
 	@Test
-	public void getProjectManagers() {
-		ProjectManager mockPrManager = createMockProjectManager();
-		List<ProjectManager> mockPrManagers = new ArrayList<>();
-		mockPrManagers.add(mockPrManager);
-		
-		when(projectManagerDao.getProjectManagers())
-			.thenReturn(mockPrManagers);
-		
-		List<ProjectManager> prManagers = projectService.getProjectManagers();
-		
-		assertThat(prManagers.get(0))
-			.isEqualToComparingFieldByFieldRecursively(mockPrManager);
-	}
-	
-	@Test
-	public void getProject_nullProjectFail() {
-		when(projectDao.getProject(1))
+	public void deleteProject_nullProduct_fail() {
+		when(productDao.getProductsByProjectId(2))
 			.thenReturn(null);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			projectService.getProject(1);
-		});
-	}
-	
-	@Test
-	public void addProject_success() {
-		ProjectRequestDto dto = createMockProjectRequesDto();
-		ProjectManager projectManager = createMockProjectManager();
-		
-		when(projectManagerDao.getProjectManager(1))
-			.thenReturn(projectManager);
-		
-		assertThat(dto).isNotNull();
-		assertThat(dto).hasNoNullFieldsOrProperties();
-		assertThatCode(() -> {
-			projectService.saveProject(dto);
-			
-		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	public void saveProject_nullProjectFail() {
-		assertThatExceptionOfType(EntityNotFoundException.class)
 			.isThrownBy(() -> {
-				projectService.saveProject(null);
+				projectService.deleteProject(2);
 			});
-	}
-	
-	@Test
-	public void saveProject_nullCompanyNameFail() {
-		ProjectRequestDto dto = createMockProjectRequesDto();
-		dto.setCompanyName(null);
-		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-			.isThrownBy(() -> {
-				projectService.saveProject(dto);
-			});
-	}
-	
-	@Test
-	public void saveProject_nullDateFail() {
-		ProjectRequestDto dto = createMockProjectRequesDto();
-		dto.setDate(null);
-		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-			.isThrownBy(() -> {
-				projectService.saveProject(dto);
-			});
-	}
-	
-	@Test
-	public void saveProject_nullProjectManagerFail() {
-		ProjectRequestDto dto = createMockProjectRequesDto();
-		dto.setProjectManagerId(0);
-		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-			.isThrownBy(() -> {
-				projectService.saveProject(dto);
-			});
-	}
-	
-	@Test
-	public void saveProject_nullProjectNameFail() {
-		ProjectRequestDto dto = createMockProjectRequesDto();
-		dto.setProjectName(null);
-		ProjectManager projectManager = createMockProjectManager();
-		
-		when(projectManagerDao.getProjectManager(1))
-			.thenReturn(projectManager);
-		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-			.isThrownBy(() -> {
-				projectService.saveProject(dto);
-			});
-	}
-	
-	@Test
-	public void saveProject_wrongStatusIdFail() {
-		ProjectRequestDto dto = createMockProjectRequesDto();
-		dto.setStatusId(4);
-		ProjectManager projectManager = createMockProjectManager();
-		
-		when(projectManagerDao.getProjectManager(1))
-			.thenReturn(projectManager);
-		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-			.isThrownBy(() -> {
-				projectService.saveProject(dto);
-			});
-	}
-	
-	@Test
-	public void deleteProject_success() {
-		Project mockProject = createMockProject();
-		Product mockProduct = createMockProduct();
-		List<Product> mockProducts = new ArrayList<>();
-		mockProducts.add(mockProduct);
-		
-		when(projectDao.getProject(1))
-			.thenReturn(mockProject);
-		
-		assertThatCode(() -> {
-			projectService.deleteProject(1, mockProducts);
-			
-		}).doesNotThrowAnyException();
 	}
 	
 	@Test
@@ -274,26 +163,100 @@ public class ProjectServiceTest {
 		Product mockProduct = createMockProduct();
 		List<Product> mockProducts = new ArrayList<>();
 		mockProducts.add(mockProduct);
-		
-		when(projectDao.getProject(2))
+
+		when(productDao.getProductsByProjectId(2))
+			.thenReturn(mockProducts);
+		when(finder.findById(Project.class, 2))
 			.thenReturn(null);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			projectService.deleteProject(2, mockProducts);
-		});
+			.isThrownBy(() -> {
+				projectService.deleteProject(2);
+			});
 	}
 	
+	@Test
+	public void deleteProject_success() {
+		Product mockProduct = createMockProduct();
+		List<Product> mockProducts = new ArrayList<>();
+		mockProducts.add(mockProduct);
+		Project mockProject = createMockProject();
+		
+		when(productDao.getProductsByProjectId(2))
+			.thenReturn(mockProducts);
+		when(pictureDao.getPicturesByProductId(1))
+			.thenReturn(new ArrayList<>());
+		when(finder.findById(Project.class, 2))
+			.thenReturn(mockProject);
+		when(sessionFactory.getCurrentSession())
+			.thenReturn(session);
+		
+		
+		assertThatCode(() -> {
+			projectService.deleteProject(2);
+			
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test
+	public void addProject_success() {
+		ProjectManager mockProjectManager = createMockProjectManager();
+		Project mockProject = createMockProject();
+		
+		when(projectDao.getProjectByName("name"))
+			.thenReturn(mockProject);
+		when(finder.findById(ProjectManager.class, 1))
+			.thenReturn(mockProjectManager);
+		when(sessionFactory.getCurrentSession())
+			.thenReturn(session);
+		
+		assertThatCode(() -> {
+			projectService.saveProject(mockProject, 1);
+			
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test
+	public void saveProject_projectAlreadyExists_Fail() {
+		Project mockProject = createMockProject();
+		
+		when(projectDao.getProjectByName("test"))
+			.thenReturn(mockProject);
+		
+		assertThatExceptionOfType(EntityAlreadyExistsException.class)
+			.isThrownBy(() -> {
+				projectService.saveProject(mockProject, 1);
+			});
+	}
+	
+	@Test
+	public void saveProject_nullProjectManager_fail() {
+		Project mockProject = createMockProject();
+		
+		when(projectDao.getProjectByName("name"))
+			.thenReturn(mockProject);
+		when(finder.findById(ProjectManager.class, 1))
+			.thenReturn(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+			.isThrownBy(() -> {
+				projectService.saveProject(mockProject, 1);
+			});
+	}
+	
+
 	@Test
 	public void updateProject_success() {
 		Project mockProject = createMockProject();
 		ProjectRequestDto mockDto = createMockProjectRequesDto();
 		ProjectManager projectManager = createMockProjectManager();
 		
-		when(projectManagerDao.getProjectManager(1))
+		when(finder.findById(ProjectManager.class, 1))
 			.thenReturn(projectManager);
-		when(projectDao.getProject(1))
+		when(finder.findById(Project.class, 1))
 			.thenReturn(mockProject);
+		when(sessionFactory.getCurrentSession())
+			.thenReturn(session);
 		
 		assertThatCode(() -> {
 			projectService.updateProject(mockDto, 1);
@@ -303,12 +266,8 @@ public class ProjectServiceTest {
 	@Test
 	public void updateProject_nullProjectFail() {
 		ProjectRequestDto mockDto = createMockProjectRequesDto();
-		ProjectManager projectManager = createMockProjectManager();
-		
-		when(projectManagerDao.getProjectManager(1))
-			.thenReturn(projectManager);
-		
-		when(projectDao.getProject(1))
+
+		when(finder.findById(Project.class, 1))
 			.thenReturn(null);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
@@ -324,17 +283,69 @@ public class ProjectServiceTest {
 		mockDto.setStatusId(4);
 		ProjectManager projectManager = createMockProjectManager();
 		
-		when(projectManagerDao.getProjectManager(1))
+		when(finder.findById(ProjectManager.class, 1))
 			.thenReturn(projectManager);
-		
-		when(projectDao.getProject(1))
+		when(finder.findById(Project.class, 1))
 			.thenReturn(mockProject);
+		when(sessionFactory.getCurrentSession())
+			.thenReturn(session);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 			.isThrownBy(() -> {
 				projectService.updateProject(mockDto, 1);
 			});
 	}
+	
+	@Test
+	public void getProjects() {
+		List<Project> mockProjects = createMockProjects();
+		
+		when(finder.findAll(Project.class))
+		.thenReturn(mockProjects);
+		
+		assertThatCode(() -> {
+			projectService.getProjects();
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test
+	public void getProjectManagers() {
+		List<Project> mockProjects = createMockProjects();
+		
+		when(finder.findAll(Project.class))
+		.thenReturn(mockProjects);
+		
+		assertThatCode(() -> {
+			projectService.getProjectManagers();
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test
+	public void getProjectNames() {
+		List<Project> mockProjects = createMockProjects();
+		
+		when(finder.findAll(Project.class))
+			.thenReturn(mockProjects);
+		
+		assertThatCode(() -> {
+			projectService.getProjectNames();
+		}).doesNotThrowAnyException();
+	}
+	
+	@Test 
+	public void getProjectsCount() {
+		assertThatCode(() -> {
+			projectService.getProjectsCountByStatus(2);
+		}).doesNotThrowAnyException();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -357,7 +368,7 @@ public class ProjectServiceTest {
 		ProjectManager mockPrManager = createMockProjectManager();
 		Project mockProject = new Project();
 		mockProject.setCompanyName("test");
-		mockProject.setDate("17/12/2011");
+		mockProject.setCreatedAt(LocalDate.now());
 		mockProject.setId(1);
 		mockProject.setProjectManager(mockPrManager);
 		mockProject.setProjectName("test");
@@ -368,7 +379,6 @@ public class ProjectServiceTest {
 	public ProjectRequestDto createMockProjectRequesDto() {
 		ProjectRequestDto mockProject = new ProjectRequestDto();
 		mockProject.setCompanyName("test");
-		mockProject.setDate("17/12/2011");
 		mockProject.setProjectManagerId(1);
 		mockProject.setProjectName("test");
 		mockProject.setStatusId(2);
@@ -381,9 +391,17 @@ public class ProjectServiceTest {
 		return projects;
 	}
 	
+	public List<ProjectVo> createMockProjectsVos() {
+		ProjectVo projectVo = new ProjectVo();
+		projectVo.setProject(createMockProject());
+		List<ProjectVo> projectsVos = new ArrayList<>();
+		projectsVos.add(projectVo);
+		return projectsVos;
+	}
+	
 	public Product createMockProduct() {
 		Product mockProduct = new Product();
-		mockProduct.setDate("2011-12-17 13:17:17");
+		mockProduct.setCreatedAt(LocalDate.now());
 		mockProduct.setDescription("test");
 		mockProduct.setId(1);
 		mockProduct.setProductName("test");

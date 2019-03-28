@@ -46,7 +46,7 @@ public class PictureDaoTest {
 	@Transactional
 	public void getPicturesCountByProductId() {
 		int count = pictureDao.getPicturesCountByProductId(1);
-		assertThat(count).isEqualTo(2);
+		assertThat(count).isEqualTo(3);
 	}
 	
 }

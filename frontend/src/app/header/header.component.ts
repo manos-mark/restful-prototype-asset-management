@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     newProjectsCount: number;
     projectsCountSubs: Subscription = null;
 
-    constructor(public authService: AuthService,
+    constructor(private authService: AuthService,
                 private productsService: ProductsService,
                 private projectsService: ProjectsService,
                 private windowPopService: WindowPopService) { }
@@ -74,4 +74,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.projectsCountSubs.unsubscribe();
         }
     }
+
+    get currentUser() { return this.authService.getCurrentUser(); }
 }

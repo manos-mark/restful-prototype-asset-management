@@ -167,19 +167,28 @@ export class EditProductComponent implements OnDestroy {
 
     onUploadPicture(event, picInput): void {
         const eventFileList = event.target.files;
-        this.pictures.push(new ProductPicture({
-            id: undefined,
-            productId: undefined,
-            name: eventFileList.item(0).name,
-            size: eventFileList.item(0).size,
-            file: eventFileList.item(0)
-        }))
-        this.computedPicturesLength++;
-        this.computedPicturesListSize += eventFileList.item(0).size;
-        this.thumbArray.push(new FormControl(null));
-        picInput.value = null;
-        if (!this.isThumbSelected) {
-            this.onSelectThumb(0);
+        let unique = true;
+        this.pictures.forEach(pic => {
+            if ( pic.name.indexOf(eventFileList.item(0).name) !== -1 ) {
+                unique = false;
+                return;
+            }
+        });
+        if (unique) {
+            this.pictures.push(new ProductPicture({
+                id: undefined,
+                productId: undefined,
+                name: eventFileList.item(0).name,
+                size: eventFileList.item(0).size,
+                file: eventFileList.item(0)
+            }));
+            this.computedPicturesLength++;
+            this.computedPicturesListSize += eventFileList.item(0).size;
+            this.thumbArray.push(new FormControl(null));
+            picInput.value = null;
+            if (!this.isThumbSelected) {
+                this.onSelectThumb(0);
+            }
         }
     }
 
@@ -263,10 +272,9 @@ export class EditProductComponent implements OnDestroy {
                     this.notificationService.showNotification();
                 },
                 error => {
-                    console.log(error)
                     this.windowPopService.setTitle("Update product Failed");
                     this.windowPopService.setContext("Your request is not successful!");
-                    this.windowPopService.setDetails("Try again with different credentials.");
+                    this.windowPopService.setDetails(error.error.message);
                     this.windowPopService.activate();
                 }
             )
@@ -281,10 +289,9 @@ export class EditProductComponent implements OnDestroy {
                     this.notificationService.showNotification();
                 },
                 error => {
-                    console.log(error)
                     this.windowPopService.setTitle("Add new product Failed");
                     this.windowPopService.setContext("Your request is not successful!");
-                    this.windowPopService.setDetails("Try again with different credentials.");
+                    this.windowPopService.setDetails(error.error.message);
                     this.windowPopService.activate();
                 }
             )

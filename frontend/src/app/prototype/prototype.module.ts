@@ -30,10 +30,10 @@ export const MY_NATIVE_FORMATS = {
         FormsModule,
         SharedModule,
         ReactiveFormsModule,
-        PrototypeRoutingModule,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
-        BrowserAnimationsModule,
+        // BrowserAnimationsModule,
+        PrototypeRoutingModule
     ],
     providers: [
         {provide: OWL_DATE_TIME_LOCALE, useValue: 'en-GB'}

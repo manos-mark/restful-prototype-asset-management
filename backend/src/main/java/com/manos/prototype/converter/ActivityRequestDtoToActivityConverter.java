@@ -1,7 +1,6 @@
 package com.manos.prototype.converter;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Component;
 
@@ -19,15 +18,9 @@ public class ActivityRequestDtoToActivityConverter implements Converter<Activity
 		ActivityAction action = new ActivityAction();
 		action.setId(from.getActionId());
 		
-		// convert datetime
-		String tempDate = from.getDate();
-		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("dd/MM/yyyy, HH:mm:ss");
-		LocalDateTime date = LocalDateTime.parse(tempDate, formatter);
-		
 		Activity activity = new Activity();
 		activity.setAction(action);
-		activity.setDate(date.toString());
+		activity.setDate(LocalDateTime.now());
 		
 		return activity;
 	}

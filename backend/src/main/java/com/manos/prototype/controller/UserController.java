@@ -11,14 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.manos.prototype.dto.EmailRequestDto;
-import com.manos.prototype.dto.NewUserPassRequestDto;
+import com.manos.prototype.controller.params.EmailRequestParams;
+import com.manos.prototype.controller.params.NewUserPassRequestParams;
 import com.manos.prototype.dto.UserDto;
 import com.manos.prototype.dto.UserRequestDto;
-import com.manos.prototype.entity.User;
 import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.service.EmailServiceImpl;
 import com.manos.prototype.service.UserServiceImpl;
@@ -40,38 +38,34 @@ public class UserController {
 	@GetMapping("/current")
 	public UserDto getCurrentUser() {
 		UserDetailsImpl user = userService.getCurrentUserDetails();
+		if (user == null) {
+			return null;
+		}
 		return conversionService.convert(user, UserDto.class);
 	}
 	
-	@PostMapping
-	public void addUser(@Valid @RequestBody UserRequestDto userRequestDto) {
-		User user = conversionService.convert(userRequestDto, User.class);
-		user.setId(0L);
-		userService.saveUser(user);
-	}
-	
-	@PostMapping("/new-password")
-	public void newPassword(@Valid @RequestParam EmailRequestDto email) throws MessagingException {
+//	@PostMapping
+//	public void addUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+//		User user = conversionService.convert(userRequestDto, User.class);
+//		user.setId(0L);
+//		userService.saveUser(user);
+//	}
+//	
+	@PostMapping("/reset-password")
+	public void resetPassword(@Valid @RequestBody EmailRequestParams params) throws MessagingException {
 		String newPassword;
-		newPassword = userService.saveNewPassword(email.getEmail());		// change pass
-		emailService.sendNewPassword(email.getEmail(), newPassword); 	// send email
+		newPassword = userService.saveNewPassword(params.getEmail());		// change pass
+		emailService.sendNewPassword(params.getEmail(), newPassword); 	// send email
 	}
 
-	@PutMapping("/{id}/new-password")
-	public void updateUser(@Valid @RequestBody NewUserPassRequestDto requestDto,
-			@PathVariable("id") long userId) {
-		String oldPass = requestDto.getOldPassword();
-		String newPass = requestDto.getPassword();
-		
-		User user = userService.getUser(userId);
-		
-		userService.updateUser(user, oldPass, newPass);
+	@PutMapping("/new-password")
+	public void updateUserPassword(@Valid @RequestBody NewUserPassRequestParams params) {
+		userService.updateUserPassword(params.getOldPassword(), params.getPassword());
 	}
 	
-	@PutMapping("/{id}")
-	public void updateUser(@Valid @RequestBody UserRequestDto requestDto,
-			@PathVariable("id") long userId) {
-		userService.updateUser(requestDto, userId);
+	@PutMapping
+	public void updateUser(@Valid @RequestBody UserRequestDto requestDto) {
+		userService.updateUser(requestDto);
 	}
 	
 	@DeleteMapping("/{id}")

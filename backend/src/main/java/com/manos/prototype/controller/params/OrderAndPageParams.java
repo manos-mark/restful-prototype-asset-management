@@ -1,6 +1,7 @@
 package com.manos.prototype.controller.params;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -17,7 +18,7 @@ public class OrderAndPageParams {
 	@Min(1)
 	private Integer pageSize = 5;
 	
-	@NotNull
+	@NotBlank
 	@Pattern(regexp = "(" + DIRECTION_ASC + "|" + DIRECTION_DESC + ")" )
 	private String direction = null;
 	

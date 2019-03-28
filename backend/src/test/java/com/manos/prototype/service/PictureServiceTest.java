@@ -1,33 +1,33 @@
 package com.manos.prototype.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Random;
 
-import javax.imageio.ImageIO;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.manos.prototype.dao.PictureDaoImpl;
 import com.manos.prototype.dao.ProductDaoImpl;
-import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.pastelstudios.db.GenericFinder;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(GenericFinder.class)
 public class PictureServiceTest {
 
 	@Mock
@@ -37,162 +37,115 @@ public class PictureServiceTest {
 	private PictureServiceImpl pictureService;
 	
 	@Mock
+	private GenericFinder finder;
+	
+	@Mock
 	private ProductDaoImpl productDao;
 	
-	@Test
-	public void getPicturesCountByProductId() {
-		when(pictureDao.getPicturesCountByProductId(1))
-			.thenReturn(2L);
-		
-		assertThatCode(() -> {
-			pictureService.getPicturesCountByProductId(1);
-		}).doesNotThrowAnyException();
-		
-		assertThat(pictureDao.getPicturesCountByProductId(1))
-			.isEqualTo(2);
-	}
+	@Mock
+	private SessionFactory sessionFactory;
+	
+	@Mock
+	private Session session;
 	
 	@Test
-	public void savePicture_success() throws IOException {
-		ProductPicture mockPicture = createMockPicture();
-		
-		assertThatCode(() -> {
-			pictureService.savePicture(mockPicture);
-		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	public void addPicture_success() throws IOException {
-		ProductPicture mockPicture = createMockPicture();
-		mockPicture.setId(0);
-		assertThatCode(() -> {
-			pictureService.savePicture(mockPicture);
-		}).doesNotThrowAnyException();
-	}
-	
-	@Test
-	public void savePicture_nullPic_fail() throws IOException {
-		ProductPicture mockPicture = createMockPicture();
-		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			mockPicture.setPicture(null);
-			pictureService.savePicture(mockPicture);
-		});
-	}
-	
-	@Test
-	public void savePicture_nullProd_fail() throws IOException {
-		ProductPicture mockPicture = createMockPicture();
-		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			mockPicture.setProduct(null);
-			pictureService.savePicture(mockPicture);
-		});
-	}
-	
-	@Test
-	public void getPicturesByProductId_success() throws IOException {
-		Product mockProduct = createMockProduct();
-		ProductPicture mockPic = createMockPicture();
-		List<ProductPicture> mockList = new ArrayList<>();
-		mockList.add(mockPic);
-		
-		when(productDao.getProduct(1))
-			.thenReturn(mockProduct);
-		when(pictureDao.getPicturesByProductId(1))
-			.thenReturn(mockList);
-		
-		List<ProductPicture> picList = pictureService.getPicturesByProductId(1);
-		assertThat(picList).size().isEqualTo(1);
-		assertThat(picList.get(0)).isEqualTo(mockList.get(0));
-		assertThat(picList.get(0)).isEqualToComparingFieldByFieldRecursively(mockList.get(0));
-	}
-	
-	@Test
-	public void getPicturesByProductId_nullProduct_fail() throws IOException {
-		ProductPicture mockPic = createMockPicture();
-		List<ProductPicture> mockList = new ArrayList<>();
-		mockList.add(mockPic);
-		
-		when(productDao.getProduct(1))
+	public void getPicturesCountByProductId_nullProduct_fail() {
+		when(finder.findById(Product.class, 1))
 			.thenReturn(null);
-		when(pictureDao.getPicturesByProductId(1))
-			.thenReturn(mockList);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
+			.isThrownBy(() -> {
+				pictureService.getPicturesByProductId(1);
+			});
+	}
+	
+	@Test
+	public void getPicturesCountByProductId_success() {
+		Product mockProduct = createMockProduct();
+		
+		when(finder.findById(Product.class, 1))
+			.thenReturn(mockProduct);
+		
+		assertThatCode(() -> {
 			pictureService.getPicturesByProductId(1);
-		});
+		}).doesNotThrowAnyException();
 	}
 	
 	@Test
-	public void getPicture_success() throws IOException {
-		ProductPicture mockPic = createMockPicture();
-		
-		when(pictureDao.getPicture(1))
-			.thenReturn(mockPic);
-		
-		ProductPicture pic = pictureService.getPicture(1);
-		
-		assertThat(pic).isEqualToComparingFieldByFieldRecursively(mockPic);
-	}
-	
-	@Test
-	public void getPicture_nullPic_fail() throws IOException {
-		when(pictureDao.getPicture(1))
+	public void getPicture_nullPicture_fail() {
+		when(finder.findById(ProductPicture.class, 1))
 			.thenReturn(null);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
+			.isThrownBy(() -> {
+				pictureService.getPicture(1);
+			});
+	}
+	
+	@Test
+	public void getPicture_success() {
+		ProductPicture mockPicture = createMockPicture();
+		
+		when(finder.findById(ProductPicture.class, 1))
+			.thenReturn(mockPicture);
+		
+		assertThatCode(() -> {
 			pictureService.getPicture(1);
-		});
+		}).doesNotThrowAnyException();
 	}
 	
 	@Test
-	public void getThumbPictureByProductId_success() throws IOException {
-		ProductPicture mockPic = createMockPicture();
-		Product mockProduct = createMockProduct();
-		
-		when(productDao.getProduct(1))
-			.thenReturn(mockProduct);
-		when(pictureDao.getThumbPictureByProductId(1))
-			.thenReturn(mockPic);
-		
-		ProductPicture pic = pictureService.getThumbPictureByProductId(1);
-		assertThat(pic).isEqualToComparingFieldByFieldRecursively(mockPic);
-
-	}
-	
-	@Test
-	public void getThumbPictureByProductId_nullProduct_fail() throws IOException {
-		ProductPicture mockPic = createMockPicture();
-		
-		when(productDao.getProduct(1))
-			.thenReturn(null);
-		when(pictureDao.getThumbPictureByProductId(1))
-			.thenReturn(mockPic);
+	public void savePicture_nullPicture_fail() {
+		ProductPicture mockPicture = createMockPicture();
+		mockPicture.setPicture(null);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
-			pictureService.getThumbPictureByProductId(1);
-		});
+			.isThrownBy(() -> {
+				pictureService.savePicture(mockPicture);
+			});
+	}
+	
+	@Test
+	public void savePicture_nullProduct_fail() {
+		ProductPicture mockPicture = createMockPicture();
+		mockPicture.setProduct(null);
+		
+		assertThatExceptionOfType(EntityNotFoundException.class)
+			.isThrownBy(() -> {
+				pictureService.savePicture(mockPicture);
+			});
+	}
+	
+	@Test
+	public void savePicture_success() {
+		ProductPicture mockPicture = createMockPicture();
+		
+		when(sessionFactory.getCurrentSession())
+			.thenReturn(session);
+
+		assertThatCode(() -> {
+			pictureService.savePicture(mockPicture);
+		}).doesNotThrowAnyException();
 	}
 	
 	
 	
-	private ProductPicture createMockPicture() throws IOException {
-		BufferedImage img = new BufferedImage(600, 400, BufferedImage.TYPE_INT_RGB);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(img, "jpg", baos);
+	
+	
+	
+	
+	
+	public ProductPicture createMockPicture() {
+		ProductPicture picture = new ProductPicture();
+		picture.setId(1);
+		picture.setName("pic");
+		picture.setProduct(createMockProduct());
+		picture.setSize(1000L);
 		
-		ProductPicture pic = new ProductPicture();
-		pic.setId(1);
-		pic.setProduct(createMockProduct());
-		pic.setPicture(baos.toByteArray());
-		pic.setThumb(true);
-		return pic;
+		byte[] b = new byte[20];
+		new Random().nextBytes(b);
+		picture.setPicture(b);
+		return picture;
 	}
 
 	public Status createMockStatus() {
@@ -202,12 +155,19 @@ public class PictureServiceTest {
 		return mockStatus;
 	}
 	
+	public ProjectManager createMockManager() {
+		ProjectManager mockManager = new ProjectManager();
+		mockManager.setId(1);
+		mockManager.setName("manager");
+		return mockManager;
+	}
+	
 	public Project createMockProject() {
 		Project mockProject = new Project();
 		mockProject.setCompanyName("test");
-		mockProject.setDate("2011-12-17 13:17:17");
+		mockProject.setCreatedAt(LocalDate.now());
 		mockProject.setId(1);
-		mockProject.setProjectManager("test");
+		mockProject.setProjectManager(createMockManager());
 		mockProject.setProjectName("test");
 		mockProject.setStatus(createMockStatus());
 		return mockProject;
@@ -215,7 +175,7 @@ public class PictureServiceTest {
 	
 	public Product createMockProduct() {
 		Product mockProduct = new Product();
-		mockProduct.setDate("2011-12-17 13:17:17");
+		mockProduct.setCreatedAt(LocalDate.now());
 		mockProduct.setDescription("test");
 		mockProduct.setId(1);
 		mockProduct.setProductName("test");

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -24,6 +25,12 @@ import com.pastelstudios.db.SearchSupport;
 @EnableTransactionManagement
 @ComponentScan(basePackages = "com.manos.prototype")
 public class AppConfig {
+	
+	@Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+         return new MethodValidationPostProcessor();
+    }
+	
 	@Bean
 	@Autowired
 	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {

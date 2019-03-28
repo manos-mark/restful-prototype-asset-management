@@ -7,15 +7,16 @@ import { EditProductComponent } from './products/edit-product/edit-product.compo
 import { ListProductsComponent } from './products/list-products/list-products.component';
 
 const prototypeRoutes: Routes = [
-    { path: 'prototype', canActivateChild: [AuthGuard], children: [
+    { path: '', children: [
+    // { path: '', canActivateChild: [AuthGuard], children: [
         { path: 'projects', component: ListProjectsComponent},
         { path: 'projects/:id/edit', component: EditProjectComponent},
         { path: 'projects/new', component: EditProjectComponent},
         { path: 'products', component: ListProductsComponent},
         { path: 'products/new', component: EditProductComponent},
-        { path: 'products/:id/edit', component: EditProductComponent},
+        { path: 'products/:id/edit', component: EditProductComponent}
     ] }
-]
+];
 
 @NgModule({
     imports: [

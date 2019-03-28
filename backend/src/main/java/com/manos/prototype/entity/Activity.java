@@ -1,6 +1,8 @@
 package com.manos.prototype.entity;
 
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,9 +31,9 @@ public class Activity {
     private User user;
 	
 	@Column(name = "creation_date")
-	private String date;
+	private LocalDateTime date;
 
-	public Activity(ActivityAction action, User user, String date) {
+	public Activity(ActivityAction action, User user, LocalDateTime date) {
 		this.action = action;
 		this.user = user;
 		this.date = date;
@@ -64,11 +66,11 @@ public class Activity {
 		this.user = user;
 	}
 
-	public String getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 }

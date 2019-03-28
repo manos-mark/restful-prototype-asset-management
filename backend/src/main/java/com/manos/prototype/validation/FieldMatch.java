@@ -16,7 +16,7 @@ import com.manos.prototype.validation.FieldMatchValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface FieldMatch {
-	String message() default "";
+	String message() default "The fields must match";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
 	

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +17,12 @@ import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.Status;
-import com.manos.prototype.exception.EntityAlreadyExistException;
+import com.manos.prototype.exception.EntityAlreadyExistsException;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.vo.ProductVo;
 import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
 
@@ -30,7 +30,7 @@ import com.pastelstudios.paging.PageResult;
 public class ProductServiceImpl {
 	
 	@Autowired
-	private SessionFactory sessionFactory;
+	private GenericGateway gateway;
 	
 	@Autowired
 	private GenericFinder finder;
@@ -92,10 +92,10 @@ public class ProductServiceImpl {
 		
 		List<ProductPicture> pictures = pictureDao.getPicturesByProductId(id);
 		for (ProductPicture picture: pictures) {
-			sessionFactory.getCurrentSession().delete(picture);
+			gateway.delete(picture);
 		}
 		
-		sessionFactory.getCurrentSession().delete(product);
+		gateway.delete(product);
 	}
 
 	@Transactional
@@ -108,12 +108,12 @@ public class ProductServiceImpl {
 		// Save the product
 		Product tempProduct = productDao.getProductByName(product.getProductName());
 		if (tempProduct != null) {
-			throw new EntityAlreadyExistException(Product.class, product.getProductName());
+			throw new EntityAlreadyExistsException(Product.class, product.getProductName());
 		}
 		
 		tempProduct = productDao.getProductBySerialNumber(product.getSerialNumber());
 		if (tempProduct != null) {
-			throw new EntityAlreadyExistException(Product.class, product.getSerialNumber());
+			throw new EntityAlreadyExistsException(Product.class, product.getSerialNumber());
 		}
 		
 		Project project = finder.findById(Project.class, projectId);
@@ -126,12 +126,12 @@ public class ProductServiceImpl {
 		product.setStatus(new Status(Status.NEW_ID));
 		product.setCreatedAt(LocalDate.now());
 		product.setProject(project);
-		sessionFactory.getCurrentSession().save(product);
+		gateway.save(product);
 		
 		// Save the pictures
 		for (ProductPicture picture : pictures) {
 			picture.setProduct(product);
-			sessionFactory.getCurrentSession().save(picture);
+			gateway.save(picture);
 		}
 	}
 	
@@ -166,13 +166,13 @@ public class ProductServiceImpl {
 			if (pictureTypeList.get(i).getType().equals(PictureTypeRequestDto.TYPE_NEW)) {
 				ProductPicture tempPicture = newPictures.get(newPicturesIndex++);
 				tempPicture.setProduct(existingProduct);
-				sessionFactory.getCurrentSession().save(tempPicture);
+				gateway.save(tempPicture);
 			}
 		}
 		
 		existingPictures = existingProduct.getPictures();
 		// Set the thumb picture for the product
-		if (productDto.getThumbPictureIndex() >= 0) {
+		if (productDto.getThumbPictureIndex() >= 0 && existingPictures.size() > 0) {
 			ProductPicture thumbPicture = existingPictures.get(productDto.getThumbPictureIndex());
 			thumbPicture.setProduct(existingProduct);
 			existingProduct.setThumbPicture(thumbPicture);
@@ -180,7 +180,7 @@ public class ProductServiceImpl {
 		
 		for (int i = 0; i < pictureTypeList.size(); i++) {
 			if (pictureTypeList.get(i).getType().equals(PictureTypeRequestDto.TYPE_DELETED)) {
-				sessionFactory.getCurrentSession().delete(existingPictures.get(i));
+				gateway.delete(existingPictures.get(i));
 			} 
 		}
 	}
