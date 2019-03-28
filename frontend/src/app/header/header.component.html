@@ -1,7 +1,7 @@
-<div class="headerWrapper">
+<div class="headerWrapper" [ngClass]="{'login': !currentUser}">
 	<div class="header">
 		<a class="logo" routerLink="/general"></a>
-		<div class="mainMenu">
+		<div class="mainMenu" *ngIf="currentUser">
 			<div class="group">
 				<p>General</p>
 				<a class="dashboard" routerLinkActive="active" routerLink="general">
@@ -40,6 +40,6 @@
 				<i class="profilePic"></i>
 			</div>
 		</div>
-		<app-search></app-search>
+		<app-search *ngIf="currentUser"></app-search>
 	</div>
 </div>

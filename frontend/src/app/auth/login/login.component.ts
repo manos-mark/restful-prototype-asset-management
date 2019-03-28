@@ -35,9 +35,9 @@ export class LoginComponent implements OnInit {
         .subscribe(
             resp => {
                 this.authService.setCurrentUser(resp.body);
-                if (this.authService.getCurrentUser()) {
-                    this.router.navigate(['/']);
-                }
+                // if (this.authService.getCurrentUser()) {
+                //     this.router.navigate(['/']);
+                // }
             },
             error => { console.log(error); }
         );
@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
   }
 
   onForgottenPass() {
-    this.forgottenPass = !this.forgottenPass;
+    this.authService.isForgottenPassActive = !this.authService.isForgottenPassActive;
   }
 
   get email() { return this.loginForm.get('email'); }

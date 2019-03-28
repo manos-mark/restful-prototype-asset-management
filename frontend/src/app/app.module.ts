@@ -27,17 +27,17 @@ import { SearchService } from './header/search/search.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     FormsModule,
     BrowserModule,
     HttpClientModule,
     HttpClientXsrfModule,
+    SharedModule,
     HeaderModule,
     GeneralModule,
     ProfileModule,
-    SharedModule,
     AppRoutingModule
   ],
   providers: [

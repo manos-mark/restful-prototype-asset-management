@@ -2,9 +2,12 @@
     <app-window-pop 
         [(active)]="windowPopAvtivate" 
     ></app-window-pop>
-    <div *ngIf="currentUser">
+    <app-forgotten-password 
+        [(active)]="isForgottenPassActive"
+    ></app-forgotten-password>
+    <div>
         <app-header></app-header>
-        <div class="contentWrapper">
+        <div class="contentWrapper" [ngClass]="{'login': !currentUser}">
             <div class="content">
                 <app-image-carousel
                     [(active)]="carouselAvtivate"
@@ -12,7 +15,7 @@
                 <app-notification
                     [(active)]="notificationAvtivate" 
                 ></app-notification>
-                <div class="breadcrumbs">
+                <div class="breadcrumbs" *ngIf="currentUser">
                     <div *ngFor="let breadcrumb of breadcrumbs" >
                         <a 
                             *ngIf="breadcrumb.src"
@@ -23,16 +26,16 @@
                         >{{ breadcrumb.name }}</a>
                     </div>
                 </div>
-                <ng-container *ngTemplateOutlet="template"></ng-container>
+                <router-outlet></router-outlet>
+                <!-- <ng-container *ngTemplateOutlet="template"></ng-container> -->
             </div>
         </div>
     </div>
-    <div *ngIf="!currentUser">
+    <!-- <div *ngIf="!currentUser">
         <ng-container *ngTemplateOutlet="template"></ng-container>
-    </div>
+    </div> -->
 </div>
 
-<ng-template #template>
-    <router-outlet>
-    </router-outlet>
-</ng-template>
+<!-- <ng-template #template>
+    <router-outlet></router-outlet>
+</ng-template> -->

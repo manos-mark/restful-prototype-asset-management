@@ -75,4 +75,5 @@ export class ProfileComponent implements OnInit {
   get newPassword() { return this.changePasswordForm.controls.passwords.get('newPassword'); }
   get repeatNewPassword() { return this.changePasswordForm.controls.passwords.get('repeatNewPassword'); }
   get passwords() { return this.changePasswordForm.controls.passwords; }
+  get currentUser() { return this.authService.getCurrentUser(); }
 }

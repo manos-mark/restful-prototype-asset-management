@@ -1,7 +1,7 @@
 <div class="rightCont">
   <div class="welcome">
     <i class="profilePic"></i>
-    <p>Welcome <span>{{ this.authService.currentUser.firstName }}</span></p>
+    <p *ngIf="currentUser">Welcome <span>{{ currentUser.firstName }}</span></p>
   </div>
   <div class="activity">
     <p class="ttl">Activity</p>
@@ -15,8 +15,8 @@
           <i [ngClass]="activity.action.cssClass"></i>
           <p>
             <span>
-              {{ authService.currentUser.firstName }} 
-              {{ authService.currentUser.lastName }}
+              {{ currentUser.firstName }} 
+              {{ currentUser.lastName }}
             </span> 
             <span>{{ activity.action.name }}</span>
           </p>

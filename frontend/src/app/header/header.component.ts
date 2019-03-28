@@ -5,6 +5,7 @@ import { ProjectsService } from '../prototype/projects/projects.service';
 import { WindowPopService } from '../shared/window-pop/window-pop.service';
 import { Statuses } from '../prototype/status.enum';
 import { Subscription } from 'rxjs';
+import { User } from '../auth/user.model';
 
 @Component({
   selector: 'app-header',
@@ -16,6 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     productsCountSubs: Subscription = null;
     newProjectsCount: number;
     projectsCountSubs: Subscription = null;
+    private currentUser: User;
 
     constructor(private authService: AuthService,
                 private productsService: ProductsService,
@@ -23,39 +25,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 private windowPopService: WindowPopService) { }
 
     ngOnInit() {
-        // IN_PROGRESS Products
-        this.productsService.getProductsCountByStatusId(Statuses.IN_PROGRESS)
-            .subscribe(
-                products => {
-                    this.productsService.inProgressProductsCount.next(products);
-                },
-                error => { console.log(error); }
-            );
-
-        // NEW Projects
-        this.projectsService.getProjectsCountByStatusId(Statuses.NEW)
-            .subscribe(
-            projects => {
-                this.projectsService.newProjectsCount.next(projects);
-            },
-            error => { console.log(error); }
-            );
-
-        this.productsCountSubs = this.productsService.inProgressProductsCount
+        this.authService.getCurrentUserSubject()
             .subscribe(
                 res => {
-                    this.inProgressProductsCount = res;
-                },
-                error => console.log(error)
-            );
-
-        this.projectsCountSubs = this.projectsService.newProjectsCount
-            .subscribe(
-                res => {
-                    this.newProjectsCount = res;
-                },
-                error => console.log(error)
-            );
+                    this.currentUser = res;
+                    if (res) {
+                        // IN_PROGRESS Products
+                        this.productsService.getProductsCountByStatusId(Statuses.IN_PROGRESS)
+                            .subscribe(
+                                products => {
+                                    this.productsService.inProgressProductsCount.next(products);
+                                },
+                                error => { console.log(error); }
+                            );
+                
+                        // NEW Projects
+                        this.projectsService.getProjectsCountByStatusId(Statuses.NEW)
+                            .subscribe(
+                            projects => {
+                                this.projectsService.newProjectsCount.next(projects);
+                            },
+                            error => { console.log(error); }
+                            );
+                
+                        this.productsCountSubs = this.productsService.inProgressProductsCount
+                            .subscribe(
+                                res => {
+                                    this.inProgressProductsCount = res;
+                                },
+                                error => console.log(error)
+                            );
+                
+                        this.projectsCountSubs = this.projectsService.newProjectsCount
+                            .subscribe(
+                                res => {
+                                    this.newProjectsCount = res;
+                                },
+                                error => console.log(error)
+                            );
+                        }
+                    }
+        )
     }
 
     onLogout() {
@@ -75,5 +85,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
     }
 
-    get currentUser() { return this.authService.getCurrentUser(); }
+    // get currentUser() { return this.authService.getCurrentUser(); }
 }

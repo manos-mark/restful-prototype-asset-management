@@ -5,13 +5,15 @@ import { CommonModule } from '@angular/common';
 import { ImageCarouselComponent } from './image-carousel/image-carousel.component';
 import { LightboxModule } from 'ngx-lightbox';
 import { NotificationComponent } from './notification/notification.component';
+import { ForgottenPasswordComponent } from '../auth/login/forgotten-password/forgotten-password.component';
 
 
 @NgModule({
     declarations: [
         WindowPopComponent,
         ImageCarouselComponent,
-        NotificationComponent
+        NotificationComponent,
+        ForgottenPasswordComponent
     ],
     imports: [
         FormsModule,
@@ -22,7 +24,8 @@ import { NotificationComponent } from './notification/notification.component';
     exports: [
         WindowPopComponent,
         ImageCarouselComponent,
-        NotificationComponent
+        NotificationComponent,
+        ForgottenPasswordComponent
     ]
 })
 export class SharedModule {}

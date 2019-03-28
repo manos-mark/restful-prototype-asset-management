@@ -29,21 +29,19 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.authService.retrieveCurrentUser()
-            .subscribe(
-                resp => {
-                    this.authService.setCurrentUser(resp.body);
-                    if (this.authService.getCurrentUser()) {
-                        this.router.navigate(['/']);
-                    }
-                },
-                error => { console.log(error); }
-            );
+        // this.authService.retrieveCurrentUser()
+        //     .subscribe(
+        //         resp => {
+        //             this.authService.setCurrentUser(resp.body);
+        //         },
+        //         error => { console.log(error); }
+        //     );
     }
 
     get carouselAvtivate() { return this.carouselService.activate; }
     get windowPopAvtivate() { return this.windowPopService.isActivated(); }
     get notificationAvtivate() { return this.notificationService.isActivated(); }
     get currentUser() { return this.authService.getCurrentUser(); }
+    get isForgottenPassActive() { return this.authService.isForgottenPassActive; }
     get breadcrumbs() { return this.breadcrumbsService.breadcrumbs; }
 }

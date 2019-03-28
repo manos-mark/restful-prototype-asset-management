@@ -10,21 +10,22 @@ import { Activity } from './activity.model';
   styleUrls: ['./activity.component.css']
 })
 export class ActivityComponent implements OnInit {
-  activities: Array<Activity> = [];
+    activities: Array<Activity> = [];
 
-  constructor(public authService: AuthService,
-              public actService: ActivityService) { }
+    constructor(public authService: AuthService,
+                public actService: ActivityService) { }
 
-  ngOnInit() {
-    this.actService.getActivities()
-      .subscribe(
-        activities => {
-          activities.map(
-            activity => { this.activities.push(new Activity(activity)); }
-          );
-        },
-        error => { console.log(error); }
-      );
-  }
+    ngOnInit() {
+        this.actService.getActivities()
+        .subscribe(
+            activities => {
+            activities.map(
+                activity => { this.activities.push(new Activity(activity)); }
+            );
+            },
+            error => { console.log(error); }
+        );
+    }
 
+    get currentUser() { return this.authService.getCurrentUser() }
 }
