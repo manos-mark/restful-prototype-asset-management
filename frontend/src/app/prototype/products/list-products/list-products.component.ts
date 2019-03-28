@@ -161,12 +161,12 @@ export class ListProductsComponent implements OnInit, OnDestroy {
                         this.ngOnInit();
                         // IN_PROGRESS Products
                         this.productService.getProductsCountByStatusId(Statuses.IN_PROGRESS)
-                        .subscribe(
-                            products => {
-                                this.productService.inProgressProductsCount.next(products);
-                            },
-                            error => { console.log(error); }
-                        );
+                            .subscribe(
+                                products => {
+                                    this.productService.inProgressProductsCount.next(products);
+                                },
+                                error => { console.log(error); }
+                            );
                     },
                     error => console.log(error)
                 );
