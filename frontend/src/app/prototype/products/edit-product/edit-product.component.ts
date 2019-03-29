@@ -279,7 +279,7 @@ export class EditProductComponent implements OnDestroy {
                 }
             )
     }
-    
+
     saveProduct(product) {
         this.productService.addProduct(product, this.pictures)
             .subscribe(

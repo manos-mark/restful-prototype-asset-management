@@ -23,6 +23,8 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
     sortByDateDesc = true;
     sortedByDate = true;
     sortByProductsCountDesc = false;
+    isChangeStatusSelected = false;
+    isFilterChanged = false;
     isMasterChecked = false;
     projects: Project[] = [];
     totalCount: number;
@@ -42,8 +44,11 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.isFilterChanged = false;
+        this.isChangeStatusSelected = false;
         this.selectedProjectsCount = 0;
         this.searchService.clear();
+        this.filterParams.clear();
         this.isMasterChecked = false;
         this.projectService.getProjects(this.pageParams, this.filterParams)
             .subscribe(

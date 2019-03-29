@@ -1,12 +1,12 @@
 package com.manos.prototype.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ProductDto {
 
 	private int id;
 	
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
 	
 	private String productName;
 	
@@ -61,11 +61,11 @@ public class ProductDto {
 		this.id = id;
 	}
 
-	public LocalDate getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDate date) {
+	public void setCreatedAt(LocalDateTime date) {
 		this.createdAt = date;
 	}
 

@@ -1,6 +1,6 @@
 package com.manos.prototype.search;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.pastelstudios.db.GeneratedSearchConstraint;
 import com.pastelstudios.db.SearchConstraint;
@@ -9,8 +9,8 @@ public class ProductSearch {
 
 	private Integer statusId = null;
 
-	private LocalDate fromDate = null;
-	private LocalDate toDate = null;
+	private LocalDateTime fromDate = null;
+	private LocalDateTime toDate = null;
 	
 	private String projectName = null;
 	
@@ -32,19 +32,19 @@ public class ProductSearch {
 		this.statusId = statusId;
 	}
 
-	public LocalDate getFromDate() {
+	public LocalDateTime getFromDate() {
 		return fromDate;
 	}
 
-	public void setFromDate(LocalDate fromDate) {
+	public void setFromDate(LocalDateTime fromDate) {
 		this.fromDate = fromDate;
 	}
 
-	public LocalDate getToDate() {
+	public LocalDateTime getToDate() {
 		return toDate;
 	}
 
-	public void setToDate(LocalDate toDate) {
+	public void setToDate(LocalDateTime toDate) {
 		this.toDate = toDate;
 	}
 

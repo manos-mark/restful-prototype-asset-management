@@ -1,6 +1,6 @@
 package com.manos.prototype.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,7 +112,7 @@ public class ProjectServiceImpl {
 		}
 		project.setProjectManager(projectManager);
 		project.setStatus(new Status(Status.NEW_ID));
-		project.setCreatedAt(LocalDate.now());
+		project.setCreatedAt(LocalDateTime.now());
 		
 		gateway.save(project);
 	}

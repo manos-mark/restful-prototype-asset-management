@@ -1,6 +1,6 @@
 package com.manos.prototype.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class Project {
 	private String companyName;
 
 	@Column(name = "creation_date")
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status_id")
@@ -106,11 +106,11 @@ public class Project {
 		this.projectManager = projectManager;
 	}
 
-	public LocalDate getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDate createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 

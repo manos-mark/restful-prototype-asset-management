@@ -13,11 +13,12 @@ export class Product {
     public picturesCount: number;
     public thumbPictureId: number;
     public isChecked: boolean;
-    public pictures: []; 
+    public pictures: [];
 
-    constructor(dto:any) {
+    constructor(dto: any) {
         this.id = dto.id;
-        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue-1, dto.createdAt.dayOfMonth);
+        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue - 1, dto.createdAt.dayOfMonth,
+            dto.createdAt.hour, dto.createdAt.minute, dto.createdAt.second);
         this.productName = dto.productName;
         this.serialNumber = dto.serialNumber;
         this.description = dto.description;
@@ -27,5 +28,5 @@ export class Product {
         this.projectName = dto.projectName;
         this.picturesCount = dto.picturesCount;
         this.thumbPictureId = dto.thumbPictureId;
-    } 
+    }
 }

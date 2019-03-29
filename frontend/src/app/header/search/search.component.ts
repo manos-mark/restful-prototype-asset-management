@@ -57,13 +57,13 @@ export class SearchComponent implements OnInit {
     }
 
     onEdit(productId: number, projectId: number, input) {
-        this.productService.editMode = true;
-
         if (productId) {
+            this.productService.editMode = true;
             this.router.navigate(['prototype/products/', productId, 'edit'],
                 {queryParams: { productId: productId }}
             );
         } else if (projectId) {
+            this.projectService.editMode = true;
             this.router.navigate(['prototype/projects/', projectId, 'edit'],
                 {queryParams: { projectId: projectId }}
             );

@@ -45,7 +45,7 @@
         ></owl-date-time>
       </div>
       <div class="dropdown status">
-            <select #statusDropdown (click)="doNothing()">
+            <select #statusDropdown (click)="isFilterChanged = true">
                 <option value=0 selected>Status: All</option>
                 <option value=1>Status: In Progress</option>
                 <option value=2>Status: New</option>
@@ -53,7 +53,7 @@
             </select>
       </div>
       <a class="blueDarkBtn" 
-            [ngClass]="{'disabled': statusDropdown.value == 0 && toDate == null && fromDate == null}"
+            [ngClass]="{'disabled': !isFilterChanged && toDate == null && fromDate == null}"
             (click)="applyFilters(statusDropdown.value, dateFrom.value, dateTo.value)"
         >Apply</a>
       <div class="right">
@@ -132,7 +132,7 @@
     <div class="bottomActions">
         <p>Actions</p>
         <div class="dropdown">
-            <select #actionsDropdown (click)="doNothing()">
+            <select #actionsDropdown (click)="isChangeStatusSelected = true">
                 <option selected disabled>Select</option>
                 <option value="NEW">Change status to New</option>
                 <option value="IN_PROGRESS">Change status to In progress</option>
@@ -141,7 +141,7 @@
             </select>
         </div>
         <a class="blueDarkBtn" 
-            [ngClass]="{'disabled': selectedProjectsCount == 0 || actionsDropdown.value == 'Select'}"
+            [ngClass]="{'disabled': selectedProjectsCount == 0 || !isChangeStatusSelected}"
             (click)="applyChanges(actionsDropdown.value)">Apply</a> 
         </div>
   </div>

@@ -1,6 +1,6 @@
 package com.manos.prototype.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ProjectDto {
 
@@ -12,7 +12,7 @@ public class ProjectDto {
 
 	private ProjectManagerDto projectManager;
 
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
 
 	private int statusId;
 
@@ -61,11 +61,11 @@ public class ProjectDto {
 		this.projectManager = projectManager;
 	}
 
-	public LocalDate getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDate createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 

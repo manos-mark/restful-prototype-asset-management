@@ -1,11 +1,11 @@
 export interface Status {
-    id: number,
-    name: string,
-    cssClass: string
+    id: number;
+    name: string;
+    cssClass: string;
 }
 
 export enum Statuses {
-    'IN_PROGRESS' = 1, 
+    'IN_PROGRESS' = 1,
     'NEW' = 2,
     'FINISHED' = 3
 }

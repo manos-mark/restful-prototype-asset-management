@@ -33,6 +33,8 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     pagesArray = [];
     totalPages = this.products.length / this.pageParams.pageSize;
     deleteProductsSubscription: Subscription = null;
+    isFilterChanged = false;
+    isChangeStatusSelected = false;
 
     constructor(private productService: ProductsService,
                 private router: Router,
@@ -47,6 +49,9 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.filterParams.clear();
+        this.isFilterChanged = false;
+        this.isChangeStatusSelected = false;
         this.selectedProductsCount = 0;
         this.searchService.clear();
         this.route.queryParams.subscribe(

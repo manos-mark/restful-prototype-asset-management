@@ -1,6 +1,6 @@
 package com.manos.prototype.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class Product {
 	private int id;
 	
 	@Column(name = "creation_date")
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
 	
 	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "product_name")
@@ -122,11 +122,11 @@ public class Product {
 		this.id = id;
 	}
 
-	public LocalDate getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDate date) {
+	public void setCreatedAt(LocalDateTime date) {
 		this.createdAt = date;
 	}
 

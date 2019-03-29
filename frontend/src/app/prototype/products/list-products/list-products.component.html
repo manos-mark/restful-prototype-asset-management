@@ -45,7 +45,7 @@
             ></owl-date-time>
         </div>
         <div class="dropdown status">
-            <select #statusDropdown (click)="doNothing()">
+            <select #statusDropdown (click)="isFilterChanged = true">
                 <option value=0 selected>Status: All</option>
                 <option value=1>Status: In Progress</option>
                 <option value=2>Status: New</option>
@@ -53,7 +53,7 @@
             </select>
         </div>
         <div class="dropdown status">
-            <select #projectDropdown (click)="doNothing()">
+            <select #projectDropdown (click)="isFilterChanged = true">
                 <option [selected]="!filterParams.projectName" value="null">Project: All</option>
                 <option 
                     *ngFor="let projectName of projectsNames"
@@ -65,7 +65,7 @@
         </div>
         <div  *ngIf="projectsNames">
             <a class="blueDarkBtn" 
-                [ngClass]="{'disabled': projectDropdown.value === 'null' && statusDropdown.value == 0 && toDate == null && fromDate == null}"
+                [ngClass]="{'disabled': !isFilterChanged && toDate == null && fromDate == null}"
                 (click)="applyFilters(statusDropdown.value, projectDropdown.value, dateFrom.value, dateTo.value)"
             >Apply</a>
         </div>
@@ -153,7 +153,7 @@
     <div class="bottomActions">
         <p>Actions</p>
         <div class="dropdown">
-            <select #actionsDropdown (click)="doNothing()">
+            <select #actionsDropdown (click)="isChangeStatusSelected = true">
                 <option selected disabled>Select</option>
                 <option value="NEW">Change status to New</option>
                 <option value="IN_PROGRESS">Change status to In progress</option>
@@ -163,7 +163,7 @@
         </div>
         <a class="blueDarkBtn" 
             (click)="applyChanges(actionsDropdown.value)"
-            [ngClass]="{'disabled': selectedProductsCount == 0 || actionsDropdown.value == 'Select'}"
+            [ngClass]="{'disabled': selectedProductsCount == 0 || !isChangeStatusSelected}"
         >Apply</a>
     </div>
 </div>

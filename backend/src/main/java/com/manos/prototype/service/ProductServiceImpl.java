@@ -1,6 +1,6 @@
 package com.manos.prototype.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +124,7 @@ public class ProductServiceImpl {
 		Hibernate.initialize(project.getStatus());
 		
 		product.setStatus(new Status(Status.NEW_ID));
-		product.setCreatedAt(LocalDate.now());
+		product.setCreatedAt(LocalDateTime.now());
 		product.setProject(project);
 		gateway.save(product);
 		

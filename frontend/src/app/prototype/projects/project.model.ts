@@ -15,11 +15,14 @@ export class Project {
 
     constructor(dto: any) {
         this.id = dto.id;
-        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue-1, dto.createdAt.dayOfMonth);
+        this.createdAt = new Date(dto.createdAt.year, dto.createdAt.monthValue - 1, dto.createdAt.dayOfMonth,
+            dto.createdAt.hour, dto.createdAt.minute, dto.createdAt.second);
         this.projectName = dto.projectName;
         this.companyName = dto.companyName;
         this.projectManager = dto.projectManager;
+        console.log(dto.statusId)
         this.status = StatusesMap.get(dto.statusId);
+        console.log(this.status.id)
         this.productsCount = dto.productsCount;
     }
 }

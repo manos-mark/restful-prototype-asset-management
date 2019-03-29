@@ -35,9 +35,9 @@ export class LoginComponent implements OnInit {
         .subscribe(
             resp => {
                 this.authService.setCurrentUser(resp.body);
-                // if (this.authService.getCurrentUser()) {
-                //     this.router.navigate(['/']);
-                // }
+                if (this.authService.getCurrentUser()) {
+                    this.router.navigate(['/']);
+                }
             },
             error => { console.log(error); }
         );

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 import org.hibernate.Session;
@@ -165,7 +165,7 @@ public class PictureServiceTest {
 	public Project createMockProject() {
 		Project mockProject = new Project();
 		mockProject.setCompanyName("test");
-		mockProject.setCreatedAt(LocalDate.now());
+		mockProject.setCreatedAt(LocalDateTime.now());
 		mockProject.setId(1);
 		mockProject.setProjectManager(createMockManager());
 		mockProject.setProjectName("test");
@@ -175,7 +175,7 @@ public class PictureServiceTest {
 	
 	public Product createMockProduct() {
 		Product mockProduct = new Product();
-		mockProduct.setCreatedAt(LocalDate.now());
+		mockProduct.setCreatedAt(LocalDateTime.now());
 		mockProduct.setDescription("test");
 		mockProduct.setId(1);
 		mockProduct.setProductName("test");
