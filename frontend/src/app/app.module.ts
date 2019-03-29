@@ -23,6 +23,7 @@ import { LightboxModule } from 'ngx-lightbox';
 import { BreadcrumbsService } from './shared/breadcrumbs.service';
 import { NotificationService } from './shared/notification/notification.service';
 import { SearchService } from './header/search/search.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { SearchService } from './header/search/search.service';
   imports: [
     FormsModule,
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     HttpClientXsrfModule,
     SharedModule,

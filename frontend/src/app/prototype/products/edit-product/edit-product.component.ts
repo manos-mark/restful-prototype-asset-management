@@ -289,6 +289,7 @@ export class EditProductComponent implements OnDestroy {
                     this.notificationService.showNotification();
                 },
                 error => {
+                    console.log(error)
                     this.windowPopService.setTitle("Add new product Failed");
                     this.windowPopService.setContext("Your request is not successful!");
                     this.windowPopService.setDetails(error.error.message);
