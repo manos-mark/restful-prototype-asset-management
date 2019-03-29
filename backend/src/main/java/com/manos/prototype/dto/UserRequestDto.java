@@ -11,12 +11,6 @@ import com.manos.prototype.validation.ValidEmail;
 public class UserRequestDto {
 
 	@NotBlank
-	private String password;
-	
-	@NotBlank
-	private String matchingPassword;
-
-	@NotBlank
 	private String firstName;
 
 	@NotBlank
@@ -34,22 +28,6 @@ public class UserRequestDto {
 
 	public void setAcceptedCookies(boolean acceptedCookies) {
 		this.acceptedCookies = acceptedCookies;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getMatchingPassword() {
-		return matchingPassword;
-	}
-
-	public void setMatchingPassword(String matchingPassword) {
-		this.matchingPassword = matchingPassword;
 	}
 
 	public String getFirstName() {

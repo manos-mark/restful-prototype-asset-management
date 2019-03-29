@@ -158,9 +158,7 @@ public class UserControllerTest extends AbstractMvcTest {
 	        .content("{"
 	        		+ "\"firstName\": \"firstName\","
 	        		+ "\"lastName\": \"lastName\","
-	        		+ "\"email\": \"changed@email.com\","
-	        		+ "\"password\": \"123\","
-	        		+ "\"matchingPassword\": \"123\""
+	        		+ "\"email\": \"changed@email.com\""
 	        		+ "}");				
 		
 		mockMvc.perform(request.with(user(user)).with(csrf()))
@@ -182,9 +180,7 @@ public class UserControllerTest extends AbstractMvcTest {
 	        		+ "\"firstName\": \"firstName\","
 	        		+ "\"lastName\": \"lastName\","
 	        		+ "\"email\": \"changed@email.com\","
-	        		+ "\"password\": \"123\","
-	        		+ "\"acceptedCookies\": \"true\","
-	        		+ "\"matchingPassword\": \"123\""
+	        		+ "\"acceptedCookies\": \"true\""
 	        		+ "}");				
 		
 		mockMvc.perform(request.with(user(user)).with(csrf()))
@@ -205,9 +201,7 @@ public class UserControllerTest extends AbstractMvcTest {
 	        		+ "\"firstName\": \"\","
 	        		+ "\"lastName\": \"\","
 	        		+ "\"email\": \"\","
-	        		+ "\"password\": \"\","
-	        		+ "\"acceptedCookies\": \"\","
-	        		+ "\"matchingPassword\": \"\""
+	        		+ "\"acceptedCookies\": \"\""
 	        		+ "}")
 			.contentType(MediaType.APPLICATION_JSON);
 				

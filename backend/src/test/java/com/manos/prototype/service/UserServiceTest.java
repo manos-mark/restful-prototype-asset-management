@@ -288,9 +288,6 @@ public class UserServiceTest {
 		mockDto.setEmail("mmail");
 		mockDto.setFirstName("Name");
 		mockDto.setLastName("last");
-		mockDto.setMatchingPassword("123");
-		mockDto.setPassword("123");
-		
 		
 		when(SecurityUtil.getCurrentUserDetails())
 			.thenReturn(mockUserDetails);
@@ -313,8 +310,6 @@ public class UserServiceTest {
 		mockDto.setEmail("mmail");
 		mockDto.setFirstName("Name");
 		mockDto.setLastName("last");
-		mockDto.setMatchingPassword("123");
-		mockDto.setPassword("123");
 		mockDto.setAcceptedCookies(true);
 		
 		when(finder.findById(User.class, 1L))
