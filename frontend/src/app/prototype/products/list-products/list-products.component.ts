@@ -14,6 +14,7 @@ import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
 import { SearchService } from 'src/app/header/search/search.service';
 import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
+import { LoaderService } from 'src/app/shared/loader/loader.service';
 
 @Component({
   selector: 'app-list-products',
@@ -44,11 +45,13 @@ export class ListProductsComponent implements OnInit, OnDestroy {
                 private breadcrumbsService: BreadcrumbsService,
                 private notificationService: NotificationService,
                 private searchService: SearchService,
-                private windowPopService: WindowPopService) {
+                private windowPopService: WindowPopService,
+                private loaderService: LoaderService) {
         this.breadcrumbsService.setBreadcrumbsProducts();
     }
 
     ngOnInit() {
+        this.loaderService.show();
         this.filterParams.clear();
         this.isFilterChanged = false;
         this.isChangeStatusSelected = false;
@@ -74,6 +77,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
                         this.totalCount = res['totalCount'];
                         this.totalPages = Math.ceil(this.totalCount / this.pageParams.pageSize);
                         this.pagesArray =  Array(this.totalPages).fill(1).map((x, i) => ++i);
+                        this.loaderService.hide();
                     },
                     error => console.log(error)
                 );

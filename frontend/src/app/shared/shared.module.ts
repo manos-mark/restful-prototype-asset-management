@@ -6,6 +6,7 @@ import { ImageCarouselComponent } from './image-carousel/image-carousel.componen
 import { LightboxModule } from 'ngx-lightbox';
 import { NotificationComponent } from './notification/notification.component';
 import { ForgottenPasswordComponent } from '../auth/login/forgotten-password/forgotten-password.component';
+import { LoaderComponent } from './loader/loader.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { ForgottenPasswordComponent } from '../auth/login/forgotten-password/for
         WindowPopComponent,
         ImageCarouselComponent,
         NotificationComponent,
-        ForgottenPasswordComponent
+        ForgottenPasswordComponent,
+        LoaderComponent
     ],
     imports: [
         FormsModule,
@@ -25,7 +27,8 @@ import { ForgottenPasswordComponent } from '../auth/login/forgotten-password/for
         WindowPopComponent,
         ImageCarouselComponent,
         NotificationComponent,
-        ForgottenPasswordComponent
+        ForgottenPasswordComponent,
+        LoaderComponent
     ]
 })
 export class SharedModule {}
