@@ -33,9 +33,19 @@ export class FilterParams {
     }
     constructor() {
         this.projectName = '';
+        this.fromDate = null;
+        this.toDate = null;
+        this.statusId = null;
     }
 
-    isUndefined(): boolean {
-        return this.fromDate === undefined && this.toDate === undefined && this.statusId === undefined && this.projectName === '';
+    isFieldNull(): boolean {
+        return this.fromDate === null && this.toDate === null && this.statusId === null && this.projectName == '';
+    }
+
+    clear() {
+        this.fromDate = null;
+        this.toDate = null;
+        this.projectName = '';
+        this.statusId = null;
     }
 }

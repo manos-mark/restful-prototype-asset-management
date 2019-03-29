@@ -45,7 +45,7 @@
             ></owl-date-time>
         </div>
         <div class="dropdown status">
-            <select #statusDropdown>
+            <select #statusDropdown (click)="doNothing()">
                 <option value=0 selected>Status: All</option>
                 <option value=1>Status: In Progress</option>
                 <option value=2>Status: New</option>
@@ -53,21 +53,24 @@
             </select>
         </div>
         <div class="dropdown status">
-            <select #projectDropdown>
+            <select #projectDropdown (click)="doNothing()">
                 <option [selected]="!filterParams.projectName" value="null">Project: All</option>
                 <option 
                     *ngFor="let projectName of projectsNames"
                     [value]="projectName"
-                    [selected]="filterParams.projectName.match(projectName)"
+                    [selected]="filterParams.projectName === projectName"
                     >Project: {{ projectName }}
                 </option>
             </select>
         </div>
-        <a class="blueDarkBtn" 
-            (click)="applyFilters(statusDropdown.value, projectDropdown.value, dateFrom.value, dateTo.value)"
-        >Apply</a>
+        <div  *ngIf="projectsNames">
+            <a class="blueDarkBtn" 
+                [ngClass]="{'disabled': projectDropdown.value === 'null' && statusDropdown.value == 0 && toDate == null && fromDate == null}"
+                (click)="applyFilters(statusDropdown.value, projectDropdown.value, dateFrom.value, dateTo.value)"
+            >Apply</a>
+        </div>
         <div class="right">
-            <a *ngIf="!filterParams.isUndefined()"  class="grayBtn" (click)="clearFilters()">
+            <a *ngIf="!filterParams.isFieldNull()"  class="grayBtn" (click)="clearFilters()">
                 <span>Clear filters</span><i></i>
             </a>
             <div class="pagination">
@@ -84,7 +87,7 @@
                     </a>
                 </div>
                 <a class="arrowRight"
-                    [ngClass]="{'disabled': pageParams.page == totalPages}"
+                    [ngClass]="{'disabled': pageParams.page == totalPages || totalPages == 0}"
                     (click)="changePageUp()"
                 ><i></i></a>
             </div>
@@ -150,14 +153,17 @@
     <div class="bottomActions">
         <p>Actions</p>
         <div class="dropdown">
-            <select #actionsDropdown>
-            <option selected disabled>Select</option>
-            <option value="NEW">Change status to New</option>
-            <option value="IN_PROGRESS">Change status to In progress</option>
-            <option value="FINISHED">Change status to Finished</option>
-            <option value="DELETE">Delete</option>
+            <select #actionsDropdown (click)="doNothing()">
+                <option selected disabled>Select</option>
+                <option value="NEW">Change status to New</option>
+                <option value="IN_PROGRESS">Change status to In progress</option>
+                <option value="FINISHED">Change status to Finished</option>
+                <option value="DELETE">Delete</option>
             </select>
         </div>
-        <a class="blueDarkBtn" (click)="applyChanges(actionsDropdown.value)">Apply</a>
+        <a class="blueDarkBtn" 
+            (click)="applyChanges(actionsDropdown.value)"
+            [ngClass]="{'disabled': selectedProductsCount == 0 || actionsDropdown.value == 'Select'}"
+        >Apply</a>
     </div>
 </div>

@@ -272,6 +272,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     }
 
     clearFilters() {
+        this.filterParams.clear();
         this.router.navigateByUrl('/', {skipLocationChange: true})
             .then(() =>
                 this.router.navigate(['prototype/products/'])
@@ -298,6 +299,8 @@ export class ListProductsComponent implements OnInit, OnDestroy {
             this.deleteProductsSubscription.unsubscribe();
         }
     }
+
+    doNothing() {}
 
     get pageParams() { return this.productService.pageParams; }
     get filterParams() { return this.productService.filterParams; }

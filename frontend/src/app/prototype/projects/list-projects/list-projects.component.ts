@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Project } from '../project.model';
 import { ProjectsService } from '../projects.service';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ import { WindowPopService } from 'src/app/shared/window-pop/window-pop.service';
   templateUrl: './list-projects.component.html',
   styleUrls: ['./list-projects.component.css']
 })
-export class ListProjectsComponent implements OnInit {
+export class ListProjectsComponent implements OnInit, OnDestroy {
     sortByDateDesc = true;
     sortedByDate = true;
     sortByProductsCountDesc = false;
@@ -149,11 +149,11 @@ export class ListProjectsComponent implements OnInit {
                             // NEW Projects
                             this.projectService.getProjectsCountByStatusId(Statuses.NEW)
                             .subscribe(
-                            projects => {
-                                this.projectService.newProjectsCount.next(projects);
-                            },
-                            error => { console.log(error); }
-                            );
+                                projects => {
+                                    this.projectService.newProjectsCount.next(projects);
+                                },
+                                error => { console.log(error); }
+                                );
                         },
                         error => console.log(error)
                     );
@@ -253,6 +253,7 @@ export class ListProjectsComponent implements OnInit {
     }
 
     clearFilters() {
+        this.filterParams.clear();
         this.router.navigateByUrl('/', {skipLocationChange: true})
             .then(() =>
                 this.router.navigate(['prototype/projects/'])
@@ -276,6 +277,8 @@ export class ListProjectsComponent implements OnInit {
             this.deleteProjectsSubscription.unsubscribe();
         }
     }
+
+    doNothing() {}
 
     get pageParams() { return this.projectService.pageParams; }
     get filterParams() { return this.projectService.filterParams; }
