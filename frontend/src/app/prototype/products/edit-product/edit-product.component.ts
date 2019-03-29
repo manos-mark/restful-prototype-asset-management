@@ -15,13 +15,14 @@ import { Actions } from 'src/app/general/home/activity/action.enum';
 import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
 import { SearchService } from 'src/app/header/search/search.service';
+import { LoaderService } from 'src/app/shared/loader/loader.service';
 
 @Component({
   selector: 'app-edit-product',
   templateUrl: './edit-product.component.html',
   styleUrls: ['./edit-product.component.css']
 })
-export class EditProductComponent implements OnDestroy {
+export class EditProductComponent implements OnDestroy, OnInit {
     public static readonly MAX_UPLOAD_FILES_SIZE = 12582912;
     public static readonly MAX_UPLOAD_FILES_LENGTH = 10;
     product: Product;
@@ -57,8 +58,11 @@ export class EditProductComponent implements OnDestroy {
                 private carouselService: ImageCarouselService,
                 private breadcrumbsService: BreadcrumbsService,
                 private notificationService: NotificationService,
-                private searchService: SearchService) {
+                private searchService: SearchService,
+                private loaderService: LoaderService) { }
 
+    ngOnInit() {
+        this.loaderService.show();
         this.searchService.clear();
         if (this.editMode) {
             this.breadcrumbsService.setBreadcrumbsProductEdit();
@@ -130,6 +134,7 @@ export class EditProductComponent implements OnDestroy {
                                         })
                                         this.computePicturesListSize();
                                         this.computePicturesLength();
+                                        this.loaderService.hide();
                                     },
                                     error => console.log(error)
                                 );
@@ -140,7 +145,9 @@ export class EditProductComponent implements OnDestroy {
                 },
                 error => console.log(error)
             )
-        } 
+        } else {
+            this.loaderService.hide();
+        }
     }
 
     onOpenCarousel() {

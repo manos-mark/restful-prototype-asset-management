@@ -6,6 +6,7 @@ import { WindowPopService } from '../shared/window-pop/window-pop.service';
 import { Statuses } from '../prototype/status.enum';
 import { Subscription } from 'rxjs';
 import { User } from '../auth/user.model';
+import { LoaderService } from '../shared/loader/loader.service';
 
 @Component({
   selector: 'app-header',
@@ -22,9 +23,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     constructor(private authService: AuthService,
                 private productsService: ProductsService,
                 private projectsService: ProjectsService,
-                private windowPopService: WindowPopService) { }
+                private windowPopService: WindowPopService,
+                private loaderService: LoaderService) { }
 
     ngOnInit() {
+        this.loaderService.show();
         this.authService.getCurrentUserSubject()
             .subscribe(
                 res => {
@@ -64,6 +67,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                                 error => console.log(error)
                             );
                         }
+                        this.loaderService.hide();
                     }
         )
     }

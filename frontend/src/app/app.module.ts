@@ -24,6 +24,7 @@ import { BreadcrumbsService } from './shared/breadcrumbs.service';
 import { NotificationService } from './shared/notification/notification.service';
 import { SearchService } from './header/search/search.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoaderService } from './shared/loader/loader.service';
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     WindowPopService,
     ImageCarouselService,
     NotificationService,
+    LoaderService,
     SearchService
   ],
   bootstrap: [AppComponent]

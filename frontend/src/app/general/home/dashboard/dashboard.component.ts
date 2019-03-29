@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductsService } from 'src/app/prototype/products/products.service';
 import { ProjectsService } from 'src/app/prototype/projects/projects.service';
 import { Statuses } from 'src/app/prototype/status.enum';
+import { LoaderService } from 'src/app/shared/loader/loader.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,9 +18,11 @@ export class DashboardComponent implements OnInit {
   finishedProjectsCount: number;
 
   constructor(private productsService: ProductsService,
-              private projectsService: ProjectsService) { }
+              private projectsService: ProjectsService,
+              private loaderService: LoaderService) { }
 
   ngOnInit() {
+    this.loaderService.show();
     // NEW Products
     this.productsService.getProductsCountByStatusId(Statuses.NEW) 
       .subscribe(
@@ -97,6 +100,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(
         projects => { 
           this.finishedProjectsCount = projects;
+          this.loaderService.hide();
         },
         error => { console.log(error) }
     );

@@ -17,13 +17,14 @@ import { BreadcrumbsService } from 'src/app/shared/breadcrumbs.service';
 import { NotificationService } from 'src/app/shared/notification/notification.service';
 import { SearchService } from 'src/app/header/search/search.service';
 import { Subscription } from 'rxjs';
+import { LoaderService } from 'src/app/shared/loader/loader.service';
 
 @Component({
   selector: 'app-edit-project',
   templateUrl: './edit-project.component.html',
   styleUrls: ['./edit-project.component.css']
 })
-export class EditProjectComponent implements OnDestroy {
+export class EditProjectComponent implements OnDestroy, OnInit {
     projectManagers: {
         id: number;
         name: string;
@@ -53,8 +54,11 @@ export class EditProjectComponent implements OnDestroy {
                 private carouselService: ImageCarouselService,
                 private breadcrumbsService: BreadcrumbsService,
                 private notificationService: NotificationService,
-                private searchService: SearchService) {
+                private searchService: SearchService,
+                private loaderService: LoaderService) { }
 
+    ngOnInit() {
+        this.loaderService.show();
         this.searchService.clear();
         if (this.projectService.editMode) {
             this.breadcrumbsService.setBreadcrumbsProjectEdit();
@@ -100,6 +104,7 @@ export class EditProjectComponent implements OnDestroy {
                                         res.map(
                                             item => { this.products.push(new Product(item)) }
                                         )
+                                        this.loaderService.hide();
                                     },
                                     error => console.log(error)
                                 )
@@ -109,6 +114,8 @@ export class EditProjectComponent implements OnDestroy {
                 },
                 error => console.log(error)
             )
+        } else {
+            this.loaderService.hide();
         }
     }
 
