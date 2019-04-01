@@ -52,7 +52,6 @@ export class ListProductsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.loaderService.show();
-        this.filterParams.clear();
         this.isFilterChanged = false;
         this.isChangeStatusSelected = false;
         this.selectedProductsCount = 0;

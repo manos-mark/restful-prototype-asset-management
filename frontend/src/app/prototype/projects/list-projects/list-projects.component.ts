@@ -51,7 +51,6 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
         this.isChangeStatusSelected = false;
         this.selectedProjectsCount = 0;
         this.searchService.clear();
-        this.filterParams.clear();
         this.isMasterChecked = false;
         this.projectService.getProjects(this.pageParams, this.filterParams)
             .subscribe(
