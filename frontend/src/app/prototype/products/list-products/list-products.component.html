@@ -162,7 +162,7 @@
             </select>
         </div>
         <a class="blueDarkBtn" 
-            (click)="applyChanges(actionsDropdown.value)"
+            (click)="onApplyChanges(actionsDropdown.value)"
             [ngClass]="{'disabled': selectedProductsCount == 0 || !isChangeStatusSelected}"
         >Apply</a>
     </div>

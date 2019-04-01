@@ -114,8 +114,8 @@ export class ListProductsComponent implements OnInit, OnDestroy {
         }
     }
 
-    applyChanges(action) {
-        let selectedStatus: number;
+    onApplyChanges(action) {
+        let selectedStatus: number = undefined;
         if (action === 'NEW') {
             selectedStatus = Statuses.NEW;
         } else if (action === 'IN_PROGRESS') {
@@ -129,7 +129,36 @@ export class ListProductsComponent implements OnInit, OnDestroy {
         }
 
         if (selectedStatus == null) {
-            this.windowPopService.setTitle('Delete Product');
+            this.deleteProducts(selectedStatus);
+        } else { // change status
+            this.changeStatus(selectedStatus);
+        }
+    }
+
+    changeStatus(selectedStatus: number) {
+        this.changeStatusObservables(selectedStatus)
+            .subscribe(
+                dataArray => {
+                    this.products = new Array();
+                    this.isMasterChecked = false;
+                    this.activityService.addActivity(Actions.UPDATED_PRODUCT).subscribe();
+                    this.notificationService.showNotification();
+                    this.ngOnInit();
+                    // IN_PROGRESS Products
+                    this.productService.getProductsCountByStatusId(Statuses.IN_PROGRESS)
+                        .subscribe(
+                            products => {
+                                this.productService.inProgressProductsCount.next(products);
+                            },
+                            error => { console.log(error); }
+                        );
+                },
+                error => console.log(error)
+            );
+    }
+
+    deleteProducts(selectedStatus: number) {
+        this.windowPopService.setTitle('Delete Product');
             this.windowPopService.setContext('Are you sure?');
             this.windowPopService.setDetails('These products will be deleted permanently.');
             this.windowPopService.setDeleteProduct(true);
@@ -137,7 +166,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
             this.deleteProductsSubscription = this.productService.deleteProductConfirmed
                 .subscribe( res => {
                     this.deleteProductsSubscription.unsubscribe();
-                    this.changeStatus(selectedStatus)
+                    this.changeStatusObservables(selectedStatus)
                         .subscribe(
                             dataArray => {
                                 this.products = new Array();
@@ -159,30 +188,9 @@ export class ListProductsComponent implements OnInit, OnDestroy {
                 },
                 error => console.log(error)
             );
-        } else { // change status
-            this.changeStatus(selectedStatus)
-                .subscribe(
-                    dataArray => {
-                        this.products = new Array();
-                        this.isMasterChecked = false;
-                        this.activityService.addActivity(Actions.UPDATED_PRODUCT).subscribe();
-                        this.notificationService.showNotification();
-                        this.ngOnInit();
-                        // IN_PROGRESS Products
-                        this.productService.getProductsCountByStatusId(Statuses.IN_PROGRESS)
-                            .subscribe(
-                                products => {
-                                    this.productService.inProgressProductsCount.next(products);
-                                },
-                                error => { console.log(error); }
-                            );
-                    },
-                    error => console.log(error)
-                );
-        }
     }
 
-    changeStatus(selectedStatus: number) {
+    changeStatusObservables(selectedStatus: number) {
         const observables: Observable<any>[] = new Array();
 
         this.products.forEach(

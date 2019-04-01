@@ -100,8 +100,8 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
         }
     }
 
-    applyChanges(action) {
-        let selectedStatus: number;
+    onApplyChanges(action) {
+        let selectedStatus: number = undefined;
         if (action === "NEW") {
             selectedStatus = Statuses.NEW;
         } 
@@ -116,7 +116,36 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
         }
 
         if (selectedStatus == null) {
-            this.windowPopService.setTitle('Delete Project');
+            this.deleteProjects(selectedStatus);
+        } else { // change status
+            this.changeStatus(selectedStatus);
+        }
+    }
+
+    changeStatus(selectedStatus: number) {
+        this.changeStatusObservalbes(selectedStatus)
+            .subscribe(
+                dataArray => {
+                    this.projects = new Array();
+                    this.isMasterChecked = false;
+                    this.activityService.addActivity(Actions.UPDATED_PROJECT).subscribe();
+                    this.notificationService.showNotification();
+                    this.ngOnInit();
+                    // NEW Projects
+                    this.projectService.getProjectsCountByStatusId(Statuses.NEW)
+                    .subscribe(
+                        projects => {
+                            this.projectService.newProjectsCount.next(projects);
+                        },
+                        error => { console.log(error); }
+                        );
+                },
+                error => console.log(error)
+            );
+    }
+
+    deleteProjects(selectedStatus: number) {
+        this.windowPopService.setTitle('Delete Project');
             this.windowPopService.setContext('Are you sure?');
             this.windowPopService.setDetails('These projects will be deleted permanently.');
             this.windowPopService.setDeleteProject(true);
@@ -124,7 +153,7 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
             this.deleteProjectsSubscription = this.projectService.deleteProjectConfirmed
                 .subscribe( res => {
                     this.deleteProjectsSubscription.unsubscribe();
-                    this.changeStatus(selectedStatus)
+                    this.changeStatusObservalbes(selectedStatus)
                         .subscribe(
                             dataArray => {
                                 this.projects = new Array();
@@ -146,30 +175,9 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
                 },
                     error => console.log(error)
                 );
-            } else { // change status
-                this.changeStatus(selectedStatus)
-                    .subscribe(
-                        dataArray => {
-                            this.projects = new Array();
-                            this.isMasterChecked = false;
-                            this.activityService.addActivity(Actions.UPDATED_PROJECT).subscribe();
-                            this.notificationService.showNotification();
-                            this.ngOnInit();
-                            // NEW Projects
-                            this.projectService.getProjectsCountByStatusId(Statuses.NEW)
-                            .subscribe(
-                                projects => {
-                                    this.projectService.newProjectsCount.next(projects);
-                                },
-                                error => { console.log(error); }
-                                );
-                        },
-                        error => console.log(error)
-                    );
-            }
     }
 
-    changeStatus(selectedStatus: number) {
+    changeStatusObservalbes(selectedStatus: number) {
         let observables: Observable<any>[] = new Array();
 
         this.projects.forEach(

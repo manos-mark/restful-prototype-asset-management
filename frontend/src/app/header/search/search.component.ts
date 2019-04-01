@@ -23,11 +23,11 @@ export class SearchComponent implements OnInit {
     }
 
     onKeyup(input, $event) {
-        if (event['key'].match('ArrowDown')) {
+        if (event['key'] === 'ArrowDown') {
             this.moveDown();
-        } else if (event['key'].match('ArrowUp')) {
+        } else if (event['key'] === 'ArrowUp') {
             this.moveUp();
-        } else if (event['key'].match('Enter')) {
+        } else if (event['key'] === 'Enter') {
             this.select(input);
         } else {
             this.searchService.input = input;

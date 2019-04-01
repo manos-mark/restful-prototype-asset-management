@@ -5,7 +5,7 @@ class Breadcrumb {
 export class BreadcrumbsService extends Breadcrumb{
 
     
-    private _breadcrumbs : Breadcrumb[];
+    private _breadcrumbs : Breadcrumb[] = [];
     public get breadcrumbs() : Breadcrumb[] {
         return this._breadcrumbs;
     }
@@ -14,7 +14,7 @@ export class BreadcrumbsService extends Breadcrumb{
     // }
 
     setBreadcrumbsGeneral() {
-        this._breadcrumbs = [];
+        this._breadcrumbs.splice(0, this._breadcrumbs.length);
         this._breadcrumbs.push({
             name: "General",
             src: "general"
@@ -22,7 +22,7 @@ export class BreadcrumbsService extends Breadcrumb{
     }   
     
     setBreadcrumbsProducts() {
-        this._breadcrumbs = [];
+        this._breadcrumbs.splice(0, this._breadcrumbs.length);
         this._breadcrumbs.push({
             name: "Prototype > Products",
             src: "prototype/products"
@@ -30,7 +30,7 @@ export class BreadcrumbsService extends Breadcrumb{
     }
 
     setBreadcrumbsProductNew() {
-        this._breadcrumbs = [];
+        this._breadcrumbs.splice(0, this._breadcrumbs.length);
         this._breadcrumbs.push({
             name: "Prototype > Products ",
             src: "prototype/products"
@@ -42,7 +42,7 @@ export class BreadcrumbsService extends Breadcrumb{
     }
 
     setBreadcrumbsProductEdit() {
-        this._breadcrumbs = [];
+        this._breadcrumbs.splice(0, this._breadcrumbs.length);
         this._breadcrumbs.push({
             name: "Prototype > Products ",
             src: "prototype/products"
@@ -54,7 +54,7 @@ export class BreadcrumbsService extends Breadcrumb{
     }
 
     setBreadcrumbsProjects() {
-        this._breadcrumbs = [];
+        this._breadcrumbs.splice(0, this._breadcrumbs.length);
         this._breadcrumbs.push({
             name: "Prototype > Projects",
             src: "prototype/projects"
@@ -62,7 +62,7 @@ export class BreadcrumbsService extends Breadcrumb{
     }
 
     setBreadcrumbsProjectNew() {
-        this._breadcrumbs = [];
+        this._breadcrumbs.splice(0, this._breadcrumbs.length);
         this._breadcrumbs.push({
             name: "Prototype > Projects",
             src: "prototype/projects"
@@ -74,9 +74,9 @@ export class BreadcrumbsService extends Breadcrumb{
     }
 
     setBreadcrumbsProjectEdit() {
-        this._breadcrumbs = [];
+        this._breadcrumbs.splice(0, this._breadcrumbs.length);
         this._breadcrumbs.push({
-            name: "Prototype > Projects",
+            name: "Prototype > Projects ",
             src: "prototype/projects"
         });
         this._breadcrumbs.push({
@@ -86,7 +86,7 @@ export class BreadcrumbsService extends Breadcrumb{
     }
 
     setBreadcrumbsProfile() {
-        this._breadcrumbs = [];
+        this._breadcrumbs.splice(0, this._breadcrumbs.length);
         this._breadcrumbs.push({
             name: "Settings",
             src: "profile"

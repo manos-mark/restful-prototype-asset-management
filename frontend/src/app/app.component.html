@@ -16,7 +16,7 @@
                 <app-notification
                     [(active)]="notificationAvtivate" 
                 ></app-notification>
-                <div class="breadcrumbs" *ngIf="currentUser">
+                <div class="breadcrumbs" *ngIf="currentUser && breadcrumbs">
                     <div *ngFor="let breadcrumb of breadcrumbs" >
                         <a 
                             *ngIf="breadcrumb.src"
