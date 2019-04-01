@@ -10,13 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import javax.servlet.ServletContext;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import com.manos.prototype.testservice.ProductTestService;
 
 @Sql(scripts = "classpath:/sql/status.sql")
 @Sql(scripts = "classpath:/sql/projects.sql")
@@ -24,8 +21,8 @@ import com.manos.prototype.testservice.ProductTestService;
 @Sql(scripts = "classpath:/sql/pictures.sql")
 public class ProductControllerTest extends AbstractMvcTest{
 	
-	@Autowired
-	private ProductTestService productTestService;
+//	@Autowired
+//	private ProductTestService productTestService;
 
 	@Test
 	public void givenWac_whenServletContext_thenItProvidesUserController() {

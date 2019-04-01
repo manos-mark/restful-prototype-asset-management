@@ -256,7 +256,6 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
     applyFilters(statusId: number, dateFrom: Date, dateTo: Date) {
         this.filterParams.fromDate = dateFrom;
         this.filterParams.toDate = dateTo;
-
         if (statusId >= 1 && statusId <= 3) {
             this.projects = new Array();
             this.filterParams.statusId = statusId;

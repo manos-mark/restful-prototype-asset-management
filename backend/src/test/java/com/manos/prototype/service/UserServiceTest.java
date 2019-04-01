@@ -7,8 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,14 +19,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.manos.prototype.dao.UserDaoImpl;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
+import com.manos.prototype.exception.ApplicationException;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.util.PasswordGenerationUtil;
 import com.manos.prototype.util.SecurityUtil;
 import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(value = {GenericFinder.class, SecurityUtil.class, PasswordGenerationUtil.class})
+@PrepareForTest(value = {GenericGateway.class, GenericFinder.class, SecurityUtil.class, PasswordGenerationUtil.class})
 public class UserServiceTest {
 	
 	@Mock
@@ -44,10 +44,7 @@ public class UserServiceTest {
 	private GenericFinder finder;
 	
 	@Mock
-	private SessionFactory sessionFactory;
-	
-	@Mock
-	private Session session;
+	private GenericGateway gateway;
 	
 	@Test
 	public void getCurrentUserDetails_nullUserFail() {
@@ -56,10 +53,9 @@ public class UserServiceTest {
 		when(SecurityUtil.getCurrentUserDetails())
 			.thenReturn(null);
 		
-		assertThatExceptionOfType(EntityNotFoundException.class)
-		.isThrownBy(() -> {
+		assertThatCode(() -> { 
 			userService.getCurrentUserDetails();
-		});
+		}).doesNotThrowAnyException();
 	}
 	
 	@Test
@@ -150,7 +146,7 @@ public class UserServiceTest {
 		when(passwordEncoder.matches("000", "789"))
 			.thenReturn(false);
 		
-		assertThatExceptionOfType(EntityNotFoundException.class)
+		assertThatExceptionOfType(ApplicationException.class)
 			.isThrownBy(() -> {
 				userService.updateUserPassword("000", "789");
 			});
@@ -214,9 +210,7 @@ public class UserServiceTest {
 		
 		when(userService.getUser(1))
 			.thenReturn(mockUser);
-		when(sessionFactory.getCurrentSession())
-			.thenReturn(session);
-		
+
 		assertThatCode(() -> { 
 			userService.deleteUser(1);
 		}).doesNotThrowAnyException();
@@ -242,8 +236,6 @@ public class UserServiceTest {
 			.thenReturn(mockUser);
 		when(PasswordGenerationUtil.getSaltString())
 			.thenReturn("789");
-		when(sessionFactory.getCurrentSession())
-			.thenReturn(session);
 		
 		assertThatCode(() -> { 
 			userService.saveNewPassword("mail");

@@ -58,7 +58,6 @@ public class ProductDaoTest {
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
 		assertThat(product.getProductName()).isEqualTo("productName");
-		assertThat(product.getCreatedAt()).isEqualTo("2011-12-17");
 		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
 		assertThat(product.getDescription()).isEqualTo("description");
 		assertThat(product.getQuantity()).isEqualTo(12);
@@ -84,7 +83,6 @@ public class ProductDaoTest {
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
 		assertThat(product.getProductName()).isEqualTo("productName");
-		assertThat(product.getCreatedAt()).isEqualTo("2011-12-17");
 		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
 		assertThat(product.getDescription()).isEqualTo("description");
 		assertThat(product.getQuantity()).isEqualTo(12);
@@ -102,7 +100,6 @@ public class ProductDaoTest {
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
 		assertThat(product.getProductName()).isEqualTo("productName");
-		assertThat(product.getCreatedAt()).isEqualTo("2011-12-17");
 		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
 		assertThat(product.getDescription()).isEqualTo("description");
 		assertThat(product.getQuantity()).isEqualTo(12);
@@ -118,7 +115,6 @@ public class ProductDaoTest {
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
 		assertThat(product.getProductName()).isEqualTo("productName");
-		assertThat(product.getCreatedAt()).isEqualTo("2011-12-17");
 		assertThat(product.getSerialNumber()).isEqualTo("serialNumber");
 		assertThat(product.getDescription()).isEqualTo("description");
 		assertThat(product.getQuantity()).isEqualTo(12);

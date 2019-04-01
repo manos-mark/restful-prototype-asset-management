@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,13 +29,14 @@ import com.manos.prototype.exception.EntityNotFoundException;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 import com.pastelstudios.paging.OrderClause;
 import com.pastelstudios.paging.OrderDirection;
 import com.pastelstudios.paging.PageRequest;
 import com.pastelstudios.paging.PageResult;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(GenericFinder.class)
+@PrepareForTest({GenericFinder.class, GenericGateway.class})
 public class ProjectServiceTest {
 
 	@Mock
@@ -53,10 +52,7 @@ public class ProjectServiceTest {
 	private GenericFinder finder;
 	
 	@Mock
-	private SessionFactory sessionFactory;
-	
-	@Mock
-	private Session session;
+	private GenericGateway gateway;
 	
 	@Mock
 	private PictureDaoImpl pictureDao;
@@ -188,9 +184,6 @@ public class ProjectServiceTest {
 			.thenReturn(new ArrayList<>());
 		when(finder.findById(Project.class, 2))
 			.thenReturn(mockProject);
-		when(sessionFactory.getCurrentSession())
-			.thenReturn(session);
-		
 		
 		assertThatCode(() -> {
 			projectService.deleteProject(2);
@@ -207,8 +200,6 @@ public class ProjectServiceTest {
 			.thenReturn(mockProject);
 		when(finder.findById(ProjectManager.class, 1))
 			.thenReturn(mockProjectManager);
-		when(sessionFactory.getCurrentSession())
-			.thenReturn(session);
 		
 		assertThatCode(() -> {
 			projectService.saveProject(mockProject, 1);
@@ -255,8 +246,6 @@ public class ProjectServiceTest {
 			.thenReturn(projectManager);
 		when(finder.findById(Project.class, 1))
 			.thenReturn(mockProject);
-		when(sessionFactory.getCurrentSession())
-			.thenReturn(session);
 		
 		assertThatCode(() -> {
 			projectService.updateProject(mockDto, 1);
@@ -287,8 +276,6 @@ public class ProjectServiceTest {
 			.thenReturn(projectManager);
 		when(finder.findById(Project.class, 1))
 			.thenReturn(mockProject);
-		when(sessionFactory.getCurrentSession())
-			.thenReturn(session);
 		
 		assertThatExceptionOfType(EntityNotFoundException.class)
 			.isThrownBy(() -> {

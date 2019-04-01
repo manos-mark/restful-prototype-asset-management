@@ -7,8 +7,6 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,9 +23,10 @@ import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
 import com.pastelstudios.db.GenericFinder;
+import com.pastelstudios.db.GenericGateway;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(GenericFinder.class)
+@PrepareForTest({GenericFinder.class, GenericGateway.class})
 public class PictureServiceTest {
 
 	@Mock
@@ -43,10 +42,7 @@ public class PictureServiceTest {
 	private ProductDaoImpl productDao;
 	
 	@Mock
-	private SessionFactory sessionFactory;
-	
-	@Mock
-	private Session session;
+	private GenericGateway gateway;
 	
 	@Test
 	public void getPicturesCountByProductId_nullProduct_fail() {
@@ -119,9 +115,6 @@ public class PictureServiceTest {
 	@Test
 	public void savePicture_success() {
 		ProductPicture mockPicture = createMockPicture();
-		
-		when(sessionFactory.getCurrentSession())
-			.thenReturn(session);
 
 		assertThatCode(() -> {
 			pictureService.savePicture(mockPicture);

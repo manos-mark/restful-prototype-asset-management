@@ -142,11 +142,10 @@ export class EditProjectComponent implements OnDestroy, OnInit {
                 projectName: this.projectName.value,
                 companyName: this.companyName.value,
                 projectManager: { id: this.projectManagerId.value },
-                status: { id: this.statusId.value },
                 id: this.project.id,
             });
 
-            this.projectService.updateProject(tempProject)
+            this.projectService.updateProject(tempProject, this.statusId.value)
                     .subscribe(
                         res => {
                             this.router.navigate(['/prototype/projects']);
