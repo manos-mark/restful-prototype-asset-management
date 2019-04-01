@@ -20,9 +20,7 @@ export class Project {
         this.projectName = dto.projectName;
         this.companyName = dto.companyName;
         this.projectManager = dto.projectManager;
-        console.log(dto.statusId)
         this.status = StatusesMap.get(dto.statusId);
-        console.log(this.status.id)
         this.productsCount = dto.productsCount;
     }
 }

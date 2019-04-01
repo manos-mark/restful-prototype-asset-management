@@ -1,7 +1,7 @@
 export interface Action {
-    id: number,
-    name: string,
-    cssClass: string
+    readonly id: number,
+    readonly name: string,
+    readonly cssClass: string
 }
 
 export enum Actions {

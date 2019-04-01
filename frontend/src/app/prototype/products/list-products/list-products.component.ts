@@ -200,8 +200,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
                     if (selectedStatus == null) {
                         observables.push(this.productService.deleteProduct(product.id));
                     } else { // change status
-                        product.status.id = selectedStatus;
-                        observables.push(this.productService.updateProductStatus(product));
+                        observables.push(this.productService.updateProductStatus(product, selectedStatus));
                     }
                 }
             }

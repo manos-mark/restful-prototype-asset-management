@@ -80,7 +80,7 @@ export class ProductsService {
         return this.httpClient.put<any>('api/products/' + productId, formData)
     }
 
-    updateProductStatus(product) {
+    updateProductStatus(product, status: number) {
         const formData = new FormData();
         const tempTypeArray = [];
         for (let i = 0; i < product.picturesCount; i++) {
@@ -102,7 +102,7 @@ export class ProductsService {
                 serialNumber: product.serialNumber,
                 description: product.description,
                 quantity: product.quantity,
-                statusId: product.status.id,
+                statusId: status,
                 projectId: product.projectId,
                 thumbPictureIndex: -1
             }

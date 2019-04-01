@@ -187,8 +187,7 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
                     if (selectedStatus == null) {
                         observables.push(this.projectService.deleteProject(project.id));
                     } else { // change status
-                        project.status.id = selectedStatus;
-                        observables.push(this.projectService.updateProject(project));
+                        observables.push(this.projectService.updateProject(project, selectedStatus));
                     }
                 }
             }
