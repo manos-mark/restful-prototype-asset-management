@@ -17,9 +17,6 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.manos.prototype.dao.PictureDaoImpl;
-import com.manos.prototype.dao.ProductDaoImpl;
-import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dto.PictureTypeRequestDto;
 import com.manos.prototype.dto.ProductRequestDto;
 import com.manos.prototype.entity.Product;
@@ -29,6 +26,9 @@ import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityAlreadyExistsException;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.finder.PictureFinder;
+import com.manos.prototype.finder.ProductFinder;
+import com.manos.prototype.finder.ProjectFinder;
 import com.manos.prototype.search.ProductSearch;
 import com.manos.prototype.vo.ProductVo;
 import com.pastelstudios.db.GenericFinder;
@@ -42,19 +42,19 @@ import com.pastelstudios.paging.PageRequest;
 public class ProductServiceTest {
 
 	@Mock
-	private ProductDaoImpl productDao;
+	private ProductFinder productDao;
 	
 	@InjectMocks
 	private ProductServiceImpl productService;
 	
 	@Mock
-	private ProjectDaoImpl projectDao;
+	private ProjectFinder projectDao;
 	
 	@Mock
 	private GenericFinder finder;
 	
 	@Mock
-	private PictureDaoImpl pictureDao;
+	private PictureFinder pictureDao;
 	
 	@Mock
 	private GenericGateway gateway;

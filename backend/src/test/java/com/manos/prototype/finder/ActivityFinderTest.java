@@ -1,4 +1,4 @@
-package com.manos.prototype.dao;
+package com.manos.prototype.finder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,41 +14,43 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.Activity;
+import com.manos.prototype.finder.ActivityFinder;
+import com.manos.prototype.finder.UserFinder;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigUnitTest.class })
 @Sql(scripts = "classpath:/sql/actions.sql")
 @Sql(scripts = "classpath:/sql/users.sql")
 @Sql(scripts = "classpath:/sql/activities.sql")
-public class ActivityDaoTest {
+public class ActivityFinderTest {
 
 	@Autowired
-	private ActivityDaoImpl activityDao;
+	private ActivityFinder activityFinder;
 	
 	@Autowired
-	private UserDaoImpl userDao;
+	private UserFinder userDao;
 	
 	@Test
 	@Transactional
 	public void autowiredDao_success() {
-		assertThat(activityDao).isNotNull();
+		assertThat(activityFinder).isNotNull();
 		assertThat(userDao).isNotNull();
 	}
 
 	@Test
 	@Transactional
 	public void getActivitiesByUserId_success() {
-		List<Activity> userOneActivities = activityDao.getActivitiesByUserId(1);
+		List<Activity> userOneActivities = activityFinder.getActivitiesByUserId(1);
 		assertThat(userOneActivities).size().isEqualTo(2);
 		
-		List<Activity> userTwoActivities = activityDao.getActivitiesByUserId(2);
+		List<Activity> userTwoActivities = activityFinder.getActivitiesByUserId(2);
 		assertThat(userTwoActivities).size().isEqualTo(1);
 	}
 	
 	@Test
 	@Transactional
 	public void getActivitiesByUserId_fail() {
-		List<Activity> activities = activityDao.getActivitiesByUserId(100);
+		List<Activity> activities = activityFinder.getActivitiesByUserId(100);
 		assertThat(activities).isEmpty();
 	}
 	

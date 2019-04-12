@@ -7,23 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.ProductDaoImpl;
-import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dto.SearchDto;
 import com.manos.prototype.dto.SearchProductDto;
 import com.manos.prototype.dto.SearchProjectDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.finder.ProductFinder;
+import com.manos.prototype.finder.ProjectFinder;
 import com.pastelstudios.convert.ConversionService;
 
 @Service
 public class SearchService {
 	
 	@Autowired
-	private ProjectDaoImpl projectDao;
+	private ProjectFinder projectDao;
 
 	@Autowired
-	private ProductDaoImpl productDao;
+	private ProductFinder productDao;
 	
 	@Autowired
 	private ConversionService conversionService;

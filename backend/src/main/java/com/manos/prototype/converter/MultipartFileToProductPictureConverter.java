@@ -17,6 +17,7 @@ public class MultipartFileToProductPictureConverter implements Converter<Commons
 		picture.setPicture(from.getBytes());
 		picture.setName(from.getOriginalFilename());
 		picture.setSize(from.getSize());
+		picture.setFileType(from.getContentType());
 		
 		return picture;
 	}

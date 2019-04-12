@@ -1,4 +1,4 @@
-package com.manos.prototype.dao;
+package com.manos.prototype.finder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.Project;
+import com.manos.prototype.finder.ProjectFinder;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.paging.OrderClause;
@@ -28,15 +29,15 @@ import com.pastelstudios.paging.PageRequest;
 @Sql(scripts = "classpath:/sql/status.sql")
 @Sql(scripts = "classpath:/sql/projects.sql")
 @Sql(scripts = "classpath:/sql/products.sql")
-public class ProjectDaoTest {
+public class ProjectFinderTest {
 		
 	@Autowired 
-	private ProjectDaoImpl projectDao;
+	private ProjectFinder projectFinder;
 	
 	@Test
 	@Transactional
 	void autowiredDao_success() {
-		assertThat(projectDao).isNotNull();
+		assertThat(projectFinder).isNotNull();
 	}
 	
 	@Test
@@ -56,7 +57,7 @@ public class ProjectDaoTest {
 		ProjectSearch search = new ProjectSearch();
 		search.setStatusId(2);
 		
-		List<ProjectVo> projects = projectDao.getProjects(pageRequest, search);
+		List<ProjectVo> projects = projectFinder.getProjects(pageRequest, search);
 		assertThat(projects).isNotNull();
 		assertThat(projects).isNotEmpty();
 		assertThat(projects.get(0).getProject().getId()).isEqualTo(1);
@@ -82,7 +83,7 @@ public class ProjectDaoTest {
 		ProjectSearch search = new ProjectSearch();
 		search.setStatusId(2);
 		
-		List<ProjectVo> projects = projectDao.getProjects(pageRequest, search);
+		List<ProjectVo> projects = projectFinder.getProjects(pageRequest, search);
 		assertThat(projects).isNotNull();
 		assertThat(projects).isNotEmpty();
 		assertThat(projects.get(0).getProject().getId()).isEqualTo(1);
@@ -114,14 +115,14 @@ public class ProjectDaoTest {
 		
 		assertThatExceptionOfType(NullPointerException.class)
 		.isThrownBy(() -> { 
-			projectDao.getProjects(pageRequest, search);
+			projectFinder.getProjects(pageRequest, search);
 		});
 	}
 	
 	@Test
 	@Transactional
 	void getProjectsCount() {
-		assertThat(projectDao.getProjectsCountByStatus(2)).isEqualTo(1);
+		assertThat(projectFinder.getProjectsCountByStatus(2)).isEqualTo(1);
 	}
 	
 	@Test
@@ -136,13 +137,13 @@ public class ProjectDaoTest {
 		ProjectSearch search = new ProjectSearch();
 		search.setStatusId(2);
 		
-		assertThat(projectDao.count(search)).isEqualTo(1);
+		assertThat(projectFinder.count(search)).isEqualTo(1);
 	}
 	
 	@Test
 	@Transactional
 	void getProjectByName() {
-		Project project = projectDao.getProjectByName("firstProject");
+		Project project = projectFinder.getProjectByName("firstProject");
 		assertThat(project).isNotNull();
 		assertThat(project).hasNoNullFieldsOrProperties();
 	}
@@ -150,7 +151,7 @@ public class ProjectDaoTest {
 	@Test
 	@Transactional
 	void search() {
-		List<Project> projects = projectDao.search("firstProject", "projectName");
+		List<Project> projects = projectFinder.search("firstProject", "projectName");
 		assertThat(projects).isNotNull();
 	}
 }

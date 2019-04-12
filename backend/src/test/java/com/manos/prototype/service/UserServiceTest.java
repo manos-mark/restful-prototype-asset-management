@@ -16,11 +16,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.manos.prototype.dao.UserDaoImpl;
 import com.manos.prototype.dto.UserRequestDto;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.ApplicationException;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.finder.UserFinder;
 import com.manos.prototype.security.UserDetailsImpl;
 import com.manos.prototype.util.PasswordGenerationUtil;
 import com.manos.prototype.util.SecurityUtil;
@@ -32,7 +32,7 @@ import com.pastelstudios.db.GenericGateway;
 public class UserServiceTest {
 	
 	@Mock
-	private UserDaoImpl userDao;
+	private UserFinder userDao;
 
 	@InjectMocks
 	private UserServiceImpl userService;

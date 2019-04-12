@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.PictureDaoImpl;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.finder.PictureFinder;
 import com.pastelstudios.db.GenericFinder;
 import com.pastelstudios.db.GenericGateway;
 
@@ -17,7 +17,7 @@ import com.pastelstudios.db.GenericGateway;
 public class PictureServiceImpl {
 
 	@Autowired
-	private PictureDaoImpl pictureDao;
+	private PictureFinder pictureDao;
 	
 	@Autowired
 	private GenericFinder finder;

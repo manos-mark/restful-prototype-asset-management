@@ -34,6 +34,9 @@ public class ProductPicture {
 	@Column(name="size")
 	private Long size;
 	
+	@Column(name="file_type")
+    private String fileType;
+	
 	public ProductPicture(int id) {
 		this.id = id;
 	}
@@ -79,5 +82,12 @@ public class ProductPicture {
 	public void setPicture(byte[] picture) {
 		this.picture = picture;
 	}
-	
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
 }

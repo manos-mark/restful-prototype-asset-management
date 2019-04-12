@@ -1,31 +1,24 @@
-package com.manos.prototype.dao;
+package com.manos.prototype.finder;
  
 import java.util.List;
- 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
- 
+
 import com.manos.prototype.entity.Activity;
+import com.pastelstudios.db.AbstractFinder;
  
 @Repository
-public class ActivityDaoImpl {
+public class ActivityFinder extends AbstractFinder {
     
-    @Autowired
-    private SessionFactory sessionFactory;
- 
     public List<Activity> getActivitiesByUserId(long userId) {
-        Session currentSession = sessionFactory.getCurrentSession();
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("from Activity a "
                 + "join fetch a.action "
                 + "join fetch a.user "
                 + "where a.user.id = :userId "
                 + "order by a.id desc");
-        Query<Activity> theQuery = currentSession
-                .createQuery(queryBuilder.toString(), Activity.class);
+        Query<Activity> theQuery = createQuery(queryBuilder.toString(), Activity.class);
         theQuery.setParameter("userId", userId);
         theQuery.setMaxResults(15);
         

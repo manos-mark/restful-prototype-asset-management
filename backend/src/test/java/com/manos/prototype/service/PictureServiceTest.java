@@ -14,14 +14,14 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.manos.prototype.dao.PictureDaoImpl;
-import com.manos.prototype.dao.ProductDaoImpl;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
 import com.manos.prototype.entity.Project;
 import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.finder.PictureFinder;
+import com.manos.prototype.finder.ProductFinder;
 import com.pastelstudios.db.GenericFinder;
 import com.pastelstudios.db.GenericGateway;
 
@@ -30,7 +30,7 @@ import com.pastelstudios.db.GenericGateway;
 public class PictureServiceTest {
 
 	@Mock
-	private PictureDaoImpl pictureDao;
+	private PictureFinder pictureDao;
 	
 	@InjectMocks
 	private PictureServiceImpl pictureService;
@@ -39,7 +39,7 @@ public class PictureServiceTest {
 	private GenericFinder finder;
 	
 	@Mock
-	private ProductDaoImpl productDao;
+	private ProductFinder productDao;
 	
 	@Mock
 	private GenericGateway gateway;

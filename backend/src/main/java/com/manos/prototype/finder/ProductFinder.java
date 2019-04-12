@@ -1,9 +1,7 @@
-package com.manos.prototype.dao;
+package com.manos.prototype.finder;
 
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
@@ -13,15 +11,13 @@ import org.springframework.stereotype.Repository;
 
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.search.ProductSearch;
+import com.pastelstudios.db.AbstractFinder;
 import com.pastelstudios.db.PagingAndSortingSupport;
 import com.pastelstudios.db.SearchSupport;
 import com.pastelstudios.paging.PageRequest;
 
 @Repository
-public class ProductDaoImpl {
-
-	@Autowired
-	private SessionFactory sessionFactory;
+public class ProductFinder extends AbstractFinder {
 
 	@Autowired
 	private SearchSupport searchSupport;
@@ -30,7 +26,6 @@ public class ProductDaoImpl {
 	private PagingAndSortingSupport pagingSupport;
 	
 	public List<Product> getProducts(PageRequest pageRequest, ProductSearch search) {
-		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryByilder = new StringBuilder();
 		queryByilder.append("from Product product ")
 					.append(" join fetch product.project project ")
@@ -40,74 +35,62 @@ public class ProductDaoImpl {
 		queryString = pagingSupport.applySorting(queryString, pageRequest);
 		
 		return pagingSupport
-				.applyPaging(currentSession.createQuery(queryString, Product.class), pageRequest)
+				.applyPaging(createQuery(queryString, Product.class), pageRequest)
 				.setProperties(search)
 				.getResultList();
 	}
 	
 	public List<Product> getProductsByProjectId(int id) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Product p ")
 					.append("join fetch p.status ")
 					.append("join fetch p.project ")
 					.append("where p.project.id = :id");
-		Query<Product> theQuery = currentSession
-				.createQuery(queryBuilder.toString(), Product.class);
+		Query<Product> theQuery = createQuery(queryBuilder.toString(), Product.class);
 		theQuery.setParameter("id", id);
 		
 		return theQuery.getResultList();
 	}
 
 	public Long getProductsCountByStatus(int statusId) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("select count(p.id) from Product p ")
 					.append("inner join p.status s ")
 					.append("where s.id = :statusId");
 		
-		Query<Long> theQuery = currentSession
-				.createQuery(queryBuilder.toString(), Long.class);
+		Query<Long> theQuery = createQuery(queryBuilder.toString(), Long.class);
 		theQuery.setParameter("statusId", statusId);
 		
 		return theQuery.getSingleResult();
 	}
 
 	public Long getProductsCountByProjectId(int projectId) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("select count(p.id) from Product p "
 				+ "inner join p.project pr "
 				+ "where pr.id = :projectId");
 		
-		Query<Long> theQuery = currentSession
-				.createQuery(queryBuilder.toString(), Long.class);
+		Query<Long> theQuery = createQuery(queryBuilder.toString(), Long.class);
 		theQuery.setParameter("projectId", projectId);
 		
 		return theQuery.getSingleResult();
 	}
 
 	public int count(ProductSearch search) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("select count(product.id) from Product product ")
 					.append(" join product.project project ")
 					.append(" join product.status productStatus ");
 		String queryString = searchSupport.addSearchConstraints(queryBuilder.toString(), search);
 		
-		Long count = currentSession.createQuery(queryString, Long.class)
+		Long count = createQuery(queryString, Long.class)
 							.setProperties(search)
 							.getSingleResult();
 		return count == null ? 0 : count.intValue();
 	}
 
 	public List<Product> search(String text, String field) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		FullTextSession fullTextSession = Search.getFullTextSession(currentSession);
+		FullTextSession fullTextSession = Search.getFullTextSession(this.getSession());
 		// Using an Hibernate Session to rebuild an index
 //		try {
 //			fullTextSession.createIndexer().startAndWait();
@@ -133,24 +116,22 @@ public class ProductDaoImpl {
 	}
 
 	public Product getProductByName(String productName) {
-		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Product product ")
 					.append("where product.productName = :productName");
 		
-		Query<Product> query = currentSession.createQuery(queryBuilder.toString(), Product.class);
+		Query<Product> query = createQuery(queryBuilder.toString(), Product.class);
 		query.setParameter("productName", productName);
 		
 		return query.uniqueResult();
 	}
 
 	public Product getProductBySerialNumber(String serialNumber) {
-		Session currentSession = sessionFactory.getCurrentSession();
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("from Product product ")
 					.append("where product.serialNumber = :serialNumber");
 		
-		Query<Product> query = currentSession.createQuery(queryBuilder.toString(), Product.class);
+		Query<Product> query = createQuery(queryBuilder.toString(), Product.class);
 		query.setParameter("serialNumber", serialNumber);
 		
 		return query.uniqueResult();

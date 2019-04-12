@@ -18,7 +18,7 @@ import com.pastelstudios.db.PagingAndSortingSupport;
 import com.pastelstudios.db.SearchSupport;
 
 @Configuration
-@ComponentScan(basePackages = "com.manos.prototype.dao")
+@ComponentScan(basePackages = "com.manos.prototype.finder")
 public class AppConfigUnitTest {
 	
 	@Bean

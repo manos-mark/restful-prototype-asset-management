@@ -1,4 +1,4 @@
-package com.manos.prototype.dao;
+package com.manos.prototype.finder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.ProductPicture;
+import com.manos.prototype.finder.PictureFinder;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigUnitTest.class })
@@ -21,21 +22,21 @@ import com.manos.prototype.entity.ProductPicture;
 @Sql(scripts = "classpath:/sql/projects.sql")
 @Sql(scripts = "classpath:/sql/products.sql")
 @Sql(scripts = "classpath:/sql/pictures.sql")
-public class PictureDaoTest {
+public class PictureFinderTest {
 
 	@Autowired
-	private PictureDaoImpl pictureDao;
+	private PictureFinder pictureFinder;
 	
 	@Test
 	@Transactional
 	public void autowiredDao_success() {
-		assertThat(pictureDao).isNotNull();
+		assertThat(pictureFinder).isNotNull();
 	}
 	
 	@Test
 	@Transactional
 	public void getPicturesByProductId() {
-		List<ProductPicture> pictures = pictureDao.getPicturesByProductId(1);
+		List<ProductPicture> pictures = pictureFinder.getPicturesByProductId(1);
 		assertThat(pictures.get(1)).isNotNull();
 		assertThat(pictures.get(1).getId()).isEqualTo(2);
 		assertThat(pictures.get(1).getProduct().getId()).isEqualTo(1);
@@ -45,7 +46,7 @@ public class PictureDaoTest {
 	@Test
 	@Transactional
 	public void getPicturesCountByProductId() {
-		int count = pictureDao.getPicturesCountByProductId(1);
+		int count = pictureFinder.getPicturesCountByProductId(1);
 		assertThat(count).isEqualTo(3);
 	}
 	

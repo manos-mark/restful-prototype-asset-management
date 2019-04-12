@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.PictureDaoImpl;
-import com.manos.prototype.dao.ProductDaoImpl;
-import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.ProductPicture;
@@ -20,6 +17,9 @@ import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityAlreadyExistsException;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.finder.PictureFinder;
+import com.manos.prototype.finder.ProductFinder;
+import com.manos.prototype.finder.ProjectFinder;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.db.GenericFinder;
@@ -42,13 +42,13 @@ public class ProjectServiceImpl {
 	private GenericFinder finder;
 	
 	@Autowired
-	private ProjectDaoImpl projectDao;
+	private ProjectFinder projectDao;
 
 	@Autowired
-	private ProductDaoImpl productDao;
+	private ProductFinder productDao;
 	
 	@Autowired
-	private PictureDaoImpl pictureDao;
+	private PictureFinder pictureDao;
 	
 	@Transactional
 	public PageResult<ProjectVo> getProjects(PageRequest pageRequest, ProjectSearch search) {

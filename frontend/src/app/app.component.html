@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <app-loader-component></app-loader-component>
+    <!-- <app-loader-component></app-loader-component> -->
     <app-window-pop 
         [(active)]="windowPopAvtivate" 
     ></app-window-pop>
@@ -27,16 +27,20 @@
                         >{{ breadcrumb.name }}</a>
                     </div>
                 </div>
-                <router-outlet></router-outlet>
-                <!-- <ng-container *ngTemplateOutlet="template"></ng-container> -->
+                <router-outlet>
+                </router-outlet>
+                <app-loader-component></app-loader-component>
+                <!-- <div *ngIf="!showLoader">
+                    <ng-container *ngTemplateOutlet="template"></ng-container>
+                </div>
+                <div *ngIf="showLoader">
+                    <app-loader-component></app-loader-component>
+                </div> -->
             </div>
         </div>
     </div>
-    <!-- <div *ngIf="!currentUser">
-        <ng-container *ngTemplateOutlet="template"></ng-container>
-    </div> -->
 </div>
 
-<!-- <ng-template #template>
+<ng-template #template>
     <router-outlet></router-outlet>
-</ng-template> -->
+</ng-template>

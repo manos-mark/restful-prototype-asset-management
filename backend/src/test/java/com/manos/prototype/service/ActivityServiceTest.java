@@ -14,25 +14,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.manos.prototype.dao.ActivityDaoImpl;
-import com.manos.prototype.dao.UserDaoImpl;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.ActivityAction;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.finder.ActivityFinder;
+import com.manos.prototype.finder.UserFinder;
 import com.manos.prototype.security.UserDetailsImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityServiceTest {
 	
 	@Mock
-	private ActivityDaoImpl activityDao;
+	private ActivityFinder activityDao;
 	
 	@InjectMocks
 	private ActivityServiceImpl activityService;
 
 	@Mock
-	private UserDaoImpl userDao;
+	private UserFinder userDao;
 	
 	@Mock
 	private UserServiceImpl userService;

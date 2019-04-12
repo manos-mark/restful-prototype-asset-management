@@ -16,9 +16,6 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.manos.prototype.dao.PictureDaoImpl;
-import com.manos.prototype.dao.ProductDaoImpl;
-import com.manos.prototype.dao.ProjectDaoImpl;
 import com.manos.prototype.dto.ProjectRequestDto;
 import com.manos.prototype.entity.Product;
 import com.manos.prototype.entity.Project;
@@ -26,6 +23,9 @@ import com.manos.prototype.entity.ProjectManager;
 import com.manos.prototype.entity.Status;
 import com.manos.prototype.exception.EntityAlreadyExistsException;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.finder.PictureFinder;
+import com.manos.prototype.finder.ProductFinder;
+import com.manos.prototype.finder.ProjectFinder;
 import com.manos.prototype.search.ProjectSearch;
 import com.manos.prototype.vo.ProjectVo;
 import com.pastelstudios.db.GenericFinder;
@@ -40,13 +40,13 @@ import com.pastelstudios.paging.PageResult;
 public class ProjectServiceTest {
 
 	@Mock
-	private ProjectDaoImpl projectDao;
+	private ProjectFinder projectDao;
 	
 	@InjectMocks
 	private ProjectServiceImpl projectService;
 	
 	@Mock
-	private ProductDaoImpl productDao;
+	private ProductFinder productDao;
 	
 	@Mock
 	private GenericFinder finder;
@@ -55,7 +55,7 @@ public class ProjectServiceTest {
 	private GenericGateway gateway;
 	
 	@Mock
-	private PictureDaoImpl pictureDao;
+	private PictureFinder pictureDao;
 	
 	@Test
 	public void getProjects_withStatus_success() {

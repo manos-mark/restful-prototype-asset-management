@@ -6,17 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.manos.prototype.dao.ActivityDaoImpl;
 import com.manos.prototype.entity.Activity;
 import com.manos.prototype.entity.User;
 import com.manos.prototype.exception.EntityNotFoundException;
+import com.manos.prototype.finder.ActivityFinder;
 import com.pastelstudios.db.GenericGateway;
 
 @Service
 public class ActivityServiceImpl {
 	
 	@Autowired
-	private ActivityDaoImpl activityDao;
+	private ActivityFinder activityDao;
 	
 	@Autowired
 	private UserServiceImpl userService;

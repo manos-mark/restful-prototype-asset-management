@@ -79,8 +79,9 @@ CREATE TABLE `product_pictures` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
     `picture` MEDIUMBLOB NOT NULL,
     `product_id` INT(11) NOT NULL,
-    `name` VARCHAR(45) NOT NULL,
+    `name` VARCHAR(80) NOT NULL,
     `size` LONG NOT NULL,
+    `file_type` VARCHAR(40) NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`product_id`)
 		REFERENCES product (`id`)

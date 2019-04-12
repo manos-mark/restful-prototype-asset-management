@@ -33,7 +33,7 @@ export class ImageCarouselComponent {
 
         if (event.id === LIGHTBOX_EVENT.CHANGE_PAGE) {
             // event change page is fired
-            console.log(event.data); // -> image index that lightbox is switched to
+            // console.log(event.data); // -> image index that lightbox is switched to
         }
     }
 

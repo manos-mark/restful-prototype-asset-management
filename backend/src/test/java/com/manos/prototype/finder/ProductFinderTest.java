@@ -1,4 +1,4 @@
-package com.manos.prototype.dao;
+package com.manos.prototype.finder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.Product;
+import com.manos.prototype.finder.ProductFinder;
 import com.manos.prototype.search.ProductSearch;
 import com.pastelstudios.paging.OrderClause;
 import com.pastelstudios.paging.OrderDirection;
@@ -26,15 +27,15 @@ import com.pastelstudios.paging.PageRequest;
 @Sql(scripts = "classpath:/sql/projects.sql")
 @Sql(scripts = "classpath:/sql/products.sql")
 @Sql(scripts = "classpath:/sql/pictures.sql")
-public class ProductDaoTest {
+public class ProductFinderTest {
 		
 	@Autowired 
-	private ProductDaoImpl productDao;
+	private ProductFinder productFinder;
 	
 	@Test
 	@Transactional
 	void autowiredDao_success() {
-		assertThat(productDao).isNotNull();
+		assertThat(productFinder).isNotNull();
 	}
 	
 	@Test
@@ -53,7 +54,7 @@ public class ProductDaoTest {
 		
 		ProductSearch search = new ProductSearch();
 		
-		List<Product> products = productDao.getProducts(pageRequest, search);
+		List<Product> products = productFinder.getProducts(pageRequest, search);
 		Product product = products.get(0);
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
@@ -71,14 +72,14 @@ public class ProductDaoTest {
 	@Test
 	@Transactional
 	void search() {
-		List<Product> products = productDao.search("productName", "productName");
+		List<Product> products = productFinder.search("productName", "productName");
 		assertThat(products).isNotNull();
 	}
 	
 	@Test
 	@Transactional
 	void getProductsByProjectId_success() {
-		List<Product> products = productDao.getProductsByProjectId(1);
+		List<Product> products = productFinder.getProductsByProjectId(1);
 		Product product = products.get(0);
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
@@ -96,7 +97,7 @@ public class ProductDaoTest {
 	@Test
 	@Transactional
 	void getProductByName() {
-		Product product = productDao.getProductByName("productName");
+		Product product = productFinder.getProductByName("productName");
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
 		assertThat(product.getProductName()).isEqualTo("productName");
@@ -111,7 +112,7 @@ public class ProductDaoTest {
 	@Test
 	@Transactional
 	void getProductBySerialNumber() {
-		Product product = productDao.getProductBySerialNumber("serialNumber");
+		Product product = productFinder.getProductBySerialNumber("serialNumber");
 		assertThat(product).isNotNull();
 		assertThat(product).hasNoNullFieldsOrProperties();
 		assertThat(product.getProductName()).isEqualTo("productName");
@@ -126,26 +127,26 @@ public class ProductDaoTest {
 	@Test
 	@Transactional
 	void getProductsByProjectId_fail() {
-		List<Product> products = productDao.getProductsByProjectId(100);
+		List<Product> products = productFinder.getProductsByProjectId(100);
 		assertThat(products).isEmpty();
 	}
 	
 	@Test
 	@Transactional
 	void getProductsCount() {
-		assertThat(productDao.getProductsCountByStatus(2)).isEqualTo(1);
+		assertThat(productFinder.getProductsCountByStatus(2)).isEqualTo(1);
 	}
 	
 	@Test
 	@Transactional
 	void getProductsCountByProjectId() {
-		assertThat(productDao.getProductsCountByProjectId(1)).isEqualTo(1);
+		assertThat(productFinder.getProductsCountByProjectId(1)).isEqualTo(1);
 	}
 	
 	@Test
 	@Transactional
 	void count() {
-		assertThat(productDao.count(new ProductSearch())).isEqualTo(1);
+		assertThat(productFinder.count(new ProductSearch())).isEqualTo(1);
 	}
 }
 

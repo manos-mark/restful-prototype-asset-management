@@ -1,4 +1,4 @@
-package com.manos.prototype.dao;
+package com.manos.prototype.finder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -16,30 +16,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.manos.prototype.config.AppConfigUnitTest;
 import com.manos.prototype.entity.User;
+import com.manos.prototype.finder.UserFinder;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppConfigUnitTest.class })
 @Sql(scripts = "classpath:/sql/users.sql")
-class UserDaoTest {
+class UserFinderTest {
 
 	@Autowired
-	private UserDaoImpl userDao;
+	private UserFinder userFinder;
 	
 	@Test
 	@Transactional
 	void autowiredDao_success() {
-		assertThat(userDao).isNotNull();
+		assertThat(userFinder).isNotNull();
 	}
 
 	@Test
 	@Transactional
 	void findByUserEmail_success() {
 		assertThatCode(() -> { 
-			userDao.getUserByEmail("john@luv2code.com");
+			userFinder.getUserByEmail("john@luv2code.com");
 		})
 		.doesNotThrowAnyException();
 		
-		User user = userDao.getUserByEmail("john@luv2code.com");
+		User user = userFinder.getUserByEmail("john@luv2code.com");
 		assertThat(user).isNotNull();
 		assertThat(user.getEmail()).isEqualTo("john@luv2code.com");
 		assertThat(user.getFirstName()).isEqualTo("John");
@@ -53,7 +54,7 @@ class UserDaoTest {
 	void findByUserEmail_fail() {
 		assertThatExceptionOfType(NoResultException.class)
 		.isThrownBy(() -> { 
-			userDao.getUserByEmail("manos@luv2code.com"); 
+			userFinder.getUserByEmail("manos@luv2code.com"); 
 		});
 	}
 	
