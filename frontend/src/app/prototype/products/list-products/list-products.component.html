@@ -1,0 +1,169 @@
+<div class="heading">
+    <div class="pageTtl">
+        <i class="products"></i>
+        <p>Products({{ totalCount }})</p>
+    </div>
+    <div class="action">
+        <a class="blueBtn" routerLink="new">Add product</a>
+        <div class="dropdown">
+        <select #resultsPerPageDropdown (change)="changeResultsPerPage(resultsPerPageDropdown.value)">
+            <option [selected]="pageParams.pageSize == 5" value=5>Results per page:5</option>
+            <option [selected]="pageParams.pageSize == 20" value=20>Results per page:20</option>
+            <option [selected]="pageParams.pageSize == 50" value=50>Results per page:50</option>
+        </select>
+        </div>
+    </div>
+</div>
+<div class="tableWrp">
+    <div class="filters">
+        <p>Filters</p>
+        <div class="inputWrp date">
+            <input 
+                #dateFrom 
+                [(ngModel)]="fromDate"
+                placeholder="Date from" 
+                [max]="dateToFilter"
+                (ngModelChange)="dateFromFilter = fromDate"
+                [owlDateTime]="dt1" 
+                [owlDateTimeTrigger]="dt1" 
+            >
+            <owl-date-time #dt1
+                pickerType="calendar"
+            ></owl-date-time>
+        </div>
+        <div class="inputWrp date">
+            <input #dateTo 
+                [(ngModel)]="toDate"
+                placeholder="Date to" 
+                [min]="dateFromFilter"
+                (ngModelChange)="dateToFilter = toDate"
+                [owlDateTime]="dt2" 
+                [owlDateTimeTrigger]="dt2" 
+            />
+            <owl-date-time #dt2
+                pickerType="calendar"
+            ></owl-date-time>
+        </div>
+        <div class="dropdown status">
+            <select #statusDropdown (click)="isFilterChanged = true">
+                <option value=0 selected>Status: All</option>
+                <option value=1>Status: In Progress</option>
+                <option value=2>Status: New</option>
+                <option value=3>Status: Finished</option>
+            </select>
+        </div>
+        <div class="dropdown status">
+            <select #projectDropdown (click)="isFilterChanged = true">
+                <option [selected]="!filterParams.projectName" value="null">Project: All</option>
+                <option 
+                    *ngFor="let projectName of projectsNames"
+                    [value]="projectName"
+                    [selected]="filterParams.projectName === projectName"
+                    >Project: {{ projectName }}
+                </option>
+            </select>
+        </div>
+        <div  *ngIf="projectsNames">
+            <a class="blueDarkBtn" 
+                [ngClass]="{'disabled': !isFilterChanged && toDate == null && fromDate == null}"
+                (click)="applyFilters(statusDropdown.value, projectDropdown.value, dateFrom.value, dateTo.value)"
+            >Apply</a>
+        </div>
+        <div class="right">
+            <a *ngIf="!filterParams.isFieldNull()"  class="grayBtn" (click)="clearFilters()">
+                <span>Clear filters</span><i></i>
+            </a>
+            <div class="pagination">
+                <a class="arrowLeft"
+                    [ngClass]="{'disabled': pageParams.page == 1}"
+                    (click)="changePageDown()"
+                ><i></i></a>
+                <div class="center">
+                    <a *ngIf="pagesArray.length == 0" class="disabled">0</a>
+                    <a 
+                        *ngFor="let curPage of pagesArray"
+                        (click)="changePage(curPage)"
+                        [ngClass]="{'active': pageParams.page == curPage}">{{ curPage }}
+                    </a>
+                </div>
+                <a class="arrowRight"
+                    [ngClass]="{'disabled': pageParams.page == totalPages || totalPages == 0}"
+                    (click)="changePageUp()"
+                ><i></i></a>
+            </div>
+        </div>
+    </div>
+  <div class="table">
+    <div class="header">
+        <div class="checkbox">
+            <a class="checkbox" 
+                (click)="onSelectAll()"
+                [ngClass]="{'active': isMasterChecked}"
+            ><i></i></a>
+        </div>
+        <span class="number">#</span>
+        <a class="date" (click)="sortByDate()">
+            <i [ngClass]="sortedByDate ? (sortByDateDesc ? 'sort down' : 'sort up') : ('sort down disabled')"></i>
+        Created</a>
+        <span class="productName">Product name</span>
+        <span class="sn">SN</span>
+        <a class="quantity" (click)="sortByQuantity()">
+            <i [ngClass]="sortedByDate ? ('sort down disabled') : (sortByQuantityDesc ? 'sort down' : 'sort up')"></i>
+        Qty</a>
+        <span class="description">Description</span>
+        <span class="project">Project</span>
+        <span class="picture">Picture</span>
+        <div class="status">Status</div>
+        <div class="settings"><i></i></div>
+    </div>
+    
+    <div class="content">
+        <div class="row" *ngFor="let product of products,let i = index">
+            <div class="checkbox">
+                <a class="checkbox" 
+                    [ngClass]="{'active': product.isChecked}"
+                    (click)="onSelect(product)"
+                ><i></i></a>
+            </div>
+            <span class="number">{{ (((this.pageParams.page-1) * this.pageParams.pageSize) + i + 1) }}</span>
+            <span class="date">{{ product.createdAt | date: 'mediumDate' }}</span>
+            <span class="productName">{{ product.productName }}</span>
+            <span class="sn">{{ product.serialNumber }}</span>
+            <span class="quantity">{{ product.quantity }}</span>
+            <span class="description">{{ product.description }}</span>
+            <span class="project">{{ product.projectName }}</span>
+            <div class="picture" (click)="getProductPictures(product.id)">
+                <a class="picWrp">
+                <img [src]="'api/product-pictures/' + product.thumbPictureId"/>  
+                <i>{{ product.picturesCount }}</i>
+                <var class="zoom"><span></span></var>
+                </a>
+            </div>
+            <div class="status">
+                <span [ngClass]="product.status.cssClass">{{ product.status.name }}</span>
+            </div>
+            <div class="settings"><a class="grayBtn" (click)="onEdit(product.id)"><i></i></a></div>
+        </div>
+    </div>
+  </div>
+  <div class="actionTtl">
+    <i></i>
+    <p>With {{ selectedProductsCount }} products selected:</p>
+  </div>
+    <div class="bottomActions">
+        <p>Actions</p>
+        <div class="dropdown">
+            <select #actionsDropdown (click)="isChangeStatusSelected = true">
+                <option selected disabled>Select</option>
+                <option value="NEW">Change status to New</option>
+                <option value="IN_PROGRESS">Change status to In progress</option>
+                <option value="FINISHED">Change status to Finished</option>
+                <option value="DELETE">Delete</option>
+            </select>
+        </div>
+        <a class="blueDarkBtn" 
+            (click)="onApplyChanges(actionsDropdown.value)"
+            [ngClass]="{'disabled': selectedProductsCount == 0 || !isChangeStatusSelected}"
+        >Apply</a>
+    </div>
+</div>

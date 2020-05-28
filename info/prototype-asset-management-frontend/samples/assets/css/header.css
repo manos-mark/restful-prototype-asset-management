@@ -1,0 +1,335 @@
+div.headerWrapper{
+	position:relative;
+	width:100%;
+	background:#2b3245;
+}
+
+div.headerWrapper div.header{
+	position:relative;
+	width: 1270px;
+	margin:auto;
+	height:150px;
+	padding-top:15px;
+	padding-bottom:15px;
+}
+
+div.headerWrapper div.header a.logo{
+	float:left;
+	width:150px;
+	height:130px;
+	background:url("../img/sprite.png") scroll -20px 0px no-repeat;
+	margin-right:60px;
+}
+
+div.headerWrapper div.header a.logo:hover{
+	filter: brightness(0.8);
+}
+
+div.headerWrapper div.header a.logo:active{
+	filter: brightness(0.6);
+}
+
+div.headerWrapper div.header div.mainMenu{
+	float:left;
+	width:1060px;
+	height:65px;
+	margin-bottom:10px;
+}
+
+div.headerWrapper div.header div.mainMenu div.group{
+	float:left;
+	height:100%;
+}
+
+div.headerWrapper div.header div.mainMenu div.group p{
+	display:block;
+	width:100%;
+	font-size:13px;
+	color:#2b9ee1;
+	font-weight: 500;
+	margin-bottom: 5px;
+	text-transform: uppercase;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a{
+	float:left;
+	padding:10px;
+	width:155px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	position: relative;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a:hover{
+	background:#373e50;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a:active{
+	background:#242a39;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a.active{
+	background:#279be4;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a i{
+	float:left;
+	width:20px;
+	height:20px;
+	background:pink;
+	margin-right:15px;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a span{
+	float:left;
+	color:white;
+	font-size:14px;
+	font-weight:500;
+	margin-top: 4px;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a.dashboard i{
+	background: url("../img/sprite.png") scroll -110px -164px no-repeat;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a.projects i{
+	background: url("../img/sprite.png") scroll -110px -207px no-repeat;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a.products i{
+	background: url("../img/sprite.png") scroll -110px -246px no-repeat;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a.profile i{
+	background: url("../img/sprite.png") scroll -110px -286px no-repeat;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a var{
+	position: absolute;
+	right: 10px;
+    top: -10px;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	width:25px;
+	height:25px;
+	background:#373e50;
+	color:white;
+	font-size:13px;
+	font-weight:500;
+	border:2px solid #373e50;
+	text-align:center;
+	padding-top: 3px;
+}
+
+div.headerWrapper div.header div.mainMenu div.group a.active var{
+	border:2px solid #279be4;
+}
+
+div.headerWrapper div.header div.mainMenu div.logoutGroup{
+	float:right;
+}
+div.headerWrapper div.header div.mainMenu div.logoutGroup div.user{
+	float:left;
+	text-align: right;
+	margin-top: 3px;
+}
+div.headerWrapper div.header div.mainMenu div.logoutGroup div.user > p{
+	float:left;
+	color:#77c96b;
+	font-size:15px;
+	font-weight:500;
+	width:100%;
+	margin-bottom:10px;
+}
+div.headerWrapper div.header div.mainMenu div.logoutGroup div.user a.logout{
+	float: right;
+}
+
+div.headerWrapper div.header div.mainMenu div.logoutGroup div.user a.logout:hover{
+	filter: brightness(1.2);
+}
+
+div.headerWrapper div.header div.mainMenu div.logoutGroup div.user a.logout:active{
+	filter: brightness(0.7);
+}
+
+div.headerWrapper div.header div.mainMenu div.logoutGroup div.user a.logout i{
+	float: left;
+    width: 15px;
+    height: 15px;
+    background: url(../img/sprite.png) scroll -110px -568px no-repeat;
+}
+
+div.headerWrapper div.header div.mainMenu div.logoutGroup div.user a.logout > p{
+	float: left;
+    margin-left: 5px;
+    color: #5aacff;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+div.headerWrapper div.header div.mainMenu div.logoutGroup i.profilePic{
+	float:left;
+	margin-left:15px;
+    width: 42px;
+    height: 42px;
+    background: url(../img/sprite.png) scroll -25px -374px no-repeat;
+}
+
+
+div.headerWrapper div.header div.searchWrp{
+	float:left;
+	width:1060px;
+	position:relative;
+}
+div.headerWrapper div.header div.searchWrp div.search{
+	position:relative;
+	float:left;
+	width:100%;
+	height:50px;
+	background:#373e50;
+	position:relative;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+
+div.headerWrapper div.header div.searchWrp div.search i.searchIcon{
+	position:absolute;
+	left: 17px;
+    top: 14px;
+	width: 22px;
+    height: 22px;
+    background: url(../img/sprite.png) scroll -108px -328px no-repeat;
+}
+div.headerWrapper div.header div.searchWrp div.search input{
+	height: 100%;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    color: white;
+    padding-left:65px;
+    padding-right:55px;
+    font-weight:500;
+    font-family: Ubuntu;
+}
+div.headerWrapper div.header div.searchWrp div.search:HOVER,
+div.headerWrapper div.header div.searchWrp div.search:FOCUS{
+	background:#424a5f;
+}
+
+
+div.headerWrapper div.header div.searchWrp div.search a.clear{
+	position:absolute;
+	right: 16px;
+    top: 15px;
+	background:url(../img/sprite.png) scroll -108px -488px no-repeat;
+	width:20px;
+	height:20px;
+}	
+
+div.headerWrapper div.header div.searchWrp div.search a.clear:hover{
+	background: url(../img/sprite.png) scroll -108px -516px no-repeat;
+}
+
+div.headerWrapper div.header div.searchWrp div.search a.clear:active{
+	background:url(../img/sprite.png) scroll -108px -463px no-repeat;
+}	
+
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown{
+	position:absolute;
+	top:50px;
+	left:0;
+	width:80%;
+	z-index: 3;
+    border:1px solid #2b3245;
+    border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+    overflow:hidden;
+    
+    -webkit-box-shadow: 3px 0px 47px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 3px 0px 47px 0px rgba(0,0,0,0.75);
+	box-shadow: 3px 0px 47px 0px rgba(0,0,0,0.75);
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items{
+	float:left;
+	width:100%;
+	max-height:400px;
+	overflow:auto;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result{
+	float:left;
+	width:100%;
+	
+	padding-left:25px;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-right:25px;
+	
+	display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    
+    align-content:center;
+ 	-webkit-align-content:center;
+ 	-moz-align-content:scenter;
+ 	
+ 	align-items:center;
+ 	-webkit-align-items:center;
+ 	-moz-align-items:center;
+ 	border-bottom:1px solid #dee1e7;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result:nth-child(odd){
+	background:#f4f6f7;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result:nth-child(even){
+	background:#f8fafc;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result:hover{
+	background:#e4f1ff;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result:active{
+	background:#279be4;
+}
+
+
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result i{
+	float:left;
+	margin-right:25px;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result span.type{
+	float:left;
+	color:#5a687a;
+	font-weight:500;
+	font-size:14px;
+	width:140px;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result span.item{
+	float:left;
+	font-size:14px;
+	color:black;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result:active span.type,
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result:active span.item{
+	color:white;
+}
+
+div.headerWrapper div.header div.searchWrp div.searchDropdown div.items a.result:active i{
+	filter: brightness(300%);
+}

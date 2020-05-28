@@ -1,0 +1,28 @@
+<div class="rightCont">
+  <div class="welcome">
+    <i class="profilePic"></i>
+    <p *ngIf="currentUser">Welcome <span>{{ currentUser.firstName }}</span></p>
+  </div>
+  <div class="activity">
+    <p class="ttl">Activity</p>
+    <div class="lastActions">Last <span>15</span> actions:</div>
+    <div class="history">
+      
+      <div class="row" *ngFor="let activity of activities">
+        <p class="date">{{ activity.date | date: 'dd.MM.yyyy' }}</p>
+        <p class="hour">{{ activity.date | date: 'HH:mm:ss' }}</p>
+        <div class="action">
+          <i [ngClass]="activity.action.cssClass"></i>
+          <p>
+            <span>
+              {{ currentUser.firstName }} 
+              {{ currentUser.lastName }}
+            </span> 
+            <span>{{ activity.action.name }}</span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

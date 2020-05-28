@@ -1,0 +1,158 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td ,select , input{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+	font-family:"Ubuntu";
+	font-weight: 300;
+	}
+:focus {
+	outline:0;
+	}
+body {
+	line-height: 1;
+	color:white;
+	font-size:10px;
+	text-align:left;
+	}
+ol, ul {
+	list-style: none;
+	}
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+	}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+	}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+	}
+blockquote, q {
+	quotes: "" "";
+	}
+	
+a {
+	cursor:pointer;
+	}
+	
+.clear{
+	clear:both;
+	width:100%;
+}
+.hidden{
+	display:none;
+	}
+textarea{
+	resize:none;
+}
+textarea:focus {
+	outline:0;
+	}
+input:active, input:focus, input:hover, a, a:hover, a:active, a:focus {
+	outline:0;
+	text-decoration: none;
+	-webkit-font-smoothing: antialiased;
+	 -moz-osx-font-smoothing: grayscale;
+	}
+:focus {
+	outline:0;
+	}
+ins, var {
+	text-decoration:none;
+	font-style:normal;
+	}
+
+	
+*::-moz-selection {
+    background: none repeat scroll 0 0 transparent;
+}
+a, a:focus, a:active, *:-moz-any-link:focus {
+    outline: 0 none;
+    text-decoration: none;
+}
+:focus {
+    outline: medium none;
+}
+::selection {
+	background: none repeat scroll 0 0 transparent;
+	}
+::-moz-selection {
+	background: none repeat scroll 0 0 transparent;
+}
+
+input::selection {
+	background: #b7e3ff;
+}
+input::-moz-selection {
+	background: #b7e3ff;
+}
+h1{
+	display: none;
+}
+
+
+
+body, html{
+ 	width:100%;
+	height:100%;
+	background:url("../img/pattern.png") repeat #5c76a7;
+ 	min-width: 1270px;
+ 	position: relative;
+ 	
+ 	-webkit-box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+  	box-sizing: border-box;
+}
+ 
+div.wrapper{
+	width: 100%;
+	height: 100%;
+ 	position:relative;
+	overflow-x:hidden;
+	-webkit-font-smoothing: antialiased;
+	 -moz-osx-font-smoothing: grayscale;
+}
+
+
+*{
+	-webkit-box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+  	box-sizing: border-box;
+}
+
+
+@font-face {
+  font-family: "Ubuntu";
+  src: url(../fonts/Ubuntu-Light.ttf) format("truetype");
+  font-weight: 100;
+  font-style: light;
+}
+
+
+@font-face {
+  font-family: "Ubuntu";
+  src: url(../fonts/Ubuntu-Regular.ttf) format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  src: url(../fonts/Ubuntu-Bold.ttf) format("truetype");
+  font-weight: 500;
+  font-style: bold;
+}

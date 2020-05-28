@@ -1,0 +1,26 @@
+<div class="searchWrp">
+    <div class="search">
+        <i class="searchIcon"></i>
+        <input #input 
+            placeholder="Search" 
+            (keyup)="onKeyup(input)"
+            autocomplete="off" 
+        />
+        <a class="clear" (click)="onClear(input, $event)"></a>
+    </div>
+    <div class="searchDropdown" *ngIf="itemsArray.length != 0">
+        <div class="items">
+            <div *ngFor="let obj of itemsArray">
+                <a 
+                    class="result"
+                    [ngStyle]="{ 'background': obj.isHovered ? '#e4f1ff' : null }"
+                    (click)="obj.product ? onEdit(obj.product.id, 0, input) : onEdit(0, obj.project.id, input)"
+                    >
+                    <i [ngClass]="obj.cssClass"></i>
+                    <span class="type">{{ obj.type }}</span>
+                    <span class="item">{{ obj.item }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

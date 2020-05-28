@@ -1,0 +1,28 @@
+<div class="heading">
+  <div class="pageTtl">
+    <i class="dashboard"></i>
+    <p>Dashboard</p>
+  </div>
+</div>
+<div class="leftCont">
+  <div class="statistics">
+    <a class="viewAll" routerLink="../prototype/projects">
+      <span>{{ newProjectsCount }}</span>
+      <span>New projects</span>
+      <i class="projects"></i>
+      <span>view all</span>
+    </a>
+    <div class="finishedProjects"><span>{{ finishedProjectsCount }}</span> finished projects</div>
+    <a class="greenBtn" routerLink="../prototype/projects/new">Add project</a>
+  </div>
+  <div class="statistics">
+    <a class="viewAll" routerLink="../prototype/products">
+      <span>{{ inProgressProductsCount }}</span>
+      <span>Products in progress</span>
+      <i class="products"></i>
+      <span>view all</span>
+    </a>
+    <div class="finishedProjects"><span>{{ finishedProductsCount }}</span> finished projects</div>
+    <a class="blueBtn" routerLink="../prototype/products/new">Add product</a>
+  </div>
+</div>

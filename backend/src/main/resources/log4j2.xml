@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration status="INFO" strict="true">
+	<Appenders>
+		<Appender type="Console" target="SYSTEM_ERR" name="STDERR">
+			<Layout type="PatternLayout" pattern="[%d{dd.MM.yyyy HH:mm:ss,SSS}] %p: %m%n" />
+		</Appender>
+	</Appenders>
+	
+	<Loggers>
+		<Root level="debug">
+			<AppenderRef ref="STDERR" />
+		</Root>
+		
+		<!-- Spring config -->
+		<Logger name="org.springframework" level="info" additivity="false">
+			<AppenderRef ref="STDERR" />
+		</Logger> 
+		
+		<!-- Hibernate config -->
+		<Logger name="org.hibernate" level="info" additivity="false">
+			<AppenderRef ref="STDERR" />
+		</Logger> 
+		
+		<!-- C3P0 config -->
+		<Logger name="com.mchange" level="info" additivity="false">
+			<AppenderRef ref="STDERR" />
+		</Logger> 
+	</Loggers>
+</Configuration>

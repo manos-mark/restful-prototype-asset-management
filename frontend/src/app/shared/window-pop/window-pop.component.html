@@ -1,0 +1,45 @@
+<div 
+    class="windowPopWrp" 
+    [(ngModel)]="active"
+    (logout)="logout"
+    ngDefaultControl
+    [ngStyle]="{'display': active ? 'block' : 'none'}">
+    <div class="windowPop">
+        <div class="windowPopHeader">
+            <i></i>
+            <div class="title">
+                <p>{{ title }}</p>
+            </div>
+        </div>
+        <div class="windowPopContents">
+            <div class="centered">
+                <h4>{{ context}}</h4>
+                <span>{{ details }}</span> 
+             </div>
+        </div>
+        <div class="windowPopButtons">
+            <a *ngIf="!logout 
+                && !deleteImage 
+                && !cookies 
+                && !cookiesToDB
+                && !deleteProduct
+                && !deleteProject" 
+                class="grayDarkBtn" 
+                (click)="onCancel($event)"
+            >Okay</a>
+            <a *ngIf="logout 
+                || deleteImage 
+                || deleteProduct 
+                || deleteProject" 
+                class="grayDarkBtn" 
+                (click)="onCancel($event)"
+            >Cancel</a>
+            <a *ngIf="logout" class="greenBtn" (click)="onLogout($event)">Confirm</a>
+            <a *ngIf="deleteImage" class="greenBtn" (click)="onDeleteImage($event)">Confirm</a>
+            <a *ngIf="deleteProduct" class="greenBtn" (click)="onDeleteProduct($event)">Confirm</a>
+            <a *ngIf="deleteProject" class="greenBtn" (click)="onDeleteProject($event)">Confirm</a>
+            <a *ngIf="cookies" class="greenBtn" (click)="onAcceptCookies($event)">I Accept</a>
+            <a *ngIf="cookiesToDB" class="greenBtn" (click)="onAcceptCookiesToDB($event)">I Accept</a>
+        </div>
+    </div>
+</div>

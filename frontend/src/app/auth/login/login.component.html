@@ -1,0 +1,69 @@
+<div class="loginForm" [formGroup]="loginForm">
+    <div class="loginHeader">
+        <i class="lock"></i>
+        <i class="login"></i>
+    </div>
+    <div class="loginCenter">
+        <div class="helloTxt">
+            <p>Hello!</p>
+            <span>Please sign in with your email and password.</span>
+        </div>
+        <div class="inputWrp" [ngClass]="{'error': email.invalid && (email.dirty || email.touched)}">
+            <div class="title"> 
+                <span>Email address</span>
+            </div>
+            <div class="input ">
+                <i class="email"></i>
+                <input 
+                type="email" 
+                id="email" 
+                formControlName="email" 
+                trim
+                ng-pattern="/^[a-zA-Z_-]*$/"
+                />
+            </div>
+            <span 
+                class="error"
+                *ngIf="email.invalid && (email.dirty || email.touched)"
+            >Please enter correct email address</span>
+        </div>
+        <div class="inputWrp" [ngClass]="{'error': password.invalid && (password.dirty || password.touched)}">
+            <div class="title">
+                <span>Password</span>
+                <a 
+                    class="forgottenPass"
+                    (click)="onForgottenPass()"
+                >Forgotten password?</a>
+            </div>
+            <div class="input">
+                <i class="password"></i>
+                <input 
+                type="password" 
+                formControlName="password" 
+                trim
+                ng-pattern="/^[a-zA-Z_-]*$/"
+                >
+            </div>
+            <span 
+                class="error"
+                *ngIf="password.invalid && (password.dirty || password.touched)"
+            >Please enter correct password</span>
+        </div>
+        <div class="rememberMe">
+            <a 
+                class="checkbox" 
+                (click)="this.authService.rememberMe = !this.authService.rememberMe"
+                [ngClass]="{ 'active': this.authService.rememberMe }"
+            ><i></i></a>
+            <p>Remember me</p>	
+        </div>
+    </div>
+    <div class="loginBtn">
+        <a 
+        class="greenBtn"
+        (click)="onSubmit()" 
+        [ngClass]="{ 'disabled': loginForm.invalid }"
+        >Sign in</a>
+    </div>
+</div>
+<div class="loginImage"></div>
