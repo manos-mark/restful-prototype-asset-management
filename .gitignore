@@ -3,3 +3,4 @@
 # project informations
 #/infos
 /backend/src/main/persistence-mysql.properties
+/backend/pom.xml
