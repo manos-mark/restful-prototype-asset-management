@@ -2,5 +2,5 @@
 
 # project informations
 #/infos
-/backend/src/main/persistence-mysql.properties
+/backend/src/main/resources/persistence-mysql.properties
 /backend/pom.xml
