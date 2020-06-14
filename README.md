@@ -3,6 +3,10 @@ This project is created for a job application and it represents my skills in ful
   - The frontend is implemented with Angular and TypeScript
   - The Backend is implemented with Java Spring framework and Hibernate
     
+ Static webapp link: https://raw.githack.com/manos-mark/restful-prototype-asset-management/master/info/prototype-asset-management-frontend/samples/index.html
+ 
+### Warning: This is just a representation of the static pages, is NOT the final project.
+
 ## 01 Login:
   - Login with a pre-defined email and password account.
   - Input field validations:
