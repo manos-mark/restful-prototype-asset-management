@@ -6,7 +6,7 @@
             (keyup)="onKeyup(input)"
             autocomplete="off" 
         />
-        <a class="clear" (click)="onClear(input, $event)"></a>
+        <a class="clear" (click)="onClear(input)"></a>
     </div>
     <div class="searchDropdown" *ngIf="itemsArray.length != 0">
         <div class="items">

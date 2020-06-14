@@ -22,7 +22,7 @@ export class SearchComponent implements OnInit {
     ngOnInit() {
     }
 
-    onKeyup(input, $event) {
+    onKeyup(input) {
         if (event['key'] === 'ArrowDown') {
             this.moveDown();
         } else if (event['key'] === 'ArrowUp') {

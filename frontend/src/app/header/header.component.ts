@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     productsCountSubs: Subscription = null;
     newProjectsCount: number;
     projectsCountSubs: Subscription = null;
-    private currentUser: User;
+    currentUser: User;
 
     constructor(private authService: AuthService,
                 private productsService: ProductsService,
