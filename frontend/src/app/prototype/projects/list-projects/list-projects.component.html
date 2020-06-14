@@ -20,10 +20,10 @@
       <div class="inputWrp date">
         <input 
             #dateFrom 
-            [(ngModel)]="fromDate"
+            [(ngModel)]="filterParams.fromDate"
             placeholder="Date from" 
             [max]="dateToFilter"
-            (ngModelChange)="dateFromFilter = fromDate"
+            (ngModelChange)="dateFromFilter = filterParams.fromDate"
             [owlDateTime]="dt1" 
             [owlDateTimeTrigger]="dt1" 
         >
@@ -33,10 +33,10 @@
       </div>
       <div class="inputWrp date">
         <input #dateTo 
-            [(ngModel)]="toDate"
+            [(ngModel)]="filterParams.toDate"
             placeholder="Date to" 
             [min]="dateFromFilter"
-            (ngModelChange)="dateToFilter = toDate"
+            (ngModelChange)="dateToFilter = filterParams.toDate"
             [owlDateTime]="dt2" 
             [owlDateTimeTrigger]="dt2" 
         />
@@ -53,7 +53,7 @@
             </select>
       </div>
       <a class="blueDarkBtn" 
-            [ngClass]="{'disabled': !isFilterChanged && toDate == null && fromDate == null}"
+            [ngClass]="{'disabled': !isFilterChanged && filterParams.toDate == null && filterParams.fromDate == null}"
             (click)="applyFilters(statusDropdown.value, dateFrom.value, dateTo.value)"
         >Apply</a>
       <div class="right">

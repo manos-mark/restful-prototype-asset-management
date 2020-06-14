@@ -36,6 +36,8 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     deleteProductsSubscription: Subscription = null;
     isFilterChanged = false;
     isChangeStatusSelected = false;
+    dateToFilter = null;
+    dateFromFilter = null;
 
     constructor(private productService: ProductsService,
                 private router: Router,

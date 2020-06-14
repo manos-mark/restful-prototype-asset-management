@@ -44,10 +44,10 @@ export class AppComponent implements OnInit, OnDestroy {
         // this.subscription.unsubscribe();
     }
 
-    get carouselAvtivate() { return this.carouselService.activate; }
-    get windowPopAvtivate() { return this.windowPopService.isActivated(); }
-    get notificationAvtivate() { return this.notificationService.isActivated(); }
-    get currentUser() { return this.authService.getCurrentUser(); }
-    get isForgottenPassActive() { return this.authService.isForgottenPassActive; }
-    get breadcrumbs() { return this.breadcrumbsService.breadcrumbs; }
+    carouselAvtivate() { return this.carouselService.activate; }
+    windowPopAvtivate() { return this.windowPopService.isActivated(); }
+    notificationAvtivate() { return this.notificationService.isActivated(); }
+    currentUser() { return this.authService.getCurrentUser(); }
+    isForgottenPassActive() { return this.authService.isForgottenPassActive; }
+    breadcrumbs() { return this.breadcrumbsService.breadcrumbs; }
 }

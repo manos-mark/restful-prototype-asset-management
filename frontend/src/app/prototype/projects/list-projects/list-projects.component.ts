@@ -33,6 +33,8 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
     pagesArray = [];
     totalPages = this.projects.length / this.pageParams.pageSize;
     deleteProjectsSubscription: Subscription = null;
+    dateToFilter = null;
+    dateFromFilter = null;
 
     constructor(private projectService: ProjectsService,
                 private router: Router,
@@ -294,6 +296,6 @@ export class ListProjectsComponent implements OnInit, OnDestroy {
 
     doNothing() {}
 
-    get pageParams() { return this.projectService.pageParams; }
-    get filterParams() { return this.projectService.filterParams; }
+    public get pageParams() { return this.projectService.pageParams; }
+    public get filterParams() { return this.projectService.filterParams; }
 }

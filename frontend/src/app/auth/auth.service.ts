@@ -7,9 +7,9 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable()
 export class AuthService {
-    private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-    private rememberMe = false;
-    isForgottenPassActive = false;
+    public currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+    public rememberMe = false;
+    public isForgottenPassActive = false;
 
     constructor(private httpClient: HttpClient,
                 private router: Router,
